@@ -66,14 +66,18 @@ const onMessage = function(request, sender, callback) {
 
     case 'listsFromNetFilter':
         µb.staticFilteringReverseLookup.fromNetFilter(
-            request.compiledFilter,
-            request.rawFilter,
-            callback
-        );
+            request.rawFilter
+        ).then(response => {
+            callback(response);
+        });
         return;
 
     case 'listsFromCosmeticFilter':
-        µb.staticFilteringReverseLookup.fromCosmeticFilter(request, callback);
+        µb.staticFilteringReverseLookup.fromCosmeticFilter(
+            request
+        ).then(response => {
+            callback(response);
+        });
         return;
 
     case 'reloadAllFilters':
@@ -362,32 +366,35 @@ const popupDataFromRequest = async function(request) {
     return popupDataFromTabId(tabId, tabTitle);
 };
 
-const getDOMStats = async function(tabId) {
+const getElementCount = async function(tabId, what) {
     const results = await vAPI.tabs.executeScript(tabId, {
         allFrames: true,
-        file: '/js/scriptlets/dom-survey.js',
+        file: `/js/scriptlets/dom-survey-${what}.js`,
         runAt: 'document_end',
     });
 
-    let elementCount = 0;
-    let scriptCount = 0;
-    results.forEach(result => {
-        if ( result instanceof Object === false ) { return; }
-        elementCount += result.elementCount;
-        scriptCount += result.scriptCount;
-    });
+    let total = 0;
+    for ( const count of results ) {
+        if ( typeof count !== 'number' ) { continue; }
+        if ( count === -1 ) { return -1; }
+        total += count;
+    }
 
-    return { elementCount, scriptCount };
+    return total;
 };
 
 const onMessage = function(request, sender, callback) {
-    let pageStore;
-
     // Async
     switch ( request.what ) {
-    case 'getPopupLazyData':
-        getDOMStats(request.tabId).then(results => {
-            callback(results);
+    case 'getHiddenElementCount':
+        getElementCount(request.tabId, 'elements').then(count => {
+            callback(count);
+        });
+        return;
+
+    case 'getScriptCount':
+        getElementCount(request.tabId, 'scripts').then(count => {
+            callback(count);
         });
         return;
 
@@ -403,6 +410,7 @@ const onMessage = function(request, sender, callback) {
 
     // Sync
     let response;
+    let pageStore;
 
     switch ( request.what ) {
     case 'hasPopupContentChanged':
@@ -1207,7 +1215,6 @@ const getLoggerData = async function(details, activeTabId, callback) {
         colorBlind: µb.userSettings.colorBlindFriendly,
         entries: µb.logger.readAll(details.ownerId),
         filterAuthorMode: µb.hiddenSettings.filterAuthorMode,
-        maxEntries: µb.userSettings.requestLogMaxEntries,
         tabIdsToken: µb.pageStoresToken,
         tooltips: µb.userSettings.tooltipsDisabled === false
     };
@@ -1482,7 +1489,7 @@ const logCSPViolations = function(pageStore, request) {
             µb.staticNetFilteringEngine.matchAndFetchData(fctxt, 'csp');
         for ( const directive of staticDirectives ) {
             if ( directive.result !== 1 ) { continue; }
-            cspData.set(directive.data, directive.logData());
+            cspData.set(directive.getData('csp'), directive.logData());
         }
 
         fctxt.type = 'inline-script';

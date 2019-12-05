@@ -39,7 +39,14 @@ vAPI.cantWebsocket =
     browser.webRequest.ResourceType instanceof Object === false  ||
     browser.webRequest.ResourceType.WEBSOCKET !== 'websocket';
 
+vAPI.canWASM = vAPI.webextFlavor.soup.has('chromium') === false;
+if ( vAPI.canWASM === false ) {
+    const csp = manifest.content_security_policy;
+    vAPI.canWASM = csp !== undefined && csp.indexOf("'wasm-eval'") !== -1;
+}
+
 vAPI.supportsUserStylesheets = vAPI.webextFlavor.soup.has('user_stylesheet');
+
 // The real actual webextFlavor value may not be set in stone, so listen
 // for possible future changes.
 window.addEventListener('webextFlavor', function() {
@@ -1157,16 +1164,16 @@ vAPI.Net = class {
         browser.webRequest.onBeforeRequest.addListener(
             details => {
                 this.normalizeDetails(details);
-                if ( this.suspendDepth === 0 ) {
-                    if ( this.suspendableListener === undefined ) { return; }
-                    return this.suspendableListener(details);
+                if ( this.suspendDepth !== 0 && details.tabId >= 0 ) {
+                    return this.suspendOneRequest(details);
                 }
-                if ( details.tabId < 0 ) { return; }
-                return this.suspendOneRequest(details);
+                return this.onBeforeSuspendableRequest(details);
             },
             this.denormalizeFilters({ urls: [ 'http://*/*', 'https://*/*' ] }),
             [ 'blocking' ]
         );
+    }
+    setOptions(/* options */) {
     }
     normalizeDetails(/* details */) {
     }
@@ -1202,6 +1209,10 @@ vAPI.Net = class {
             options
         );
     }
+    onBeforeSuspendableRequest(details) {
+        if ( this.suspendableListener === undefined ) { return; }
+        return this.suspendableListener(details);
+    }
     setSuspendableListener(listener) {
         this.suspendableListener = listener;
     }
@@ -1228,14 +1239,62 @@ vAPI.Net = class {
             this.suspendDepth += 1;
         }
     }
-    unsuspend() {
+    unsuspend(all = false) {
         if ( this.suspendDepth === 0 ) { return; }
-        this.suspendDepth -= 1;
+        if ( all ) {
+            this.suspendDepth = 0;
+        } else {
+            this.suspendDepth -= 1;
+        }
         if ( this.suspendDepth !== 0 ) { return; }
-        this.unsuspendAllRequests(this.suspendableListener);
+        this.unsuspendAllRequests();
     }
     canSuspend() {
         return false;
+    }
+    async benchmark() {
+        if ( typeof µBlock !== 'object' ) { return; }
+        const requests = await µBlock.loadBenchmarkDataset();
+        if ( Array.isArray(requests) === false || requests.length === 0 ) {
+            console.info('No requests found to benchmark');
+            return;
+        }
+        const mappedTypes = new Map([
+            [ 'document', 'main_frame' ],
+            [ 'subdocument', 'sub_frame' ],
+        ]);
+        console.info('vAPI.net.onBeforeSuspendableRequest()...');
+        const t0 = self.performance.now();
+        const promises = [];
+        const details = {
+            documentUrl: '',
+            tabId: -1,
+            parentFrameId: -1,
+            frameId: 0,
+            type: '',
+            url: '',
+        };
+        for ( const request of requests ) {
+            details.documentUrl = request.frameUrl;
+            details.tabId = -1;
+            details.parentFrameId = -1;
+            details.frameId = 0;
+            details.type = mappedTypes.get(request.cpt) || request.cpt;
+            details.url = request.url;
+            if ( details.type === 'main_frame' ) { continue; }
+            promises.push(this.onBeforeSuspendableRequest(details));
+        }
+        return Promise.all(promises).then(results => {
+            let blockCount = 0;
+            for ( const r of results ) {
+                if ( r !== undefined ) { blockCount += 1; }
+            }
+            const t1 = self.performance.now();
+            const dur = t1 - t0;
+            console.info(`Evaluated ${requests.length} requests in ${dur.toFixed(0)} ms`);
+            console.info(`\tBlocked ${blockCount} requests`);
+            console.info(`\tAverage: ${(dur / requests.length).toFixed(3)} ms per request`);
+        });
     }
 };
 

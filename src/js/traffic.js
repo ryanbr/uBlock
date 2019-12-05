@@ -96,10 +96,15 @@ const onBeforeRequest = function(details) {
 
     // Not blocked
     if ( result !== 1 ) {
-        if ( details.parentFrameId !== -1 && details.type === 'sub_frame' ) {
+        if (
+            details.parentFrameId !== -1 &&
+            details.type === 'sub_frame' &&
+            details.aliasURL === undefined
+        ) {
             pageStore.setFrame(details.frameId, details.url);
         }
-        return;
+        if ( result !== 2 ) { return; }
+        return { cancel: false };
     }
 
     // Blocked
@@ -217,11 +222,10 @@ const onBeforeRootFrameRequest = function(fctxt) {
     if ( logData === undefined  ) { return; }
 
     // Blocked
-    const query = btoa(JSON.stringify({
+    const query = encodeURIComponent(JSON.stringify({
         url: requestURL,
         hn: requestHostname,
         dn: fctxt.getDomain() || requestHostname,
-        fc: logData.compiled,
         fs: logData.raw
     }));
 
@@ -848,7 +852,7 @@ const injectCSP = function(fctxt, pageStore, responseHeaders) {
         µb.staticNetFilteringEngine.matchAndFetchData(fctxt, 'csp');
     for ( const directive of staticDirectives ) {
         if ( directive.result !== 1 ) { continue; }
-        cspSubsets.push(directive.data);
+        cspSubsets.push(directive.getData('csp'));
     }
 
     // URL filtering `allow` rules override static filtering.
@@ -1071,7 +1075,7 @@ return {
                     [ 'blocking', 'requestBody' ]
                 );
             }
-            vAPI.net.unsuspend();
+            vAPI.net.unsuspend(true);
         };
     })(),
 

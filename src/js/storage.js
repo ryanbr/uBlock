@@ -112,7 +112,6 @@
                     : 'unset';
         }
     }
-    self.log.verbosity = this.hiddenSettings.consoleLogLevel;
     this.fireDOMEvent('hiddenSettingsChanged');
 };
 
@@ -132,8 +131,20 @@
     }
     vAPI.storage.set(bin);
     this.saveImmediateHiddenSettings();
-    self.log.verbosity = this.hiddenSettings.consoleLogLevel;
 };
+
+self.addEventListener('hiddenSettingsChanged', ( ) => {
+    self.log.verbosity = µBlock.hiddenSettings.consoleLogLevel;
+    vAPI.net.setOptions({
+        cnameIgnoreList: µBlock.hiddenSettings.cnameIgnoreList,
+        cnameIgnore1stParty: µBlock.hiddenSettings.cnameIgnore1stParty,
+        cnameIgnoreExceptions: µBlock.hiddenSettings.cnameIgnoreExceptions,
+        cnameIgnoreRootDocument: µBlock.hiddenSettings.cnameIgnoreRootDocument,
+        cnameMaxTTL: µBlock.hiddenSettings.cnameMaxTTL,
+        cnameReplayFullURL: µBlock.hiddenSettings.cnameReplayFullURL,
+        cnameUncloak: µBlock.hiddenSettings.cnameUncloak,
+    });
+});
 
 /******************************************************************************/
 
@@ -156,7 +167,7 @@
             }
             break;
         case 'string':
-            out[name] = value;
+            out[name] = value.trim();
             break;
         case 'number':
             out[name] = parseInt(value, 10);
@@ -621,7 +632,11 @@
     const loadedListKeys = [];
     let loadingPromise;
 
+    const t0 = Date.now();
+
     const onDone = function() {
+        log.info(`loadFilterLists() took ${Date.now()-t0} ms`);
+
         this.staticNetFilteringEngine.freeze();
         this.staticExtFilteringEngine.freeze();
         this.redirectEngine.freeze();
@@ -638,6 +653,7 @@
 
         this.selfieManager.destroy();
         this.lz4Codec.relinquish();
+        this.compiledFormatChanged = false;
 
         loadingPromise = undefined;
     };
@@ -695,9 +711,9 @@
         if ( loadingPromise instanceof Promise === false ) {
             loadedListKeys.length = 0;
             loadingPromise = Promise.all([
-                this.getAvailableLists().then(lists => {
-                    return onFilterListsReady.call(this, lists);
-                }),
+                this.getAvailableLists().then(lists =>
+                    onFilterListsReady.call(this, lists)
+                ),
                 this.loadRedirectResources(),
             ]).then(( ) => {
                 onDone.call(this);
@@ -712,10 +728,12 @@
 µBlock.getCompiledFilterList = async function(assetKey) {
     const compiledPath = 'compiled/' + assetKey;
 
-    let compiledDetails = await this.assets.get(compiledPath);
-    if ( compiledDetails.content !== '' ) {
-        compiledDetails.assetKey = assetKey;
-        return compiledDetails;
+    if ( this.compiledFormatChanged === false ) {
+        let compiledDetails = await this.assets.get(compiledPath);
+        if ( compiledDetails.content !== '' ) {
+            compiledDetails.assetKey = assetKey;
+            return compiledDetails;
+        }
     }
 
     const rawDetails = await this.assets.get(assetKey);
@@ -730,7 +748,7 @@
     // Fetching the raw content may cause the compiled content to be
     // generated somewhere else in uBO, hence we try one last time to
     // fetch the compiled content in case it has become available.
-    compiledDetails = await this.assets.get(compiledPath);
+    let compiledDetails = await this.assets.get(compiledPath);
     if ( compiledDetails.content === '' ) {
         compiledDetails.content = this.compileFilters(
             rawDetails.content,
@@ -810,7 +828,7 @@
     const reIsWhitespaceChar = /\s/;
     const reMaybeLocalIp = /^[\d:f]/;
     const reIsLocalhostRedirect = /\s+(?:0\.0\.0\.0|broadcasthost|localhost|local|ip6-\w+)\b/;
-    const reLocalIp = /^(?:0\.0\.0\.0|127\.0\.0\.1|::1|fe80::1%lo0)/;
+    const reLocalIp = /^(?:0\.0\.0\.0|127\.0\.0\.1|::1?|fe80::1%lo0)\s+/;
     const lineIter = new this.LineIterator(this.processDirectives(rawText));
 
     while ( lineIter.eot() === false ) {
@@ -1053,6 +1071,7 @@
             ),
         ]);
         µb.lz4Codec.relinquish();
+        µb.selfieIsInvalid = false;
     };
 
     const loadMain = async function() {
@@ -1080,7 +1099,7 @@
     };
 
     const load = async function() {
-        if ( destroyTimer !== undefined ) {
+        if ( µb.selfieIsInvalid ) {
             return false;
         }
         try {
@@ -1101,12 +1120,14 @@
         catch (reason) {
             log.info(reason);
         }
+        destroy();
         return false;
     };
 
     const destroy = function() {
         µb.cacheStorage.remove('selfie'); // TODO: obsolete, remove eventually.
         µb.assets.remove(/^selfie\//);
+        µb.selfieIsInvalid = true;
         createTimer = vAPI.setTimeout(( ) => {
             createTimer = undefined;
             create();
@@ -1126,6 +1147,7 @@
             },
             1019
         );
+        µb.selfieIsInvalid = true;
     };
 
     return { load, destroy: destroyAsync };

@@ -19,6 +19,8 @@
     }
   },
   "commands": {
+    "_execute_browser_action": {
+    },
     "launch-element-zapper": {
       "description": "__MSG_popupTipZapper__"
     },
@@ -73,6 +75,7 @@
     "open_in_tab": true
   },
   "permissions": [
+    "dns",
     "menus",
     "privacy",
     "storage",
