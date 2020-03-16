@@ -181,12 +181,14 @@ vAPI.browserSettings = (( ) => {
                 // https://github.com/gorhill/uBlock/issues/3009
                 //   Firefox currently works differently, use
                 //   `default_public_interface_only` for now.
-                bpn.webRTCIPHandlingPolicy.set({
-                    value: vAPI.webextFlavor.soup.has('chromium')
-                        ? 'disable_non_proxied_udp'
-                        : 'default_public_interface_only',
-                    scope: 'regular',
-                });
+                // https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/privacy/network#Browser_compatibility
+                //   Firefox 70+ supports `disable_non_proxied_udp`
+                const value =
+                    vAPI.webextFlavor.soup.has('firefox') &&
+                    vAPI.webextFlavor.major < 70
+                        ? 'default_public_interface_only'
+                        : 'disable_non_proxied_udp';
+                bpn.webRTCIPHandlingPolicy.set({ value, scope: 'regular' });
             }
         },
 
@@ -824,7 +826,14 @@ vAPI.setIcon = (( ) => {
             }
         }
 
-        if ( browserAction.setTitle !== undefined ) {
+        // Insert the badge text in the title if:
+        // - the platform does not support browserAction.setIcon(); OR
+        // - the rendering of the badge is disabled
+        if (
+            browserAction.setTitle !== undefined && (
+                browserAction.setIcon === undefined || (parts & 0b1000) !== 0
+            )
+        ) {
             browserAction.setTitle({
                 tabId: tab.id,
                 title: titleTemplate.replace(
@@ -1200,6 +1209,8 @@ vAPI.Net = class {
     denormalizeTypes(types) {
         return types;
     }
+    canonicalNameFromHostname(/* hn */) {
+    }
     addListener(which, clientListener, filters, options) {
         const actualFilters = this.denormalizeFilters(filters);
         const actualListener = this.makeNewListenerProxy(clientListener);
@@ -1434,8 +1445,12 @@ vAPI.cloud = (( ) => {
 
     const options = {
         defaultDeviceName: window.navigator.platform,
-        deviceName: vAPI.localStorage.getItem('deviceName') || ''
+        deviceName: undefined,
     };
+
+    vAPI.localStorage.getItemAsync('deviceName').then(value => {
+        options.deviceName = value;
+    });
 
     // This is used to find out a rough count of how many chunks exists:
     // We "poll" at specific index in order to get a rough idea of how
@@ -1482,7 +1497,6 @@ vAPI.cloud = (( ) => {
     };
 
     const push = async function(dataKey, data) {
-
         let bin = {
             'source': options.deviceName || options.defaultDeviceName,
             'tstamp': Date.now(),

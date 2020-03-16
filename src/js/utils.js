@@ -242,6 +242,10 @@
         this.offset = lineEnd + 1;
         return line;
     }
+    peek(n) {
+        const offset = this.offset;
+        return this.text.slice(offset, offset + n);
+    }
     charCodeAt(offset) {
         return this.text.charCodeAt(this.offset + offset);
     }
@@ -555,16 +559,19 @@
         const inbuf = new Uint32Array(arrbuf, 0, inputLength);
         const outputLength = this.magic.length + 7 + inputLength * 7;
         const outbuf = new Uint8Array(outputLength);
+        // magic bytes
         let j = 0;
         for ( let i = 0; i < this.magic.length; i++ ) {
             outbuf[j++] = this.magic.charCodeAt(i);
         }
+        // array size
         let v = inputLength;
         do {
             outbuf[j++] = this.valToDigit[v & 0b111111];
             v >>>= 6;
         } while ( v !== 0 );
         outbuf[j++] = 0x20 /* ' ' */;
+        // array content
         for ( let i = 0; i < inputLength; i++ ) {
             v = inbuf[i];
             do {
@@ -596,16 +603,18 @@
             throw new Error('Invalid µBlock.base64 encoding');
         }
         const inputLength = instr.length;
+        const outputLength = this.decodeSize(instr) >> 2;
         const outbuf = arrbuf instanceof ArrayBuffer === false
-            ? new Uint32Array(this.decodeSize(instr) >> 2)
+            ? new Uint32Array(outputLength)
             : new Uint32Array(arrbuf);
         let i = instr.indexOf(' ', this.magic.length) + 1;
         if ( i === -1 ) {
             throw new Error('Invalid µBlock.base64 encoding');
         }
+        // array content
         let j = 0;
         for (;;) {
-            if ( i === inputLength ) { break; }
+            if ( j === outputLength || i >= inputLength ) { break; }
             let v = 0, l = 0;
             for (;;) {
                 const c = instr.charCodeAt(i++);
@@ -614,6 +623,9 @@
                 l += 6;
             }
             outbuf[j++] = v;
+        }
+        if ( i < inputLength || j < outputLength ) {
+            throw new Error('Invalid µBlock.base64 encoding');
         }
         return outbuf;
     }
@@ -676,15 +688,19 @@
         vAPI.setTimeout(( ) => {
             ttlTimer = undefined;
             datasetPromise = undefined;
-        }, 60000);
+        }, 5 * 60 * 1000);
 
         if ( datasetPromise !== undefined ) {
             return datasetPromise;
         }
 
+        const datasetURL = µBlock.hiddenSettings.benchmarkDatasetURL;
+        if ( datasetURL === 'unset' ) {
+            console.info(`No benchmark dataset available.`);
+            return Promise.resolve();
+        }
         console.info(`Loading benchmark dataset...`);
-        const url = vAPI.getURL('/assets/requests.json');
-        datasetPromise = µBlock.assets.fetchText(url).then(details => {
+        datasetPromise = µBlock.assets.fetchText(datasetURL).then(details => {
             console.info(`Parsing benchmark dataset...`);
             const requests = [];
             const lineIter = new µBlock.LineIterator(details.content);

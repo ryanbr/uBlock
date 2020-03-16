@@ -130,7 +130,6 @@
         }
     }
     vAPI.storage.set(bin);
-    this.saveImmediateHiddenSettings();
 };
 
 self.addEventListener('hiddenSettingsChanged', ( ) => {
@@ -188,33 +187,6 @@ self.addEventListener('hiddenSettingsChanged', ( ) => {
         out.push(key + ' ' + this.hiddenSettings[key]);
     }
     return out.join('\n');
-};
-
-/******************************************************************************/
-
-// These settings must be available immediately on startup, without delay
-// through the vAPI.localStorage. Add/remove settings as needed.
-
-µBlock.saveImmediateHiddenSettings = function() {
-    const props = [
-        'consoleLogLevel',
-        'disableWebAssembly',
-        'suspendTabsUntilReady',
-    ];
-    const toSave = {};
-    for ( const prop of props ) {
-        if ( this.hiddenSettings[prop] !== this.hiddenSettingsDefault[prop] ) {
-            toSave[prop] = this.hiddenSettings[prop];
-        }
-    }
-    if ( Object.keys(toSave).length !== 0 ) {
-        vAPI.localStorage.setItem(
-            'immediateHiddenSettings',
-            JSON.stringify(toSave)
-        );
-    } else {
-        vAPI.localStorage.removeItem('immediateHiddenSettings');
-    }
 };
 
 /******************************************************************************/
@@ -631,8 +603,7 @@ self.addEventListener('hiddenSettingsChanged', ( ) => {
 µBlock.loadFilterLists = (( ) => {
     const loadedListKeys = [];
     let loadingPromise;
-
-    const t0 = Date.now();
+    let t0 = 0;
 
     const onDone = function() {
         log.info(`loadFilterLists() took ${Date.now()-t0} ms`);
@@ -709,6 +680,7 @@ self.addEventListener('hiddenSettingsChanged', ( ) => {
 
     return function() {
         if ( loadingPromise instanceof Promise === false ) {
+            t0 = Date.now();
             loadedListKeys.length = 0;
             loadingPromise = Promise.all([
                 this.getAvailableLists().then(lists =>
@@ -828,15 +800,17 @@ self.addEventListener('hiddenSettingsChanged', ( ) => {
     const reIsWhitespaceChar = /\s/;
     const reMaybeLocalIp = /^[\d:f]/;
     const reIsLocalhostRedirect = /\s+(?:0\.0\.0\.0|broadcasthost|localhost|local|ip6-\w+)\b/;
-    const reLocalIp = /^(?:0\.0\.0\.0|127\.0\.0\.1|::1?|fe80::1%lo0)\s+/;
+    const reLocalIp = /^(?:(0\.0\.0\.)?0|127\.0\.0\.1|::1?|fe80::1%lo0)\s+/;
     const lineIter = new this.LineIterator(this.processDirectives(rawText));
 
     while ( lineIter.eot() === false ) {
-        // rhill 2014-04-18: The trim is important here, as without it there
-        // could be a lingering `\r` which would cause problems in the
-        // following parsing code.
         let line = lineIter.next().trim();
         if ( line.length === 0 ) { continue; }
+
+        while ( line.endsWith(' \\') ) {
+            if ( lineIter.peek(4) !== '    ' ) { break; }
+            line = line.slice(0, -2).trim() + lineIter.next().trim();
+        }
 
         // Strip comments
         const c = line.charAt(0);
@@ -957,6 +931,7 @@ self.addEventListener('hiddenSettingsChanged', ( ) => {
     [ 'env_chromium', 'chromium' ],
     [ 'env_edge', 'edge' ],
     [ 'env_firefox', 'firefox' ],
+    [ 'env_legacy', 'legacy' ],
     [ 'env_mobile', 'mobile' ],
     [ 'env_safari', 'safari' ],
     [ 'cap_html_filtering', 'html_filtering' ],
@@ -1010,7 +985,7 @@ self.addEventListener('hiddenSettingsChanged', ( ) => {
 /******************************************************************************/
 
 µBlock.loadPublicSuffixList = async function() {
-    if ( this.hiddenSettings.disableWebAssembly === false ) {
+    if ( this.hiddenSettings.disableWebAssembly !== true ) {
         publicSuffixList.enableWASM();
     }
 
@@ -1020,8 +995,7 @@ self.addEventListener('hiddenSettingsChanged', ( ) => {
             return;
         }
     } catch (ex) {
-        console.error(ex);
-        return;
+        log.info(ex);
     }
 
     const result = await this.assets.get(this.pslAssetKey);

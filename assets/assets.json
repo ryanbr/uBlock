@@ -42,18 +42,6 @@
 		"supportURL": "https://github.com/gorhill/uBlock/wiki/Badware-risks",
 		"instructionURL": "https://github.com/gorhill/uBlock/wiki/Badware-risks"
 	},
-	"ublock-experimental": {
-		"content": "filters",
-		"group": "default",
-		"title": "uBlock filters – Experimental",
-		"off": true,
-		"contentURL": [
-			"https://raw.githubusercontent.com/uBlockOrigin/uAssets/master/filters/experimental.txt",
-			"assets/ublock/experimental.txt"
-		],
-		"supportURL": "https://github.com/gorhill/uBlock/wiki/Experimental-filters",
-		"instructionURL": "https://github.com/gorhill/uBlock/wiki/Experimental-filters"
-	},
 	"ublock-privacy": {
 		"content": "filters",
 		"group": "default",
@@ -71,13 +59,6 @@
 			"https://raw.githubusercontent.com/uBlockOrigin/uAssets/master/filters/resource-abuse.txt",
 			"assets/ublock/resource-abuse.txt"
 		]
-	},
-	"ublock-annoyances": {
-		"content": "filters",
-		"group": "default",
-		"title": "uBlock filters – Annoyances",
-		"off": true,
-		"contentURL": "https://raw.githubusercontent.com/uBlockOrigin/uAssets/master/filters/annoyances.txt"
 	},
 	"ublock-unbreak": {
 		"content": "filters",
@@ -252,6 +233,13 @@
 		],
 		"supportURL": "https://forums.lanik.us/"
 	},
+	"ublock-annoyances": {
+		"content": "filters",
+		"group": "social",
+		"title": "uBlock filters – Annoyances",
+		"off": true,
+		"contentURL": "https://raw.githubusercontent.com/uBlockOrigin/uAssets/master/filters/annoyances.txt"
+	},
 	"dpollock-0": {
 		"content": "filters",
 		"group": "multipurpose",
@@ -279,8 +267,8 @@
 		"updateAfter": 11,
 		"off": true,
 		"title": "MVPS HOSTS",
-		"contentURL": "http://winhelp2002.mvps.org/hosts.txt",
-		"supportURL": "http://winhelp2002.mvps.org/"
+		"contentURL": "https://winhelp2002.mvps.org/hosts.txt",
+		"supportURL": "https://winhelp2002.mvps.org/"
 	},
 	"plowe-0": {
 		"content": "filters",
@@ -460,15 +448,6 @@
 		"contentURL": "https://filters.adtidy.org/extension/ublock/filters/7.txt",
 		"supportURL": "https://github.com/AdguardTeam/AdguardFilters#adguard-filters",
 		"instructionURL": "https://kb.adguard.com/en/general/adguard-ad-filters"
-	},
-	"KOR-0": {
-		"content": "filters",
-		"group": "regions",
-		"off": true,
-		"title": "KOR: Korean Adblock List",
-		"lang": "ko",
-		"contentURL": "https://raw.githubusercontent.com/gfmaster/adblock-korea-contrib/master/filter.txt",
-		"supportURL": "https://github.com/gfmaster/adblock-korea-contrib"
 	},
 	"KOR-1": {
 		"content": "filters",

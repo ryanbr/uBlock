@@ -42,6 +42,7 @@ const µBlock = (( ) => { // jshint ignore:line
         autoUpdateAssetFetchPeriod: 120,
         autoUpdateDelayAfterLaunch: 180,
         autoUpdatePeriod: 7,
+        benchmarkDatasetURL: 'unset',
         blockingProfiles: '11111/#F00 11011/#C0F 11001/#00F 00001',
         cacheStorageAPI: 'unset',
         cacheStorageCompression: true,
@@ -50,7 +51,7 @@ const µBlock = (( ) => { // jshint ignore:line
         cnameIgnore1stParty: true,
         cnameIgnoreExceptions: true,
         cnameIgnoreRootDocument: true,
-        cnameMaxTTL: 60,
+        cnameMaxTTL: 120,
         cnameReplayFullURL: false,
         cnameUncloak: true,
         consoleLogLevel: 'unset',
@@ -68,6 +69,7 @@ const µBlock = (( ) => { // jshint ignore:line
         selfieAfter: 3,
         strictBlockingBypassDuration: 120,
         suspendTabsUntilReady: 'unset',
+        uiFlavor: 'unset',
         updateAssetBypassBrowserCache: false,
         userResourcesLocation: 'unset',
     };
@@ -96,28 +98,7 @@ const µBlock = (( ) => { // jshint ignore:line
         },
 
         hiddenSettingsDefault: hiddenSettingsDefault,
-        hiddenSettings: (( ) => {
-            const out = Object.assign({}, hiddenSettingsDefault);
-            const json = vAPI.localStorage.getItem('immediateHiddenSettings');
-            if ( typeof json !== 'string' ) { return out; }
-            try {
-                const o = JSON.parse(json);
-                if ( o instanceof Object ) {
-                    for ( const k in o ) {
-                        if ( out.hasOwnProperty(k) ) { out[k] = o[k]; }
-                    }
-                    self.log.verbosity = out.consoleLogLevel;
-                    if ( typeof out.suspendTabsUntilReady === 'boolean' ) {
-                        out.suspendTabsUntilReady = out.suspendTabsUntilReady
-                            ? 'yes'
-                            : 'unset';
-                    }
-                }
-            }
-            catch(ex) {
-            }
-            return out;
-        })(),
+        hiddenSettings: Object.assign({}, hiddenSettingsDefault),
 
         // Features detection.
         privacySettingsSupported: vAPI.browserSettings instanceof Object,
@@ -133,6 +114,7 @@ const µBlock = (( ) => { // jshint ignore:line
             'about-scheme',
             'chrome-extension-scheme',
             'chrome-scheme',
+            'edge-scheme',
             'moz-extension-scheme',
             'opera-scheme',
             'vivaldi-scheme',
@@ -148,8 +130,8 @@ const µBlock = (( ) => { // jshint ignore:line
 
         // Read-only
         systemSettings: {
-            compiledMagic: 23,  // Increase when compiled format changes
-            selfieMagic: 25,    // Increase when selfie format changes
+            compiledMagic: 26,  // Increase when compiled format changes
+            selfieMagic: 26,    // Increase when selfie format changes
         },
 
         // https://github.com/uBlockOrigin/uBlock-issues/issues/759#issuecomment-546654501

@@ -263,6 +263,23 @@ try {
     await µb.loadHiddenSettings();
     log.info(`Hidden settings ready ${Date.now()-vAPI.T0} ms after launch`);
 
+    // By default network requests are always suspended, so we must
+    // unsuspend immediately if commanded by platform + advanced settings.
+    if (
+        vAPI.net.canSuspend() &&
+            µb.hiddenSettings.suspendTabsUntilReady === 'no' ||
+        vAPI.net.canSuspend() !== true &&
+            µb.hiddenSettings.suspendTabsUntilReady !== 'yes'
+    ) {
+        vAPI.net.unsuspend(true);
+    }
+
+    if ( µb.hiddenSettings.disableWebAssembly !== true ) {
+        µb.staticNetFilteringEngine.enableWASM().then(( ) => {
+            log.info(`WASM modules ready ${Date.now()-vAPI.T0} ms after launch`);
+        });
+    }
+
     const cacheBackend = await µb.cacheStorage.select(
         µb.hiddenSettings.cacheStorageAPI
     );
@@ -286,16 +303,32 @@ try {
             log.info(`PSL ready ${Date.now()-vAPI.T0} ms after launch`);
         }),
     ]);
+} catch (ex) {
+    console.trace(ex);
+}
 
-    const selfieIsValid = await µb.selfieManager.load();
+// Prime the filtering engines before first use.
+µb.staticNetFilteringEngine.prime();
+
+// https://github.com/uBlockOrigin/uBlock-issues/issues/817#issuecomment-565730122
+//   Still try to load filter lists regardless of whether a serious error
+//   occurred in the previous initialization steps.
+let selfieIsValid = false;
+try {
+    selfieIsValid = await µb.selfieManager.load();
     if ( selfieIsValid === true ) {
         log.info(`Selfie ready ${Date.now()-vAPI.T0} ms after launch`);
-    } else {
-        await µb.loadFilterLists();
-        log.info(`Filter lists ready ${Date.now()-vAPI.T0} ms after launch`);
     }
 } catch (ex) {
     console.trace(ex);
+}
+if ( selfieIsValid !== true ) {
+    try {
+        await µb.loadFilterLists();
+        log.info(`Filter lists ready ${Date.now()-vAPI.T0} ms after launch`);
+    } catch (ex) {
+        console.trace(ex);
+    }
 }
 
 // Final initialization steps after all needed assets are in memory.
@@ -325,6 +358,23 @@ initializeTabs();
 // Force an update of the context menu according to the currently
 // active tab.
 µb.contextMenu.update();
+
+// Maybe install non-default popup document, or automatically select
+// default UI according to platform.
+if (
+    browser.browserAction instanceof Object &&
+    browser.browserAction.setPopup instanceof Function
+) {
+    let uiFlavor = µb.hiddenSettings.uiFlavor;
+    if ( uiFlavor === 'unset' && vAPI.webextFlavor.soup.has('mobile') ) {
+        uiFlavor = 'fenix';
+    }
+    if ( uiFlavor !== 'unset' && /\w+/.test(uiFlavor) ) {
+        browser.browserAction.setPopup({
+            popup: vAPI.getURL(`popup-${uiFlavor}.html`)
+        });
+    }
+}
 
 // https://github.com/uBlockOrigin/uBlock-issues/issues/717
 //   Prevent the extension from being restarted mid-session.

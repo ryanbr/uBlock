@@ -187,78 +187,78 @@ vAPI.messaging.setup(onMessage);
 
 const µb = µBlock;
 
-const getHostnameDict = function(hostnameToCountMap) {
-    const r = Object.create(null);
-    const domainFromHostname = µb.URI.domainFromHostname;
-    // Note: destructuring assignment not supported before Chromium 49.
+const getHostnameDict = function(hostnameToCountMap, out) {
+    const hnDict = Object.create(null);
+    const cnMap = [];
     for ( const [ hostname, hnCounts ] of hostnameToCountMap ) {
-        if ( r[hostname] !== undefined ) { continue; }
-        const domain = domainFromHostname(hostname) || hostname;
+        if ( hnDict[hostname] !== undefined ) { continue; }
+        const domain = vAPI.domainFromHostname(hostname) || hostname;
         const dnCounts = hostnameToCountMap.get(domain) || 0;
         let blockCount = dnCounts & 0xFFFF;
         let allowCount = dnCounts >>> 16 & 0xFFFF;
-        if ( r[domain] === undefined ) {
-            r[domain] = {
-                domain: domain,
-                blockCount: blockCount,
-                allowCount: allowCount,
+        if ( hnDict[domain] === undefined ) {
+            hnDict[domain] = {
+                domain,
+                blockCount,
+                allowCount,
                 totalBlockCount: blockCount,
-                totalAllowCount: allowCount
+                totalAllowCount: allowCount,
             };
+            const cname = vAPI.net.canonicalNameFromHostname(domain);
+            if ( cname !== undefined ) {
+                cnMap.push([ cname, domain ]);
+            }
         }
-        const domainEntry = r[domain];
+        const domainEntry = hnDict[domain];
         blockCount = hnCounts & 0xFFFF;
         allowCount = hnCounts >>> 16 & 0xFFFF;
         domainEntry.totalBlockCount += blockCount;
         domainEntry.totalAllowCount += allowCount;
         if ( hostname === domain ) { continue; }
-        r[hostname] = {
-            domain: domain,
-            blockCount: blockCount,
-            allowCount: allowCount,
+        hnDict[hostname] = {
+            domain,
+            blockCount,
+            allowCount,
             totalBlockCount: 0,
-            totalAllowCount: 0
+            totalAllowCount: 0,
         };
+        const cname = vAPI.net.canonicalNameFromHostname(hostname);
+        if ( cname !== undefined ) {
+            cnMap.push([ cname, hostname ]);
+        }
     }
-    return r;
+    out.hostnameDict = hnDict;
+    out.cnameMap = cnMap;
 };
 
 const getFirewallRules = function(srcHostname, desHostnames) {
-    var r = {};
-    var df = µb.sessionFirewall;
-    r['/ * *'] = df.lookupRuleData('*', '*', '*');
-    r['/ * image'] = df.lookupRuleData('*', '*', 'image');
-    r['/ * 3p'] = df.lookupRuleData('*', '*', '3p');
-    r['/ * inline-script'] = df.lookupRuleData('*', '*', 'inline-script');
-    r['/ * 1p-script'] = df.lookupRuleData('*', '*', '1p-script');
-    r['/ * 3p-script'] = df.lookupRuleData('*', '*', '3p-script');
-    r['/ * 3p-frame'] = df.lookupRuleData('*', '*', '3p-frame');
-    if ( typeof srcHostname !== 'string' ) { return r; }
+    const out = {};
+    const df = µb.sessionFirewall;
+    out['/ * *'] = df.lookupRuleData('*', '*', '*');
+    out['/ * image'] = df.lookupRuleData('*', '*', 'image');
+    out['/ * 3p'] = df.lookupRuleData('*', '*', '3p');
+    out['/ * inline-script'] = df.lookupRuleData('*', '*', 'inline-script');
+    out['/ * 1p-script'] = df.lookupRuleData('*', '*', '1p-script');
+    out['/ * 3p-script'] = df.lookupRuleData('*', '*', '3p-script');
+    out['/ * 3p-frame'] = df.lookupRuleData('*', '*', '3p-frame');
+    if ( typeof srcHostname !== 'string' ) { return out; }
 
-    r['. * *'] = df.lookupRuleData(srcHostname, '*', '*');
-    r['. * image'] = df.lookupRuleData(srcHostname, '*', 'image');
-    r['. * 3p'] = df.lookupRuleData(srcHostname, '*', '3p');
-    r['. * inline-script'] = df.lookupRuleData(srcHostname,
+    out['. * *'] = df.lookupRuleData(srcHostname, '*', '*');
+    out['. * image'] = df.lookupRuleData(srcHostname, '*', 'image');
+    out['. * 3p'] = df.lookupRuleData(srcHostname, '*', '3p');
+    out['. * inline-script'] = df.lookupRuleData(srcHostname,
         '*',
         'inline-script'
     );
-    r['. * 1p-script'] = df.lookupRuleData(srcHostname, '*', '1p-script');
-    r['. * 3p-script'] = df.lookupRuleData(srcHostname, '*', '3p-script');
-    r['. * 3p-frame'] = df.lookupRuleData(srcHostname, '*', '3p-frame');
+    out['. * 1p-script'] = df.lookupRuleData(srcHostname, '*', '1p-script');
+    out['. * 3p-script'] = df.lookupRuleData(srcHostname, '*', '3p-script');
+    out['. * 3p-frame'] = df.lookupRuleData(srcHostname, '*', '3p-frame');
 
     for ( const desHostname in desHostnames ) {
-        r[`/ ${desHostname} *`] = df.lookupRuleData(
-            '*',
-            desHostname,
-            '*'
-        );
-        r[`. ${desHostname} *`] = df.lookupRuleData(
-            srcHostname,
-            desHostname,
-            '*'
-        );
+        out[`/ ${desHostname} *`] = df.lookupRuleData('*', desHostname, '*');
+        out[`. ${desHostname} *`] = df.lookupRuleData(srcHostname, desHostname, '*');
     }
-    return r;
+    return out;
 };
 
 const popupDataFromTabId = function(tabId, tabTitle) {
@@ -304,7 +304,7 @@ const popupDataFromTabId = function(tabId, tabTitle) {
         r.pageBlockedRequestCount = pageStore.perLoadBlockedRequestCount;
         r.pageAllowedRequestCount = pageStore.perLoadAllowedRequestCount;
         r.netFilteringSwitch = pageStore.getNetFilteringSwitch();
-        r.hostnameDict = getHostnameDict(pageStore.hostnameToCountMap);
+        getHostnameDict(pageStore.hostnameToCountMap, r);
         r.contentLastModified = pageStore.contentLastModified;
         r.firewallRules = getFirewallRules(rootHostname, r.hostnameDict);
         r.canElementPicker = µb.URI.isNetworkURI(r.rawURL);
@@ -532,8 +532,8 @@ const retrieveContentScriptParameters = function(senderDetails, request) {
     //   `generichide` must be evaluated in the frame context.
     if ( noCosmeticFiltering === false ) {
         const genericHide =
-            µb.staticNetFilteringEngine.matchStringElementHide(
-                'generic',
+            µb.staticNetFilteringEngine.matchStringReverse(
+                'generichide',
                 request.url
             );
         response.noGenericCosmeticFiltering = genericHide === 2;
@@ -559,8 +559,8 @@ const retrieveContentScriptParameters = function(senderDetails, request) {
     //   Add support for `specifichide`.
     if ( noCosmeticFiltering === false ) {
         const specificHide =
-            µb.staticNetFilteringEngine.matchStringElementHide(
-                'specific',
+            µb.staticNetFilteringEngine.matchStringReverse(
+                'specifichide',
                 request.url
             );
         response.noSpecificCosmeticFiltering = specificHide === 2;
@@ -896,7 +896,6 @@ const restoreUserData = async function(request) {
 
     // If we are going to restore all, might as well wipe out clean local
     // storages
-    vAPI.localStorage.removeItem('immediateHiddenSettings');
     await Promise.all([
         µb.cacheStorage.clear(),
         vAPI.storage.clear(),
@@ -945,8 +944,6 @@ const restoreUserData = async function(request) {
 // Remove all stored data but keep global counts, people can become
 // quite attached to numbers
 const resetUserData = async function() {
-    vAPI.localStorage.removeItem('immediateHiddenSettings');
-
     await Promise.all([
         µb.cacheStorage.clear(),
         vAPI.storage.clear(),

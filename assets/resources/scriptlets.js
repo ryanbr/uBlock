@@ -55,11 +55,17 @@
         owner = owner[prop];
         if ( owner instanceof Object === false ) { return; }
     }
-    const desc = Object.getOwnPropertyDescriptor(owner, prop);
-    if ( desc && desc.get !== undefined ) { return; }
+    let value;
+    let desc = Object.getOwnPropertyDescriptor(owner, prop);
+    if (
+        desc instanceof Object === false ||
+        desc.get instanceof Function === false
+    ) {
+        value = owner[prop];
+        desc = undefined;
+    }
     const magic = String.fromCharCode(Date.now() % 26 + 97) +
                   Math.floor(Math.random() * 982451653 + 982451653).toString(36);
-    let value = owner[prop];
     const validate = function() {
         const e = document.currentScript;
         if (
@@ -74,11 +80,17 @@
     Object.defineProperty(owner, prop, {
         get: function() {
             validate();
-            return value;
+            return desc instanceof Object
+                ? desc.get()
+                : value;
         },
         set: function(a) {
             validate();
-            value = a;
+            if ( desc instanceof Object ) {
+                desc.set(a);
+            } else {
+                value = a;
+            }
         }
     });
     const oe = window.onerror;
@@ -506,7 +518,10 @@
     let aborted = false;
     const mustAbort = function(v) {
         if ( aborted ) { return true; }
-        aborted = v !== undefined && cValue !== undefined && typeof v !== typeof cValue;
+        aborted =
+            (v !== undefined && v !== null) &&
+            (cValue !== undefined && cValue !== null) &&
+            (typeof v !== typeof cValue);
         return aborted;
     };
     const makeProxy = function(owner, chain) {
@@ -534,7 +549,10 @@
         const prop = chain.slice(0, pos);
         let v = owner[prop];
         chain = chain.slice(pos + 1);
-        if ( v !== undefined ) {
+        if (
+            (v instanceof Object) ||
+            (typeof v === 'object' && v !== null)
+        ) {
             makeProxy(v, chain);
             return;
         }

@@ -19,17 +19,19 @@
     Home: https://github.com/gorhill/uBlock
 */
 
+/* global CodeMirror */
+
 'use strict';
 
-self.log = (function() {
-    const noopFunc = function() {};
-    const info = function(s) { console.log(`[uBO] ${s}`); };
+CodeMirror.defineMode("raw-settings", function() {
     return {
-        get verbosity( ) { return; },
-        set verbosity(level) {
-            this.info = console.info = level === 'info' ? info : noopFunc;
-        },
-        info: noopFunc,
-        print: info,
+        token: function(stream) {
+            if ( stream.sol() ) {
+                stream.match(/\s*\S+/);
+                return 'keyword';
+            }
+            stream.skipToEnd();
+            return null;
+        }
     };
-})();
+});
