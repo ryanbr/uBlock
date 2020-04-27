@@ -288,6 +288,10 @@ const popupDataFromTabId = function(tabId, tabTitle) {
         tooltipsDisabled: µb.userSettings.tooltipsDisabled
     };
 
+    if ( µb.hiddenSettings.uiPopupConfig !== 'undocumented' ) {
+        r.uiPopupConfig = µb.hiddenSettings.uiPopupConfig;
+    }
+
     const pageStore = µb.pageStoreFromTabId(tabId);
     if ( pageStore ) {
         // https://github.com/gorhill/uBlock/issues/2105
@@ -509,6 +513,7 @@ vAPI.messaging.listen({
 const µb = µBlock;
 
 const retrieveContentScriptParameters = function(senderDetails, request) {
+    if ( µb.readyToFilter !== true ) { return; }
     const { url, tabId, frameId } = senderDetails;
     if ( url === undefined || tabId === undefined || frameId === undefined ) {
         return;

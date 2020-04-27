@@ -287,10 +287,6 @@ const isSeparatorChar = c => (charClassMap[c] & CHAR_CLASS_SEPARATOR) !== 0;
 
 /******************************************************************************/
 
-// TODO: Unify  [ string instance, string usage instance ] pairs
-
-/******************************************************************************/
-
 let filterUnits = [ null ];
 
 let filterSequences = new Uint32Array(131072);
@@ -349,6 +345,7 @@ const bidiTrieOptimize = function(shrink = false) {
 */
 
 const filterClasses = [];
+const filterArgsToUnit = new Map();
 let   filterClassIdGenerator = 0;
 
 const registerFilterClass = function(ctor) {
@@ -369,7 +366,21 @@ const filterFromCtor = function(ctor, ...args) {
 
 const filterUnitFromCompiled = function(args) {
     const ctor = filterClasses[args[0]];
-    return ctor.unitFromCompiled(args);
+    const keygen = ctor.keyFromArgs;
+    if ( keygen === undefined ) {
+        return filterUnits.push(ctor.fromCompiled(args)) - 1;
+    }
+    let key = `${ctor.fid}`;
+    const keyargs = keygen(args);
+    if ( keyargs !== undefined ) {
+        key += `\t${keyargs}`;
+    }
+    let iunit = filterArgsToUnit.get(key);
+    if ( iunit === undefined ) {
+        iunit = filterUnits.push(ctor.fromCompiled(args)) - 1;
+        filterArgsToUnit.set(key, iunit);
+    }
+    return iunit;
 };
 
 const filterFromSelfie = function(args) {
@@ -482,17 +493,17 @@ const FilterTrue = class {
         return [ FilterTrue.fid ];
     }
 
-    static unitFromCompiled() {
-        return FilterTrue.filterUnit;
+    static fromCompiled() {
+        return new FilterTrue();
     }
 
     static fromSelfie() {
-        return FilterTrue.instance;
+        return new FilterTrue();
+    }
+
+    static keyFromArgs() {
     }
 };
-
-FilterTrue.instance = new FilterTrue();
-FilterTrue.filterUnit = filterUnits.push(FilterTrue.instance) - 1;
 
 registerFilterClass(FilterTrue);
 
@@ -543,18 +554,16 @@ const FilterPatternPlain = class {
         return [ FilterPatternPlain.fid, details.f, details.tokenBeg ];
     }
 
-    static unitFromCompiled(args) {
+    static fromCompiled(args) {
         const i = bidiTrie.storeString(args[1]);
         const n = args[1].length;
-        let f;
         if ( args[2] === 0 ) {
-            f = new FilterPatternPlain(i, n);
-        } else if ( args[2] === 1 ) {
-            f = new FilterPatternPlain1(i, n);
-        } else {
-            f = new FilterPatternPlainX(i, n, args[2]);
+            return new FilterPatternPlain(i, n);
         }
-        return filterUnits.push(f) - 1;
+        if ( args[2] === 1 ) {
+            return new FilterPatternPlain1(i, n);
+        }
+        return new FilterPatternPlainX(i, n, args[2]);
     }
 
     static fromSelfie(args) {
@@ -659,10 +668,9 @@ const FilterPatternLeft = class {
         ];
     }
 
-    static unitFromCompiled(args) {
+    static fromCompiled(args) {
         const i = bidiTrie.storeString(args[1]);
-        const f = new FilterPatternLeft(i, args[1].length);
-        return filterUnits.push(f) - 1;
+        return new FilterPatternLeft(i, args[1].length);
     }
 
     static fromSelfie(args) {
@@ -697,10 +705,9 @@ const FilterPatternLeftEx = class extends FilterPatternLeft {
         details.regex.unshift(restrFromPlainPattern(s), restrSeparator, '.*');
     }
 
-    static unitFromCompiled(args) {
+    static fromCompiled(args) {
         const i = bidiTrie.storeString(args[1]);
-        const f = new FilterPatternLeftEx(i, args[1].length);
-        return filterUnits.push(f) - 1;
+        return new FilterPatternLeftEx(i, args[1].length);
     }
 
     static fromSelfie(args) {
@@ -745,10 +752,9 @@ const FilterPatternRight = class {
         ];
     }
 
-    static unitFromCompiled(args) {
+    static fromCompiled(args) {
         const i = bidiTrie.storeString(args[1]);
-        const f = new FilterPatternRight(i, args[1].length);
-        return filterUnits.push(f) - 1;
+        return new FilterPatternRight(i, args[1].length);
     }
 
     static fromSelfie(args) {
@@ -780,10 +786,9 @@ const FilterPatternRightEx = class extends FilterPatternRight {
         details.regex.push(restrSeparator, '.*', restrFromPlainPattern(s));
     }
 
-    static unitFromCompiled(args) {
+    static fromCompiled(args) {
         const i = bidiTrie.storeString(args[1]);
-        const f = new FilterPatternRightEx(i, args[1].length);
-        return filterUnits.push(f) - 1;
+        return new FilterPatternRightEx(i, args[1].length);
     }
 
     static fromSelfie(args) {
@@ -837,13 +842,16 @@ const FilterPatternGeneric = class {
         return [ FilterPatternGeneric.fid, details.f, anchor ];
     }
 
-    static unitFromCompiled(args) {
-        const f = new FilterPatternGeneric(args[1], args[2]);
-        return filterUnits.push(f) - 1;
+    static fromCompiled(args) {
+        return new FilterPatternGeneric(args[1], args[2]);
     }
 
     static fromSelfie(args) {
         return new FilterPatternGeneric(args[1], args[2]);
+    }
+
+    static keyFromArgs(args) {
+        return `${args[1]}\t${args[2]}`;
     }
 };
 
@@ -881,9 +889,8 @@ const FilterPlainHostname = class {
         return [ FilterPlainHostname.fid, details.f ];
     }
 
-    static unitFromCompiled(args) {
-        const f = new FilterPlainHostname(args[1]);
-        return filterUnits.push(f) - 1;
+    static fromCompiled(args) {
+        return new FilterPlainHostname(args[1]);
     }
 
     static fromSelfie(args) {
@@ -949,18 +956,17 @@ const FilterAnchorHn = class {
         return [ FilterAnchorHn.fid ];
     }
 
-    static unitFromCompiled() {
-        return FilterAnchorHn.filterUnit;
+    static fromCompiled() {
+        return new FilterAnchorHn();
     }
 
     static fromSelfie() {
-        return FilterAnchorHn.instance;
+        return new FilterAnchorHn();
+    }
+
+    static keyFromArgs() {
     }
 };
-
-FilterAnchorHn.instance = new FilterAnchorHn();
-FilterAnchorHn.filterUnit = filterUnits.length;
-filterUnits.push(FilterAnchorHn.instance);
 
 registerFilterClass(FilterAnchorHn);
 
@@ -984,18 +990,17 @@ const FilterAnchorLeft = class {
         return [ FilterAnchorLeft.fid ];
     }
 
-    static unitFromCompiled() {
-        return FilterAnchorLeft.filterUnit;
+    static fromCompiled() {
+        return new FilterAnchorLeft();
     }
 
     static fromSelfie() {
-        return FilterAnchorLeft.instance;
+        return new FilterAnchorLeft();
+    }
+
+    static keyFromArgs() {
     }
 };
-
-FilterAnchorLeft.instance = new FilterAnchorLeft();
-FilterAnchorLeft.filterUnit = filterUnits.length;
-filterUnits.push(FilterAnchorLeft.instance);
 
 registerFilterClass(FilterAnchorLeft);
 
@@ -1019,18 +1024,17 @@ const FilterAnchorRight = class {
         return [ FilterAnchorRight.fid ];
     }
 
-    static unitFromCompiled() {
-        return FilterAnchorRight.filterUnit;
+    static fromCompiled() {
+        return new FilterAnchorRight();
     }
 
     static fromSelfie() {
-        return FilterAnchorRight.instance;
+        return new FilterAnchorRight();
+    }
+
+    static keyFromArgs() {
     }
 };
-
-FilterAnchorRight.instance = new FilterAnchorRight();
-FilterAnchorRight.filterUnit = filterUnits.length;
-filterUnits.push(FilterAnchorRight.instance);
 
 registerFilterClass(FilterAnchorRight);
 
@@ -1055,18 +1059,17 @@ const FilterTrailingSeparator = class {
         return [ FilterTrailingSeparator.fid ];
     }
 
-    static unitFromCompiled() {
-        return FilterTrailingSeparator.filterUnit;
+    static fromCompiled() {
+        return new FilterTrailingSeparator();
     }
 
     static fromSelfie() {
-        return FilterTrailingSeparator.instance;
+        return new FilterTrailingSeparator();
+    }
+
+    static keyFromArgs() {
     }
 };
-
-FilterTrailingSeparator.instance = new FilterTrailingSeparator();
-FilterTrailingSeparator.filterUnit = filterUnits.length;
-filterUnits.push(FilterTrailingSeparator.instance);
 
 registerFilterClass(FilterTrailingSeparator);
 
@@ -1092,9 +1095,8 @@ const FilterType = class {
         return [ FilterType.fid, details.typeBits & allNetworkTypesBits ];
     }
 
-    static unitFromCompiled(args) {
-        const f = new FilterType(args[1]);
-        return filterUnits.push(f) - 1;
+    static fromCompiled(args) {
+        return new FilterType(args[1]);
     }
 
     static fromSelfie(args) {
@@ -1138,13 +1140,16 @@ const FilterRegex = class {
         return [ FilterRegex.fid, details.f ];
     }
 
-    static unitFromCompiled(args) {
-        const f = new FilterRegex(args[1]);
-        return filterUnits.push(f) - 1;
+    static fromCompiled(args) {
+        return new FilterRegex(args[1]);
     }
 
     static fromSelfie(args) {
         return new FilterRegex(args[1]);
+    }
+
+    static keyFromArgs(args) {
+        return args[1];
     }
 };
 
@@ -1163,8 +1168,6 @@ registerFilterClass(FilterRegex);
 const filterOrigin = new (class {
     constructor() {
         this.trieContainer = new µb.HNTrieContainer();
-        this.strToUnitMap = new Map();
-        this.gcTimer = undefined;
     }
 
     compile(details, prepend, units) {
@@ -1219,23 +1222,6 @@ const filterOrigin = new (class {
         }
     }
 
-    unitFromCompiled(ctor, s) {
-        let iunit = this.strToUnitMap.get(s);
-        if ( iunit !== undefined ) { return iunit; }
-        const f = new ctor(s);
-        iunit = filterUnits.push(f) - 1;
-        this.strToUnitMap.set(s, iunit);
-        if ( this.gcTimer !== undefined ) { return iunit; }
-        this.gcTimer = self.setTimeout(
-            ( ) => {
-                this.gcTimer = undefined;
-                this.strToUnitMap.clear();
-            },
-            5000
-        );
-        return iunit;
-    }
-
     prime() {
         this.trieContainer.reset(
             vAPI.localStorage.getItem('SNFE.filterOrigin.trieDetails')
@@ -1244,7 +1230,6 @@ const filterOrigin = new (class {
 
     reset() {
         this.trieContainer.reset();
-        this.strToUnitMap.clear();
     }
 
     optimize() {
@@ -1292,8 +1277,8 @@ const FilterOriginHit = class {
         return [ FilterOriginHit.fid, domainOpt ];
     }
 
-    static unitFromCompiled(args) {
-        return filterOrigin.unitFromCompiled(FilterOriginHit, args[1]);
+    static fromCompiled(args) {
+        return new FilterOriginHit(args[1]);
     }
 
     static fromSelfie(args) {
@@ -1336,8 +1321,8 @@ const FilterOriginMiss = class {
         return [ FilterOriginMiss.fid, domainOpt ];
     }
 
-    static unitFromCompiled(args) {
-        return filterOrigin.unitFromCompiled(FilterOriginMiss, args[1]);
+    static fromCompiled(args) {
+        return new FilterOriginMiss(args[1]);
     }
 
     static fromSelfie(args) {
@@ -1384,12 +1369,16 @@ const FilterOriginHitSet = class {
         return [ FilterOriginHitSet.fid, domainOpt ];
     }
 
-    static unitFromCompiled(args) {
-        return filterOrigin.unitFromCompiled(FilterOriginHitSet, args[1]);
+    static fromCompiled(args) {
+        return new FilterOriginHitSet(args[1]);
     }
 
     static fromSelfie(args) {
         return new FilterOriginHitSet(args[1], args[2]);
+    }
+
+    static keyFromArgs(args) {
+        return args[1];
     }
 };
 
@@ -1432,12 +1421,16 @@ const FilterOriginMissSet = class {
         return [ FilterOriginMissSet.fid, domainOpt ];
     }
 
-    static unitFromCompiled(args) {
-        return filterOrigin.unitFromCompiled(FilterOriginMissSet, args[1]);
+    static fromCompiled(args) {
+        return new FilterOriginMissSet(args[1]);
     }
 
     static fromSelfie(args) {
         return new FilterOriginMissSet(args[1], args[2]);
+    }
+
+    static keyFromArgs(args) {
+        return args[1];
     }
 };
 
@@ -1482,13 +1475,16 @@ const FilterDataHolder = class {
         return [ FilterDataHolder.fid, details.dataType, details.data ];
     }
 
-    static unitFromCompiled(args) {
-        const f = new FilterDataHolder(args[1], args[2]);
-        return filterUnits.push(f) - 1;
+    static fromCompiled(args) {
+        return new FilterDataHolder(args[1], args[2]);
     }
 
     static fromSelfie(args) {
         return new FilterDataHolder(args[1], args[2]);
+    }
+
+    static keyFromArgs(args) {
+        return `${args[1]}\t${args[2]}`;
     }
 };
 
@@ -1564,7 +1560,7 @@ const FilterCollection = class {
         return [ ctor.fid, fdata ];
     }
 
-    static unitFromCompiled(ctor, args) {
+    static fromCompiled(ctor, args) {
         let iprev = 0, i0 = 0;
         const n = args[1].length;
         for ( let i = 0; i < n; i++ ) {
@@ -1577,7 +1573,7 @@ const FilterCollection = class {
             }
             iprev = inext;
         }
-        return filterUnits.push(new ctor(i0, args[1].length)) - 1;
+        return new ctor(i0, args[1].length);
     }
 
     static fromSelfie(ctor, args) {
@@ -1639,8 +1635,8 @@ const FilterComposite = class extends FilterCollection {
         return FilterCollection.compile(FilterComposite, fdata);
     }
 
-    static unitFromCompiled(args) {
-        return FilterCollection.unitFromCompiled(FilterComposite, args);
+    static fromCompiled(args) {
+        return FilterCollection.fromCompiled(FilterComposite, args);
     }
 
     static fromSelfie(args) {
@@ -1741,17 +1737,21 @@ const FilterDenyAllow = class {
         return [ FilterDenyAllow.fid, details.denyallow ];
     }
 
-    static unitFromCompiled(args) {
+    static fromCompiled(args) {
         const f = new FilterDenyAllow(args[1]);
         for ( const hn of args[1].split('|') ) {
             if ( hn === '' ) { continue; }
             f.hndict.add(hn);
         }
-        return filterUnits.push(f) - 1;
+        return f;
     }
 
     static fromSelfie(args) {
         return new FilterDenyAllow(...args.slice(1));
+    }
+
+    static keyFromArgs(args) {
+        return args[1];
     }
 };
 
@@ -1793,9 +1793,8 @@ const FilterJustOrigin = class {
         return [ this.fid, filterOrigin.trieContainer.compileOne(this.dict) ];
     }
 
-    static unitFromCompiled(args) {
-        const f = new FilterJustOrigin(args[1]);
-        return filterUnits.push(f) - 1;
+    static fromCompiled(args) {
+        return new FilterJustOrigin(args[1]);
     }
 
     static fromSelfie(args) {
@@ -1818,9 +1817,8 @@ const FilterHTTPSJustOrigin = class extends FilterJustOrigin {
         details.domains.push(this.$h);
     }
 
-    static unitFromCompiled(args) {
-        const f = new FilterHTTPSJustOrigin(args[1]);
-        return filterUnits.push(f) - 1;
+    static fromCompiled(args) {
+        return new FilterHTTPSJustOrigin(args[1]);
     }
 
     static fromSelfie(args) {
@@ -1843,9 +1841,8 @@ const FilterHTTPJustOrigin = class extends FilterJustOrigin {
         details.domains.push(this.$h);
     }
 
-    static unitFromCompiled(args) {
-        const f = new FilterHTTPJustOrigin(args[1]);
-        return filterUnits.push(f) - 1;
+    static fromCompiled(args) {
+        return new FilterHTTPJustOrigin(args[1]);
     }
 
     static fromSelfie(args) {
@@ -2584,20 +2581,6 @@ const FilterParser = class {
         this.token = matches[0];
         this.tokenHash = urlTokenizer.tokenHashFromString(this.token);
         this.tokenBeg = matches.index;
-
-        // https://www.reddit.com/r/uBlockOrigin/comments/dpcvfx/
-        //   Since we found a valid token, we can get rid of trailing
-        //   wildcards if any.
-        if ( this.firstWildcardPos !== -1 ) {
-            const lastCharPos = this.f.length - 1;
-            if ( this.firstWildcardPos === lastCharPos ) {
-                this.f = this.f.slice(0, -1);
-                this.firstWildcardPos = -1;
-            } else if ( this.secondWildcardPos === lastCharPos ) {
-                this.f = this.f.slice(0, -1);
-                this.secondWildcardPos = -1;
-            }
-        }
     }
 
     findGoodToken() {
@@ -2662,6 +2645,7 @@ const FilterParser = class {
     isJustOrigin() {
         return this.isRegex === false &&
             this.dataType === undefined &&
+            this.denyallow === '' &&
             this.domainOpt !== '' && (
                 this.f === '*' || (
                     this.anchor === 0b010 &&
@@ -2739,6 +2723,7 @@ FilterContainer.prototype.reset = function() {
     FilterHostnameDict.reset();
     filterOrigin.reset();
     bidiTrie.reset();
+    filterArgsToUnit.clear();
 
     filterUnits = filterUnits.slice(0, FILTER_UNITS_MIN);
     filterSequenceWritePtr = FILTER_SEQUENCES_MIN;
@@ -2861,6 +2846,7 @@ FilterContainer.prototype.freeze = function() {
 
     FilterHostnameDict.optimize();
     bidiTrieOptimize();
+    filterArgsToUnit.clear();
 
     log.info(`staticNetFilteringEngine.freeze() took ${Date.now()-t0} ms`);
 };
@@ -3020,6 +3006,7 @@ FilterContainer.prototype.compile = function(raw, writer) {
     if (
         parsed.isPureHostname &&
         parsed.domainOpt === '' &&
+        parsed.denyallow === '' &&
         parsed.dataType === undefined
     ) {
         parsed.tokenHash = this.dotTokenHash;

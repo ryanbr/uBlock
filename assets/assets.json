@@ -29,6 +29,11 @@
 			"https://raw.githubusercontent.com/uBlockOrigin/uAssets/master/filters/filters.txt",
 			"assets/ublock/filters.txt"
 		],
+		"cdnURLs": [
+			"https://gitcdn.xyz/repo/uBlockOrigin/uAssets/master/filters/filters.txt",
+			"https://cdn.jsdelivr.net/gh/uBlockOrigin/uAssets@master/filters/filters.txt",
+			"https://cdn.statically.io/gh/uBlockOrigin/uAssets/master/filters/filters.txt"
+		],
 		"supportURL": "https://github.com/uBlockOrigin/uAssets/issues"
 	},
 	"ublock-badware": {
@@ -67,15 +72,12 @@
 		"contentURL": [
 			"https://raw.githubusercontent.com/uBlockOrigin/uAssets/master/filters/unbreak.txt",
 			"assets/ublock/unbreak.txt"
+		],
+		"cdnURLs": [
+			"https://gitcdn.xyz/repo/uBlockOrigin/uAssets/master/filters/unbreak.txt",
+			"https://cdn.jsdelivr.net/gh/uBlockOrigin/uAssets@master/filters/unbreak.txt",
+			"https://cdn.statically.io/gh/uBlockOrigin/uAssets/master/filters/unbreak.txt"
 		]
-	},
-	"awrl-0": {
-		"content": "filters",
-		"group": "ads",
-		"off": true,
-		"title": "Adblock Warning Removal",
-		"contentURL": "https://easylist-downloads.adblockplus.org/antiadblockfilters.txt",
-		"supportURL": "https://forums.lanik.us/"
 	},
 	"adguard-generic": {
 		"content": "filters",
@@ -136,13 +138,6 @@
 		"title": "Fanboy’s Enhanced Tracking List",
 		"contentURL": "https://www.fanboy.co.nz/enhancedstats.txt",
 		"supportURL": "https://github.com/ryanbr/fanboy-adblock/issues"
-	},
-	"disconnect-malvertising": {
-		"content": "filters",
-		"group": "malware",
-		"off": true,
-		"title": "Malvertising filter list by Disconnect",
-		"contentURL": "https://s3.amazonaws.com/lists.disconnect.me/simple_malvertising.txt"
 	},
 	"malware-0": {
 		"content": "filters",
@@ -238,7 +233,12 @@
 		"group": "social",
 		"title": "uBlock filters – Annoyances",
 		"off": true,
-		"contentURL": "https://raw.githubusercontent.com/uBlockOrigin/uAssets/master/filters/annoyances.txt"
+		"contentURL": "https://raw.githubusercontent.com/uBlockOrigin/uAssets/master/filters/annoyances.txt",
+		"cdnURLs": [
+			"https://gitcdn.xyz/repo/uBlockOrigin/uAssets/master/filters/annoyances.txt",
+			"https://cdn.jsdelivr.net/gh/uBlockOrigin/uAssets@master/filters/annoyances.txt",
+			"https://cdn.statically.io/gh/uBlockOrigin/uAssets/master/filters/annoyances.txt"
+		]
 	},
 	"dpollock-0": {
 		"content": "filters",
@@ -248,18 +248,6 @@
 		"title": "Dan Pollock’s hosts file",
 		"contentURL": "https://someonewhocares.org/hosts/hosts",
 		"supportURL": "https://someonewhocares.org/hosts/"
-	},
-	"hphosts": {
-		"content": "filters",
-		"group": "multipurpose",
-		"updateAfter": 11,
-		"off": true,
-		"title": "hpHosts’ Ad and tracking servers",
-		"contentURL": [
-			"https://hosts-file.net/.%5Cad_servers.txt",
-			"http://hosts-file.net/.%5Cad_servers.txt"
-		],
-		"supportURL": "https://hosts-file.net/"
 	},
 	"mvps-0": {
 		"content": "filters",

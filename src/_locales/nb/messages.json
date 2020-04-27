@@ -179,21 +179,25 @@
     "message": "Klikk for å ikke lenger slå av JavaScript på dette nettstedet",
     "description": "Tooltip for the no-scripting per-site switch"
   },
+  "popupNoPopups_v2": {
+    "message": "Pop-up windows",
+    "description": "Caption for the no-popups per-site switch"
+  },
   "popupNoLargeMedia_v2": {
     "message": "Store mediaelementer",
-    "description": "Tip for the no-large-media per-site switch"
+    "description": "Caption for the no-large-media per-site switch"
   },
   "popupNoCosmeticFiltering_v2": {
     "message": "Kosmetisk filtrering",
-    "description": "Tip for the no-cosmetic-filtering per-site switch"
+    "description": "Caption for the no-cosmetic-filtering per-site switch"
   },
   "popupNoRemoteFonts_v2": {
     "message": "Eksterne skrifttyper",
-    "description": "Tip for the no-remote-fonts per-site switch"
+    "description": "Caption for the no-remote-fonts per-site switch"
   },
   "popupNoScripting_v2": {
     "message": "JavaScript",
-    "description": "Tip for the no-scripting per-site switch"
+    "description": "Caption for the no-scripting per-site switch"
   },
   "popupMoreButton_v2": {
     "message": "Mer",
@@ -359,10 +363,6 @@
     "message": "Blokker CSP-rapporter",
     "description": "background information: https://github.com/gorhill/uBlock/issues/3150"
   },
-  "settingsStorageUsed": {
-    "message": "Brukt lagringsplass: {{value}} bytes",
-    "description": "English: Storage used: {{}} bytes"
-  },
   "settingsLastRestorePrompt": {
     "message": "Siste gjenoppretting:",
     "description": "English: Last restore:"
@@ -396,7 +396,7 @@
     "description": "English: Parse and enforce Adblock+ element hiding filters."
   },
   "3pParseAllABPHideFiltersInfo": {
-    "message": "<p>Dette alternativet aktiverer analyseringen og bruken av <a href=\"https://adblockplus.org/en/faq_internal#elemhide\">Adblock Plus-kompatible filtre for &ldquo;elementskjuling&rdquo;</a>. Disse filtrene er i hovedsak kosmetiske, de tjener den hensikt å skjule elementer i en nettside som anses for å være en visuell ulempe, og som ikke blokkeres av den nettforespørselsbaserte filtreringsmotoren.</p><p>Aktivering av denne funksjonen øker minnebruken til <i>uBlock₀</i>.</p>",
+    "message": "Kosmetiske filtre tjener den hensikt å skjule elementer i en nettside som anses for å være en visuell ulempe, og som ikke blokkeres av de nettverkforespørselsbaserte filtreringsmotorene.",
     "description": "Describes the purpose of the 'Parse and enforce cosmetic filters' feature."
   },
   "3pIgnoreGenericCosmeticFilters": {
@@ -404,7 +404,7 @@
     "description": "This will cause uBO to ignore all generic cosmetic filters."
   },
   "3pIgnoreGenericCosmeticFiltersInfo": {
-    "message": "<p>Generelle kosmetiske filtre er de kosmetiske filtrene som er ment å brukes på alle nettsteder.<p>Selv om de håndteres effektivt av uBlock₀, kan generelle kosmetiske filtre likevel ende opp med å bidra til målbar ekstra minne- og prosessorbruk på noen nettsider, særlig de store og de som er åpne lenge.<p>Aktivering av dette alternativet vil eliminere ekstra minne- og prosessorbruk på nettsider grunnet håndteringen av generelle kosmetiske filtre, og også redusere minnebruken til selve uBlock₀.<p>Det anbefales å aktivere dette alternativet på mindre kraftige enheter.",
+    "message": "Generelle kosmetiske filtre er de kosmetiske filtrene som er ment å brukes på alle nettsteder. Aktivering av dette alternativet vil eliminere ekstra minne- og prosessorbruk på nettsider grunnet håndteringen av generelle kosmetiske filtre.\n\nDet anbefales å aktivere dette alternativet på mindre kraftige enheter.",
     "description": "Describes the purpose of the 'Ignore generic cosmetic filters' feature."
   },
   "3pListsOfBlockedHostsHeader": {
@@ -458,6 +458,10 @@
   "3pExternalListObsolete": {
     "message": "Utgått på dato",
     "description": "used as a tooltip for the out-of-date icon beside a list"
+  },
+  "3pViewContent": {
+    "message": "vis innhold",
+    "description": "used as a tooltip for eye icon beside a list"
   },
   "3pLastUpdate": {
     "message": "Siste oppdatering: {{ago}}.\nKlikk for å framtvinge en oppdatering.",
@@ -744,7 +748,7 @@
     "description": "Below this sentence, the filter list(s) in which the filter was found"
   },
   "loggerStaticFilteringFinderSentence2": {
-    "message": "Statisk filter <code>{{filter}}</code> ble ikke funnet i noen av filterlistene som er aktiverte nå",
+    "message": "Statisk filter ble ikke funnet i noen av filterlistene som er aktiverte nå",
     "description": "Message to show when a filter cannot be found in any filter lists"
   },
   "loggerSettingDiscardPrompt": {
@@ -826,6 +830,18 @@
   "aboutContributors": {
     "message": "Bidragsytere",
     "description": "English: Contributors"
+  },
+  "aboutSourceCode": {
+    "message": "Kildekode",
+    "description": "Link text to source code repo"
+  },
+  "aboutTranslations": {
+    "message": "Oversettelser",
+    "description": "Link text to translations repo"
+  },
+  "aboutFilterLists": {
+    "message": "Filterlister",
+    "description": "Link text to uBO's own filter lists repo"
   },
   "aboutDependencies": {
     "message": "Eksterne avhengigheter (GPLv3-kompatible):",
@@ -1002,6 +1018,22 @@
   "relaxBlockingMode": {
     "message": "Lemp på blokkeringsmodus",
     "description": "Label for keyboard shortcut used to relax blocking mode (meant to replace 'Toggle blocking profile')"
+  },
+  "storageUsed": {
+    "message": "Brukt lagringsplass: {{value}} {{unit}}",
+    "description": " In Setting pane, renders as (example): Storage used: 13.2 MB"
+  },
+  "KB": {
+    "message": "KB",
+    "description": "short for 'kilobytes'"
+  },
+  "MB": {
+    "message": "MB",
+    "description": "short for 'megabytes'"
+  },
+  "GB": {
+    "message": "GB",
+    "description": "short for 'gigabytes'"
   },
   "dummy": {
     "message": "This entry must be the last one",

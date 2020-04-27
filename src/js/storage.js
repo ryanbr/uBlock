@@ -133,15 +133,17 @@
 };
 
 self.addEventListener('hiddenSettingsChanged', ( ) => {
-    self.log.verbosity = µBlock.hiddenSettings.consoleLogLevel;
+    const µbhs = µBlock.hiddenSettings;
+    self.log.verbosity = µbhs.consoleLogLevel;
     vAPI.net.setOptions({
-        cnameIgnoreList: µBlock.hiddenSettings.cnameIgnoreList,
-        cnameIgnore1stParty: µBlock.hiddenSettings.cnameIgnore1stParty,
-        cnameIgnoreExceptions: µBlock.hiddenSettings.cnameIgnoreExceptions,
-        cnameIgnoreRootDocument: µBlock.hiddenSettings.cnameIgnoreRootDocument,
-        cnameMaxTTL: µBlock.hiddenSettings.cnameMaxTTL,
-        cnameReplayFullURL: µBlock.hiddenSettings.cnameReplayFullURL,
-        cnameUncloak: µBlock.hiddenSettings.cnameUncloak,
+        cnameIgnoreList: µbhs.cnameIgnoreList,
+        cnameIgnore1stParty: µbhs.cnameIgnore1stParty,
+        cnameIgnoreExceptions: µbhs.cnameIgnoreExceptions,
+        cnameIgnoreRootDocument: µbhs.cnameIgnoreRootDocument,
+        cnameMaxTTL: µbhs.cnameMaxTTL,
+        cnameReplayFullURL: µbhs.cnameReplayFullURL,
+        cnameUncloak: µbhs.cnameUncloak,
+        cnameUncloakProxied: µbhs.cnameUncloakProxied,
     });
 });
 
@@ -1142,6 +1144,8 @@ self.addEventListener('hiddenSettingsChanged', ( ) => {
         const json = await vAPI.adminStorage.getItem('adminSettings');
         if ( typeof json === 'string' && json !== '' ) {
             data = JSON.parse(json);
+        } else if ( json instanceof Object ) {
+            data = json;
         }
     } catch (ex) {
         console.error(ex);
@@ -1245,7 +1249,7 @@ self.addEventListener('hiddenSettingsChanged', ( ) => {
 
 /******************************************************************************/
 
-µBlock.scheduleAssetUpdater = (function() {
+µBlock.scheduleAssetUpdater = (( ) => {
     let timer, next = 0;
 
     return function(updateDelay) {
@@ -1269,7 +1273,8 @@ self.addEventListener('hiddenSettingsChanged', ( ) => {
             next = 0;
             this.assets.updateStart({
                 delay: this.hiddenSettings.autoUpdateAssetFetchPeriod * 1000 ||
-                       120000
+                       120000,
+                auto: true,
             });
         }, updateDelay);
     };

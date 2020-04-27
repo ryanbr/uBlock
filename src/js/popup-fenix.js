@@ -44,7 +44,7 @@ let dfPaneVisibleStored;
 vAPI.localStorage.getItemAsync('popupFirewallPane').then(value => {
     dfPaneVisibleStored = value === true || value === 'true';
     if ( dfPaneVisibleStored ) {
-        document.getElementById('main').classList.add('dfEnabled');
+        document.body.classList.add('dfEnabled');
     }
 });
 
@@ -152,7 +152,12 @@ const hashFromPopupData = function(reset) {
 /******************************************************************************/
 
 const formatNumber = function(count) {
-    return typeof count === 'number' ? count.toLocaleString() : '';
+    if ( typeof count !== 'number' ) { return ''; }
+    if ( count < 1e6 ) { return count.toLocaleString(); }
+    return count.toLocaleString(undefined, {
+        notation: 'compact',
+        maximumSignificantDigits: 4,
+    });
 };
 
 /******************************************************************************/
@@ -178,7 +183,7 @@ const rulekeyCompare = function(a, b) {
 
 const updateFirewallCell = function(scope, des, type, rule) {
     const row = document.querySelector(
-        `#firewallContainer div[data-des="${des}"][data-type="${type}"]`
+        `#firewall div[data-des="${des}"][data-type="${type}"]`
     );
     if ( row === null ) { return; }
 
@@ -265,14 +270,13 @@ const updateAllFirewallCells = function() {
 const buildAllFirewallRows = function() {
     // Do this before removing the rows
     if ( dfHotspots === null ) {
-        dfHotspots = uDom('#actionSelector')
-            .toggleClass('colorBlind', popupData.colorBlindFriendly)
-            .on('click', 'span', setFirewallRuleHandler);
+        dfHotspots =
+            uDom('#actionSelector').on('click', 'span', setFirewallRuleHandler);
     }
-    dfHotspots.detach();
+    dfHotspots.remove();
 
     // Update incrementally: reuse existing rows if possible.
-    const rowContainer = document.getElementById('firewallContainer');
+    const rowContainer = document.getElementById('firewall');
     const toAppend = document.createDocumentFragment();
     const rowTemplate = document.querySelector('#templates > div:nth-of-type(1)');
     let row = rowContainer.querySelector('div:nth-of-type(7) + div');
@@ -333,7 +337,7 @@ const buildAllFirewallRows = function() {
     }
 
     if ( dfPaneBuilt !== true && popupData.advancedUserEnabled ) {
-        uDom('#firewallContainer')
+        uDom('#firewall')
             .on('click', 'span[data-src]', unsetFirewallRuleHandler)
             .on('mouseenter', '[data-src]', mouseenterCellHandler)
             .on('mouseleave', '[data-src]', mouseleaveCellHandler);
@@ -424,9 +428,9 @@ const renderPopup = function() {
     uDom.nodeFromId('gotoPick').classList.toggle('enabled', canElementPicker);
     uDom.nodeFromId('gotoZap').classList.toggle('enabled', canElementPicker);
 
-    let blocked = popupData.pageBlockedRequestCount,
-        total = popupData.pageAllowedRequestCount + blocked,
-        text;
+    let blocked = popupData.pageBlockedRequestCount;
+    let total = popupData.pageAllowedRequestCount + blocked;
+    let text;
     if ( total === 0 ) {
         text = formatNumber(0);
     } else {
@@ -474,12 +478,12 @@ const renderPopup = function() {
         vAPI.localStorage.setItem('popupFirewallPane', dfPaneVisibleStored);
     }
 
-    uDom.nodeFromId('main').classList.toggle(
+    document.body.classList.toggle(
         'dfEnabled',
         dfPaneVisible === true
     );
 
-    uDom.nodeFromId('firewallContainer').classList.toggle(
+    document.documentElement.classList.toggle(
         'colorBlind',
         popupData.colorBlindFriendly === true
     );
@@ -500,24 +504,16 @@ const renderPopup = function() {
 //   Use tooltip for ARIA purpose.
 
 const renderTooltips = function(selector) {
-    for ( const entry of tooltipTargetSelectors ) {
-        if ( selector !== undefined && entry[0] !== selector ) { continue; }
+    for ( const [ key, details ] of tooltipTargetSelectors ) {
+        if ( selector !== undefined && key !== selector ) { continue; }
+        const elem = uDom.nodeFromSelector(key);
+        if ( elem.hasAttribute('title') === false ) { continue; }
         const text = vAPI.i18n(
-            entry[1].i18n +
-            (uDom.nodeFromSelector(entry[1].state) === null ? '1' : '2')
+            details.i18n +
+            (uDom.nodeFromSelector(details.state) === null ? '1' : '2')
         );
-        const elem = uDom.nodeFromSelector(entry[0]);
         elem.setAttribute('aria-label', text);
-        const tip = elem.querySelector('.tip');
-        if ( tip !== null ) {
-            tip.textContent = text;
-        } else {
-            elem.setAttribute('data-tip', text);
-        }
-        if ( tip === null && selector !== undefined ) {
-            uDom.nodeFromId('tooltip').textContent =
-                elem.getAttribute('data-tip');
-        }
+        elem.setAttribute('title', text);
     }
 };
 
@@ -527,6 +523,13 @@ const tooltipTargetSelectors = new Map([
         {
             state: 'body.off',
             i18n: 'popupPowerSwitchInfo',
+        }
+    ],
+    [
+        '#no-popups',
+        {
+            state: '#no-popups.on',
+            i18n: 'popupTipNoPopups'
         }
     ],
     [
@@ -566,20 +569,31 @@ const tooltipTargetSelectors = new Map([
 let renderOnce = function() {
     renderOnce = function(){};
 
+    const body = document.body;
+
     if ( popupData.fontSize !== popupFontSize ) {
         popupFontSize = popupData.fontSize;
         if ( popupFontSize !== 'unset' ) {
-            document.body.style.setProperty('font-size', popupFontSize);
+            body.style.setProperty('font-size', popupFontSize);
             vAPI.localStorage.setItem('popupFontSize', popupFontSize);
         } else {
-            document.body.style.removeProperty('font-size');
+            body.style.removeProperty('font-size');
             vAPI.localStorage.removeItem('popupFontSize');
         }
     }
 
     // https://github.com/uBlockOrigin/uBlock-issues/issues/22
     if ( popupData.advancedUserEnabled !== true ) {
-        uDom('#firewallContainer [data-i18n-tip][data-src]').removeAttr('data-tip');
+        uDom('#firewall [title][data-src]').removeAttr('title');
+    }
+
+    if ( popupData.uiPopupConfig !== undefined ) {
+        document.body.setAttribute('data-ui', popupData.uiPopupConfig);
+    }
+
+    body.classList.toggle('no-tooltips', popupData.tooltipsDisabled === true);
+    if ( popupData.tooltipsDisabled === true ) {
+        uDom('[title]').removeAttr('title');
     }
 };
 
@@ -719,7 +733,7 @@ const toggleFirewallPane = function() {
     vAPI.localStorage.setItem('popupFirewallPane', dfPaneVisibleStored);
 
     // Dynamic filtering pane may not have been built yet
-    uDom.nodeFromId('main').classList.toggle('dfEnabled', popupData.dfEnabled);
+    document.body.classList.toggle('dfEnabled', popupData.dfEnabled);
     if ( popupData.dfEnabled && dfPaneBuilt === false ) {
         buildAllFirewallRows();
     }
@@ -734,7 +748,7 @@ const mouseenterCellHandler = function() {
 };
 
 const mouseleaveCellHandler = function() {
-    dfHotspots.detach();
+    dfHotspots.remove();
 };
 
 /******************************************************************************/
@@ -758,6 +772,12 @@ const setFirewallRule = async function(src, des, type, action, persist) {
         action: action,
         persist: persist,
     });
+
+    // Remove action widget if an own rule has been set, this allows to click
+    // again immediately to remove the rule.
+    if ( action !== 0 ) {
+        dfHotspots.remove();
+    }
 
     cachePopupData(response);
     updateAllFirewallCells();
@@ -801,7 +821,7 @@ const setFirewallRuleHandler = function(ev) {
         action,
         ev.ctrlKey || ev.metaKey
     );
-    dfHotspots.detach();
+    dfHotspots.remove();
 };
 
 /******************************************************************************/
@@ -863,9 +883,9 @@ const saveExpandExceptions = function() {
 const setGlobalExpand = function(state, internal = false) {
     uDom('.expandException').removeClass('expandException');
     if ( state ) {
-        uDom('#firewallContainer').addClass('expanded');
+        uDom('#firewall').addClass('expanded');
     } else {
-        uDom('#firewallContainer').removeClass('expanded');
+        uDom('#firewall').removeClass('expanded');
     }
     if ( internal ) { return; }
     popupData.firewallPaneMinimized = !state;
@@ -912,11 +932,11 @@ uDom('[data-i18n="popupAnyRulePrompt"]').on('click', ev => {
     }
 
     setGlobalExpand(
-        uDom('#firewallContainer').hasClass('expanded') === false
+        uDom('#firewall').hasClass('expanded') === false
     );
 });
 
-uDom('#firewallContainer').on(
+uDom('#firewall').on(
     'click', '.isDomain[data-type="*"] > span:first-of-type',
     ev => {
         const div = ev.target.closest('[data-des]');
@@ -969,7 +989,7 @@ const toggleHostnameSwitch = async function(ev) {
         return;
     }
     target.classList.toggle('on');
-    renderTooltips('#' + switchName);
+    renderTooltips(`#${switchName}`);
 
     const response = await messaging.send('popupPanel', {
         what: 'toggleHostnameSwitch',
@@ -1052,45 +1072,6 @@ const getPopupData = async function(tabId) {
 
 /******************************************************************************/
 
-const onShowTooltip = function(ev) {
-    if ( popupData.tooltipsDisabled ) { return; }
-
-    const target = ev.target;
-
-    // Tooltip container
-    const ttc = uDom(target).ancestors('.tooltipContainer').nodeAt(0) ||
-                document.body;
-    const ttcRect = ttc.getBoundingClientRect();
-
-    // Tooltip itself
-    const tip = uDom.nodeFromId('tooltip');
-    tip.textContent = target.getAttribute('data-tip');
-    tip.style.removeProperty('top');
-    tip.style.removeProperty('bottom');
-    ttc.appendChild(tip);
-
-    // Target rect
-    const targetRect = target.getBoundingClientRect();
-
-    // Default is "over"
-    let pos;
-    if ( target.getAttribute('data-tip-position') !== 'under' ) {
-        pos = ttcRect.height - targetRect.top + ttcRect.top;
-        tip.style.setProperty('bottom', pos + 'px');
-    } else {
-        pos = targetRect.bottom - ttcRect.top;
-        tip.style.setProperty('top', pos + 'px');
-    }
-
-    tip.classList.add('show');
-};
-
-const onHideTooltip = function() {
-    uDom.nodeFromId('tooltip').classList.remove('show');
-};
-
-/******************************************************************************/
-
 // Popup DOM is assumed to be loaded at this point -- because this script
 // is loaded after everything else..
 
@@ -1100,11 +1081,41 @@ const onHideTooltip = function() {
     let tabId = null;
 
     // Extract the tab id of the page this popup is for
-    const matches = window.location.search.match(/[\?&]tabId=([^&]+)/);
+    const matches = self.location.search.match(/[\?&]tabId=([^&]+)/);
     if ( matches && matches.length === 2 ) {
         tabId = parseInt(matches[1], 10) || 0;
     }
-    getPopupData(tabId);
+
+    // The purpose of the following code is to reset to a vertical layout
+    // should the viewport be not enough wide to accomodate the horizontal
+    // layout.
+    const checkViewport = function() {
+        const root = document.querySelector(':root');
+        if ( root.classList.contains('desktop') ) {
+            const main = document.getElementById('main');
+            const firewall = document.getElementById('firewall');
+            const minWidth = Math.floor(main.offsetWidth + firewall.offsetWidth);
+            if ( document.body.offsetWidth < minWidth ) {
+                root.classList.remove('desktop');
+            } else {
+                const sticky = document.getElementById('sticky');
+                if ( sticky.parentElement !== main ) {
+                    main.prepend(sticky);
+                }
+            }
+        }
+        self.requestAnimationFrame(( ) => {
+            document.body.classList.remove('loading');
+        });
+    };
+
+    getPopupData(tabId).then(( ) => {
+        if ( document.readyState !== 'complete' ) {
+            self.addEventListener('load', checkViewport, { once: true });
+        } else {
+            checkViewport();
+        }
+    });
 }
 
 uDom('#switch').on('click', toggleNetFilteringSwitch);
@@ -1114,10 +1125,6 @@ uDom('#moreButton').on('click', toggleFirewallPane);
 uDom('.hnSwitch').on('click', ev => { toggleHostnameSwitch(ev); });
 uDom('#saveRules').on('click', saveFirewallRules);
 uDom('#revertRules').on('click', ( ) => { revertFirewallRules(); });
-
-uDom('body').on('mouseenter', '[data-tip]', onShowTooltip)
-            .on('mouseleave', '[data-tip]', onHideTooltip);
-
 uDom('a[href]').on('click', gotoURL);
 
 /******************************************************************************/

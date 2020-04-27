@@ -54,6 +54,7 @@ const µBlock = (( ) => { // jshint ignore:line
         cnameMaxTTL: 120,
         cnameReplayFullURL: false,
         cnameUncloak: true,
+        cnameUncloakProxied: false,
         consoleLogLevel: 'unset',
         debugScriptlets: false,
         debugScriptletInjector: false,
@@ -69,6 +70,7 @@ const µBlock = (( ) => { // jshint ignore:line
         selfieAfter: 3,
         strictBlockingBypassDuration: 120,
         suspendTabsUntilReady: 'unset',
+        uiPopupConfig: 'undocumented',
         uiFlavor: 'unset',
         updateAssetBypassBrowserCache: false,
         userResourcesLocation: 'unset',
@@ -163,6 +165,10 @@ const µBlock = (( ) => { // jshint ignore:line
 
         selectedFilterLists: [],
         availableFilterLists: {},
+
+        // https://github.com/uBlockOrigin/uBlock-issues/issues/974
+        //   This can be used to defer filtering decision-making.
+        readyToFilter: false,
 
         pageStores: new Map(),
         pageStoresToken: 0,

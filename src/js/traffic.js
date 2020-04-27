@@ -454,11 +454,7 @@ const onHeadersReceived = function(details) {
     const responseHeaders = details.responseHeaders;
 
     if ( requestType === 'image' || requestType === 'media' ) {
-        return foilLargeMediaElement(
-            fctxt,
-            pageStore,
-            responseHeaders
-        );
+        return foilLargeMediaElement(fctxt, pageStore, responseHeaders);
     }
 
     if ( isDoc === false ) { return; }
