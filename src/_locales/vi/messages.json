@@ -184,15 +184,15 @@
     "description": "Caption for the no-popups per-site switch"
   },
   "popupNoLargeMedia_v2": {
-    "message": "Phần tử đa phương tiện kích thước lớn",
+    "message": "Thành phần đa phương tiện kích thước lớn",
     "description": "Caption for the no-large-media per-site switch"
   },
   "popupNoCosmeticFiltering_v2": {
-    "message": "Lọc phần tử trang điểm",
+    "message": "Lọc phần tử ẩn",
     "description": "Caption for the no-cosmetic-filtering per-site switch"
   },
   "popupNoRemoteFonts_v2": {
-    "message": "Phông điều khiển từ xa",
+    "message": "Phông từ xa",
     "description": "Caption for the no-remote-fonts per-site switch"
   },
   "popupNoScripting_v2": {
@@ -201,7 +201,11 @@
   },
   "popupMoreButton_v2": {
     "message": "Khác",
-    "description": "Label to be used to toggle overview panel"
+    "description": "Label to be used to show popup panel sections"
+  },
+  "popupLessButton_v2": {
+    "message": "Ít hơn",
+    "description": "Label to be used to hide popup panel sections"
   },
   "popupTipGlobalRules": {
     "message": "Quy tắc chung: cột này dành cho quy tắc áp dụng cho mọi trang.",
@@ -258,6 +262,10 @@
   "popupHitDomainCount": {
     "message": "{{count}} trên tổng {{total}}",
     "description": "appears in popup"
+  },
+  "popupVersion": {
+    "message": "Phiên bản",
+    "description": "Example of use: Version 1.26.4"
   },
   "pickerCreate": {
     "message": "Tạo",

@@ -8,7 +8,7 @@
       "16": "img/icon_16.png",
       "32": "img/icon_32.png"
     },
-    "default_popup": "popup.html",
+    "default_popup": "popup-fenix.html",
     "default_title": "uBlock Origin"
   },
   "commands": {
@@ -20,6 +20,9 @@
     },
     "launch-logger": {
       "description": "__MSG_popupTipLog__"
+    },
+    "open-dashboard": {
+      "description": "__MSG_popupTipDashboard__"
     },
     "relax-blocking-mode": {
       "description": "__MSG_relaxBlockingMode__"

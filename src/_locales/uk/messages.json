@@ -180,7 +180,7 @@
     "description": "Tooltip for the no-scripting per-site switch"
   },
   "popupNoPopups_v2": {
-    "message": "Pop-up windows",
+    "message": "Спливаючі вікна",
     "description": "Caption for the no-popups per-site switch"
   },
   "popupNoLargeMedia_v2": {
@@ -201,7 +201,11 @@
   },
   "popupMoreButton_v2": {
     "message": "Більше",
-    "description": "Label to be used to toggle overview panel"
+    "description": "Label to be used to show popup panel sections"
+  },
+  "popupLessButton_v2": {
+    "message": "Менше",
+    "description": "Label to be used to hide popup panel sections"
   },
   "popupTipGlobalRules": {
     "message": "Глобальні правила: цей стовпчик для правил, що застосовуються для всіх сайтів.",
@@ -258,6 +262,10 @@
   "popupHitDomainCount": {
     "message": "{{count}} з {{total}}",
     "description": "appears in popup"
+  },
+  "popupVersion": {
+    "message": "Версія",
+    "description": "Example of use: Version 1.26.4"
   },
   "pickerCreate": {
     "message": "Створити",
@@ -832,15 +840,15 @@
     "description": "English: Contributors"
   },
   "aboutSourceCode": {
-    "message": "Source code",
+    "message": "Джерельний код",
     "description": "Link text to source code repo"
   },
   "aboutTranslations": {
-    "message": "Translations",
+    "message": "Переклади",
     "description": "Link text to translations repo"
   },
   "aboutFilterLists": {
-    "message": "Filter lists",
+    "message": "Списки фільтрів",
     "description": "Link text to uBO's own filter lists repo"
   },
   "aboutDependencies": {

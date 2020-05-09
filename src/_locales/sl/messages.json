@@ -180,7 +180,7 @@
     "description": "Tooltip for the no-scripting per-site switch"
   },
   "popupNoPopups_v2": {
-    "message": "Pop-up windows",
+    "message": "Pojavna okna",
     "description": "Caption for the no-popups per-site switch"
   },
   "popupNoLargeMedia_v2": {
@@ -201,7 +201,11 @@
   },
   "popupMoreButton_v2": {
     "message": "More",
-    "description": "Label to be used to toggle overview panel"
+    "description": "Label to be used to show popup panel sections"
+  },
+  "popupLessButton_v2": {
+    "message": "Manj",
+    "description": "Label to be used to hide popup panel sections"
   },
   "popupTipGlobalRules": {
     "message": "Globalna pravila: ta stolpec je za pravila, ki se uveljavljajo za vse strani.",
@@ -258,6 +262,10 @@
   "popupHitDomainCount": {
     "message": "{{count}} od {{total}}",
     "description": "appears in popup"
+  },
+  "popupVersion": {
+    "message": "Različica",
+    "description": "Example of use: Version 1.26.4"
   },
   "pickerCreate": {
     "message": "Ustvari",

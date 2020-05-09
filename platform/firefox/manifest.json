@@ -10,7 +10,7 @@
       "32": "img/icon_32.png"
     },
     "default_title": "uBlock Origin",
-    "default_popup": "popup.html"
+    "default_popup": "popup-fenix.html"
   },
   "browser_specific_settings": {
     "gecko": {
@@ -29,6 +29,9 @@
     },
     "launch-logger": {
       "description": "__MSG_popupTipLog__"
+    },
+    "open-dashboard": {
+      "description": "__MSG_popupTipDashboard__"
     },
     "relax-blocking-mode": {
       "description": "__MSG_relaxBlockingMode__"

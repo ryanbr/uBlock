@@ -24,7 +24,7 @@ License - https://github.com/FortAwesome/Font-Awesome/tree/a8386aae19e200ddb0f68
 
 -->
 
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="display: none;">
+<svg xmlns="http://www.w3.org/2000/svg">
     <defs>
     <symbol id="angle-up"             viewBox="0 0  998  582"><path d="m 998,499 q 0,13 -10,23 l -50,50 q -10,10 -23,10 -13,0 -23,-10 L 499,179 106,572 Q 96,582 83,582 70,582 60,572 L 10,522 Q 0,512 0,499 0,486 10,476 L 476,10 q 10,-10 23,-10 13,0 23,10 l 466,466 q 10,10 10,23 z"/></symbol>
     <symbol id="bar-chart"            viewBox="0 0 2048 1536"><path d="m 640,768 0,512 -256,0 0,-512 256,0 z m 384,-512 0,1024 -256,0 0,-1024 256,0 z m 1024,1152 0,128 L 0,1536 0,0 l 128,0 0,1408 1920,0 z m -640,-896 0,768 -256,0 0,-768 256,0 z m 384,-384 0,1152 -256,0 0,-1152 256,0 z"/></symbol>

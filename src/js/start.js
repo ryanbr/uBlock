@@ -114,6 +114,24 @@ const onVersionReady = function(lastVersion) {
         µb.saveHostnameSwitches();
     }
 
+    // Configure new popup panel according to classic popup panel
+    // configuration.
+    if ( lastVersionInt !== 0 ) {
+        if ( lastVersionInt <= 1026003014 ) {
+            µb.userSettings.popupPanelSections =
+                µb.userSettings.dynamicFilteringEnabled === true ? 0b11111 : 0b01111;
+            µb.userSettings.dynamicFilteringEnabled = undefined;
+            µb.saveUserSettings();
+        } else if (
+            lastVersionInt <= 1026003016 &&
+            (µb.userSettings.popupPanelSections & 1) !== 0
+        ) {
+            µb.userSettings.popupPanelSections =
+                (µb.userSettings.popupPanelSections << 1 | 1) & 0b111111;
+            µb.saveUserSettings();
+        }
+    }
+
     vAPI.storage.set({ version: vAPI.app.version });
 };
 
@@ -250,15 +268,11 @@ try {
     await µb.loadHiddenSettings();
     log.info(`Hidden settings ready ${Date.now()-vAPI.T0} ms after launch`);
 
-    // By default network requests are always suspended, so we must
-    // unsuspend immediately if commanded by platform + advanced settings.
-    if (
-        vAPI.net.canSuspend() &&
-            µb.hiddenSettings.suspendTabsUntilReady === 'no' ||
-        vAPI.net.canSuspend() !== true &&
-            µb.hiddenSettings.suspendTabsUntilReady !== 'yes'
-    ) {
+    // Maybe override current network listener suspend state
+    if ( µb.hiddenSettings.suspendTabsUntilReady === 'no' ) {
         vAPI.net.unsuspend(true);
+    } else if ( µb.hiddenSettings.suspendTabsUntilReady === 'yes' ) {
+        vAPI.net.suspend();
     }
 
     if ( µb.hiddenSettings.disableWebAssembly !== true ) {
@@ -356,14 +370,16 @@ if (
     browser.browserAction instanceof Object &&
     browser.browserAction.setPopup instanceof Function
 ) {
-    let uiFlavor = µb.hiddenSettings.uiFlavor;
-    if ( uiFlavor === 'unset' && vAPI.webextFlavor.soup.has('mobile') ) {
-        uiFlavor = 'fenix';
-    }
-    if ( uiFlavor !== 'unset' && /\w+/.test(uiFlavor) ) {
-        browser.browserAction.setPopup({
-            popup: vAPI.getURL(`popup-${uiFlavor}.html`)
-        });
+    const env = vAPI.webextFlavor;
+    if (
+        µb.hiddenSettings.uiFlavor === 'classic' || (
+            µb.hiddenSettings.uiFlavor === 'unset' && (
+                env.soup.has('chromium') && env.major < 66 ||
+                env.soup.has('firefox') && env.major < 68
+            )
+        )
+    ) {
+        browser.browserAction.setPopup({ popup: vAPI.getURL('popup.html') });
     }
 }
 

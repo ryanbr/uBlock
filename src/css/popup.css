@@ -165,7 +165,7 @@ body.responsive #extraTools {
 #extraTools > span > .nope {
     left: 50%;
     position: absolute;
-    stroke: var(--fg-popup-icon-x);
+    stroke: var(--popup-icon-x-ink);
     stroke-width: 2;
     transform: translateX(-50%);
     visibility: hidden;
@@ -433,7 +433,7 @@ body.advancedUser #firewallContainer > div > span.noopRule,
     }
 body.advancedUser #firewallContainer > div > span.ownRule,
 #firewallContainer > div > span.ownRule {
-    color: var(--bg-popup-cell-block-own);
+    color: var(--default-surface);
     }
 body.advancedUser #firewallContainer > div > span.allowRule.ownRule,
 #actionSelector > #dynaAllow:hover {

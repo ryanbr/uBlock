@@ -240,7 +240,7 @@
             apply: function(target, thisArg, args) {
                 const type = args[0].toString();
                 const handler = String(args[1]);
-                log('addEventListener("%s", %s)', type, handler);
+                log('uBO: addEventListener("%s", %s)', type, handler);
                 return target.apply(thisArg, args);
             }
         }
@@ -249,16 +249,35 @@
 
 
 /// json-prune.js
+//
+//  When no "prune paths" argument is provided, the scriptlet is
+//  used for logging purpose and the "needle paths" argument is
+//  used to filter logging output.
 (function() {
-    const log = console.log.bind(console);
     const rawPrunePaths = '{{1}}';
     const rawNeedlePaths = '{{2}}';
     const prunePaths = rawPrunePaths !== '{{1}}' && rawPrunePaths !== ''
         ? rawPrunePaths.split(/ +/)
         : [];
-    const needlePaths = rawNeedlePaths !== '{{2}}' && rawNeedlePaths !== ''
-        ? rawNeedlePaths.split(/ +/)
-        : [];
+    let needlePaths;
+    let log, reLogNeedle;
+    if ( prunePaths.length !== 0 ) {
+        needlePaths = prunePaths.length !== 0 &&
+                      rawNeedlePaths !== '{{2}}' && rawNeedlePaths !== ''
+            ? rawNeedlePaths.split(/ +/)
+            : [];
+    } else {
+        log = console.log.bind(console);
+        let needle;
+        if ( rawNeedlePaths === '' || rawNeedlePaths === '{{2}}' ) {
+            needle = '.?';
+        } else if ( rawNeedlePaths.charAt(0) === '/' && rawNeedlePaths.slice(-1) === '/' ) {
+            needle = rawNeedlePaths.slice(1, -1);
+        } else {
+            needle = rawNeedlePaths.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        }
+        reLogNeedle = new RegExp(needle);
+    }
     const findOwner = function(root, path) {
         let owner = root;
         let chain = path;
@@ -286,8 +305,11 @@
     JSON.parse = new Proxy(JSON.parse, {
         apply: function() {
             const r = Reflect.apply(...arguments);
-            if ( prunePaths.length === 0 ) {
-                log(location.hostname, r);
+            if ( log !== undefined ) {
+                const json = JSON.stringify(r, null, 2);
+                if ( reLogNeedle.test(json) ) {
+                    log('uBO:', location.hostname, json);
+                }
                 return r;
             }
             if ( mustProcess(r) === false ) { return r; }
@@ -829,7 +851,7 @@
         new Proxy(peerConnectionProto.createDataChannel, {
             apply: function(target, thisArg, args) {
                 if ( isGoodConfig(target, args[1]) === false ) {
-                    log(args[1]);
+                    log('uBO:', args[1]);
                     return Reflect.apply(target, thisArg, args.slice(0, 1));
                 }
                 return Reflect.apply(target, thisArg, args);
@@ -839,7 +861,7 @@
         new Proxy(peerConnectionCtor, {
             construct: function(target, args) {
                 if ( isGoodConfig(target, args[0]) === false ) {
-                    log(args[0]);
+                    log('uBO:', args[0]);
                     return Reflect.construct(target);
                 }
                 return Reflect.construct(target, args);
