@@ -1020,8 +1020,12 @@ registerFilterClass(FilterAnchorRight);
 
 const FilterTrailingSeparator = class {
     match() {
-        return $patternMatchRight === $requestURL.length ||
-               isSeparatorChar(bidiTrie.haystack[$patternMatchRight]);
+        if ( $patternMatchRight === $requestURL.length ) { return true; }
+        if ( isSeparatorChar(bidiTrie.haystack[$patternMatchRight]) ) {
+            $patternMatchRight += 1;
+            return true;
+        }
+        return false;
     }
 
     logData(details) {
@@ -2304,8 +2308,7 @@ const FilterParser = class {
     }
 
     parseOptions(parser) {
-        for ( let { id, val, not, bad } of parser.options() ) {
-            if ( bad ) { return false; }
+        for ( let { id, val, not } of parser.netOptions() ) {
             switch ( id ) {
             case parser.OPTToken3p:
                 this.parsePartyOption(false, not);
@@ -2359,6 +2362,8 @@ const FilterParser = class {
                 if ( this.redirect !== 0 ) { return false; }
                 this.redirect = id === parser.OPTTokenRedirectRule ? 2 : 1;
                 break;
+            case parser.OPTTokenInvalid:
+                return false;
             default:
                 if ( this.tokenIdToNormalizedType.has(id) === false ) {
                     return false;
@@ -2431,7 +2436,7 @@ const FilterParser = class {
             // https://github.com/gorhill/uBlock/issues/1246
             //   If the filter is valid, use the corrected version of the
             //   source string -- this ensure reverse-lookup will work fine.
-            this.pattern = this.normalizeRegexSource(parser.getPattern());
+            this.pattern = this.normalizeRegexSource(parser.getNetPattern());
             if ( this.pattern === '' ) {
                 this.unsupported = true;
             }
