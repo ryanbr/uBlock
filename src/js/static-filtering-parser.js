@@ -104,6 +104,8 @@ const Parser = class {
         this.maxTokenLength = Number.MAX_SAFE_INTEGER;
         this.reIsLocalhostRedirect = /(?:0\.0\.0\.0|(?:broadcast|local)host|local|ip6-\w+)\b/;
         this.reHostname = /^[^\x00-\x24\x26-\x29\x2B\x2C\x2F\x3A-\x5E\x60\x7B-\x7F]+/;
+        this.reUnicodeChar = /[^\x00-\x7F]/;
+        this.reUnicodeChars = /[^\x00-\x7F]/g;
         this.punycoder = new URL(self.location);
         this.selectorCompiler = new this.SelectorCompiler(this);
         // TODO: reuse for network filtering analysis
@@ -631,7 +633,7 @@ const Parser = class {
         } else if (
             this.patternIsDubious() || (
                 this.patternHasUnicode() &&
-                this.toPunycode(true) === false
+                this.toASCII(true) === false
             )
         ) {
             this.markSpan(this.patternSpan, BITError);
@@ -1047,23 +1049,43 @@ const Parser = class {
 
     // https://github.com/uBlockOrigin/uBlock-issues/issues/1118#issuecomment-650730158
     //   Be ready to deal with non-punycode-able Unicode characters.
-    toPunycode(dryrun = false) {
+    // https://github.com/uBlockOrigin/uBlock-issues/issues/772
+    //   Encode Unicode characters beyond the hostname part.
+    toASCII(dryrun = false) {
         if ( this.patternHasUnicode() === false ) { return true; }
         const { i, len } = this.patternSpan;
         if ( len === 0 ) { return true; }
+        const patternIsRegex = this.patternIsRegex();
         let pattern = this.getNetPattern();
-        const match = this.reHostname.exec(this.pattern);
-        if ( match === null ) { return true; }
-        try {
-            this.punycoder.hostname = match[0].replace(/\*/g, '__asterisk__');
-        } catch(ex) {
-            return false;
+        // Punycode hostname part of the pattern.
+        if ( patternIsRegex === false ) {
+            const match = this.reHostname.exec(pattern);
+            if ( match === null ) { return true; }
+            try {
+                this.punycoder.hostname = match[0].replace(/\*/g, '__asterisk__');
+            } catch(ex) {
+                return false;
+            }
+            const hn = this.punycoder.hostname;
+            if ( hn === '' ) { return false; }
+            const punycoded = hn.replace(/__asterisk__/g, '*');
+            pattern = punycoded + pattern.slice(match.index + match[0].length);
         }
-        const hn = this.punycoder.hostname;
-        if ( hn === '' ) { return false; }
+        // Percent-encode remaining Unicode characters.
+        if ( this.reUnicodeChar.test(pattern) ) {
+            try {
+                pattern = pattern.replace(
+                    this.reUnicodeChars,
+                    s => encodeURIComponent(s)
+                );
+            } catch (ex) {
+                return false;
+            }
+        }
         if ( dryrun ) { return true; }
-        const punycoded = hn.replace(/__asterisk__/g, '*');
-        pattern = punycoded + this.pattern.slice(match.index + match[0].length);
+        if ( patternIsRegex ) {
+            pattern = `/${pattern}/`;
+        }
         const beg = this.slices[i+1];
         const end = this.slices[i+len+1];
         const raw = this.raw.slice(0, beg) + pattern + this.raw.slice(end);
@@ -1886,7 +1908,8 @@ const OPTDomainList              = 1 << 13;
 const OPTType                    = 1 << 14;
 const OPTNetworkType             = 1 << 15;
 const OPTRedirectType            = 1 << 16;
-const OPTNotSupported            = 1 << 17;
+const OPTRedirectableType        = 1 << 17;
+const OPTNotSupported            = 1 << 18;
 
 /******************************************************************************/
 
@@ -1971,6 +1994,7 @@ Parser.prototype.OPTDomainList = OPTDomainList;
 Parser.prototype.OPTType = OPTType;
 Parser.prototype.OPTNetworkType = OPTNetworkType;
 Parser.prototype.OPTRedirectType = OPTRedirectType;
+Parser.prototype.OPTRedirectableType = OPTRedirectableType;
 Parser.prototype.OPTNotSupported = OPTNotSupported;
 
 /******************************************************************************/
@@ -1984,41 +2008,41 @@ const netOptionTokens = new Map([
     [ 'badfilter', OPTTokenBadfilter ],
     [ 'cname', OPTTokenCname | OPTAllowOnly | OPTType ],
     [ 'csp', OPTTokenCsp | OPTMustAssign | OPTAllowMayAssign ],
-    [ 'css', OPTTokenCss | OPTCanNegate | OPTType | OPTNetworkType ],
-        [ 'stylesheet', OPTTokenCss | OPTCanNegate | OPTType | OPTNetworkType ],
+    [ 'css', OPTTokenCss | OPTCanNegate | OPTType | OPTNetworkType | OPTRedirectableType ],
+        [ 'stylesheet', OPTTokenCss | OPTCanNegate | OPTType | OPTNetworkType | OPTRedirectableType ],
     [ 'denyallow', OPTTokenDenyAllow | OPTMustAssign | OPTDomainList ],
-    [ 'doc', OPTTokenDoc | OPTType | OPTNetworkType ],
-        [ 'document', OPTTokenDoc | OPTType | OPTNetworkType ],
+    [ 'doc', OPTTokenDoc | OPTType | OPTNetworkType | OPTCanNegate ],
+        [ 'document', OPTTokenDoc | OPTType | OPTNetworkType | OPTCanNegate ],
     [ 'domain', OPTTokenDomain | OPTMustAssign | OPTDomainList ],
     [ 'ehide', OPTTokenEhide | OPTType ],
         [ 'elemhide', OPTTokenEhide | OPTType ],
-    [ 'empty', OPTTokenEmpty | OPTBlockOnly | OPTType | OPTNetworkType | OPTBlockOnly | OPTRedirectType ],
-    [ 'frame', OPTTokenFrame | OPTCanNegate | OPTType | OPTNetworkType ],
-        [ 'subdocument', OPTTokenFrame | OPTCanNegate | OPTType | OPTNetworkType ],
-    [ 'font', OPTTokenFont | OPTCanNegate | OPTType | OPTNetworkType ],
+    [ 'empty', OPTTokenEmpty | OPTBlockOnly | OPTRedirectType ],
+    [ 'frame', OPTTokenFrame | OPTCanNegate | OPTType | OPTNetworkType | OPTRedirectableType ],
+        [ 'subdocument', OPTTokenFrame | OPTCanNegate | OPTType | OPTNetworkType | OPTRedirectableType ],
+    [ 'font', OPTTokenFont | OPTCanNegate | OPTType | OPTNetworkType | OPTRedirectableType ],
     [ 'genericblock', OPTTokenGenericblock | OPTNotSupported ],
     [ 'ghide', OPTTokenGhide | OPTType ],
         [ 'generichide', OPTTokenGhide | OPTType ],
-    [ 'image', OPTTokenImage | OPTCanNegate | OPTType | OPTNetworkType ],
+    [ 'image', OPTTokenImage | OPTCanNegate | OPTType | OPTNetworkType | OPTRedirectableType ],
     [ 'important', OPTTokenImportant | OPTBlockOnly ],
-    [ 'inline-font', OPTTokenInlineFont | OPTType ],
-    [ 'inline-script', OPTTokenInlineScript | OPTType ],
-    [ 'media', OPTTokenMedia | OPTCanNegate | OPTType | OPTNetworkType ],
-    [ 'mp4', OPTTokenMp4 | OPTType | OPTNetworkType | OPTBlockOnly | OPTRedirectType ],
-    [ 'object', OPTTokenObject | OPTCanNegate | OPTType | OPTNetworkType ],
+    [ 'inline-font', OPTTokenInlineFont | OPTType | OPTCanNegate ],
+    [ 'inline-script', OPTTokenInlineScript | OPTType | OPTCanNegate ],
+    [ 'media', OPTTokenMedia | OPTCanNegate | OPTType | OPTNetworkType | OPTRedirectableType ],
+    [ 'mp4', OPTTokenMp4 | OPTType | OPTNetworkType | OPTBlockOnly | OPTRedirectType | OPTRedirectableType ],
+    [ 'object', OPTTokenObject | OPTCanNegate | OPTType | OPTNetworkType | OPTRedirectableType ],
         [ 'object-subrequest', OPTTokenObject | OPTCanNegate | OPTType | OPTNetworkType ],
-    [ 'other', OPTTokenOther | OPTCanNegate | OPTType | OPTNetworkType ],
+    [ 'other', OPTTokenOther | OPTCanNegate | OPTType | OPTNetworkType | OPTRedirectableType ],
     [ 'ping', OPTTokenPing | OPTCanNegate | OPTType | OPTNetworkType ],
         [ 'beacon', OPTTokenPing | OPTCanNegate | OPTType | OPTNetworkType ],
     [ 'popunder', OPTTokenPopunder | OPTType ],
-    [ 'popup', OPTTokenPopup | OPTType ],
+    [ 'popup', OPTTokenPopup | OPTType | OPTCanNegate ],
     [ 'redirect', OPTTokenRedirect | OPTMustAssign | OPTBlockOnly | OPTRedirectType ],
     [ 'redirect-rule', OPTTokenRedirectRule | OPTMustAssign | OPTBlockOnly | OPTRedirectType ],
-    [ 'script', OPTTokenScript | OPTCanNegate | OPTType | OPTNetworkType ],
+    [ 'script', OPTTokenScript | OPTCanNegate | OPTType | OPTNetworkType | OPTRedirectableType ],
     [ 'shide', OPTTokenShide | OPTType ],
         [ 'specifichide', OPTTokenShide | OPTType ],
-    [ 'xhr', OPTTokenXhr | OPTCanNegate| OPTType | OPTNetworkType ],
-        [ 'xmlhttprequest', OPTTokenXhr | OPTCanNegate | OPTType | OPTNetworkType ],
+    [ 'xhr', OPTTokenXhr | OPTCanNegate| OPTType | OPTNetworkType | OPTRedirectableType ],
+        [ 'xmlhttprequest', OPTTokenXhr | OPTCanNegate | OPTType | OPTNetworkType | OPTRedirectableType ],
     [ 'webrtc', OPTTokenWebrtc | OPTNotSupported ],
     [ 'websocket', OPTTokenWebsocket | OPTCanNegate | OPTType | OPTNetworkType ],
 ]);
@@ -2081,7 +2105,7 @@ const NetOptionsIterator = class {
         const slices = this.parser.slices;
         const optSlices = this.optSlices;
         let typeCount = 0;
-        let networkTypeCount = 0;
+        let redirectableTypeCount = 0;
         let redirectIndex = -1;
         let cspIndex = -1;
         let writePtr = 0;
@@ -2136,8 +2160,8 @@ const NetOptionsIterator = class {
             // Keep count of types
             if ( hasBits(descriptor, OPTType) ) {
                 typeCount += 1;
-                if ( hasBits(descriptor, OPTNetworkType) ) {
-                    networkTypeCount += 1;
+                if ( hasBits(descriptor, OPTRedirectableType) ) {
+                    redirectableTypeCount += 1;
                 }
             }
             // Only one `redirect` or `csp` can be present
@@ -2193,8 +2217,8 @@ const NetOptionsIterator = class {
         }
         // Invalid combinations of options
         //
-        // `csp` can't be used with any other types
-        if ( cspIndex !== -1 && typeCount !== 0 ) {
+        // `csp` can't be used with any other types or redirection
+        if ( cspIndex !== -1 && ( typeCount !== 0 || redirectIndex !== -1 ) ) {
             optSlices[cspIndex] = OPTTokenInvalid;
             if ( this.interactive ) {
                 this.parser.markSlices(
@@ -2204,17 +2228,18 @@ const NetOptionsIterator = class {
                 );
             }
         }
-        // `redirect` requires one single network type, EXCEPT for when we
+        // `redirect` requires one single redirectable type, EXCEPT for when we
         // redirect to `empty`, in which case it is allowed to not have any
         // network type specified.
         if (
-            ( redirectIndex !== -1 ) &&
-            ( typeCount !== 1 || networkTypeCount !== 1 ) &&
-            ( typeCount !== 0 || networkTypeCount !== 0 ||
+            redirectIndex !== -1 &&
+            redirectableTypeCount !== 1 && (
+                redirectableTypeCount !== 0 ||
+                typeCount !== 0 ||
                 this.parser.raw.slice(
-                    this.parser.slices[optSlices[redirectIndex+4]+1],
+                    this.parser.slices[optSlices[redirectIndex+0]+1],
                     this.parser.slices[optSlices[redirectIndex+5]+1]
-                ) !== 'empty'
+                ).endsWith('empty') === false
             )
         ) {
             optSlices[redirectIndex] = OPTTokenInvalid;
