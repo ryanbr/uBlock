@@ -481,6 +481,15 @@ self.addEventListener('hiddenSettingsChanged', ( ) => {
     let oldAvailableLists = {},
         newAvailableLists = {};
 
+    if ( this.badLists.size === 0 ) {
+        const details = await this.assets.get('ublock-badlists');
+        this.badLists = new Set(
+            details.content.split(/\s*[\n\r]+\s*/).filter(a => {
+               return a !== '' && a.startsWith('#') === false;
+            })
+        );
+    }
+
     // User filter list.
     newAvailableLists[this.userFiltersPath] = {
         group: 'user',
@@ -498,7 +507,7 @@ self.addEventListener('hiddenSettingsChanged', ( ) => {
             external: true,
             group: 'custom',
             submitter: 'user',
-            title: ''
+            title: '',
         };
         newAvailableLists[listKey] = entry;
         this.assets.registerAssetSource(listKey, entry);
@@ -705,7 +714,10 @@ self.addEventListener('hiddenSettingsChanged', ( ) => {
 µBlock.getCompiledFilterList = async function(assetKey) {
     const compiledPath = 'compiled/' + assetKey;
 
-    if ( this.compiledFormatChanged === false ) {
+    if (
+        this.compiledFormatChanged === false &&
+        this.badLists.has(assetKey) === false
+    ) {
         let compiledDetails = await this.assets.get(compiledPath);
         if ( compiledDetails.content !== '' ) {
             compiledDetails.assetKey = assetKey;
@@ -721,6 +733,11 @@ self.addEventListener('hiddenSettingsChanged', ( ) => {
     }
 
     this.extractFilterListMetadata(assetKey, rawDetails.content);
+
+    // Skip compiling bad lists.
+    if ( this.badLists.has(assetKey) ) {
+        return { assetKey, content: '' };
+    }
 
     // Fetching the raw content may cause the compiled content to be
     // generated somewhere else in uBO, hence we try one last time to
@@ -951,14 +968,23 @@ self.addEventListener('hiddenSettingsChanged', ( ) => {
         [ 'cap_html_filtering', 'html_filtering' ],
         [ 'cap_user_stylesheet', 'user_stylesheet' ],
         [ 'false', 'false' ],
+        // Hoping ABP-only list maintainers can at least make use of it to
+        // help non-ABP content blockers better deal with filters benefiting
+        // only ABP.
+        [ 'ext_abp', 'false' ],
         // Compatibility with other blockers
         // https://kb.adguard.com/en/general/how-to-create-your-own-ad-filters#adguard-specific
         [ 'adguard', 'adguard' ],
+        [ 'adguard_app_android', 'false' ],
+        [ 'adguard_app_ios', 'false' ],
+        [ 'adguard_app_mac', 'false' ],
         [ 'adguard_app_windows', 'false' ],
+        [ 'adguard_ext_android_cb', 'false' ],
         [ 'adguard_ext_chromium', 'chromium' ],
         [ 'adguard_ext_edge', 'edge' ],
         [ 'adguard_ext_firefox', 'firefox' ],
         [ 'adguard_ext_opera', 'chromium' ],
+        [ 'adguard_ext_safari', 'false' ],
     ]),
 };
 
@@ -1330,13 +1356,15 @@ self.addEventListener('hiddenSettingsChanged', ( ) => {
                         details.assetKey,
                         details.content
                     );
-                    this.assets.put(
-                        'compiled/' + details.assetKey,
-                        this.compileFilters(
-                            details.content,
-                            { assetKey: details.assetKey }
-                        )
-                    );
+                    if ( this.badLists.has(details.assetKey) === false ) {
+                        this.assets.put(
+                            'compiled/' + details.assetKey,
+                            this.compileFilters(
+                                details.content,
+                                { assetKey: details.assetKey }
+                            )
+                        );
+                    }
                 }
             } else {
                 this.removeCompiledFilterList(details.assetKey);
@@ -1345,6 +1373,8 @@ self.addEventListener('hiddenSettingsChanged', ( ) => {
             if ( cached ) {
                 this.compilePublicSuffixList(details.content);
             }
+        } else if ( details.assetKey === 'ublock-badlists' ) {
+            this.badLists = new Set();
         }
         vAPI.messaging.broadcast({
             what: 'assetUpdated',

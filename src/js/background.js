@@ -47,6 +47,7 @@ const µBlock = (( ) => { // jshint ignore:line
         cacheStorageAPI: 'unset',
         cacheStorageCompression: true,
         cacheControlForFirefox1376932: 'no-cache, no-store, must-revalidate',
+        cloudStorageCompression: false,
         cnameIgnoreList: 'unset',
         cnameIgnore1stParty: true,
         cnameIgnoreExceptions: true,
@@ -170,6 +171,7 @@ const µBlock = (( ) => { // jshint ignore:line
 
         selectedFilterLists: [],
         availableFilterLists: {},
+        badLists: new Set(),
 
         // https://github.com/uBlockOrigin/uBlock-issues/issues/974
         //   This can be used to defer filtering decision-making.
