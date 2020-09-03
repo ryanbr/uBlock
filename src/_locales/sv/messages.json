@@ -484,7 +484,7 @@
     "description": "used as a tooltip for error icon beside a list"
   },
   "1pFormatHint": {
-    "message": "Ett filter per rad. Ett filter kan vara ett vanligt värdnamn eller ett Adblock Plus-kompatibelt filter. Rader med prefixet <code>!</code> kommer att ignoreras.",
+    "message": "Ett filter per rad. Ett filter kan vara ett vanligt värdnamn eller ett EasyList-kompatibelt filter. Rader med prefixet <code>!</code> kommer att ignoreras.",
     "description": "Short information about how to create custom filters"
   },
   "1pImport": {
@@ -550,6 +550,22 @@
   "rulesFormatHint": {
     "message": "Regelsyntax: <code>källa mål typ åtgärd</code> (<a href='https://github.com/gorhill/uBlock/wiki/Dynamic-filtering:-rule-syntax'>full dokumentation</a>).",
     "description": "English: dynamic rule syntax and full documentation."
+  },
+  "rulesSort": {
+    "message": "Sortera:",
+    "description": "English: label for sort option."
+  },
+  "rulesSortByType": {
+    "message": "Regeltyp",
+    "description": "English: a sort option for list of rules."
+  },
+  "rulesSortBySource": {
+    "message": "Källa",
+    "description": "English: a sort option for list of rules."
+  },
+  "rulesSortByDestination": {
+    "message": "Mål",
+    "description": "English: a sort option for list of rules."
   },
   "whitelistPrompt": {
     "message": "De pålitliga webbplatsdirektiven dikterar på vilka webbplatser uBlock Origin bör inaktiveras. En post per rad. Ogiltiga direktiv ignoreras och kommenteras ut.",
