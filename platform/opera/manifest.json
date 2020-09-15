@@ -44,15 +44,19 @@
       "run_at": "document_start"
     },
     {
-      "all_frames": false,
-      "js": [
-        "js/scriptlets/subscriber.js"
-      ],
       "matches": [
-        "http://*/*",
-        "https://*/*"
+        "https://easylist.to/*",
+        "https://*.fanboy.co.nz/*",
+        "https://filterlists.com/*",
+        "https://forums.lanik.us/*",
+        "https://github.com/*",
+        "https://*.github.io/*"
       ],
-      "run_at": "document_idle"
+      "js": [
+        "/js/scriptlets/subscriber.js"
+      ],
+      "run_at": "document_idle",
+      "all_frames": false
     }
   ],
   "default_locale": "en",

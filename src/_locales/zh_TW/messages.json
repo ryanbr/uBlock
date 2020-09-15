@@ -905,7 +905,11 @@
   },
   "subscriberConfirm": {
     "message": "uBlock₀：確定要新增下列網址至自訂過濾規則清單？\n\n標題：「{{title}}」\n網址：{{url}}",
-    "description": "English: The message seen by the user to confirm subscription to a ABP filter list"
+    "description": "No longer used"
+  },
+  "subscribeButton": {
+    "message": "訂閱",
+    "description": "For the button used to subscribe to a filter list"
   },
   "elapsedOneMinuteAgo": {
     "message": "1 分鐘前",
@@ -945,11 +949,11 @@
   },
   "docblockedPrompt1": {
     "message": "uBlock₀ 已防止下列的頁面載入：",
-    "description": "English: uBlock₀ has prevented the following page from loading:"
+    "description": "Used in the strict-blocking page"
   },
   "docblockedPrompt2": {
-    "message": "因為下列過濾規則",
-    "description": "English: Because of the following filter"
+    "message": "因為下列過濾規則：",
+    "description": "Used in the strict-blocking page"
   },
   "docblockedNoParamsPrompt": {
     "message": "不帶參數",

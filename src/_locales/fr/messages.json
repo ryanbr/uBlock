@@ -904,8 +904,12 @@
     "description": "English: Network error: {{msg}}"
   },
   "subscriberConfirm": {
-    "message": "uBlock₀ : Ajouter la ressource Web suivante à votre sélection de listes de filtrage ?\n\nTitre : \"{{title}}\"\nURL : {{url}}",
-    "description": "English: The message seen by the user to confirm subscription to a ABP filter list"
+    "message": "Ajouter le lien suivant à votre sélection de listes de filtrage ?\n\nTitre : \"{{title}}\"\nLien : {{url}}",
+    "description": "No longer used"
+  },
+  "subscribeButton": {
+    "message": "Souscrire",
+    "description": "For the button used to subscribe to a filter list"
   },
   "elapsedOneMinuteAgo": {
     "message": "Il y a une minute",
@@ -945,11 +949,11 @@
   },
   "docblockedPrompt1": {
     "message": "uBlock₀ a empêché le chargement de la page suivante :",
-    "description": "English: uBlock₀ has prevented the following page from loading:"
+    "description": "Used in the strict-blocking page"
   },
   "docblockedPrompt2": {
     "message": "À cause du filtre suivant :",
-    "description": "English: Because of the following filter"
+    "description": "Used in the strict-blocking page"
   },
   "docblockedNoParamsPrompt": {
     "message": "sans paramètres",

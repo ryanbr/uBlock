@@ -320,7 +320,7 @@
     "description": "English: Color-blind friendly"
   },
   "settingsCloudStorageEnabledPrompt": {
-    "message": "Fungsikan dukungan penyimpanan awan",
+    "message": "Aktifkan dukungan penyimpanan awan",
     "description": ""
   },
   "settingsAdvancedUserPrompt": {
@@ -552,7 +552,7 @@
     "description": "English: dynamic rule syntax and full documentation."
   },
   "rulesSort": {
-    "message": "Urutan:",
+    "message": "Urutkan:",
     "description": "English: label for sort option."
   },
   "rulesSortByType": {
@@ -904,8 +904,12 @@
     "description": "English: Network error: {{msg}}"
   },
   "subscriberConfirm": {
-    "message": "uBlock₀: Tambahkan URL berikut ke daftar filter tersesuai anda?\n\nJudul: \"{{title}}\"\nURL: {{url}}",
-    "description": "English: The message seen by the user to confirm subscription to a ABP filter list"
+    "message": "Tambah URL berikut ke ke daftar filter khusus anda?\n\nJudul: \"{{title}}\"\nURL: {{url}}",
+    "description": "No longer used"
+  },
+  "subscribeButton": {
+    "message": "Subscribe",
+    "description": "For the button used to subscribe to a filter list"
   },
   "elapsedOneMinuteAgo": {
     "message": "semenit yang lalu",
@@ -945,11 +949,11 @@
   },
   "docblockedPrompt1": {
     "message": "uBlock Origin telah mencegah halaman berikut dimuat:",
-    "description": "English: uBlock₀ has prevented the following page from loading:"
+    "description": "Used in the strict-blocking page"
   },
   "docblockedPrompt2": {
     "message": "Disebabkan oleh filter berikut",
-    "description": "English: Because of the following filter"
+    "description": "Used in the strict-blocking page"
   },
   "docblockedNoParamsPrompt": {
     "message": "tanpa parameter",

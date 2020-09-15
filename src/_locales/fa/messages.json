@@ -905,7 +905,11 @@
   },
   "subscriberConfirm": {
     "message": "uBlock₀: آدرس اینترنتی زیر به فهرست فیلتر های سفارشی شما اضافه شود؟\n\nعنوان: \"{{title}}\"\nآدرس: {{url}}",
-    "description": "English: The message seen by the user to confirm subscription to a ABP filter list"
+    "description": "No longer used"
+  },
+  "subscribeButton": {
+    "message": "Subscribe",
+    "description": "For the button used to subscribe to a filter list"
   },
   "elapsedOneMinuteAgo": {
     "message": "1 دقیقه پیش",
@@ -945,11 +949,11 @@
   },
   "docblockedPrompt1": {
     "message": "uBlock₀ از بارگذاری این صفحات جلوگیری کرده:",
-    "description": "English: uBlock₀ has prevented the following page from loading:"
+    "description": "Used in the strict-blocking page"
   },
   "docblockedPrompt2": {
     "message": "بخاطر فیلتر زیر",
-    "description": "English: Because of the following filter"
+    "description": "Used in the strict-blocking page"
   },
   "docblockedNoParamsPrompt": {
     "message": "بدون پارامترها",

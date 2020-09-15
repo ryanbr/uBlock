@@ -326,7 +326,10 @@ self.addEventListener('hiddenSettingsChanged', ( ) => {
         const importedSet = new Set(this.listKeysFromCustomFilterLists(externalLists));
         const toImportSet = new Set(this.listKeysFromCustomFilterLists(details.toImport));
         for ( const urlKey of toImportSet ) {
-            if ( importedSet.has(urlKey) ) { continue; }
+            if ( importedSet.has(urlKey) ) {
+                selectedListKeySet.add(urlKey);
+                continue;
+            }
             const assetKey = assetKeyFromURL(urlKey);
             if ( assetKey === urlKey ) {
                 importedSet.add(urlKey);
@@ -339,7 +342,7 @@ self.addEventListener('hiddenSettingsChanged', ( ) => {
     const result = Array.from(selectedListKeySet);
     if ( externalLists !== this.userSettings.externalLists ) {
         this.userSettings.externalLists = externalLists;
-        vAPI.storage.set({ externalLists: externalLists });
+        vAPI.storage.set({ externalLists });
     }
     this.saveSelectedFilterLists(result);
 };
@@ -354,6 +357,8 @@ self.addEventListener('hiddenSettingsChanged', ( ) => {
     while ( lineIter.eot() === false ) {
         const location = lineIter.next().trim();
         if ( reIgnore.test(location) || !reValid.test(location) ) { continue; }
+        // Ignore really bad lists.
+        if ( this.badLists.get(location) === true ) { continue; }
         out.add(location);
     }
     return Array.from(out);
@@ -543,8 +548,8 @@ self.addEventListener('hiddenSettingsChanged', ( ) => {
         for ( const line of badlists.content.split(/\s*[\n\r]+\s*/) ) {
             if ( line === '' || line.startsWith('#') ) { continue; }
             const fields = line.split(/\s+/);
-            const nofetch = fields.length === 2 && fields[1] === 'nofetch';
-            this.badLists.set(fields[0], nofetch);
+            const remove = fields.length === 2;
+            this.badLists.set(fields[0], remove);
         }
     }
 

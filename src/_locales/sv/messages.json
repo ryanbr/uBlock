@@ -452,7 +452,7 @@
     "description": "English: Regions, languages"
   },
   "3pGroupCustom": {
-    "message": "Egna filter",
+    "message": "Anpassad",
     "description": "English: Custom"
   },
   "3pImport": {
@@ -904,8 +904,12 @@
     "description": "English: Network error: {{msg}}"
   },
   "subscriberConfirm": {
-    "message": "uBlock₀: Lägg till följande webbadress till din skräddarsydda filterlista?\n\nTitel: \"{{title}}\"\nWebbadress: {{url}}",
-    "description": "English: The message seen by the user to confirm subscription to a ABP filter list"
+    "message": "Lägg till följande webbadress till din anpassade filterlista?\n\nTitel: \"{{title}}\"\nWebbadress: {{url}}",
+    "description": "No longer used"
+  },
+  "subscribeButton": {
+    "message": "Prenumerera",
+    "description": "For the button used to subscribe to a filter list"
   },
   "elapsedOneMinuteAgo": {
     "message": "en minut sedan",
@@ -945,11 +949,11 @@
   },
   "docblockedPrompt1": {
     "message": "uBlock Origin har förhindrat följande sida från att läsas in:",
-    "description": "English: uBlock₀ has prevented the following page from loading:"
+    "description": "Used in the strict-blocking page"
   },
   "docblockedPrompt2": {
     "message": "På grund av följande filter",
-    "description": "English: Because of the following filter"
+    "description": "Used in the strict-blocking page"
   },
   "docblockedNoParamsPrompt": {
     "message": "utan parametrar",

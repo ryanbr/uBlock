@@ -4,7 +4,8 @@
 <head>
 <meta charset="utf-8">
 <title>uBlock Origin Element Picker</title>
-<link rel="stylesheet" href="../css/epicker-dialog.css">
+<link rel="stylesheet" href="../css/themes/default.css">
+<link rel="stylesheet" href="../css/epicker-ui.css">
 </head>
 
 <body>
@@ -12,7 +13,19 @@
 <section>
     <div>
         <textarea lang="en" dir="ltr" spellcheck="false"></textarea>
-        <div id="resultsetCount"></div>
+        <div>
+            <span id="resultsetModifiers">
+                <span id="resultsetDepth" class="resultsetModifier">
+                    <span><span></span><span></span><span></span></span>
+                    <input type="range" min="0" max="7" value="7">
+                </span>
+                <span id="resultsetSpecificity" class="resultsetModifier">
+                    <span><span></span><span></span><span></span></span>
+                    <input type="range" min="0" max="7" value="6">
+                </span>
+            </span>
+            <span id="resultsetCount"></span>
+        </div>
     </div>
     <div id="toolbar">
         <div>
@@ -27,21 +40,23 @@
 </section>
 <ul id="candidateFilters">
     <li id="netFilters">
-        <span data-i18n="pickerNetFilters"></span><ul lang="en" class="changeFilter"></ul>
+        <span data-i18n="pickerNetFilters"></span>
+        <ul lang="en" class="changeFilter"></ul>
     </li>
-    <li id="cosmeticFilters">
-        <span data-i18n="pickerCosmeticFilters"></span> <span data-i18n="pickerCosmeticFiltersHint"></span>
+    <li id="cosmeticFilters" data-specificity="3">
+        <span data-i18n="pickerCosmeticFilters"></span>
         <ul lang="en" class="changeFilter"></ul>
     </li>
 </ul>
 </aside>
+<svg><path d></path><path d></path></svg>
 
 <script src="../js/vapi.js"></script>
 <script src="../js/vapi-common.js"></script>
 <script src="../js/vapi-client.js"></script>
 <script src="../js/vapi-client-extra.js"></script>
 <script src="../js/i18n.js"></script>
-<script src="../js/epicker-dialog.js"></script>
+<script src="../js/epicker-ui.js"></script>
 <script src="../js/static-filtering-parser.js"></script>
 
 </body>
