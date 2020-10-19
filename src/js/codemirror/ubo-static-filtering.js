@@ -177,6 +177,56 @@ CodeMirror.defineMode('ubo-static-filtering', function() {
         return null;
     };
 
+    const colorNetOptionValueSpan = function(stream, bits) {
+        const { pos, string } = stream;
+        let style;
+        // Warn about unknown redirect tokens.
+        if (
+            string.charCodeAt(pos - 1) === 0x3D /* '=' */ &&
+            /[$,]redirect(-rule)?=$/.test(string.slice(0, pos))
+        ) {
+            style = 'value';
+            let end = parser.skipUntil(
+                parserSlot,
+                parser.commentSpan.i,
+                parser.BITComma
+            );
+            const token = parser.strFromSlices(parserSlot, end - 3);
+            if ( redirectNames.has(token) === false ) {
+                style += ' warning';
+            }
+            stream.pos += token.length;
+            parserSlot = end;
+            return style;
+        }
+        if ( (bits & parser.BITTilde) !== 0 ) {
+            style = 'keyword strong';
+        } else if ( (bits & parser.BITPipe) !== 0 ) {
+            style = 'def';
+        }
+        stream.pos += parser.slices[parserSlot+2];
+        parserSlot += 3;
+        return style || 'value';
+    };
+
+    const colorNetOptionSpan = function(stream) {
+        const bits = parser.slices[parserSlot];
+        let style;
+        if ( (bits & parser.BITComma) !== 0  ) {
+            style = 'def strong';
+            netOptionValueMode = false;
+        } else if ( netOptionValueMode ) {
+            return colorNetOptionValueSpan(stream, bits);
+        } else if ( (bits & parser.BITTilde) !== 0 ) {
+            style = 'keyword strong';
+        } else if ( (bits & parser.BITEqual) !== 0 ) {
+            netOptionValueMode = true;
+        }
+        stream.pos += parser.slices[parserSlot+2];
+        parserSlot += 3;
+        return style || 'def';
+    };
+
     const colorNetSpan = function(stream) {
         if ( parserSlot < parser.exceptionSpan.i ) {
             stream.pos += parser.slices[parserSlot+2];
@@ -236,23 +286,7 @@ CodeMirror.defineMode('ubo-static-filtering', function() {
             parserSlot >= parser.optionsSpan.i &&
             parserSlot < parser.commentSpan.i
         ) {
-            const bits = parser.slices[parserSlot];
-            let style;
-            if ( (bits & parser.BITComma) !== 0  ) {
-                style = 'def strong';
-                netOptionValueMode = false;
-            } else if ( (bits & parser.BITTilde) !== 0 ) {
-                style = 'keyword strong';
-            } else if ( (bits & parser.BITPipe) !== 0 ) {
-                style = 'def';
-            } else if ( netOptionValueMode ) {
-                style = 'value';
-            } else if ( (bits & parser.BITEqual) !== 0 ) {
-                netOptionValueMode = true;
-            }
-            stream.pos += parser.slices[parserSlot+2];
-            parserSlot += 3;
-            return style || 'def';
+            return colorNetOptionSpan(stream);
         }
         if (
             parserSlot >= parser.commentSpan.i &&
@@ -284,10 +318,12 @@ CodeMirror.defineMode('ubo-static-filtering', function() {
             return 'comment';
         }
         if ( parser.category === parser.CATStaticExtFilter ) {
-            return colorExtSpan(stream);
+            const style = colorExtSpan(stream);
+            return style ? `ext ${style}` : 'ext';
         }
         if ( parser.category === parser.CATStaticNetFilter ) {
-            return colorNetSpan(stream);
+            const style = colorNetSpan(stream);
+            return style ? `net ${style}` : 'net';
         }
         stream.skipToEnd();
         return null;
@@ -296,13 +332,14 @@ CodeMirror.defineMode('ubo-static-filtering', function() {
     return {
         lineComment: '!',
         token: function(stream) {
+            let style = '';
             if ( stream.sol() ) {
                 parser.analyze(stream.string);
                 parser.analyzeExtra();
                 parserSlot = 0;
                 netOptionValueMode = false;
             }
-            let style = colorSpan(stream) || '';
+            style += colorSpan(stream) || '';
             if ( (parser.flavorBits & parser.BITFlavorError) !== 0 ) {
                 style += ' line-background-error';
             }
@@ -578,19 +615,68 @@ CodeMirror.registerHelper('fold', 'ubo-static-filtering', (( ) => {
                 return Pass;
             }
         }
+
         const s = cm.getLine(line);
+        const token = cm.getTokenTypeAt(pos);
+        let beg, end;
 
-        // Select URL
-        let lmatch = /\bhttps?:\/\/\S+$/.exec(s.slice(0, ch));
-        let rmatch = /^\S+/.exec(s.slice(ch));
+        // Select URL in comments
+        if ( /\bcomment\b/.test(token) && /\blink\b/.test(token) ) {
+            const l = /\S+$/.exec(s.slice(0, ch));
+            if ( l && /^https?:\/\//.test(s.slice(l.index)) ) {
+                const r = /^\S+/.exec(s.slice(ch));
+                if ( r ) {
+                    beg = l.index;
+                    end = ch + r[0].length;
+                }
+            }
+        }
 
-        // TODO: add more convenient word-matching cases here
-        // if ( lmatch === null || rmatch === null ) { ... }
+        // Better word selection for cosmetic filters
+        else if ( /\bext\b/.test(token) ) {
+            if ( /\bvalue\b/.test(token) ) {
+                const l = /[^,.]*$/i.exec(s.slice(0, ch));
+                const r = /^[^#,]*/i.exec(s.slice(ch));
+                if ( l && r ) {
+                    beg = l.index;
+                    end = ch + r[0].length;
+                }
+            } else if ( /\bvariable\b/.test(token) ) {
+                const l = /[#.]?[a-z0-9_-]+$/i.exec(s.slice(0, ch));
+                const r = /^[a-z0-9_-]+/i.exec(s.slice(ch));
+                if ( l && r ) {
+                    beg = l.index;
+                    end = ch + r[0].length;
+                    if ( /\bdef\b/.test(cm.getTokenTypeAt({ line, ch: beg + 1 })) ) {
+                        beg += 1;
+                    }
+                }
+            }
+        }
 
-        if ( lmatch === null || rmatch === null ) { return Pass; }
+        // Better word selection for network filters
+        else if ( /\bnet\b/.test(token) ) {
+            if ( /\bvalue\b/.test(token) ) {
+                const l = /[^ ,.=|]*$/i.exec(s.slice(0, ch));
+                const r = /^[^ #,|]*/i.exec(s.slice(ch));
+                if ( l && r ) {
+                    beg = l.index;
+                    end = ch + r[0].length;
+                }
+            } else if ( /\bdef\b/.test(token) ) {
+                const l = /[a-z0-9-]+$/i.exec(s.slice(0, ch));
+                const r = /^[^,]*=[^,]+/i.exec(s.slice(ch));
+                if ( l && r ) {
+                    beg = l.index;
+                    end = ch + r[0].length;
+                }
+            }
+        }
+
+        if ( beg === undefined ) { return Pass; }
         cm.setSelection(
-            { line, ch: lmatch.index },
-            { line, ch: ch + rmatch.index + rmatch[0].length }
+            { line, ch: beg },
+            { line, ch: end }
         );
     };
 

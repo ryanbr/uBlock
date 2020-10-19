@@ -101,7 +101,7 @@ const onBeforeRequest = function(details) {
             details.type === 'sub_frame' &&
             details.aliasURL === undefined
         ) {
-            pageStore.setFrame(details.frameId, details.url);
+            pageStore.setFrameURL(details.frameId, details.url);
         }
         if ( result === 2 ) {
             return { cancel: false };
@@ -111,22 +111,16 @@ const onBeforeRequest = function(details) {
 
     // Blocked
 
-    // https://github.com/gorhill/uBlock/issues/949
-    //   Redirect blocked request?
-    if ( µb.hiddenSettings.ignoreRedirectFilters !== true ) {
-        const url = µb.redirectEngine.toURL(fctxt);
-        if ( url !== undefined ) {
-            pageStore.internalRedirectionCount += 1;
-            if ( µb.logger.enabled ) {
-                fctxt.setRealm('redirect')
-                     .setFilter({ source: 'redirect', raw: µb.redirectEngine.resourceNameRegister })
-                     .toLogger();
-            }
-            return { redirectUrl: url };
-        }
+    if ( fctxt.redirectURL === undefined ) {
+        return { cancel: true };
     }
 
-    return { cancel: true };
+    if ( µb.logger.enabled ) {
+        fctxt.setRealm('redirect')
+             .setFilter({ source: 'redirect', raw: µb.redirectEngine.resourceNameRegister })
+             .toLogger();
+    }
+    return { redirectUrl: fctxt.redirectURL };
 };
 
 /******************************************************************************/
@@ -457,16 +451,16 @@ const onHeadersReceived = function(details) {
     }
     if ( pageStore.getNetFilteringSwitch(fctxt) === false ) { return; }
 
+    if ( requestType === 'image' || requestType === 'media' ) {
+        return foilLargeMediaElement(details, fctxt, pageStore);
+    }
+
+    if ( isDoc === false ) { return; }
+
     // Keep in mind response headers will be modified in-place if needed, so
     // `details.responseHeaders` will always point to the modified response
     // headers.
     const responseHeaders = details.responseHeaders;
-
-    if ( requestType === 'image' || requestType === 'media' ) {
-        return foilLargeMediaElement(fctxt, pageStore, responseHeaders);
-    }
-
-    if ( isDoc === false ) { return; }
 
     // https://github.com/gorhill/uBlock/issues/2813
     //   Disable the blocking of large media elements if the document is itself
@@ -475,7 +469,7 @@ const onHeadersReceived = function(details) {
     if ( isRootDoc ) {
         const contentType = headerValueFromName('content-type', responseHeaders);
         if ( reMediaContentTypes.test(contentType) ) {
-            pageStore.allowLargeMediaElementsUntil = Date.now() + 86400000;
+            pageStore.allowLargeMediaElementsUntil = 0;
             return;
         }
     }
@@ -945,14 +939,21 @@ const injectCSP = function(fctxt, pageStore, responseHeaders) {
 /******************************************************************************/
 
 // https://github.com/gorhill/uBlock/issues/1163
-//   "Block elements by size"
+//   "Block elements by size".
+// https://github.com/gorhill/uBlock/issues/1390#issuecomment-187310719
+//   Do not foil when the media element is fetched from the browser
+//   cache. This works only when the webext API supports the `fromCache`
+//   property (Firefox).
 
-const foilLargeMediaElement = function(fctxt, pageStore, responseHeaders) {
+const foilLargeMediaElement = function(details, fctxt, pageStore) {
+    if ( details.fromCache === true ) { return; }
+
     let size = 0;
     if ( µBlock.userSettings.largeMediaSize !== 0 ) {
-        const i = headerIndexFromName('content-length', responseHeaders);
+        const headers = details.responseHeaders;
+        const i = headerIndexFromName('content-length', headers);
         if ( i === -1 ) { return; }
-        size = parseInt(responseHeaders[i].value, 10) || 0;
+        size = parseInt(headers[i].value, 10) || 0;
     }
 
     const result = pageStore.filterLargeMediaElement(fctxt, size);

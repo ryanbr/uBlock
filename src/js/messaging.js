@@ -41,6 +41,15 @@
 
 const µb = µBlock;
 
+const clickToLoad = function(request, sender) {
+    const { tabId, frameId } = µb.getMessageSenderDetails(sender);
+    if ( tabId === undefined || frameId === undefined ) { return false; }
+    const pageStore = µb.pageStoreFromTabId(tabId);
+    if ( pageStore === null ) { return false; }
+    pageStore.clickToLoad(frameId, request.frameURL);
+    return true;
+};
+
 const getDomainNames = function(targets) {
     const µburi = µb.URI;
     return targets.map(target => {
@@ -93,11 +102,15 @@ const onMessage = function(request, sender, callback) {
     }
 
     // Sync
-    var response;
+    let response;
 
     switch ( request.what ) {
     case 'applyFilterListSelection':
         response = µb.applyFilterListSelection(request);
+        break;
+
+    case 'clickToLoad':
+        response = clickToLoad(request, sender);
         break;
 
     case 'createUserFilter':
@@ -938,8 +951,8 @@ const restoreUserData = async function(request) {
     // Discard unknown setting or setting with default value.
     for ( const key in hiddenSettings ) {
         if (
-            this.hiddenSettingsDefault.hasOwnProperty(key) === false ||
-            hiddenSettings[key] === this.hiddenSettingsDefault[key]
+            µb.hiddenSettingsDefault.hasOwnProperty(key) === false ||
+            hiddenSettings[key] === µb.hiddenSettingsDefault[key]
         ) {
             delete hiddenSettings[key];
         }
@@ -1628,7 +1641,7 @@ const onMessage = function(request, sender, callback) {
 
     case 'temporarilyAllowLargeMediaElement':
         if ( pageStore !== null ) {
-            pageStore.allowLargeMediaElementsUntil = Date.now() + 2000;
+            pageStore.allowLargeMediaElementsUntil = Date.now() + 5000;
         }
         break;
 
