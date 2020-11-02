@@ -28,7 +28,7 @@
 /******************************************************************************/
 
 // This can happen
-if ( typeof vAPI !== 'object' || vAPI.loadLargeMediaInteractive === true ) {
+if ( typeof vAPI !== 'object' || vAPI.loadAllLargeMedia instanceof Function ) {
     return;
 }
 
@@ -44,20 +44,26 @@ const largeMediaElementSelector =
 /******************************************************************************/
 
 const mediaNotLoaded = function(elem) {
-    const src = elem.getAttribute('src') || '';
-    if ( src === '' ) { return false; }
-
     switch ( elem.localName ) {
     case 'audio':
-    case 'video':
-        return elem.error !== null;
-    case 'img':
-        if ( elem.naturalWidth !== 0 || elem.naturalHeight !== 0 ) { break; }
+    case 'video': {
+        const src = elem.src || '';
+        if ( src.startsWith('blob:') ) {
+            elem.autoplay = false;
+            elem.pause();
+        }
+        return elem.readyState === 0 || elem.error !== null;
+    }
+    case 'img': {
+        if ( elem.naturalWidth !== 0 || elem.naturalHeight !== 0 ) {
+            break;
+        }
         const style = window.getComputedStyle(elem);
         // For some reason, style can be null with Pale Moon.
         return style !== null ?
             style.getPropertyValue('display') !== 'none' :
             elem.offsetHeight !== 0 && elem.offsetWidth !== 0;
+    }
     default:
         break;
     }
@@ -69,7 +75,6 @@ const mediaNotLoaded = function(elem) {
 // For all media resources which have failed to load, trigger a reload.
 
 // <audio> and <video> elements.
-// https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement
 // https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement
 
 const surveyMissingMediaElements = function() {
@@ -94,8 +99,6 @@ const surveyMissingMediaElements = function() {
 
 if ( surveyMissingMediaElements() === 0 ) { return; }
 
-vAPI.loadLargeMediaInteractive = true;
-
 // Insert CSS to highlight blocked media elements.
 if ( vAPI.largeMediaElementStyleSheet === undefined ) {
     vAPI.largeMediaElementStyleSheet = [
@@ -104,11 +107,13 @@ if ( vAPI.largeMediaElementStyleSheet === undefined ) {
             'box-sizing: border-box !important;',
             'cursor: zoom-in !important;',
             'display: inline-block;',
+            'filter: none !important;',
             'font-size: 1rem !important;',
             'min-height: 1em !important;',
             'min-width: 1em !important;',
             'opacity: 1 !important;',
             'outline: none !important;',
+            'transform: none !important;',
             'visibility: visible !important;',
             'z-index: 2147483647',
         '}',
@@ -119,65 +124,51 @@ if ( vAPI.largeMediaElementStyleSheet === undefined ) {
 
 /******************************************************************************/
 
-const stayOrLeave = (( ) => {
-    let timer;
-
-    const timeoutHandler = function(leaveNow) {
-        timer = undefined;
-        if ( leaveNow !== true ) {
-            if ( 
-                document.querySelector(largeMediaElementSelector) !== null ||
-                surveyMissingMediaElements() !== 0
-            ) {
-                return;
-            }
-        }
-        // Leave
-        for ( const elem of document.querySelectorAll(largeMediaElementSelector) ) {
-            elem.removeAttribute(largeMediaElementAttribute);
-        }
-        vAPI.loadLargeMediaInteractive = false;
-        document.removeEventListener('error', onLoadError, true);
-        document.removeEventListener('click', onMouseClick, true);
-    };
-
-    return function(leaveNow) {
-        if ( timer !== undefined ) {
-            clearTimeout(timer);
-        }
-        if ( leaveNow ) {
-            timeoutHandler(true);
-        } else {
-            timer = vAPI.setTimeout(timeoutHandler, 5000);
-        }
-    };
-})();
-
-/******************************************************************************/
-
-const loadImage = async function(elem) {
-    const src = elem.getAttribute('src');
+const loadMedia = async function(elem) {
+    const src = elem.getAttribute('src') || '';
     elem.removeAttribute('src');
 
     await vAPI.messaging.send('scriptlets', {
         what: 'temporarilyAllowLargeMediaElement',
     });
 
-    elem.setAttribute('src', src);
-    elem.removeAttribute(largeMediaElementAttribute);
-
-    switch ( elem.localName ) {
-    case 'img': {
-        const picture = elem.closest('picture');
-        if ( picture !== null ) {
-            picture.removeAttribute(largeMediaElementAttribute);
-        }
-    } break;
-    default:
-        break;
+    if ( src !== '' ) {
+        elem.setAttribute('src', src);
     }
+    elem.load();
+};
 
-    stayOrLeave();
+/******************************************************************************/
+
+const loadImage = async function(elem) {
+    const src = elem.getAttribute('src') || '';
+    elem.removeAttribute('src');
+
+    await vAPI.messaging.send('scriptlets', {
+        what: 'temporarilyAllowLargeMediaElement',
+    });
+
+    if ( src !== '' ) {
+        elem.setAttribute('src', src);
+    }
+};
+
+/******************************************************************************/
+
+const loadMany = function(elems) {
+    for ( const elem of elems ) {
+        switch ( elem.localName ) {
+        case 'audio':
+        case 'video':
+            loadMedia(elem);
+            break;
+        case 'img':
+            loadImage(elem);
+            break;
+        default:
+            break;
+        }
+    }
 };
 
 /******************************************************************************/
@@ -190,19 +181,16 @@ const onMouseClick = function(ev) {
         ? document.elementsFromPoint(ev.clientX, ev.clientY)
         : [ ev.target ];
     for ( const elem of elems ) {
-        if ( elem.matches(largeMediaElementSelector) && mediaNotLoaded(elem) ) {
+        if ( elem.matches(largeMediaElementSelector) === false ) { continue; }
+        elem.removeAttribute(largeMediaElementAttribute);
+        if ( mediaNotLoaded(elem) ) {
             toLoad.push(elem);
         }
     }
 
-    if ( toLoad.length === 0 ) {
-        stayOrLeave();
-        return;
-    }
+    if ( toLoad.length === 0 ) { return; }
 
-    for ( const elem of toLoad ) {
-        loadImage(elem);
-    }
+    loadMany(toLoad);
 
     ev.preventDefault();
     ev.stopPropagation();
@@ -212,12 +200,25 @@ document.addEventListener('click', onMouseClick, true);
 
 /******************************************************************************/
 
-const onLoad = function(ev) {
-    const elem = ev.target;
-    if ( elem.hasAttribute(largeMediaElementAttribute) ) {
-        elem.removeAttribute(largeMediaElementAttribute);
-        stayOrLeave();
+const onLoadedData = function(ev) {
+    const media = ev.target;
+    if ( media.localName !== 'audio' && media.localName !== 'video' ) {
+        return;
     }
+    const src = media.src;
+    if ( typeof src === 'string' && src.startsWith('blob:') === false ) {
+        return;
+    }
+    media.autoplay = false;
+    media.pause();
+};
+
+document.addEventListener('loadeddata', onLoadedData);
+
+/******************************************************************************/
+
+const onLoad = function(ev) {
+    ev.target.removeAttribute(largeMediaElementAttribute);
 };
 
 document.addEventListener('load', onLoad, true);
@@ -235,9 +236,21 @@ document.addEventListener('error', onLoadError, true);
 
 /******************************************************************************/
 
-vAPI.shutdown.add(( ) => {
-    stayOrLeave(true);
-});
+vAPI.loadAllLargeMedia = function() {
+    document.removeEventListener('click', onMouseClick, true);
+    document.removeEventListener('loadeddata', onLoadedData, true);
+    document.removeEventListener('load', onLoad, true);
+    document.removeEventListener('error', onLoadError, true);
+
+    const toLoad = [];
+    for ( const elem of document.querySelectorAll(largeMediaElementSelector) ) {
+        elem.removeAttribute(largeMediaElementAttribute);
+        if ( mediaNotLoaded(elem) ) {
+            toLoad.push(elem);
+        }
+    }
+    loadMany(toLoad);
+};
 
 /******************************************************************************/
 

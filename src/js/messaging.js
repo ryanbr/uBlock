@@ -97,6 +97,12 @@ const onMessage = function(request, sender, callback) {
         µb.scriptlets.inject(request.tabId, request.scriptlet, callback);
         return;
 
+    case 'sfneBenchmark':
+        µb.staticNetFilteringEngine.benchmark().then(result => {
+            callback(result);
+        });
+        return;
+
     default:
         break;
     }
@@ -127,7 +133,8 @@ const onMessage = function(request, sender, callback) {
     case 'getAppData':
         response = {
             name: browser.runtime.getManifest().name,
-            version: vAPI.app.version
+            version: vAPI.app.version,
+            canBenchmark: µb.hiddenSettings.benchmarkDatasetURL !== 'unset',
         };
         break;
 
@@ -1539,10 +1546,12 @@ const logCSPViolations = function(pageStore, request) {
         cspData = new Map();
 
         const staticDirectives =
-            µb.staticNetFilteringEngine.matchAndFetchData(fctxt, 'csp');
-        for ( const directive of staticDirectives ) {
-            if ( directive.result !== 1 ) { continue; }
-            cspData.set(directive.getData('csp'), directive.logData());
+            µb.staticNetFilteringEngine.matchAndFetchModifiers(fctxt, 'csp');
+        if ( staticDirectives !== undefined ) {
+            for ( const directive of staticDirectives ) {
+                if ( directive.result !== 1 ) { continue; }
+                cspData.set(directive.value, directive.logData());
+            }
         }
 
         fctxt.type = 'inline-script';
