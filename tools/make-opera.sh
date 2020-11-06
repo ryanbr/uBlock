@@ -11,19 +11,6 @@ mkdir -p $DES
 echo "*** uBlock0.opera: copying common files"
 bash ./tools/copy-common-files.sh  $DES
 
-echo "*** uBlock0.opera: concatenating content scripts"
-cat $DES/js/vapi-usercss.js > /tmp/contentscript.js
-echo >> /tmp/contentscript.js
-grep -v "^'use strict';$" $DES/js/vapi-usercss.real.js >> /tmp/contentscript.js
-echo >> /tmp/contentscript.js
-grep -v "^'use strict';$" $DES/js/vapi-usercss.pseudo.js >> /tmp/contentscript.js
-echo >> /tmp/contentscript.js
-grep -v "^'use strict';$" $DES/js/contentscript.js >> /tmp/contentscript.js
-mv /tmp/contentscript.js $DES/js/contentscript.js
-rm $DES/js/vapi-usercss.js
-rm $DES/js/vapi-usercss.real.js
-rm $DES/js/vapi-usercss.pseudo.js
-
 # Opera-specific
 cp platform/opera/manifest.json $DES/
 rm -r $DES/_locales/az
@@ -33,7 +20,6 @@ rm -r $DES/_locales/hy
 rm -r $DES/_locales/ka
 rm -r $DES/_locales/kk
 rm -r $DES/_locales/mr
-rm -r $DES/_locales/ta
 rm -r $DES/_locales/th
 
 # Removing WASM modules until I receive an answer from Opera people: Opera's

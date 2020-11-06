@@ -40,7 +40,7 @@
     "description": "appears as tab name in dashboard"
   },
   "whitelistPageName": {
-    "message": "Whitelist",
+    "message": "Vertrouwde websites",
     "description": "appears as tab name in dashboard"
   },
   "shortcutsPageName": {
@@ -84,7 +84,7 @@
     "description": "English: on this page"
   },
   "popupBlockedStats": {
-    "message": "{{count}} of {{percent}}%",
+    "message": "{{count}} ({{percent}}%)",
     "description": "Example: 15 (13%)"
   },
   "popupBlockedSinceInstallPrompt": {
@@ -112,11 +112,11 @@
     "description": "English: Click to open the dashboard"
   },
   "popupTipZapper": {
-    "message": "Element&shy;wisser&shy;modus openen",
+    "message": "Element­wisser­modus openen",
     "description": "Tooltip for the element-zapper icon in the popup panel"
   },
   "popupTipPicker": {
-    "message": "Element&shy;kiezer&shy;modus openen",
+    "message": "Element­kiezer­modus openen",
     "description": "English: Enter element picker mode"
   },
   "popupTipLog": {
@@ -300,7 +300,7 @@
     "description": "An entry in the browser's contextual menu"
   },
   "settingsCollapseBlockedPrompt": {
-    "message": "Tijdelijke aanduidingen van geblokkeerde elementen verbergen",
+    "message": "Aanduidingen van geblokkeerde elementen verbergen",
     "description": "English: Hide placeholders of blocked elements"
   },
   "settingsIconBadgePrompt": {
@@ -312,7 +312,7 @@
     "description": "A checkbox in the Settings pane"
   },
   "settingsContextMenuPrompt": {
-    "message": "Waar mogelijk gebruikmaken van het contextmenu",
+    "message": "Contextmenu gebruiken waar mogelijk",
     "description": "English: Make use of context menu where appropriate"
   },
   "settingsColorBlindPrompt": {
@@ -484,7 +484,7 @@
     "description": "used as a tooltip for error icon beside a list"
   },
   "1pFormatHint": {
-    "message": "Eén filter per regel. Een filter kan een gewone hostnaam of een Adblock Plus-compatibel filter zijn. Regels beginnend met <code>!</code> worden genegeerd.",
+    "message": "Eén filter per regel. Een filter kan een gewone hostnaam of een EasyList-compatibel filter zijn. Regels beginnend met <code>!</code> worden genegeerd.",
     "description": "Short information about how to create custom filters"
   },
   "1pImport": {
@@ -551,9 +551,25 @@
     "message": "Regelsyntaxis: <code>bron bestemming type actie</code> (<a href='https://github.com/gorhill/uBlock/wiki/Dynamic-filtering:-rule-syntax'>volledige documentatie</a>).",
     "description": "English: dynamic rule syntax and full documentation."
   },
+  "rulesSort": {
+    "message": "Sorteren:",
+    "description": "English: label for sort option."
+  },
+  "rulesSortByType": {
+    "message": "Regeltype",
+    "description": "English: a sort option for list of rules."
+  },
+  "rulesSortBySource": {
+    "message": "Bron",
+    "description": "English: a sort option for list of rules."
+  },
+  "rulesSortByDestination": {
+    "message": "Bestemming",
+    "description": "English: a sort option for list of rules."
+  },
   "whitelistPrompt": {
-    "message": "De whitelist-instructies schrijven voor op welke webpagina’s uBlock Origin dient te worden uitgeschakeld. Eén vermelding per regel. Ongeldige instructies worden zonder mededeling genegeerd en uitgecommentarieerd.",
-    "description": "English: An overview of the content of the dashboard's Whitelist pane."
+    "message": "De vertrouwde-website-instructies schrijven voor op welke webpagina’s uBlock Origin dient te worden uitgeschakeld. Eén vermelding per regel. Ongeldige instructies worden zonder mededeling genegeerd en uitgecommentarieerd.",
+    "description": "The name of the trusted sites pane."
   },
   "whitelistImport": {
     "message": "Importeren en toevoegen...",
@@ -564,8 +580,8 @@
     "description": "English: Export"
   },
   "whitelistExportFilename": {
-    "message": "mijn-ublock-whitelist_{{datetime}}.txt",
-    "description": "English: my-ublock-whitelist_{{datetime}}.txt"
+    "message": "mijn-ublock-vertrouwde-websites_{{datetime}}.txt",
+    "description": "The default filename to use for import/export purpose"
   },
   "whitelistApply": {
     "message": "Wijzigingen toepassen",
@@ -888,8 +904,12 @@
     "description": "English: Network error: {{msg}}"
   },
   "subscriberConfirm": {
-    "message": "uBlock₀: de volgende URL aan uw lijsten met aangepaste filters toevoegen?\n\nTitel: ‘{{title}}’\nURL: {{url}}",
-    "description": "English: The message seen by the user to confirm subscription to a ABP filter list"
+    "message": "De volgende URL aan uw lijsten met aangepaste filters toevoegen?\n\nTitel: ‘{{title}}’\nURL: {{url}}",
+    "description": "No longer used"
+  },
+  "subscribeButton": {
+    "message": "Abonneren",
+    "description": "For the button used to subscribe to a filter list"
   },
   "elapsedOneMinuteAgo": {
     "message": "een minuut geleden",
@@ -929,11 +949,11 @@
   },
   "docblockedPrompt1": {
     "message": "uBlock₀ heeft het laden van de volgende pagina voorkomen:",
-    "description": "English: uBlock₀ has prevented the following page from loading:"
+    "description": "Used in the strict-blocking page"
   },
   "docblockedPrompt2": {
-    "message": "vanwege het volgende filter",
-    "description": "English: Because of the following filter"
+    "message": "vanwege het volgende filter:",
+    "description": "Used in the strict-blocking page"
   },
   "docblockedNoParamsPrompt": {
     "message": "zonder parameters",
@@ -1042,6 +1062,10 @@
   "GB": {
     "message": "GB",
     "description": "short for 'gigabytes'"
+  },
+  "clickToLoad": {
+    "message": "Klik om te laden",
+    "description": "Message used in frame placeholders"
   },
   "dummy": {
     "message": "This entry must be the last one",

@@ -67,11 +67,8 @@ const redirectableResources = new Map([
     [ 'chartbeat.js', {
         alias: 'static.chartbeat.com/chartbeat.js',
     } ],
-    [ 'disqus_embed.js', {
-        alias: 'disqus.com/embed.js',
-    } ],
-    [ 'disqus_forums_embed.js', {
-        alias: 'disqus.com/forums/*/embed.js',
+    [ 'click2load.html', {
+        params: [ 'url' ],
     } ],
     [ 'doubleclick_instream_ad_status.js', {
         alias: 'doubleclick.net/instream/ad_status.js',
@@ -197,6 +194,7 @@ const RedirectEntry = class {
         this.mime = '';
         this.data = '';
         this.warURL = undefined;
+        this.params = undefined;
     }
 
     // Prevent redirection to web accessible resources when the request is
@@ -214,7 +212,15 @@ const RedirectEntry = class {
             fctxt instanceof Object &&
             fctxt.type !== 'xmlhttprequest'
         ) {
-            return `${this.warURL}${vAPI.warSecret()}`;
+            let url = `${this.warURL}${vAPI.warSecret()}`;
+            if ( this.params !== undefined ) {
+                for ( const name of this.params ) {
+                    const value = fctxt[name];
+                    if ( value === undefined ) { continue; }
+                    url += `&${name}=${encodeURIComponent(value)}`;
+                }
+            }
+            return url;
         }
         if ( this.data === undefined ) { return; }
         // https://github.com/uBlockOrigin/uBlock-issues/issues/701
@@ -257,6 +263,7 @@ const RedirectEntry = class {
         r.mime = selfie.mime;
         r.data = selfie.data;
         r.warURL = selfie.warURL;
+        r.params = selfie.params;
         return r;
     }
 };
@@ -460,7 +467,7 @@ RedirectEngine.prototype.compileRuleFromStaticFilter = function(line) {
     let type,
         redirect = '',
         srchns = [];
-    for ( const option of matches[3].split(',') ) {
+    for ( const option of matches[3].trim().split(/,/) ) {
         if ( option.startsWith('redirect=') ) {
             redirect = option.slice(9);
             continue;
@@ -727,6 +734,7 @@ RedirectEngine.prototype.loadBuiltinResources = function() {
             mime: mimeFromName(name),
             data,
             warURL: vAPI.getURL(`/web_accessible_resources/${name}`),
+            params: details.params,
         });
         this.resources.set(name, entry);
         if ( details.alias !== undefined ) {
@@ -782,7 +790,9 @@ RedirectEngine.prototype.loadBuiltinResources = function() {
 /******************************************************************************/
 
 RedirectEngine.prototype.getResourceDetails = function() {
-    const out = new Map();
+    const out = new Map([
+        [ 'none', { canInject: false, canRedirect: true, aliasOf: '' } ],
+    ]);
     for ( const [ name, entry ] of this.resources ) {
         out.set(name, {
             canInject: typeof entry.data === 'string',

@@ -79,7 +79,7 @@ code, .code {
     }
 hr {
     border: 0;
-    border-top: 1px solid var(--hor-separator-color);
+    border-top: 1px solid var(--hr-ink);
     margin: 1em 0;
     }
 textarea {
@@ -98,7 +98,6 @@ button {
     fill: var(--button-ink);
     font-size: 14px;
     justify-content: center;
-    letter-spacing: 0.5px;
     min-height: 36px;
     padding: 0 var(--font-size);
     vertical-align: middle;
@@ -244,6 +243,16 @@ select {
         }
     }
 
+.logo {
+    align-items: center;
+    display: inline-flex;
+    padding: 0 0.5em;
+    width: 1.25em;
+    }
+.logo > img {
+    width: 100%;
+    }
+
 .ubo-icon {
     align-items: center;
     background-color: transparent;
@@ -276,6 +285,7 @@ select {
 :root.hidpi button {
     font-family: Metropolis, sans-serif;
     font-weight: 600;
+    letter-spacing: 0.5px;
     }
 :root.hidpi .fieldset-header {
     font-family: Metropolis, sans-serif;

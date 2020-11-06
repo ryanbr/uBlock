@@ -88,16 +88,8 @@
 
   The domFilterer makes use of platform-dependent user stylesheets[1].
 
-  At time of writing, only modern Firefox provides a custom implementation,
-  which makes for solid, reliable and low overhead cosmetic filtering on
-  Firefox.
-
-  The generic implementation[2] performs as best as can be, but won't ever be
-  as reliable and accurate as real user stylesheets.
-
   [1] "user stylesheets" refer to local CSS rules which have priority over,
        and can't be overriden by a web page's own CSS rules.
-  [2] below, see platformUserCSS / platformHideNode / platformUnhideNode
 
 */
 
@@ -113,6 +105,57 @@ if ( typeof vAPI === 'object' && !vAPI.contentScript ) {
 /******************************************************************************/
 
 vAPI.contentScript = true;
+
+/******************************************************************************/
+/******************************************************************************/
+/******************************************************************************/
+
+// https://github.com/uBlockOrigin/uBlock-issues/issues/688#issuecomment-663657508
+{
+    let context = self;
+    try {
+        while (
+            context !== self.top &&
+            context.location.protocol === 'about:'
+        ) {
+            context = context.parent;
+        }
+    } catch(ex) {
+    }
+    vAPI.effectiveSelf = context;
+}
+
+/******************************************************************************/
+/******************************************************************************/
+/******************************************************************************/
+
+vAPI.userStylesheet = {
+    added: new Set(),
+    removed: new Set(),
+    apply: function(callback) {
+        if ( this.added.size === 0 && this.removed.size === 0 ) { return; }
+        vAPI.messaging.send('vapi', {
+            what: 'userCSS',
+            add: Array.from(this.added),
+            remove: Array.from(this.removed),
+        }).then(( ) => {
+            if ( callback instanceof Function === false ) { return; }
+            callback();
+        });
+        this.added.clear();
+        this.removed.clear();
+    },
+    add: function(cssText, now) {
+        if ( cssText === '' ) { return; }
+        this.added.add(cssText);
+        if ( now ) { this.apply(); }
+    },
+    remove: function(cssText, now) {
+        if ( cssText === '' ) { return; }
+        this.removed.add(cssText);
+        if ( now ) { this.apply(); }
+    }
+};
 
 /******************************************************************************/
 /******************************************************************************/
@@ -141,13 +184,12 @@ vAPI.contentScript = true;
 
 // https://github.com/gorhill/uBlock/issues/2147
 
-vAPI.SafeAnimationFrame = function(callback) {
-    this.fid = this.tid = undefined;
-    this.callback = callback;
-};
-
-vAPI.SafeAnimationFrame.prototype = {
-    start: function(delay) {
+vAPI.SafeAnimationFrame = class {
+    constructor(callback) {
+        this.fid = this.tid = undefined;
+        this.callback = callback;
+    }
+    start(delay) {
         if ( self.vAPI instanceof Object === false ) { return; }
         if ( delay === undefined ) {
             if ( this.fid === undefined ) {
@@ -161,8 +203,8 @@ vAPI.SafeAnimationFrame.prototype = {
         if ( this.fid === undefined && this.tid === undefined ) {
             this.tid = vAPI.setTimeout(( ) => { this.macroToMicro(); }, delay);
         }
-    },
-    clear: function() {
+    }
+    clear() {
         if ( this.fid !== undefined ) {
             cancelAnimationFrame(this.fid);
             this.fid = undefined;
@@ -171,27 +213,27 @@ vAPI.SafeAnimationFrame.prototype = {
             clearTimeout(this.tid);
             this.tid = undefined;
         }
-    },
-    macroToMicro: function() {
+    }
+    macroToMicro() {
         this.tid = undefined;
         this.start();
-    },
-    onRAF: function() {
+    }
+    onRAF() {
         if ( this.tid !== undefined ) {
             clearTimeout(this.tid);
             this.tid = undefined;
         }
         this.fid = undefined;
         this.callback();
-    },
-    onSTO: function() {
+    }
+    onSTO() {
         if ( this.fid !== undefined ) {
             cancelAnimationFrame(this.fid);
             this.fid = undefined;
         }
         this.tid = undefined;
         this.callback();
-    },
+    }
 };
 
 /******************************************************************************/
@@ -267,7 +309,9 @@ vAPI.SafeAnimationFrame.prototype = {
 /******************************************************************************/
 /******************************************************************************/
 
-vAPI.domWatcher = (( ) => {
+// vAPI.domWatcher
+
+{
     vAPI.domMutationTime = Date.now();
 
     const addedNodeLists = [];
@@ -276,11 +320,11 @@ vAPI.domWatcher = (( ) => {
     const ignoreTags = new Set([ 'br', 'head', 'link', 'meta', 'script', 'style' ]);
     const listeners = [];
 
-    let domIsReady = false,
-        domLayoutObserver,
-        listenerIterator = [], listenerIteratorDirty = false,
-        removedNodes = false,
-        safeObserverHandlerTimer;
+    let domLayoutObserver;
+    let listenerIterator = [];
+    let listenerIteratorDirty = false;
+    let removedNodes = false;
+    let safeObserverHandlerTimer;
 
     const safeObserverHandler = function() {
         let i = addedNodeLists.length;
@@ -340,7 +384,7 @@ vAPI.domWatcher = (( ) => {
     };
 
     const startMutationObserver = function() {
-        if ( domLayoutObserver !== undefined || !domIsReady ) { return; }
+        if ( domLayoutObserver !== undefined ) { return; }
         domLayoutObserver = new MutationObserver(observerHandler);
         domLayoutObserver.observe(document.documentElement, {
             //attributeFilter: [ 'class', 'id' ],
@@ -370,7 +414,7 @@ vAPI.domWatcher = (( ) => {
         if ( listeners.indexOf(listener) !== -1 ) { return; }
         listeners.push(listener);
         listenerIteratorDirty = true;
-        if ( domIsReady !== true ) { return; }
+        if ( domLayoutObserver === undefined ) { return; }
         try { listener.onDOMCreated(); }
         catch (ex) { }
         startMutationObserver();
@@ -389,7 +433,7 @@ vAPI.domWatcher = (( ) => {
     const cleanup = function() {
         if ( domLayoutObserver !== undefined ) {
             domLayoutObserver.disconnect();
-            domLayoutObserver = null;
+            domLayoutObserver = undefined;
         }
         if ( safeObserverHandlerTimer !== undefined ) {
             safeObserverHandlerTimer.clear();
@@ -398,7 +442,6 @@ vAPI.domWatcher = (( ) => {
     };
 
     const start = function() {
-        domIsReady = true;
         for ( const listener of getListenerIterator() ) {
             try { listener.onDOMCreated(); }
             catch (ex) { }
@@ -406,8 +449,8 @@ vAPI.domWatcher = (( ) => {
         startMutationObserver();
     };
 
-    return { start, addListener, removeListener };
-})();
+    vAPI.domWatcher = { start, addListener, removeListener };
+}
 
 /******************************************************************************/
 /******************************************************************************/
@@ -436,14 +479,15 @@ vAPI.injectScriptlet = function(doc, text) {
 
   The DOM filterer is the heart of uBO's cosmetic filtering.
 
-  DOMBaseFilterer: platform-specific
-  |
-  |
-  +---- DOMFilterer: adds procedural cosmetic filtering
+  DOMFilterer: adds procedural cosmetic filtering
 
 */
 
-vAPI.DOMFilterer = (function() {
+{
+    vAPI.hideStyle = 'display:none!important;';
+
+    // TODO: Experiment/evaluate loading procedural operator code using an
+    //       on demand approach.
 
     // 'P' stands for 'Procedural'
 
@@ -515,19 +559,19 @@ vAPI.DOMFilterer = (function() {
         }
     };
 
-    const PSelectorPassthru = class {
-        constructor() {
-        }
-        transpose(node, output) {
-            output.push(node);
-        }
-    };
-
     const PSelectorSpathTask = class {
         constructor(task) {
             this.spath = task[1];
+            this.nth = /^(?:\s*[+~]|:)/.test(this.spath);
+            if ( this.nth ) { return; }
+            if ( /^\s*>/.test(this.spath) ) {
+                this.spath = `:scope ${this.spath.trim()}`;
+            }
         }
-        transpose(node, output) {
+        qsa(node) {
+            if ( this.nth === false ) {
+                return node.querySelectorAll(this.spath);
+            }
             const parent = node.parentElement;
             if ( parent === null ) { return; }
             let pos = 1;
@@ -536,9 +580,13 @@ vAPI.DOMFilterer = (function() {
                 if ( node === null ) { break; }
                 pos += 1;
             }
-            const nodes = parent.querySelectorAll(
+            return parent.querySelectorAll(
                 `:scope > :nth-child(${pos})${this.spath}`
             );
+        }
+        transpose(node, output) {
+            const nodes = this.qsa(node);
+            if ( nodes === undefined ) { return; }
             for ( const node of nodes ) {
                 output.push(node);
             }
@@ -642,17 +690,13 @@ vAPI.DOMFilterer = (function() {
                     [ ':min-text-length', PSelectorMinTextLengthTask ],
                     [ ':not', PSelectorIfNotTask ],
                     [ ':nth-ancestor', PSelectorUpwardTask ],
-                    [ ':remove', PSelectorPassthru ],
                     [ ':spath', PSelectorSpathTask ],
                     [ ':upward', PSelectorUpwardTask ],
                     [ ':watch-attr', PSelectorWatchAttrs ],
                     [ ':xpath', PSelectorXpathTask ],
                 ]);
             }
-            this.budget = 200; // I arbitrary picked a 1/5 second
             this.raw = o.raw;
-            this.cost = 0;
-            this.lastAllowanceTime = 0;
             this.selector = o.selector;
             this.tasks = [];
             const tasks = o.tasks;
@@ -662,9 +706,6 @@ vAPI.DOMFilterer = (function() {
                         new (this.operatorToTaskMap.get(task[0]))(task)
                     );
                 }
-            }
-            if ( o.action !== undefined ) {
-                this.action = o.action;
             }
         }
         prime(input) {
@@ -701,9 +742,19 @@ vAPI.DOMFilterer = (function() {
             return false;
         }
     };
-    PSelector.prototype.action = undefined;
-    PSelector.prototype.hit = false;
     PSelector.prototype.operatorToTaskMap = undefined;
+
+    const PSelectorRoot = class extends PSelector {
+        constructor(o, styleToken) {
+            super(o);
+            this.budget = 200; // I arbitrary picked a 1/5 second
+            this.raw = o.raw;
+            this.cost = 0;
+            this.lastAllowanceTime = 0;
+            this.styleToken = styleToken;
+        }
+    };
+    PSelectorRoot.prototype.hit = false;
 
     const DOMProceduralFilterer = class {
         constructor(domFilterer) {
@@ -712,37 +763,32 @@ vAPI.DOMFilterer = (function() {
             this.domIsWatched = false;
             this.mustApplySelectors = false;
             this.selectors = new Map();
-            this.hiddenNodes = new Set();
+            this.masterToken = vAPI.randomToken();
+            this.styleTokenMap = new Map();
+            this.styledNodes = new Set();
+            if ( vAPI.domWatcher instanceof Object ) {
+                vAPI.domWatcher.addListener(this);
+            }
         }
 
-        addProceduralSelectors(aa) {
+        addProceduralSelectors(selectors) {
             const addedSelectors = [];
             let mustCommit = this.domIsWatched;
-            for ( let i = 0, n = aa.length; i < n; i++ ) {
-                const raw = aa[i];
-                const o = JSON.parse(raw);
-                if ( o.action === 'style' ) {
-                    this.domFilterer.addCSSRule(o.selector, o.tasks[0][1]);
-                    mustCommit = true;
-                    continue;
+            for ( const selector of selectors ) {
+                if ( this.selectors.has(selector.raw) ) { continue; }
+                let style, styleToken;
+                if ( selector.action === undefined ) {
+                    style = vAPI.hideStyle;
+                } else if ( selector.action[0] === ':style' ) {
+                    style = selector.action[1];
                 }
-                if ( o.pseudo !== undefined ) {
-                    this.domFilterer.addCSSRule(
-                        o.selector,
-                        'display:none!important;'
-                    );
-                    mustCommit = true;
-                    continue;
+                if ( style !== undefined ) {
+                    styleToken = this.styleTokenFromStyle(style);
                 }
-                if ( o.tasks !== undefined ) {
-                    if ( this.selectors.has(raw) === false ) {
-                        const pselector = new PSelector(o);
-                        this.selectors.set(raw, pselector);
-                        addedSelectors.push(pselector);
-                        mustCommit = true;
-                    }
-                    continue;
-                }
+                const pselector = new PSelectorRoot(selector, styleToken);
+                this.selectors.set(selector.raw, pselector);
+                addedSelectors.push(pselector);
+                mustCommit = true;
             }
             if ( mustCommit === false ) { return; }
             this.mustApplySelectors = this.selectors.size !== 0;
@@ -766,8 +812,8 @@ vAPI.DOMFilterer = (function() {
             // https://github.com/uBlockOrigin/uBlock-issues/issues/341
             //   Be ready to unhide nodes which no longer matches any of
             //   the procedural selectors.
-            const toRemove = this.hiddenNodes;
-            this.hiddenNodes = new Set();
+            const toUnstyle = this.styledNodes;
+            this.styledNodes = new Set();
 
             let t0 = Date.now();
 
@@ -789,42 +835,58 @@ vAPI.DOMFilterer = (function() {
                 t0 = t1;
                 if ( nodes.length === 0 ) { continue; }
                 pselector.hit = true;
-                if ( pselector.action === 'remove' ) {
-                    this.removeNodes(nodes);
-                } else {
-                    this.hideNodes(nodes);
-                }
+                this.styleNodes(nodes, pselector.styleToken);
             }
 
-            for ( const node of toRemove ) {
-                if ( this.hiddenNodes.has(node) ) { continue; }
-                this.domFilterer.unhideNode(node);
-            }
+            this.unstyleNodes(toUnstyle);
             //console.timeEnd('procedural selectors/dom layout changed');
         }
 
-        hideNodes(nodes) {
+        styleTokenFromStyle(style) {
+            if ( style === undefined ) { return; }
+            let styleToken = this.styleTokenMap.get(style);
+            if ( styleToken !== undefined ) { return styleToken; }
+            styleToken = vAPI.randomToken();
+            this.styleTokenMap.set(style, styleToken);
+            this.domFilterer.addCSSRule(
+                `[${this.masterToken}][${styleToken}]`,
+                style,
+                { silent: true, mustInject: true }
+            );
+            return styleToken;
+        }
+
+        styleNodes(nodes, styleToken) {
+            if ( styleToken === undefined ) {
+                for ( const node of nodes ) {
+                    node.textContent = '';
+                    node.remove();
+                }
+                return;
+            }
             for ( const node of nodes ) {
-                if ( node.parentElement === null ) { continue; }
-                this.domFilterer.hideNode(node);
-                this.hiddenNodes.add(node);
+                node.setAttribute(this.masterToken, '');
+                node.setAttribute(styleToken, '');
             }
         }
 
-        removeNodes(nodes) {
+        // TODO: Current assumption is one style per hit element. Could be an
+        //       issue if an element has multiple styling and one styling is
+        //       brough back. Possibly too rare to care about this for now.
+        unstyleNodes(nodes) {
             for ( const node of nodes ) {
-                node.textContent = '';
-                node.remove();
+                if ( this.styledNodes.has(node) ) { continue; }
+                node.removeAttribute(this.masterToken);
             }
         }
 
         createProceduralFilter(o) {
-            return new PSelector(o);
+            return new PSelectorRoot(o);
         }
 
         onDOMCreated() {
             this.domIsReady = true;
-            this.domFilterer.commitNow();
+            this.domFilterer.commit();
         }
 
         onDOMChanged(addedNodes, removedNodes) {
@@ -837,87 +899,226 @@ vAPI.DOMFilterer = (function() {
         }
     };
 
-    const DOMFilterer = class extends vAPI.DOMFilterer {
+    vAPI.DOMFilterer = class {
         constructor() {
-            super();
+            this.commitTimer = new vAPI.SafeAnimationFrame(
+                ( ) => { this.commitNow(); }
+            );
+            this.domIsReady = document.readyState !== 'loading';
+            this.disabled = false;
+            this.listeners = [];
+            this.filterset = new Set();
+            this.exceptedCSSRules = [];
             this.exceptions = [];
-            this.proceduralFilterer = new DOMProceduralFilterer(this);
-            this.hideNodeAttr = undefined;
-            this.hideNodeStyleSheetInjected = false;
-            if ( vAPI.domWatcher instanceof Object ) {
-                vAPI.domWatcher.addListener(this);
+            this.proceduralFilterer = null;
+            // https://github.com/uBlockOrigin/uBlock-issues/issues/167
+            //   By the time the DOMContentLoaded is fired, the content script might
+            //   have been disconnected from the background page. Unclear why this
+            //   would happen, so far seems to be a Chromium-specific behavior at
+            //   launch time.
+            if ( this.domIsReady !== true ) {
+                document.addEventListener('DOMContentLoaded', ( ) => {
+                    if ( vAPI instanceof Object === false ) { return; }
+                    this.domIsReady = true;
+                    this.commit();
+                });
             }
         }
 
-        commitNow() {
-            super.commitNow();
-            this.proceduralFilterer.commitNow();
+        addCSSRule(selectors, declarations, details = {}) {
+            if ( selectors === undefined ) { return; }
+            const selectorsStr = Array.isArray(selectors)
+                ? selectors.join(',\n')
+                : selectors;
+            if ( selectorsStr.length === 0 ) { return; }
+            this.filterset.add({ selectors: selectorsStr, declarations });
+            if ( details.mustInject && this.disabled === false ) {
+                vAPI.userStylesheet.add(`${selectorsStr}\n{${declarations}}`);
+            }
+            this.commit();
+            if ( details.silent !== true && this.hasListeners() ) {
+                this.triggerListeners({
+                    declarative: [ [ selectorsStr, declarations ] ]
+                });
+            }
         }
 
-        addProceduralSelectors(aa) {
-            this.proceduralFilterer.addProceduralSelectors(aa);
+        exceptCSSRules(exceptions) {
+            if ( exceptions.length === 0 ) { return; }
+            this.exceptedCSSRules.push(...exceptions);
+            if ( this.hasListeners() ) {
+                this.triggerListeners({ exceptions });
+            }
+        }
+
+        addListener(listener) {
+            if ( this.listeners.indexOf(listener) !== -1 ) { return; }
+            this.listeners.push(listener);
+        }
+
+        removeListener(listener) {
+            const pos = this.listeners.indexOf(listener);
+            if ( pos === -1 ) { return; }
+            this.listeners.splice(pos, 1);
+        }
+
+        hasListeners() {
+            return this.listeners.length !== 0;
+        }
+
+        triggerListeners(changes) {
+            for ( const listener of this.listeners ) {
+                listener.onFiltersetChanged(changes);
+            }
+        }
+
+        toggle(state, callback) {
+            if ( state === undefined ) { state = this.disabled; }
+            if ( state !== this.disabled ) { return; }
+            this.disabled = !state;
+            const userStylesheet = vAPI.userStylesheet;
+            for ( const entry of this.filterset ) {
+                const rule = `${entry.selectors}\n{${entry.declarations}}`;
+                if ( this.disabled ) {
+                    userStylesheet.remove(rule);
+                } else {
+                    userStylesheet.add(rule);
+                }
+            }
+            userStylesheet.apply(callback);
+        }
+
+        // Here we will deal with:
+        // - Injecting low priority user styles;
+        // - Notifying listeners about changed filterset.
+        // https://www.reddit.com/r/uBlockOrigin/comments/9jj0y1/no_longer_blocking_ads/
+        //   Ensure vAPI is still valid -- it can go away by the time we are
+        //   called, since the port could be force-disconnected from the main
+        //   process. Another approach would be to have vAPI.SafeAnimationFrame
+        //   register a shutdown job: to evaluate. For now I will keep the fix
+        //   trivial.
+        commitNow() {
+            this.commitTimer.clear();
+            if ( vAPI instanceof Object === false ) { return; }
+            vAPI.userStylesheet.apply();
+            if ( this.proceduralFilterer instanceof Object ) {
+                this.proceduralFilterer.commitNow();
+            }
+        }
+
+        commit(commitNow) {
+            if ( commitNow ) {
+                this.commitTimer.clear();
+                this.commitNow();
+            } else {
+                this.commitTimer.start();
+            }
+        }
+
+        proceduralFiltererInstance() {
+            if ( this.proceduralFilterer instanceof Object === false ) {
+                this.proceduralFilterer = new DOMProceduralFilterer(this);
+            }
+            return this.proceduralFilterer;
+        }
+
+        addProceduralSelectors(selectors) {
+            if ( Array.isArray(selectors) === false || selectors.length === 0 ) {
+                return;
+            }
+            const procedurals = [];
+            for ( const raw of selectors ) {
+                const o = JSON.parse(raw);
+                if (
+                    o.action !== undefined &&
+                    o.action[0] === ':style' &&
+                    o.tasks === undefined
+                ) {
+                    this.addCSSRule(o.selector, o.action[1], { mustInject: true });
+                    continue;
+                }
+                if ( o.pseudo !== undefined ) {
+                    this.addCSSRule(o.selector, vAPI.hideStyle, { mustInject: true });
+                    continue;
+                }
+                procedurals.push(o);
+            }
+            if ( procedurals.length !== 0 ) {
+                this.proceduralFiltererInstance()
+                    .addProceduralSelectors(procedurals);
+            }
         }
 
         createProceduralFilter(o) {
-            return this.proceduralFilterer.createProceduralFilter(o);
+            return this.proceduralFiltererInstance().createProceduralFilter(o);
         }
 
-        getAllSelectors() {
-            const out = super.getAllSelectors();
-            out.procedural = Array.from(this.proceduralFilterer.selectors.values());
+        getAllSelectors(bits = 0) {
+            const out = {
+                declarative: [],
+                exceptions: this.exceptedCSSRules,
+            };
+            const hasProcedural = this.proceduralFilterer instanceof Object;
+            const includePrivateSelectors = (bits & 0b01) !== 0;
+            const masterToken = hasProcedural
+                ? `[${this.proceduralFilterer.masterToken}]`
+                : undefined;
+            for ( const entry of this.filterset ) {
+                const selectors = entry.selectors;
+                if (
+                    includePrivateSelectors === false &&
+                    masterToken !== undefined &&
+                    selectors.startsWith(masterToken)
+                ) {
+                    continue;
+                }
+                out.declarative.push([ selectors, entry.declarations ]);
+            }
+            const excludeProcedurals = (bits & 0b10) !== 0;
+            if ( excludeProcedurals !== true ) {
+                out.procedural = hasProcedural
+                    ? Array.from(this.proceduralFilterer.selectors.values())
+                    : [];
+            }
             return out;
         }
 
         getAllExceptionSelectors() {
             return this.exceptions.join(',\n');
         }
-
-        onDOMCreated() {
-            if ( super.onDOMCreated instanceof Function ) {
-                super.onDOMCreated();
-            }
-            this.proceduralFilterer.onDOMCreated();
-        }
-
-        onDOMChanged() {
-            if ( super.onDOMChanged instanceof Function ) {
-                super.onDOMChanged.apply(this, arguments);
-            }
-            this.proceduralFilterer.onDOMChanged.apply(
-                this.proceduralFilterer,
-                arguments
-            );
-        }
     };
-
-    return DOMFilterer;
-})();
-
-vAPI.domFilterer = new vAPI.DOMFilterer();
+}
 
 /******************************************************************************/
 /******************************************************************************/
 /******************************************************************************/
 
-vAPI.domCollapser = (function() {
+// vAPI.domCollapser
+
+{
     const messaging = vAPI.messaging;
     const toCollapse = new Map();
     const src1stProps = {
+        audio: 'currentSrc',
         embed: 'src',
         iframe: 'src',
-        img: 'src',
-        object: 'data'
+        img: 'currentSrc',
+        object: 'data',
+        video: 'currentSrc',
     };
     const src2ndProps = {
-        img: 'srcset'
+        audio: 'src',
+        img: 'src',
+        video: 'src',
     };
     const tagToTypeMap = {
+        audio: 'media',
         embed: 'object',
         iframe: 'sub_frame',
         img: 'image',
-        object: 'object'
+        object: 'object',
+        video: 'media',
     };
-
     let resquestIdGenerator = 1,
         processTimer,
         cachedBlockedSet,
@@ -933,6 +1134,21 @@ vAPI.domCollapser = (function() {
         cachedBlockedSetTimer = undefined;
     };
 
+    // https://github.com/chrisaljoudi/uBlock/issues/399
+    // https://github.com/gorhill/uBlock/issues/2848
+    //   Use a user stylesheet to collapse placeholders.
+    const getCollapseToken = ( ) => {
+        if ( collapseToken === undefined ) {
+            collapseToken = vAPI.randomToken();
+            vAPI.userStylesheet.add(
+                `[${collapseToken}]\n{display:none!important;}`,
+                true
+            );
+        }
+        return collapseToken;
+    };
+    let collapseToken;
+
     // https://github.com/chrisaljoudi/uBlock/issues/174
     //   Do not remove fragment from src URL
     const onProcessed = function(response) {
@@ -944,6 +1160,7 @@ vAPI.domCollapser = (function() {
 
         const targets = toCollapse.get(response.id);
         if ( targets === undefined ) { return; }
+
         toCollapse.delete(response.id);
         if ( cachedBlockedSetHash !== response.hash ) {
             cachedBlockedSet = new Set(response.blockedResources);
@@ -956,8 +1173,8 @@ vAPI.domCollapser = (function() {
         if ( cachedBlockedSet === undefined || cachedBlockedSet.size === 0 ) {
             return;
         }
+
         const selectors = [];
-        const iframeLoadEventPatch = vAPI.iframeLoadEventPatch;
         let netSelectorCacheCountMax = response.netSelectorCacheCountMax;
 
         for ( const target of targets ) {
@@ -974,32 +1191,24 @@ vAPI.domCollapser = (function() {
             if ( cachedBlockedSet.has(tagToTypeMap[tag] + ' ' + src) === false ) {
                 continue;
             }
-            // https://github.com/chrisaljoudi/uBlock/issues/399
-            // Never remove elements from the DOM, just hide them
-            target.style.setProperty('display', 'none', 'important');
-            target.hidden = true;
+            target.setAttribute(getCollapseToken(), '');
             // https://github.com/chrisaljoudi/uBlock/issues/1048
-            // Use attribute to construct CSS rule
-            if ( netSelectorCacheCount <= netSelectorCacheCountMax ) {
-                const value = target.getAttribute(prop);
-                if ( value ) {
-                    selectors.push(`${tag}[${prop}="${CSS.escape(value)}"]`);
-                    netSelectorCacheCount += 1;
-                }
-            }
-            if ( iframeLoadEventPatch !== undefined ) {
-                iframeLoadEventPatch(target);
+            //   Use attribute to construct CSS rule
+            if ( netSelectorCacheCount > netSelectorCacheCountMax ) { continue; }
+            const value = target.getAttribute(prop);
+            if ( value ) {
+                selectors.push(`${tag}[${prop}="${CSS.escape(value)}"]`);
+                netSelectorCacheCount += 1;
             }
         }
 
-        if ( selectors.length !== 0 ) {
-            messaging.send('contentscript', {
-                what: 'cosmeticFiltersInjected',
-                type: 'net',
-                hostname: window.location.hostname,
-                selectors,
-            });
-        }
+        if ( selectors.length === 0 ) { return; }
+        messaging.send('contentscript', {
+            what: 'cosmeticFiltersInjected',
+            type: 'net',
+            hostname: window.location.hostname,
+            selectors,
+        });
     };
 
     const send = function() {
@@ -1053,27 +1262,14 @@ vAPI.domCollapser = (function() {
         attributeFilter: [ 'src' ]
     };
 
-    // The injected scriptlets are those which were injected in the current
-    // document, from within `bootstrapPhase1`, and which scriptlets are
-    // selectively looked-up from:
-    // https://github.com/uBlockOrigin/uAssets/blob/master/filters/resources.txt
-    const primeLocalIFrame = function(iframe) {
-        if ( vAPI.injectedScripts ) {
-            vAPI.injectScriptlet(iframe.contentDocument, vAPI.injectedScripts);
-        }
-    };
-
     // https://github.com/gorhill/uBlock/issues/162
-    // Be prepared to deal with possible change of src attribute.
+    //   Be prepared to deal with possible change of src attribute.
     const addIFrame = function(iframe, dontObserve) {
         if ( dontObserve !== true ) {
             iframeSourceObserver.observe(iframe, iframeSourceObserverOptions);
         }
         const src = iframe.src;
-        if ( src === '' || typeof src !== 'string' ) {
-            primeLocalIFrame(iframe);
-            return;
-        }
+        if ( typeof src !== 'string' || src === '' ) { return; }
         if ( src.startsWith('http') === false ) { return; }
         toFilter.push({ type: 'sub_frame', url: iframe.src });
         add(iframe);
@@ -1089,6 +1285,24 @@ vAPI.domCollapser = (function() {
         if ( tagToTypeMap[ev.target.localName] !== undefined ) {
             add(ev.target);
             process();
+        }
+    };
+
+    const stop = function() {
+        document.removeEventListener('error', onResourceFailed, true);
+        if ( processTimer !== undefined ) {
+            clearTimeout(processTimer);
+        }
+        if ( vAPI.domWatcher instanceof Object ) {
+            vAPI.domWatcher.removeListener(domWatcherInterface);
+        }
+        vAPI.shutdown.remove(stop);
+        vAPI.domCollapser = null;
+    };
+
+    const start = function() {
+        if ( vAPI.domWatcher instanceof Object ) {
+            vAPI.domWatcher.addListener(domWatcherInterface);
         }
     };
 
@@ -1122,12 +1336,7 @@ vAPI.domCollapser = (function() {
 
             document.addEventListener('error', onResourceFailed, true);
 
-            vAPI.shutdown.add(function() {
-                document.removeEventListener('error', onResourceFailed, true);
-                if ( processTimer !== undefined ) {
-                    clearTimeout(processTimer);
-                }
-            });
+            vAPI.shutdown.add(stop);
         },
         onDOMChanged: function(addedNodes) {
             if ( addedNodes.length === 0 ) { return; }
@@ -1145,18 +1354,16 @@ vAPI.domCollapser = (function() {
         }
     };
 
-    if ( vAPI.domWatcher instanceof Object ) {
-        vAPI.domWatcher.addListener(domWatcherInterface);
-    }
-
-    return { add, addMany, addIFrame, addIFrames, process };
-})();
+    vAPI.domCollapser = { start };
+}
 
 /******************************************************************************/
 /******************************************************************************/
 /******************************************************************************/
 
-vAPI.domSurveyor = (function() {
+// vAPI.domSurveyor
+
+{
     const messaging = vAPI.messaging;
     const queriedIds = new Set();
     const queriedClasses = new Set();
@@ -1316,31 +1523,9 @@ vAPI.domSurveyor = (function() {
         let mustCommit = false;
 
         if ( result ) {
-            let selectors = result.simple;
-            if ( Array.isArray(selectors) && selectors.length !== 0 ) {
-                domFilterer.addCSSRule(
-                    selectors,
-                    'display:none!important;',
-                    { type: 'simple' }
-                );
-                mustCommit = true;
-            }
-            selectors = result.complex;
-            if ( Array.isArray(selectors) && selectors.length !== 0 ) {
-                domFilterer.addCSSRule(
-                    selectors,
-                    'display:none!important;',
-                    { type: 'complex' }
-                );
-                mustCommit = true;
-            }
-            selectors = result.injected;
+            let selectors = result.injected;
             if ( typeof selectors === 'string' && selectors.length !== 0 ) {
-                domFilterer.addCSSRule(
-                    selectors,
-                    'display:none!important;',
-                    { injected: true }
-                );
+                domFilterer.addCSSRule(selectors, vAPI.hideStyle);
                 mustCommit = true;
             }
             selectors = result.excepted;
@@ -1415,18 +1600,18 @@ vAPI.domSurveyor = (function() {
         vAPI.domWatcher.addListener(domWatcherInterface);
     };
 
-    return { start };
-})();
+    vAPI.domSurveyor = { start };
+}
 
 /******************************************************************************/
 /******************************************************************************/
 /******************************************************************************/
 
-// Bootstrapping allows all components of the content script to be launched
-// if/when needed.
+// vAPI.bootstrap:
+//   Bootstrapping allows all components of the content script
+//   to be launched if/when needed.
 
-vAPI.bootstrap = (function() {
-
+{
     const bootstrapPhase2 = function() {
         // This can happen on Firefox. For instance:
         // https://github.com/gorhill/uBlock/issues/1893
@@ -1497,44 +1682,20 @@ vAPI.bootstrap = (function() {
             return;
         }
 
+        vAPI.domCollapser.start();
+
         if ( response.noCosmeticFiltering ) {
             vAPI.domFilterer = null;
             vAPI.domSurveyor = null;
         } else {
-            const domFilterer = vAPI.domFilterer;
+            const domFilterer = vAPI.domFilterer = new vAPI.DOMFilterer();
             if ( response.noGenericCosmeticFiltering || cfeDetails.noDOMSurveying ) {
                 vAPI.domSurveyor = null;
             }
             domFilterer.exceptions = cfeDetails.exceptionFilters;
-            domFilterer.hideNodeAttr = cfeDetails.hideNodeAttr;
-            domFilterer.hideNodeStyleSheetInjected =
-                cfeDetails.hideNodeStyleSheetInjected === true;
-            domFilterer.addCSSRule(
-                cfeDetails.declarativeFilters,
-                'display:none!important;'
-            );
-            domFilterer.addCSSRule(
-                cfeDetails.highGenericHideSimple,
-                'display:none!important;',
-                { type: 'simple', lazy: true }
-            );
-            domFilterer.addCSSRule(
-                cfeDetails.highGenericHideComplex,
-                'display:none!important;',
-                { type: 'complex', lazy: true }
-            );
-            domFilterer.addCSSRule(
-                cfeDetails.injectedHideFilters,
-                'display:none!important;',
-                { injected: true }
-            );
+            domFilterer.addCSSRule(cfeDetails.injectedHideFilters, vAPI.hideStyle);
             domFilterer.addProceduralSelectors(cfeDetails.proceduralFilters);
             domFilterer.exceptCSSRules(cfeDetails.exceptedFilters);
-        }
-
-        if ( cfeDetails.networkFilters.length !== 0 ) {
-            vAPI.userStylesheet.add(
-                cfeDetails.networkFilters + '\n{display:none!important;}');
         }
 
         vAPI.userStylesheet.apply();
@@ -1568,17 +1729,16 @@ vAPI.bootstrap = (function() {
         }
     };
 
-    return function() {
+    vAPI.bootstrap = function() {
         vAPI.messaging.send('contentscript', {
             what: 'retrieveContentScriptParameters',
-            url: window.location.href,
-            isRootFrame: window === window.top,
+            url: vAPI.effectiveSelf.location.href,
             charset: document.characterSet,
         }).then(response => {
             bootstrapPhase1(response);
         });
     };
-})();
+}
 
 // This starts bootstrap process.
 vAPI.bootstrap();

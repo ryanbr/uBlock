@@ -551,9 +551,25 @@
     "message": "Säännön syntaksi: <code>lähde kohde tyyppi toiminto</code> (<a href='https://github.com/gorhill/uBlock/wiki/Dynamic-filtering:-rule-syntax'>täysi dokumentaatio</a>).",
     "description": "English: dynamic rule syntax and full documentation."
   },
+  "rulesSort": {
+    "message": "Sort:",
+    "description": "English: label for sort option."
+  },
+  "rulesSortByType": {
+    "message": "Rule type",
+    "description": "English: a sort option for list of rules."
+  },
+  "rulesSortBySource": {
+    "message": "Source",
+    "description": "English: a sort option for list of rules."
+  },
+  "rulesSortByDestination": {
+    "message": "Destination",
+    "description": "English: a sort option for list of rules."
+  },
   "whitelistPrompt": {
     "message": "Lista osoitteista, joissa haluat kytkeä uBlock₀:n pois päältä. Kirjoita yksi osoite kullekin riville. Virheelliset säännöt ohitetaan.",
-    "description": "English: An overview of the content of the dashboard's Whitelist pane."
+    "description": "The name of the trusted sites pane."
   },
   "whitelistImport": {
     "message": "Tuo ja lisää",
@@ -565,7 +581,7 @@
   },
   "whitelistExportFilename": {
     "message": "minun-ublock-valkolista_{{datetime}}.txt",
-    "description": "English: my-ublock-whitelist_{{datetime}}.txt"
+    "description": "The default filename to use for import/export purpose"
   },
   "whitelistApply": {
     "message": "Vahvista muutokset",
@@ -889,7 +905,11 @@
   },
   "subscriberConfirm": {
     "message": "uBlock₀: Lisätäänkö seuraava URL-osoite mukautettujen suodattimien luetteloihisi?\n\nNimi: \"{{title}}\"\nURL-osoite: {{url}}",
-    "description": "English: The message seen by the user to confirm subscription to a ABP filter list"
+    "description": "No longer used"
+  },
+  "subscribeButton": {
+    "message": "Subscribe",
+    "description": "For the button used to subscribe to a filter list"
   },
   "elapsedOneMinuteAgo": {
     "message": "minuutti sitten",
@@ -929,11 +949,11 @@
   },
   "docblockedPrompt1": {
     "message": "uBlock Origin on estänyt seuraavaa sivua lataamasta:",
-    "description": "English: uBlock₀ has prevented the following page from loading:"
+    "description": "Used in the strict-blocking page"
   },
   "docblockedPrompt2": {
     "message": "Seuraavan suodattimen vuoksi",
-    "description": "English: Because of the following filter"
+    "description": "Used in the strict-blocking page"
   },
   "docblockedNoParamsPrompt": {
     "message": "ilman parametrejä",
@@ -1042,6 +1062,10 @@
   "GB": {
     "message": "Gt",
     "description": "short for 'gigabytes'"
+  },
+  "clickToLoad": {
+    "message": "Click to load",
+    "description": "Message used in frame placeholders"
   },
   "dummy": {
     "message": "This entry must be the last one",

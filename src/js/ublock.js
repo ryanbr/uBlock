@@ -428,7 +428,7 @@ const matchBucket = function(url, hostname, bucket, start) {
     });
 
     await vAPI.tabs.executeScript(tabId, {
-        file: '/js/scriptlets/element-picker.js',
+        file: '/js/scriptlets/epicker.js',
         runAt: 'document_end',
     });
 
@@ -634,7 +634,8 @@ const matchBucket = function(url, hostname, bucket, start) {
     vAPI.tabs.executeScript(tabId, {
         file: '/js/scriptlets/cosmetic-logger.js',
         frameId: frameId,
-        runAt: 'document_start'
+        matchAboutBlank: true,
+        runAt: 'document_start',
     });
 };
 

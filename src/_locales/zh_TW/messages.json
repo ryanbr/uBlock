@@ -4,7 +4,7 @@
     "description": "extension name."
   },
   "extShortDesc": {
-    "message": "一個高效率的網路資源過濾器，使用不多的 CPU 及記憶體資源。",
+    "message": "終於有套使用不多的 CPU 及記憶體資源的高效率阻擋器。",
     "description": "this will be in the Chrome web store: must be 132 characters or less"
   },
   "dashboardName": {
@@ -404,7 +404,7 @@
     "description": "English: Parse and enforce Adblock+ element hiding filters."
   },
   "3pParseAllABPHideFiltersInfo": {
-    "message": "<p>啟用此選項後，您就可以使用 <a href=\"https://adblockplus.org/zh_TW/faq_internal#elemhide\">與 Adblock Plus 相容的「元素隱藏」過濾規則</a>。這些過濾規則可用來隱藏網頁中礙眼，卻又不能被以網路請求為主的過濾引擎所阻擋的元素。</p><p>啟用此功能將增加 <i>uBlock₀ </i> 的記憶體使用量。</p>",
+    "message": "「網頁元素過濾」用來隱藏網頁中被認為礙眼，且不能被以網路請求為基礎之過濾引擎所阻擋的元素。",
     "description": "Describes the purpose of the 'Parse and enforce cosmetic filters' feature."
   },
   "3pIgnoreGenericCosmeticFilters": {
@@ -412,7 +412,7 @@
     "description": "This will cause uBO to ignore all generic cosmetic filters."
   },
   "3pIgnoreGenericCosmeticFiltersInfo": {
-    "message": "<p>一般元素過濾規則是指會套用於所有網站的規則。<p>雖然 uBlock₀ 會有效率地處理這些規則，但還是可能會在某些網頁中造成許多多餘的記憶體與 CPU 使用率，尤其是在較大又較舊的網頁中。<p>開啟此選項可避免在處理一般元素過濾規則時，造成多餘的記憶體與 CPU 使用率，也能降低 uBlock₀ 本身的記憶體用量。<p>建議您在效能較差的裝置中開啟此選項。",
+    "message": "「一般元素隱藏過濾規則」是會套用在所有網頁的元素隱藏過濾規則。啟用此選項會減少每個網頁，因處理一般元素隱藏過濾規則而增加的記憶體與 CPU 使用率。\n\n建議在效能較差的裝置啟用此選項。",
     "description": "Describes the purpose of the 'Ignore generic cosmetic filters' feature."
   },
   "3pListsOfBlockedHostsHeader": {
@@ -484,7 +484,7 @@
     "description": "used as a tooltip for error icon beside a list"
   },
   "1pFormatHint": {
-    "message": "每行一個過濾規則。規則可以單純是主機名稱，或是與 Adblock Plus 相容的過濾規則。以 <code>!</code> 開頭的行將被忽略。",
+    "message": "每行一個過濾規則。規則可以單純是主機名稱，或是與 EasyList 相容的過濾規則。以 <code>!</code> 開頭的行將被忽略。",
     "description": "Short information about how to create custom filters"
   },
   "1pImport": {
@@ -551,9 +551,25 @@
     "message": "規則語法：<code>來源主機名稱 目標主機名稱 連線請求類型 操作</code>（<a href='https://github.com/gorhill/uBlock/wiki/Dynamic-filtering:-rule-syntax'>完整說明</a>）。",
     "description": "English: dynamic rule syntax and full documentation."
   },
+  "rulesSort": {
+    "message": "排序：",
+    "description": "English: label for sort option."
+  },
+  "rulesSortByType": {
+    "message": "規則類型",
+    "description": "English: a sort option for list of rules."
+  },
+  "rulesSortBySource": {
+    "message": "來源",
+    "description": "English: a sort option for list of rules."
+  },
+  "rulesSortByDestination": {
+    "message": "目標",
+    "description": "English: a sort option for list of rules."
+  },
   "whitelistPrompt": {
-    "message": "白名單中的規則適用的頁面不會被 uBlock₀ 過濾或阻擋。每行一個規則。無效的規則將被忽略。",
-    "description": "English: An overview of the content of the dashboard's Whitelist pane."
+    "message": "列表裡的主機名稱將被 uBlock₀ 停用。每行一個規則。無效的主機名稱將被忽略掉。",
+    "description": "The name of the trusted sites pane."
   },
   "whitelistImport": {
     "message": "匯入並加入",
@@ -564,8 +580,8 @@
     "description": "English: Export"
   },
   "whitelistExportFilename": {
-    "message": "my-ublock-whitelist_{{datetime}}.txt",
-    "description": "English: my-ublock-whitelist_{{datetime}}.txt"
+    "message": "我的-ublock-白名單_{{datetime}}.txt",
+    "description": "The default filename to use for import/export purpose"
   },
   "whitelistApply": {
     "message": "套用變更",
@@ -889,7 +905,11 @@
   },
   "subscriberConfirm": {
     "message": "uBlock₀：確定要新增下列網址至自訂過濾規則清單？\n\n標題：「{{title}}」\n網址：{{url}}",
-    "description": "English: The message seen by the user to confirm subscription to a ABP filter list"
+    "description": "No longer used"
+  },
+  "subscribeButton": {
+    "message": "訂閱",
+    "description": "For the button used to subscribe to a filter list"
   },
   "elapsedOneMinuteAgo": {
     "message": "1 分鐘前",
@@ -929,11 +949,11 @@
   },
   "docblockedPrompt1": {
     "message": "uBlock₀ 已防止下列的頁面載入：",
-    "description": "English: uBlock₀ has prevented the following page from loading:"
+    "description": "Used in the strict-blocking page"
   },
   "docblockedPrompt2": {
-    "message": "因為下列過濾規則",
-    "description": "English: Because of the following filter"
+    "message": "因為下列過濾規則：",
+    "description": "Used in the strict-blocking page"
   },
   "docblockedNoParamsPrompt": {
     "message": "不帶參數",
@@ -1042,6 +1062,10 @@
   "GB": {
     "message": "GB",
     "description": "short for 'gigabytes'"
+  },
+  "clickToLoad": {
+    "message": "點擊以載入",
+    "description": "Message used in frame placeholders"
   },
   "dummy": {
     "message": "此條目須為最後一個",

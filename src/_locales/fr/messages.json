@@ -40,7 +40,7 @@
     "description": "appears as tab name in dashboard"
   },
   "whitelistPageName": {
-    "message": "Liste blanche",
+    "message": "Sites Web fiables",
     "description": "appears as tab name in dashboard"
   },
   "shortcutsPageName": {
@@ -448,7 +448,7 @@
     "description": "English: Multipurpose"
   },
   "3pGroupRegions": {
-    "message": "Régions, langages",
+    "message": "Régions, langues",
     "description": "English: Regions, languages"
   },
   "3pGroupCustom": {
@@ -484,7 +484,7 @@
     "description": "used as a tooltip for error icon beside a list"
   },
   "1pFormatHint": {
-    "message": "Une règle par ligne. Une règle peut être un simple nom d'hôte, ou encore un filtre respectant la syntaxe des filtres Adblock Plus. Les lignes débutant par <code>!</code> seront ignorées.",
+    "message": "Une règle par ligne. Une règle peut être un simple nom d'hôte, ou encore une règle compatible EasyList. Les lignes débutant par <code>!</code> seront ignorées.",
     "description": "Short information about how to create custom filters"
   },
   "1pImport": {
@@ -548,12 +548,28 @@
     "description": "English: List of your dynamic filtering rules."
   },
   "rulesFormatHint": {
-    "message": "Syntaxe : <code>source destination type action</code> (<a href='https://github.com/gorhill/uBlock/wiki/Dynamic-filtering:-rule-syntax'>Documentation complète en Anglais</a>)",
+    "message": "Syntaxe : <code>source destination type action</code> (<a href='https://github.com/gorhill/uBlock/wiki/Dynamic-filtering:-rule-syntax'>Documentation complète en anglais</a>)",
     "description": "English: dynamic rule syntax and full documentation."
   },
+  "rulesSort": {
+    "message": "Trier :",
+    "description": "English: label for sort option."
+  },
+  "rulesSortByType": {
+    "message": "Type de règle",
+    "description": "English: a sort option for list of rules."
+  },
+  "rulesSortBySource": {
+    "message": "Source",
+    "description": "English: a sort option for list of rules."
+  },
+  "rulesSortByDestination": {
+    "message": "Destination",
+    "description": "English: a sort option for list of rules."
+  },
   "whitelistPrompt": {
-    "message": "La liste blanche indique à uBlock Origin sur quels sites Web il ne doit pas opérer de filtrage. Renseignez une exception par ligne. Toute entrée invalide sera ignorée et vous n'en serez pas averti(e).",
-    "description": "English: An overview of the content of the dashboard's Whitelist pane."
+    "message": "Les sites Web déclarés comme fiables auprès d'uBlock Origin ne seront pas traités par ce dernier.\nUne entrée par ligne. Les entrées invalides seront silencieusement ignorées et commentées.",
+    "description": "The name of the trusted sites pane."
   },
   "whitelistImport": {
     "message": "Importer",
@@ -564,8 +580,8 @@
     "description": "English: Export"
   },
   "whitelistExportFilename": {
-    "message": "ma-liste-blanche-ublock-{{datetime}}.txt",
-    "description": "English: my-ublock-whitelist_{{datetime}}.txt"
+    "message": "mes-sites-fiables-ublock-{{datetime}}.txt",
+    "description": "The default filename to use for import/export purpose"
   },
   "whitelistApply": {
     "message": "Appliquer",
@@ -888,8 +904,12 @@
     "description": "English: Network error: {{msg}}"
   },
   "subscriberConfirm": {
-    "message": "uBlock₀ : Ajouter la ressource Web suivante à votre sélection de listes de filtrage ?\n\nTitre : \"{{title}}\"\nURL : {{url}}",
-    "description": "English: The message seen by the user to confirm subscription to a ABP filter list"
+    "message": "Ajouter le lien suivant à votre sélection de listes de filtrage ?\n\nTitre : \"{{title}}\"\nLien : {{url}}",
+    "description": "No longer used"
+  },
+  "subscribeButton": {
+    "message": "Souscrire",
+    "description": "For the button used to subscribe to a filter list"
   },
   "elapsedOneMinuteAgo": {
     "message": "Il y a une minute",
@@ -929,11 +949,11 @@
   },
   "docblockedPrompt1": {
     "message": "uBlock₀ a empêché le chargement de la page suivante :",
-    "description": "English: uBlock₀ has prevented the following page from loading:"
+    "description": "Used in the strict-blocking page"
   },
   "docblockedPrompt2": {
     "message": "À cause du filtre suivant :",
-    "description": "English: Because of the following filter"
+    "description": "Used in the strict-blocking page"
   },
   "docblockedNoParamsPrompt": {
     "message": "sans paramètres",
@@ -1042,6 +1062,10 @@
   "GB": {
     "message": "Go",
     "description": "short for 'gigabytes'"
+  },
+  "clickToLoad": {
+    "message": "Cliquez pour charger",
+    "description": "Message used in frame placeholders"
   },
   "dummy": {
     "message": "This entry must be the last one",

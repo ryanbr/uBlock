@@ -6,6 +6,7 @@
 <title>uBlock — Your filters</title>
 
 <link rel="stylesheet" href="lib/codemirror/lib/codemirror.css">
+<link rel="stylesheet" href="lib/codemirror/addon/fold/foldgutter.css">
 <link rel="stylesheet" href="lib/codemirror/addon/hint/show-hint.css">
 <link rel="stylesheet" href="lib/codemirror/addon/search/matchesonscrollbar.css">
 
@@ -23,7 +24,7 @@
 <div class="body">
     <div id="cloudWidget" class="hide" data-cloud-entry="myFiltersPane"></div>
 
-    <p class="vverbose"><span data-i18n="1pFormatHint"></span> <a class="fa info" href="https://github.com/gorhill/uBlock/wiki/Static-filter-syntax" target="_blank">&#xf05a;</a></p>
+    <p class="vverbose"><span data-i18n="1pFormatHint"></span> <a class="fa info" href="https://github.com/gorhill/uBlock/wiki/Dashboard:-My-filters" target="_blank">&#xf05a;</a></p>
     <p>
         <button id="userFiltersApply" class="important iconifiable" type="button" disabled><span class="fa">&#xf00c;</span><span data-i18n="1pApplyChanges"></span></button>
         <button id="userFiltersRevert" class="iconifiable" type="button" disabled><span class="fa">&#xf0e2;</span><span data-i18n="genericRevert"></span></button>
@@ -42,13 +43,16 @@
 <script src="lib/codemirror/addon/display/panel.js"></script>
 <script src="lib/codemirror/addon/edit/closebrackets.js"></script>
 <script src="lib/codemirror/addon/edit/matchbrackets.js"></script>
+<script src="lib/codemirror/addon/fold/foldcode.js"></script>
+<script src="lib/codemirror/addon/fold/foldgutter.js"></script>
 <script src="lib/codemirror/addon/hint/show-hint.js"></script>
 <script src="lib/codemirror/addon/scroll/annotatescrollbar.js"></script>
-<script src="lib/codemirror/addon/search/matchesonscrollbar.js"></script>
 <script src="lib/codemirror/addon/search/searchcursor.js"></script>
 <script src="lib/codemirror/addon/selection/active-line.js"></script>
 
 <script src="js/codemirror/search.js"></script>
+<script src="js/codemirror/search-thread.js"></script>
+<script src="js/codemirror/ubo-static-filtering.js"></script>
 
 <script src="js/fa-icons.js"></script>
 <script src="js/vapi.js"></script>
@@ -59,7 +63,6 @@
 <script src="js/dashboard-common.js"></script>
 <script src="js/cloud-ui.js"></script>
 <script src="js/static-filtering-parser.js"></script>
-<script src="js/codemirror/ubo-static-filtering.js"></script>
 <script src="js/1p-filters.js"></script>
 
 </body>

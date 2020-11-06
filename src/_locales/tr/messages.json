@@ -40,7 +40,7 @@
     "description": "appears as tab name in dashboard"
   },
   "whitelistPageName": {
-    "message": "Beyaz liste",
+    "message": "Güvenilen siteler",
     "description": "appears as tab name in dashboard"
   },
   "shortcutsPageName": {
@@ -484,7 +484,7 @@
     "description": "used as a tooltip for error icon beside a list"
   },
   "1pFormatHint": {
-    "message": "Her satırda bir filtre. Bir filtre yalın bir alan adı veya Adblock Plus uyumlu bir filtre olabilir. <code>!</code> ile başlayan satırlar yok sayılacaktır.",
+    "message": "Her satırda bir filtre. Bir filtre yalın bir alan adı veya EasyList-uyumlu bir filtre olabilir. <code>!</code> ile başlayan satırlar yok sayılacaktır.",
     "description": "Short information about how to create custom filters"
   },
   "1pImport": {
@@ -551,9 +551,25 @@
     "message": "Kural sözdizimi: <code>kaynak hedefi türü işlemi</code> (<a href='https://github.com/gorhill/uBlock/wiki/Dynamic-filtering:-rule-syntax'>bütün belgeler</a>).",
     "description": "English: dynamic rule syntax and full documentation."
   },
+  "rulesSort": {
+    "message": "Sıralama:",
+    "description": "English: label for sort option."
+  },
+  "rulesSortByType": {
+    "message": "Kural türü",
+    "description": "English: a sort option for list of rules."
+  },
+  "rulesSortBySource": {
+    "message": "Kaynak",
+    "description": "English: a sort option for list of rules."
+  },
+  "rulesSortByDestination": {
+    "message": "Hedef",
+    "description": "English: a sort option for list of rules."
+  },
   "whitelistPrompt": {
-    "message": "Beyaz liste yönergeleri, uBlock₀'in devre dışı bırakılması gerektiği web sayfalarını belirler. Her satırda bir girdi. Geçersiz yönergeler sessizce yok sayılacak ve yoruma dönüştürülecektir.",
-    "description": "English: An overview of the content of the dashboard's Whitelist pane."
+    "message": "Güvenilen site yönergeleri, uBlock Origin'in devre dışı bırakılması gerektiği web sayfalarını belirler. Her satırda bir girdi. Geçersiz yönergeler sessizce yok sayılacak ve yoruma dönüştürülecektir.",
+    "description": "The name of the trusted sites pane."
   },
   "whitelistImport": {
     "message": "İçe aktar ve ekle",
@@ -564,8 +580,8 @@
     "description": "English: Export"
   },
   "whitelistExportFilename": {
-    "message": "ublock-beyazlistem_{{datetime}}.txt",
-    "description": "English: my-ublock-whitelist_{{datetime}}.txt"
+    "message": "ublock-güvenilen-sitelerim_{{datetime}}.txt",
+    "description": "The default filename to use for import/export purpose"
   },
   "whitelistApply": {
     "message": "Değişiklikleri uygula",
@@ -612,7 +628,7 @@
     "description": "Tooltip for the popup panel button in the logger page"
   },
   "loggerInfoTip": {
-    "message": "uBlock₀ viki: Günlükçü",
+    "message": "uBlock Origin viki: Günlükçü",
     "description": "Tooltip for the top-right info label in the logger page"
   },
   "loggerClearTip": {
@@ -888,8 +904,12 @@
     "description": "English: Network error: {{msg}}"
   },
   "subscriberConfirm": {
-    "message": "uBlock₀: Aşağıdaki URL, özel filtre listenize eklensin mi?\n\nBaşlık: \"{{title}}\"\nURL: {{url}}",
-    "description": "English: The message seen by the user to confirm subscription to a ABP filter list"
+    "message": "Bu URL, özel filtre listenize eklensin mi?\n\nBaşlık: \"{{title}}\"\nURL: {{url}}",
+    "description": "No longer used"
+  },
+  "subscribeButton": {
+    "message": "Abone ol",
+    "description": "For the button used to subscribe to a filter list"
   },
   "elapsedOneMinuteAgo": {
     "message": "bir dakika önce",
@@ -928,12 +948,12 @@
     "description": "Firefox-specific: appears as 'uBlock₀ (off)'"
   },
   "docblockedPrompt1": {
-    "message": "uBlock₀ aşağıdaki sayfanın yüklenmesini engelledi:",
-    "description": "English: uBlock₀ has prevented the following page from loading:"
+    "message": "uBlock Origin aşağıdaki sayfanın yüklenmesini engelledi:",
+    "description": "Used in the strict-blocking page"
   },
   "docblockedPrompt2": {
-    "message": "Bu filtre nedeniyle",
-    "description": "English: Because of the following filter"
+    "message": "Bu filtre nedeniyle:",
+    "description": "Used in the strict-blocking page"
   },
   "docblockedNoParamsPrompt": {
     "message": "değişkensiz",
@@ -1042,6 +1062,10 @@
   "GB": {
     "message": "GB",
     "description": "short for 'gigabytes'"
+  },
+  "clickToLoad": {
+    "message": "Yüklemek için tıkla",
+    "description": "Message used in frame placeholders"
   },
   "dummy": {
     "message": "Bu girdi en sonda olmalıdır",

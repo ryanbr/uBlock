@@ -40,7 +40,7 @@
     "description": "appears as tab name in dashboard"
   },
   "whitelistPageName": {
-    "message": "Lista e bardhë",
+    "message": "Faqet e besuara",
     "description": "appears as tab name in dashboard"
   },
   "shortcutsPageName": {
@@ -304,7 +304,7 @@
     "description": "English: Hide placeholders of blocked elements"
   },
   "settingsIconBadgePrompt": {
-    "message": "Tregoj te ikona numrin e kërkesave të refuzuara",
+    "message": "Shfaq te ikona numrin e kërkesave të refuzuara",
     "description": "English: Show the number of blocked requests on the icon"
   },
   "settingsTooltipsPrompt": {
@@ -484,7 +484,7 @@
     "description": "used as a tooltip for error icon beside a list"
   },
   "1pFormatHint": {
-    "message": "Një filtër për rresht. Filtri mund të jetë thjesht emri i një hosti ose i ngjashëm me ata që përdor Adblock Plus. Nuk do të merren parasysh rreshtat që fillojnë me <code>!</code>.",
+    "message": "Një filtër për rresht. Filtri mund të jetë thjesht emri i një hosti ose i ngjashëm me ata që përdor EasyList. Nuk do të merren parasysh rreshtat që fillojnë me <code>!</code>.",
     "description": "Short information about how to create custom filters"
   },
   "1pImport": {
@@ -551,9 +551,25 @@
     "message": "Rregullat e sintaksës: <code>burimi destinacioni lloji veprimi</code> (<a href='https://github.com/gorhill/uBlock/wiki/Dynamic-filtering:-rule-syntax'>dokumentimi i plotë</a>).",
     "description": "English: dynamic rule syntax and full documentation."
   },
+  "rulesSort": {
+    "message": "Rendit:",
+    "description": "English: label for sort option."
+  },
+  "rulesSortByType": {
+    "message": "Lloji i rregullit",
+    "description": "English: a sort option for list of rules."
+  },
+  "rulesSortBySource": {
+    "message": "Burimi",
+    "description": "English: a sort option for list of rules."
+  },
+  "rulesSortByDestination": {
+    "message": "Destinacioni",
+    "description": "English: a sort option for list of rules."
+  },
   "whitelistPrompt": {
-    "message": "Lista e bardhë e detyron uBlock Origin të mos veprojë në faqe të caktuara. Një element për rresht. Nuk do të merren parasysh udhëzimet e pasakta.",
-    "description": "English: An overview of the content of the dashboard's Whitelist pane."
+    "message": "Kjo listë paraqet faqet e besuara në të cilat uBlock Origin duhet çaktivizuar. Një element për rresht. Nuk do të merren parasysh udhëzimet e pasakta.",
+    "description": "The name of the trusted sites pane."
   },
   "whitelistImport": {
     "message": "Importoj dhe shtoj",
@@ -564,8 +580,8 @@
     "description": "English: Export"
   },
   "whitelistExportFilename": {
-    "message": "my-ublock-whitelist_{{datetime}}.txt",
-    "description": "English: my-ublock-whitelist_{{datetime}}.txt"
+    "message": "my-ublock-trusted-sites_{{datetime}}.txt",
+    "description": "The default filename to use for import/export purpose"
   },
   "whitelistApply": {
     "message": "Ruaj ndryshimet",
@@ -888,8 +904,12 @@
     "description": "English: Network error: {{msg}}"
   },
   "subscriberConfirm": {
-    "message": "uBlock₀: Të shtohet adresa në listën e filtrave tuaj?\n\nTitulli: \"{{title}}\"\nURL: {{url}}",
-    "description": "English: The message seen by the user to confirm subscription to a ABP filter list"
+    "message": "Të shtohet adresa në listën e personalizuar të filtrave?\n\nTitulli: \"{{title}}\"\nURL: {{url}}",
+    "description": "No longer used"
+  },
+  "subscribeButton": {
+    "message": "Abonohem",
+    "description": "For the button used to subscribe to a filter list"
   },
   "elapsedOneMinuteAgo": {
     "message": "një minutë më parë",
@@ -929,11 +949,11 @@
   },
   "docblockedPrompt1": {
     "message": "uBlock Origin po pengon hapjen e faqes:",
-    "description": "English: uBlock₀ has prevented the following page from loading:"
+    "description": "Used in the strict-blocking page"
   },
   "docblockedPrompt2": {
     "message": "Për shkak të filtrit",
-    "description": "English: Because of the following filter"
+    "description": "Used in the strict-blocking page"
   },
   "docblockedNoParamsPrompt": {
     "message": "pa parametra",
@@ -1042,6 +1062,10 @@
   "GB": {
     "message": "GB",
     "description": "short for 'gigabytes'"
+  },
+  "clickToLoad": {
+    "message": "Klikoni për ta hapur",
+    "description": "Message used in frame placeholders"
   },
   "dummy": {
     "message": "This entry must be the last one",

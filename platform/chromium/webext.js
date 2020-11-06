@@ -93,6 +93,7 @@ const webext = {
         get: promisifyNoFail(chrome.tabs, 'get', tab => tab instanceof Object ? tab : null),
         executeScript: promisifyNoFail(chrome.tabs, 'executeScript'),
         insertCSS: promisifyNoFail(chrome.tabs, 'insertCSS'),
+        removeCSS: promisifyNoFail(chrome.tabs, 'removeCSS'),
         query: promisifyNoFail(chrome.tabs, 'query', tabs => Array.isArray(tabs) ? tabs : []),
         reload: promisifyNoFail(chrome.tabs, 'reload'),
         remove: promisifyNoFail(chrome.tabs, 'remove'),
@@ -101,6 +102,7 @@ const webext = {
     // https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/webNavigation
     webNavigation: {
         getFrame: promisify(chrome.webNavigation, 'getFrame'),
+        getAllFrames: promisify(chrome.webNavigation, 'getAllFrames'),
     },
     // https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/windows
     windows: {

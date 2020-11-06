@@ -214,6 +214,7 @@ const LogEntry = function(details) {
             this[prop] = details[prop];
         }
     }
+    this.type = details.stype;
     if ( details.aliasURL !== undefined ) {
         this.aliased = true;
     }
@@ -1263,13 +1264,16 @@ const reloadTab = function(ev) {
             // Avoid duplicates
             if ( createdStaticFilters.hasOwnProperty(value) ) { return; }
             createdStaticFilters[value] = true;
+            // https://github.com/uBlockOrigin/uBlock-issues/issues/1281#issuecomment-704217175
+            // TODO:
+            //   Figure a way to use the actual document URL. Currently using
+            //   a synthetic URL derived from the document hostname.
             if ( value !== '' ) {
                 messaging.send('loggerUI', {
                     what: 'createUserFilter',
                     autoComment: true,
                     filters: value,
-                    origin: targetPageDomain,
-                    pageDomain: targetPageDomain,
+                    docURL: `https://${targetFrameHostname}/`,
                 });
             }
             updateWidgets();
@@ -1872,8 +1876,6 @@ const reloadTab = function(ev) {
     );
 })();
 
-// https://www.youtube.com/watch?v=XyNYrmmdUd4
-
 /******************************************************************************/
 /******************************************************************************/
 
@@ -2323,7 +2325,7 @@ const popupManager = (( ) => {
 
     const setTabId = function(tabId) {
         if ( popup === null ) { return; }
-        popup.setAttribute('src', 'popup.html?tabId=' + tabId);
+        popup.setAttribute('src', 'popup-fenix.html?portrait=1&tabId=' + tabId);
     };
 
     const onTabIdChanged = function() {
