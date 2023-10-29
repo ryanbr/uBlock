@@ -55,6 +55,10 @@
     "message": "O razširitvi",
     "description": "appears as tab name in dashboard"
   },
+  "supportPageName": {
+    "message": "Podpora",
+    "description": "appears as tab name in dashboard"
+  },
   "assetViewerPageName": {
     "message": "uBlock₀ — pregled sredstev",
     "description": "Title for the asset viewer page"
@@ -85,7 +89,7 @@
   },
   "popupBlockedStats": {
     "message": "{{count}} ali {{percent}}%",
-    "description": "Example: 15 or 13%"
+    "description": "Example: 15 (13%)"
   },
   "popupBlockedSinceInstallPrompt": {
     "message": "od namestitve",
@@ -96,15 +100,15 @@
     "description": "English: or"
   },
   "popupBlockedOnThisPage_v2": {
-    "message": "Blocked on this page",
+    "message": "Blokirano na tej strani",
     "description": "For the new mobile-friendly popup design"
   },
   "popupBlockedSinceInstall_v2": {
-    "message": "Blocked since install",
+    "message": "Blokirano od namestitve",
     "description": "For the new mobile-friendly popup design"
   },
   "popupDomainsConnected_v2": {
-    "message": "Domains connected",
+    "message": "Povezane domene",
     "description": "For the new mobile-friendly popup design"
   },
   "popupTipDashboard": {
@@ -122,6 +126,10 @@
   "popupTipLog": {
     "message": "Pojdi na dnevnik omrežnih zahtev",
     "description": "Tooltip used for the logger icon in the panel"
+  },
+  "popupTipReport": {
+    "message": "Prijavi napako na tej strani",
+    "description": "Tooltip used for the 'chat' icon in the panel"
   },
   "popupTipNoPopups": {
     "message": "Vklop/Izklop blokiranja vseh pojavnih oken za to stran",
@@ -179,25 +187,33 @@
     "message": "Klikni, da prenehaš onemogočati JavaScript na tej strani",
     "description": "Tooltip for the no-scripting per-site switch"
   },
+  "popupNoPopups_v2": {
+    "message": "Pojavna okna",
+    "description": "Caption for the no-popups per-site switch"
+  },
   "popupNoLargeMedia_v2": {
-    "message": "Large media elements",
-    "description": "Tip for the no-large-media per-site switch"
+    "message": "Veliki predstavnostni elementi",
+    "description": "Caption for the no-large-media per-site switch"
   },
   "popupNoCosmeticFiltering_v2": {
-    "message": "Cosmetic filtering",
-    "description": "Tip for the no-cosmetic-filtering per-site switch"
+    "message": "Kozmetično filtriranje",
+    "description": "Caption for the no-cosmetic-filtering per-site switch"
   },
   "popupNoRemoteFonts_v2": {
-    "message": "Remote fonts",
-    "description": "Tip for the no-remote-fonts per-site switch"
+    "message": "Oddaljene pisave",
+    "description": "Caption for the no-remote-fonts per-site switch"
   },
   "popupNoScripting_v2": {
     "message": "JavaScript",
-    "description": "Tip for the no-scripting per-site switch"
+    "description": "Caption for the no-scripting per-site switch"
   },
   "popupMoreButton_v2": {
-    "message": "More",
-    "description": "Label to be used to toggle overview panel"
+    "message": "Več",
+    "description": "Label to be used to show popup panel sections"
+  },
+  "popupLessButton_v2": {
+    "message": "Manj",
+    "description": "Label to be used to hide popup panel sections"
   },
   "popupTipGlobalRules": {
     "message": "Globalna pravila: ta stolpec je za pravila, ki se uveljavljajo za vse strani.",
@@ -255,6 +271,18 @@
     "message": "{{count}} od {{total}}",
     "description": "appears in popup"
   },
+  "popupVersion": {
+    "message": "Različica",
+    "description": "Example of use: Version 1.26.4"
+  },
+  "popup3pScriptFilter": {
+    "message": "script",
+    "description": "Appears as an option to filter out firewall rows"
+  },
+  "popup3pFrameFilter": {
+    "message": "frame",
+    "description": "Appears as an option to filter out firewall rows"
+  },
   "pickerCreate": {
     "message": "Ustvari",
     "description": "English: Create"
@@ -307,17 +335,25 @@
     "message": "Način prijazen barvno slepim uporabnikom",
     "description": "English: Color-blind friendly"
   },
+  "settingsAppearance": {
+    "message": "Izgled",
+    "description": "Section for controlling user interface appearance"
+  },
+  "settingsThemeLabel": {
+    "message": "Tema",
+    "description": "Label for checkbox to enable a custom dark theme"
+  },
+  "settingsThemeAccent0Label": {
+    "message": "Barva akcenta po meri",
+    "description": "Label for checkbox to pick an accent color"
+  },
   "settingsCloudStorageEnabledPrompt": {
     "message": "Omogoči podporo za shrambo v oblaku",
     "description": ""
   },
   "settingsAdvancedUserPrompt": {
     "message": "Sem napreden uporabnik (<a href='https://github.com/gorhill/uBlock/wiki/Advanced-user-features'>Potrebno branje</a>)",
-    "description": ""
-  },
-  "settingsAdvancedUserSettings": {
-    "message": "napredne nastavitve",
-    "description": "For the tooltip of a link which gives access to advanced settings"
+    "description": "Checkbox to let user access advanced, technical features"
   },
   "settingsPrefetchingDisabledPrompt": {
     "message": "Onemogoči prednalaganje strani (da se prepreči kakršno koli povezavo za blokirane zahteve omrežja)",
@@ -359,9 +395,21 @@
     "message": "Blokiraj CSP poročila",
     "description": "background information: https://github.com/gorhill/uBlock/issues/3150"
   },
-  "settingsStorageUsed": {
-    "message": "Uporabljenega prostora: {{value}} bajtov",
-    "description": "English: Storage used: {{}} bytes"
+  "settingsUncloakCnamePrompt": {
+    "message": "Uncloak canonical names",
+    "description": "background information: https://github.com/uBlockOrigin/uBlock-issues/issues/1513"
+  },
+  "settingsAdvanced": {
+    "message": "Napredno",
+    "description": "Section for controlling advanced-user settings"
+  },
+  "settingsAdvancedSynopsis": {
+    "message": "Funkcije primerne zgolj za napredne uporabnike",
+    "description": "Description of section controlling advanced-user settings"
+  },
+  "settingsAdvancedUserSettings": {
+    "message": "napredne nastavitve",
+    "description": "For the tooltip of a link which gives access to advanced settings"
   },
   "settingsLastRestorePrompt": {
     "message": "Zadnja obnovitev:",
@@ -407,6 +455,10 @@
     "message": "<p>Generični vizualni filtri so vizualni filtri, ki naj bi bili uporabljeni na vseh spletnih straneh.<p>Kljub temu, da je njihova uporaba v uBlock₀ učinkovita, generični vizualni filtri lahko, na nekaterih spletnih straneh (še posebno na velikih in starih), pripomorejo k opazni dodatni porabi pomnilnika in uporabi CPE.<p>Omogočitev te funkcije bo zmanjšala porabo pomnilnika in uporabo CPE, ki nastane kot rezultat dodajanja generičnih vizualnih filtrov, in tudi zmanjšala porabo pomnilnika dodatka uBlock₀.<p>Priporočeno je, da omogočite to možnost na manj zmogljivih napravah.",
     "description": "Describes the purpose of the 'Ignore generic cosmetic filters' feature."
   },
+  "3pSuspendUntilListsAreLoaded": {
+    "message": "Prekini aktivnosti omrežja, dokler niso naloženi vsi filtri",
+    "description": "A checkbox in the 'Filter lists' pane"
+  },
   "3pListsOfBlockedHostsHeader": {
     "message": "Seznam blokiranih gostiteljev",
     "description": "English: Lists of blocked hosts"
@@ -417,35 +469,35 @@
   },
   "3pGroupDefault": {
     "message": "Lokalno",
-    "description": "Header for the uBlock filters section in 'Filter lists pane'"
+    "description": "Filter lists section name"
   },
   "3pGroupAds": {
     "message": "Oglasi",
-    "description": "English: Ads"
+    "description": "Filter lists section name"
   },
   "3pGroupPrivacy": {
     "message": "Zasebnost",
-    "description": "English: Privacy"
+    "description": "Filter lists section name"
   },
   "3pGroupMalware": {
     "message": "Zlonamerne domene",
-    "description": "English: Malware domains"
+    "description": "Filter lists section name"
   },
   "3pGroupAnnoyances": {
     "message": "\t\nNadlegovanje",
-    "description": "The header identifying the filter lists in the category 'annoyances'"
+    "description": "Filter lists section name"
   },
   "3pGroupMultipurpose": {
     "message": "Večnamenski",
-    "description": "English: Multipurpose"
+    "description": "Filter lists section name"
   },
   "3pGroupRegions": {
     "message": "Regije, jeziki",
-    "description": "English: Regions, languages"
+    "description": "Filter lists section name"
   },
   "3pGroupCustom": {
     "message": "Po meri",
-    "description": "English: Custom"
+    "description": "Filter lists section name"
   },
   "3pImport": {
     "message": "Uvozi ...",
@@ -458,6 +510,10 @@
   "3pExternalListObsolete": {
     "message": "zastarelo",
     "description": "used as a tooltip for the out-of-date icon beside a list"
+  },
+  "3pViewContent": {
+    "message": "view content",
+    "description": "used as a tooltip for eye icon beside a list"
   },
   "3pLastUpdate": {
     "message": "Zadnja posodobitev: {{ago}}",
@@ -475,13 +531,17 @@
     "message": "En filter na vrstico. Filter je lahko navadno ime gostitelja, ali pa Adblock Plus kompatibilen filter. Vrstice z znakom &lsquo;!&rsquo; bodo ignorirane.",
     "description": "Short information about how to create custom filters"
   },
+  "1pTrustWarning": {
+    "message": "Do not add filters from untrusted sources.",
+    "description": "Warning against copy-pasting filters from random sources"
+  },
   "1pImport": {
     "message": "Uvozi in dodaj",
-    "description": "English: Import and append"
+    "description": "Button in the 'My filters' pane"
   },
   "1pExport": {
     "message": "Izvozi",
-    "description": "English: Export"
+    "description": "Button in the 'My filters' pane"
   },
   "1pExportFilename": {
     "message": "moji-ublock-staticni-filtri_{{datetime}}.txt",
@@ -525,7 +585,7 @@
   },
   "rulesExport": {
     "message": "Izvozi v datoteko",
-    "description": ""
+    "description": "Button in the 'My rules' pane"
   },
   "rulesDefaultFileName": {
     "message": "moji-ublock-dinamicna-pravila_{{datetime}}.txt",
@@ -539,21 +599,37 @@
     "message": "Sintaksa pravil: <code>vir destinacija tip akcija</code> (<a href='https://github.com/gorhill/uBlock/wiki/Dynamic-filtering:-rule-syntax'>polna dokumentacija (v angleščini)</a>).",
     "description": "English: dynamic rule syntax and full documentation."
   },
+  "rulesSort": {
+    "message": "Razvrsti",
+    "description": "English: label for sort option."
+  },
+  "rulesSortByType": {
+    "message": "Tip pravila",
+    "description": "English: a sort option for list of rules."
+  },
+  "rulesSortBySource": {
+    "message": "Vir",
+    "description": "English: a sort option for list of rules."
+  },
+  "rulesSortByDestination": {
+    "message": "Cilju",
+    "description": "English: a sort option for list of rules."
+  },
   "whitelistPrompt": {
     "message": "Vaš seznam gostiteljskih naslovov, za katere želite, da je uBlock₀ izklopljen. En vnos na vrstico. Neveljavna gostiteljska imena bodo brez opozoril ignorirana.",
-    "description": "English: An overview of the content of the dashboard's Whitelist pane."
+    "description": "A concise description of the 'Trusted sites' pane."
   },
   "whitelistImport": {
     "message": "Uvozi in dodaj",
-    "description": "English: Import and append"
+    "description": "Button in the 'Trusted sites' pane"
   },
   "whitelistExport": {
     "message": "Izvozi",
-    "description": "English: Export"
+    "description": "Button in the 'Trusted sites' pane"
   },
   "whitelistExportFilename": {
     "message": "moj-ublock-seznam-dovoljenih_{{datetime}}.txt",
-    "description": "English: my-ublock-whitelist_{{datetime}}.txt"
+    "description": "The default filename to use for import/export purpose"
   },
   "whitelistApply": {
     "message": "Uveljavi spremembe",
@@ -596,27 +672,27 @@
     "description": "Tooltip for the DOM inspector button in the logger page"
   },
   "loggerPopupPanelTip": {
-    "message": "Toggle the popup panel",
+    "message": "Preklopi pojavno okno",
     "description": "Tooltip for the popup panel button in the logger page"
   },
   "loggerInfoTip": {
-    "message": "uBlock Origin wiki: The logger",
+    "message": "uBlock Origin wiki: Dnevnik omrežnih zahtev",
     "description": "Tooltip for the top-right info label in the logger page"
   },
   "loggerClearTip": {
-    "message": "Clear logger",
+    "message": "Počisti dnevnik omrežnih zahtev",
     "description": "Tooltip for the eraser in the logger page; used to blank the content of the logger"
   },
   "loggerPauseTip": {
-    "message": "Pause logger (discard all incoming data)",
+    "message": "Ustavi dnevnik omrežnih zahtev (zavrne vse prihajajoče zahteve)",
     "description": "Tooltip for the pause button in the logger page"
   },
   "loggerUnpauseTip": {
-    "message": "Unpause logger",
+    "message": "Nadaljuj dnevnik omrežnih zahtev",
     "description": "Tooltip for the play button in the logger page"
   },
   "loggerRowFiltererButtonTip": {
-    "message": "Toggle logger filtering",
+    "message": "Preklopi filtriranje dnevnika",
     "description": "Tooltip for the row filterer button in the logger page"
   },
   "logFilterPrompt": {
@@ -624,7 +700,7 @@
     "description": "Placeholder string for logger output filtering input field"
   },
   "loggerRowFiltererBuiltinTip": {
-    "message": "Logger filtering options",
+    "message": "Nastavitve filtriranja dnevnika",
     "description": "Tooltip for the button to bring up logger output filtering options"
   },
   "loggerRowFiltererBuiltinNot": {
@@ -641,6 +717,10 @@
   },
   "loggerRowFiltererBuiltinAllowed": {
     "message": "dovoljeno",
+    "description": "A keyword in the built-in row filtering expression"
+  },
+  "loggerRowFiltererBuiltinModified": {
+    "message": "spremenjeno",
     "description": "A keyword in the built-in row filtering expression"
   },
   "loggerRowFiltererBuiltin1p": {
@@ -668,15 +748,15 @@
     "description": "Label to identify a rule field"
   },
   "loggerEntryDetailsContext": {
-    "message": "Context",
+    "message": "Vsebina",
     "description": "Label to identify a context field (typically a hostname)"
   },
   "loggerEntryDetailsRootContext": {
-    "message": "Root context",
+    "message": "Glavna vsebina",
     "description": "Label to identify a root context field (typically a hostname)"
   },
   "loggerEntryDetailsPartyness": {
-    "message": "Partyness",
+    "message": "Pripadnost",
     "description": "Label to identify a field providing partyness information"
   },
   "loggerEntryDetailsType": {
@@ -772,19 +852,19 @@
     "description": "Logger settings: a sentence to describe the purpose of the checkboxes below"
   },
   "loggerSettingHideColumnTime": {
-    "message": "{{input}} Time",
+    "message": "{{input}} čas",
     "description": "A label for the time column"
   },
   "loggerSettingHideColumnFilter": {
-    "message": "{{input}} Filter/rule",
+    "message": "{{input}} filter/pravilo",
     "description": "A label for the filter or rule column"
   },
   "loggerSettingHideColumnContext": {
-    "message": "{{input}} Context",
+    "message": "{{input}} vsebina",
     "description": "A label for the context column"
   },
   "loggerSettingHideColumnPartyness": {
-    "message": "{{input}} Partyness",
+    "message": "{{input}} Pripadnost",
     "description": "A label for the partyness column"
   },
   "loggerExportFormatList": {
@@ -803,21 +883,141 @@
     "message": "Markdown",
     "description": "Label for radio-button to pick export text format"
   },
+  "supportOpenButton": {
+    "message": "Odpri",
+    "description": "Text for button which open an external webpage in Support pane"
+  },
+  "supportReportSpecificButton": {
+    "message": "Ustvari novo poročilo",
+    "description": "Text for button which open an external webpage in Support pane"
+  },
+  "supportFindSpecificButton": {
+    "message": "Najdi podobna poročila",
+    "description": "A clickable link in the filter issue reporter section"
+  },
+  "supportS1H": {
+    "message": "Dokumentacija",
+    "description": "Header of 'Documentation' section in Support pane"
+  },
+  "supportS1P1": {
+    "message": "Preberi dokumentacijo na <code>uBlock/wiki</code>, da izveš vse o funkcijah uBlock Origin.",
+    "description": "First paragraph of 'Documentation' section in Support pane"
+  },
+  "supportS2H": {
+    "message": "Vprašanja in podpora",
+    "description": "Header of 'Questions and support' section in Support pane"
+  },
+  "supportS2P1": {
+    "message": "Odgovori na vprašanja in druga pomoč so na voljo na forumu <code>/r/uBlockOrigin</code>.",
+    "description": "First paragraph of 'Questions and support' section in Support pane"
+  },
+  "supportS3H": {
+    "message": "Težave s filtrom/stran ne deluje",
+    "description": "Header of 'Filter issues' section in Support pane"
+  },
+  "supportS3P1": {
+    "message": "Prijavi težave s filtrom na posameznih straneh v <span data-url=\"https://github.com/uBlockOrigin/uAssets/issues?q=is%3Aissue\"><code>uBlockOrigin/uAssets</code> sledilnik težav.",
+    "description": "First paragraph of 'Filter issues' section in Support pane"
+  },
+  "supportS3P2": {
+    "message": "<b>Pomembno:</b> Izogibajte se sočasni uporabi podobnih orodij za blokiranje, to lahko povzroči težave s filtrom na posameznih straneh.",
+    "description": "Second paragraph of 'Filter issues' section in Support pane"
+  },
+  "supportS3P3": {
+    "message": "<b>Tips:</b> Preverjajte, da so vaši seznami filtrov redno posodobljeni. <span data-url=\"logger-ui.html#_\">Zapisovalnik</span> je glavno orodje za diagnostiko težav s filtri.",
+    "description": "Third paragraph of 'Filter issues' section in Support pane"
+  },
+  "supportS4H": {
+    "message": "Prijavi napako",
+    "description": "Header of 'Bug report' section in Support pane"
+  },
+  "supportS4P1": {
+    "message": "Prijavi težave z uBlock Origin na <span data-url=\"https://github.com/uBlockOrigin/uBlock-issues/issues?q=is%3Aissue\"><code>uBlockOrigin/uBlock-issue</code>sledilnik težav</span>. <u>Potreben je GitHub račun.</u>",
+    "description": "First paragraph of 'Bug report' section in Support pane"
+  },
+  "supportS5H": {
+    "message": "Informacije za odpravljanje težav",
+    "description": "Header of 'Troubleshooting Information' section in Support pane"
+  },
+  "supportS5P1": {
+    "message": "Below is technical information that might be useful when volunteers are trying to help you solve a problem.",
+    "description": "First paragraph of 'Troubleshooting Information' section in Support pane"
+  },
+  "supportS5P2": {
+    "message": "<b>Important:</b> Potentially private or sensitive information is redacted by default. Redacted information may make it more difficult to solve a problem.",
+    "description": "Second paragraph of 'Troubleshooting Information' section in Support pane"
+  },
+  "supportS6H": {
+    "message": "Prijavi napako filtra",
+    "description": "Header of 'Report a filter issue' section in Support pane"
+  },
+  "supportS6P1S1": {
+    "message": "Zaradi preprečitve obremenjevanja prostovoljcev s podvojenimi poročili prosim preveri da težava še ni bila sporočena.",
+    "description": "A paragraph in the filter issue reporter section"
+  },
+  "supportS6P2S1": {
+    "message": "Filter lists are updated daily. Be sure your issue has not already been addressed in the most recent filter lists.",
+    "description": "A paragraph in the filter issue reporter section"
+  },
+  "supportS6P2S2": {
+    "message": "Verify that the issue still exists after reloading the problematic webpage.",
+    "description": "A paragraph in the filter issue reporter section"
+  },
+  "supportS6URL": {
+    "message": "Naslov spletne strani:",
+    "description": "Label for the URL of the page"
+  },
+  "supportS6Select1": {
+    "message": "Spletna stran …",
+    "description": "Label for widget to select type of issue"
+  },
+  "supportS6Select1Option0": {
+    "message": "-- Izberi vnos --",
+    "description": "An entry in the widget used to select the type of issue"
+  },
+  "supportS6Select1Option1": {
+    "message": "Prikaže reklame ali ostanke reklam",
+    "description": "An entry in the widget used to select the type of issue"
+  },
+  "supportS6Select1Option2": {
+    "message": "Has overlays or other nuisances",
+    "description": "An entry in the widget used to select the type of issue"
+  },
+  "supportS6Select1Option3": {
+    "message": "Detects uBlock Origin",
+    "description": "An entry in the widget used to select the type of issue"
+  },
+  "supportS6Select1Option4": {
+    "message": "Ima probleme povezane z zasebnostjo",
+    "description": "An entry in the widget used to select the type of issue"
+  },
+  "supportS6Select1Option5": {
+    "message": "Malfunctions when uBlock Origin is enabled",
+    "description": "An entry in the widget used to select the type of issue"
+  },
+  "supportS6Select1Option6": {
+    "message": "Opens unwanted tabs or windows",
+    "description": "An entry in the widget used to select the type of issue"
+  },
+  "supportS6Checkbox1": {
+    "message": "Label the web page as “NSFW” (<a href=\"https://wikipedia.org/wiki/Not_safe_for_work\">“Not Safe For Work”</a>)",
+    "description": "A checkbox to use for NSFW sites"
+  },
+  "supportRedact": {
+    "message": "Redact",
+    "description": "Text for 'Redact' button"
+  },
+  "supportUnredact": {
+    "message": "Unredact",
+    "description": "Text for 'Unredact' button"
+  },
+  "aboutPrivacyPolicy": {
+    "message": "Pravilnik o zasebnosti",
+    "description": "Link to privacy policy on GitHub (English)"
+  },
   "aboutChangelog": {
     "message": "Dnevnik sprememb",
     "description": ""
-  },
-  "aboutWiki": {
-    "message": "Wiki",
-    "description": "English: project' wiki on GitHub"
-  },
-  "aboutSupport": {
-    "message": "Podpora",
-    "description": "A link for where to get support"
-  },
-  "aboutIssues": {
-    "message": "Sledilec težav",
-    "description": "Text for a link to official issue tracker"
   },
   "aboutCode": {
     "message": "Izvorna koda (GPLv3)",
@@ -827,8 +1027,28 @@
     "message": "Razvijalci",
     "description": "English: Contributors"
   },
+  "aboutSourceCode": {
+    "message": "Izvorna koda",
+    "description": "Link text to source code repo"
+  },
+  "aboutTranslations": {
+    "message": "Prevodi",
+    "description": "Link text to translations repo"
+  },
+  "aboutFilterLists": {
+    "message": "Seznami filtrov",
+    "description": "Link text to uBO's own filter lists repo"
+  },
   "aboutDependencies": {
     "message": "Zunanje odvisnosti (GPLv3-kompatibilne):",
+    "description": "Shown in the About pane"
+  },
+  "aboutCDNs": {
+    "message": "uBO's own filter lists are freely hosted on the following <a href=\"https://wikipedia.org/wiki/Content_delivery_network\">CDNs</a>:",
+    "description": "Shown in the About pane"
+  },
+  "aboutCDNsInfo": {
+    "message": "Ob posodobitvi seznama filtrov se uporabi naključno izbran CDN",
     "description": "Shown in the About pane"
   },
   "aboutBackupDataButton": {
@@ -865,7 +1085,11 @@
   },
   "subscriberConfirm": {
     "message": "uBlock₀: Dodam sledeči URL na listo lastnih filtrov?\n\nNaslov: \"{{title}}\"\nURL: {{url}}",
-    "description": "English: The message seen by the user to confirm subscription to a ABP filter list"
+    "description": "No longer used"
+  },
+  "subscribeButton": {
+    "message": "Naročite se",
+    "description": "For the button used to subscribe to a filter list"
   },
   "elapsedOneMinuteAgo": {
     "message": "1 minuto nazaj",
@@ -903,13 +1127,17 @@
     "message": "izklop",
     "description": "Firefox-specific: appears as 'uBlock₀ (off)'"
   },
+  "docblockedTitle": {
+    "message": "Page blocked",
+    "description": "Used as a title for the document-blocked page"
+  },
   "docblockedPrompt1": {
     "message": "uBlock₀ je preprečil nalaganje naslednje strani:",
-    "description": "English: uBlock₀ has prevented the following page from loading:"
+    "description": "Used in the strict-blocking page"
   },
   "docblockedPrompt2": {
     "message": "Zaradi sledečega filtra",
-    "description": "English: Because of the following filter"
+    "description": "Used in the strict-blocking page"
   },
   "docblockedNoParamsPrompt": {
     "message": "brez parametrov",
@@ -927,6 +1155,10 @@
     "message": "Zapri to okno",
     "description": "English: Close this window"
   },
+  "docblockedDontWarn": {
+    "message": "Don't warn me again about this site",
+    "description": "Label for checkbox in document-blocked page"
+  },
   "docblockedProceed": {
     "message": "Onemogoči striktno blokiranje za {{hostname}}",
     "description": "English: Disable strict blocking for {{hostname}} ..."
@@ -938,6 +1170,10 @@
   "docblockedDisablePermanent": {
     "message": "Trajno",
     "description": "English: Permanently"
+  },
+  "docblockedDisable": {
+    "message": "Proceed",
+    "description": "Button text to navigate to the blocked page"
   },
   "cloudPush": {
     "message": "Izvozi v shrambe oblaka",
@@ -952,7 +1188,7 @@
     "description": "tooltip"
   },
   "cloudNoData": {
-    "message": "...\n...",
+    "message": "…\n…",
     "description": ""
   },
   "cloudDeviceNamePrompt": {
@@ -979,9 +1215,21 @@
     "message": "biti",
     "description": ""
   },
+  "contextMenuBlockElementInFrame": {
+    "message": "Blokiraj element v okvirju",
+    "description": "An entry in the browser's contextual menu"
+  },
+  "contextMenuSubscribeToList": {
+    "message": "Naroči se na seznam filtrov..",
+    "description": "An entry in the browser's contextual menu"
+  },
   "contextMenuTemporarilyAllowLargeMediaElements": {
     "message": "Začasno dovoli velike medijske elemente",
     "description": "A context menu entry, present when large media elements have been blocked on the current site"
+  },
+  "contextMenuViewSource": {
+    "message": "View source code…",
+    "description": "A context menu entry, to view the source code of the target resource"
   },
   "shortcutCapturePlaceholder": {
     "message": "Vnesite bližnjico",
@@ -995,13 +1243,45 @@
     "message": "Kopiraj v odložišče",
     "description": "Label for buttons used to copy something to the clipboard"
   },
-  "toggleBlockingProfile": {
-    "message": "Toggle blocking profile",
-    "description": "Label for keyboard shortcut used to toggle blocking profile"
+  "genericSelectAll": {
+    "message": "Izberi vse",
+    "description": "Label for buttons used to select all text in editor"
+  },
+  "toggleCosmeticFiltering": {
+    "message": "Preklopi lepotno filtriranje",
+    "description": "Label for keyboard shortcut used to toggle cosmetic filtering"
   },
   "relaxBlockingMode": {
-    "message": "Relax blocking mode",
-    "description": "Label for keyboard shortcut used to relax blocking mode (meant to replace 'Toggle blocking profile')"
+    "message": "Sprostite način blokiranja.",
+    "description": "Label for keyboard shortcut used to relax blocking mode"
+  },
+  "storageUsed": {
+    "message": "Uporabljena shramba: {{value}} {{unit}}",
+    "description": " In Setting pane, renders as (example): Storage used: 13.2 MB"
+  },
+  "KB": {
+    "message": "KB",
+    "description": "short for 'kilobytes'"
+  },
+  "MB": {
+    "message": "MB",
+    "description": "short for 'megabytes'"
+  },
+  "GB": {
+    "message": "GB",
+    "description": "short for 'gigabytes'"
+  },
+  "clickToLoad": {
+    "message": "Kliknite za prikaz",
+    "description": "Message used in frame placeholders"
+  },
+  "linterMainReport": {
+    "message": "Errors: {{count}}",
+    "description": "Summary of number of errors as reported by the linter "
+  },
+  "unprocessedRequestTooltip": {
+    "message": "Could not filter properly at browser launch. Reload the page to ensure proper filtering.",
+    "description": "A warning which will appear in the popup panel if needed"
   },
   "dummy": {
     "message": "This entry must be the last one",

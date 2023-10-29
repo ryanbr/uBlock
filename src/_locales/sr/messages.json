@@ -40,7 +40,7 @@
     "description": "appears as tab name in dashboard"
   },
   "whitelistPageName": {
-    "message": "Дозвољени домени",
+    "message": "Поуздани сајтови",
     "description": "appears as tab name in dashboard"
   },
   "shortcutsPageName": {
@@ -53,6 +53,10 @@
   },
   "aboutPageName": {
     "message": "О програму",
+    "description": "appears as tab name in dashboard"
+  },
+  "supportPageName": {
+    "message": "Подршка",
     "description": "appears as tab name in dashboard"
   },
   "assetViewerPageName": {
@@ -85,7 +89,7 @@
   },
   "popupBlockedStats": {
     "message": "{{count}} или {{percent}}%",
-    "description": "Example: 15 or 13%"
+    "description": "Example: 15 (13%)"
   },
   "popupBlockedSinceInstallPrompt": {
     "message": "од инсталације",
@@ -122,6 +126,10 @@
   "popupTipLog": {
     "message": "Отвори евиденцију",
     "description": "Tooltip used for the logger icon in the panel"
+  },
+  "popupTipReport": {
+    "message": "Пријавите проблем на овом веб сајту",
+    "description": "Tooltip used for the 'chat' icon in the panel"
   },
   "popupTipNoPopups": {
     "message": "Укључи/искључи блокирање свих искачућих прозора за овај сајт",
@@ -179,25 +187,33 @@
     "message": "Кликните да JavaScript не буде више онемогућен на овом сајту",
     "description": "Tooltip for the no-scripting per-site switch"
   },
+  "popupNoPopups_v2": {
+    "message": "Искачући прозори",
+    "description": "Caption for the no-popups per-site switch"
+  },
   "popupNoLargeMedia_v2": {
     "message": "Велики мултимедијски елементи",
-    "description": "Tip for the no-large-media per-site switch"
+    "description": "Caption for the no-large-media per-site switch"
   },
   "popupNoCosmeticFiltering_v2": {
     "message": "Естетско филтрирање",
-    "description": "Tip for the no-cosmetic-filtering per-site switch"
+    "description": "Caption for the no-cosmetic-filtering per-site switch"
   },
   "popupNoRemoteFonts_v2": {
     "message": "Удаљени фонтови",
-    "description": "Tip for the no-remote-fonts per-site switch"
+    "description": "Caption for the no-remote-fonts per-site switch"
   },
   "popupNoScripting_v2": {
     "message": "JavaScript",
-    "description": "Tip for the no-scripting per-site switch"
+    "description": "Caption for the no-scripting per-site switch"
   },
   "popupMoreButton_v2": {
     "message": "Више",
-    "description": "Label to be used to toggle overview panel"
+    "description": "Label to be used to show popup panel sections"
+  },
+  "popupLessButton_v2": {
+    "message": "Мање",
+    "description": "Label to be used to hide popup panel sections"
   },
   "popupTipGlobalRules": {
     "message": "Општа правила: ова колона је за правила која се примењују на свим сајтовима.",
@@ -255,6 +271,18 @@
     "message": "{{count}} од {{total}}",
     "description": "appears in popup"
   },
+  "popupVersion": {
+    "message": "Верзија",
+    "description": "Example of use: Version 1.26.4"
+  },
+  "popup3pScriptFilter": {
+    "message": "скрипта",
+    "description": "Appears as an option to filter out firewall rows"
+  },
+  "popup3pFrameFilter": {
+    "message": "оквир",
+    "description": "Appears as an option to filter out firewall rows"
+  },
   "pickerCreate": {
     "message": "Креирај",
     "description": "English: Create"
@@ -307,17 +335,25 @@
     "message": "Мод за далтонисте",
     "description": "English: Color-blind friendly"
   },
+  "settingsAppearance": {
+    "message": "Изглед",
+    "description": "Section for controlling user interface appearance"
+  },
+  "settingsThemeLabel": {
+    "message": "Тема",
+    "description": "Label for checkbox to enable a custom dark theme"
+  },
+  "settingsThemeAccent0Label": {
+    "message": "Прилагођена наглашена боја",
+    "description": "Label for checkbox to pick an accent color"
+  },
   "settingsCloudStorageEnabledPrompt": {
     "message": "Укључи подршку за складиште у облаку",
     "description": ""
   },
   "settingsAdvancedUserPrompt": {
-    "message": "Ја сам напредни корисник (<a href='https://github.com/gorhill/uBlock/wiki/Advanced-user-features'>обавезна литература</a>)",
-    "description": ""
-  },
-  "settingsAdvancedUserSettings": {
-    "message": "напредна подешавања",
-    "description": "For the tooltip of a link which gives access to advanced settings"
+    "message": "Ја сам напредни корисник",
+    "description": "Checkbox to let user access advanced, technical features"
   },
   "settingsPrefetchingDisabledPrompt": {
     "message": "Онемогући оптимизацију учитавања (да би се спречила свака веза блокираних мрежних захтева)",
@@ -359,9 +395,21 @@
     "message": "Блокирај CSP извештаје",
     "description": "background information: https://github.com/gorhill/uBlock/issues/3150"
   },
-  "settingsStorageUsed": {
-    "message": "Искоришћеност складишта: {{value}} бајтова",
-    "description": "English: Storage used: {{}} bytes"
+  "settingsUncloakCnamePrompt": {
+    "message": "Откриј канонска имена",
+    "description": "background information: https://github.com/uBlockOrigin/uBlock-issues/issues/1513"
+  },
+  "settingsAdvanced": {
+    "message": "Напредно",
+    "description": "Section for controlling advanced-user settings"
+  },
+  "settingsAdvancedSynopsis": {
+    "message": "Функције прикладне само за техничке кориснике",
+    "description": "Description of section controlling advanced-user settings"
+  },
+  "settingsAdvancedUserSettings": {
+    "message": "напредна подешавања",
+    "description": "For the tooltip of a link which gives access to advanced settings"
   },
   "settingsLastRestorePrompt": {
     "message": "Последње враћање:",
@@ -380,7 +428,7 @@
     "description": "Appears aside each filter list in the _3rd-party filters_ pane"
   },
   "3pAutoUpdatePrompt1": {
-    "message": "Аутоматско ажурирање листе филтера",
+    "message": "Аутоматски ажурирај листе филтера",
     "description": "A checkbox in the _3rd-party filters_ pane"
   },
   "3pUpdateNow": {
@@ -396,7 +444,7 @@
     "description": "English: Parse and enforce Adblock+ element hiding filters."
   },
   "3pParseAllABPHideFiltersInfo": {
-    "message": "<p>Ова опција омогућава рашчлањавање и спровођење <a href=\"https://adblockplus.org/en/faq_internal#elemhide\">Adblock Plus компатибилних филтера &ldquo;за сакривање елемената&rdquo; </a>. Ови филтери су углавном естетски, они служе за сакривање елемената на веб страници који се сматрају визуелном сметњом и који не могу бити блокирани од стране мрежних захтева базираних на филтрирању.</p><p>Омогућавањем ове функције повећава се количина меморије коју uBlock₀ користи.</p>",
+    "message": "Естетски филтери служе за сакривање елемената на веб страници који се сматрају визуелном сметњом и који не могу бити блокирани од стране мрежних захтева базираних на филтрирању.",
     "description": "Describes the purpose of the 'Parse and enforce cosmetic filters' feature."
   },
   "3pIgnoreGenericCosmeticFilters": {
@@ -404,8 +452,12 @@
     "description": "This will cause uBO to ignore all generic cosmetic filters."
   },
   "3pIgnoreGenericCosmeticFiltersInfo": {
-    "message": "<p>Општи естетски филтери су они естетски филтери који су намењени за примену на свим сајтовима.<p>Иако uBlock₀ ефикасно рукује њима, општи естетски филтери могу довести до повећане потрошње меморије и оптерећења процесора на неким страницама, нарочито на оним великим. <p>Омогућавањем ове опције, елиминисаће се повећана потрошња меморије и оптерећење процесора на страницама као резултат руковања општим естетским филтерима, а такође и смањити меморијски отисак самог uBlock₀-а.<p>Препоручује се да се ова опција омогући на мање моћним уређајима.",
+    "message": "Општи естетски филтери су они естетски филтери који су намењени за примену на свим сајтовима. Омогућавањем ове опције, елиминисаће се повећана потрошња меморије и оптерећење процесора на страницама као резултат руковања општим естетским филтерима.\n\nПрепоручује се да се ова опција омогући на мање моћним уређајима.",
     "description": "Describes the purpose of the 'Ignore generic cosmetic filters' feature."
+  },
+  "3pSuspendUntilListsAreLoaded": {
+    "message": "Обустави мрежну активност док се не учитају све листе филтера",
+    "description": "A checkbox in the 'Filter lists' pane"
   },
   "3pListsOfBlockedHostsHeader": {
     "message": "Списак блокираних хостова",
@@ -417,35 +469,35 @@
   },
   "3pGroupDefault": {
     "message": "Уграђени",
-    "description": "Header for the uBlock filters section in 'Filter lists pane'"
+    "description": "Filter lists section name"
   },
   "3pGroupAds": {
     "message": "Рекламе",
-    "description": "English: Ads"
+    "description": "Filter lists section name"
   },
   "3pGroupPrivacy": {
     "message": "Приватност",
-    "description": "English: Privacy"
+    "description": "Filter lists section name"
   },
   "3pGroupMalware": {
-    "message": "Злонамерни домени",
-    "description": "English: Malware domains"
+    "message": "Заштита од злонамерног софтвера, безбедност",
+    "description": "Filter lists section name"
   },
   "3pGroupAnnoyances": {
     "message": "Сметње",
-    "description": "The header identifying the filter lists in the category 'annoyances'"
+    "description": "Filter lists section name"
   },
   "3pGroupMultipurpose": {
     "message": "Вишенаменски",
-    "description": "English: Multipurpose"
+    "description": "Filter lists section name"
   },
   "3pGroupRegions": {
     "message": "Регионални, језички",
-    "description": "English: Regions, languages"
+    "description": "Filter lists section name"
   },
   "3pGroupCustom": {
     "message": "Прилагођени",
-    "description": "English: Custom"
+    "description": "Filter lists section name"
   },
   "3pImport": {
     "message": "Увези...",
@@ -458,6 +510,10 @@
   "3pExternalListObsolete": {
     "message": "Застарело.",
     "description": "used as a tooltip for the out-of-date icon beside a list"
+  },
+  "3pViewContent": {
+    "message": "приказ садржаја",
+    "description": "used as a tooltip for eye icon beside a list"
   },
   "3pLastUpdate": {
     "message": "Последње ажурирање: {{ago}}.\nКликните да бисте ажурирали.",
@@ -472,16 +528,20 @@
     "description": "used as a tooltip for error icon beside a list"
   },
   "1pFormatHint": {
-    "message": "Један филтер по реду. Филтер може бити назив хоста или филтер компатибилан са Adblock Plus форматом. Редови са префиксом <code>!</code> ће бити игнорисани.",
+    "message": "Један филтер по реду. Филтер може бити назив хоста или филтер компатибилан са EasyList форматом. Редови са префиксом <code>!</code> ће бити игнорисани.",
     "description": "Short information about how to create custom filters"
+  },
+  "1pTrustWarning": {
+    "message": "Не додавај филтере из непоузданих извора.",
+    "description": "Warning against copy-pasting filters from random sources"
   },
   "1pImport": {
     "message": "Увези и додај",
-    "description": "English: Import and append"
+    "description": "Button in the 'My filters' pane"
   },
   "1pExport": {
     "message": "Извези",
-    "description": "English: Export"
+    "description": "Button in the 'My filters' pane"
   },
   "1pExportFilename": {
     "message": "моји-ublock-филтери_{{datetime}}.txt",
@@ -525,7 +585,7 @@
   },
   "rulesExport": {
     "message": "Извези у датотеку...",
-    "description": ""
+    "description": "Button in the 'My rules' pane"
   },
   "rulesDefaultFileName": {
     "message": "моја-ublock-динамичка-правила_{{datetime}}.txt",
@@ -539,21 +599,37 @@
     "message": "Правила синтаксе: <code>извор одредиште тип акција</code>(<a href='https://github.com/gorhill/uBlock/wiki/Dynamic-filtering:-rule-syntax'>сва документација</a>).",
     "description": "English: dynamic rule syntax and full documentation."
   },
+  "rulesSort": {
+    "message": "Сортирај:",
+    "description": "English: label for sort option."
+  },
+  "rulesSortByType": {
+    "message": "Тип правила",
+    "description": "English: a sort option for list of rules."
+  },
+  "rulesSortBySource": {
+    "message": "Извор",
+    "description": "English: a sort option for list of rules."
+  },
+  "rulesSortByDestination": {
+    "message": "Одредиште",
+    "description": "English: a sort option for list of rules."
+  },
   "whitelistPrompt": {
-    "message": "Смернице дозвољених домена диктирају на којим веб страницама би uBlock Origin требало бити онемогућен. Један унос по реду. Неисправне смернице ће бити тихо занемарене.",
-    "description": "English: An overview of the content of the dashboard's Whitelist pane."
+    "message": "Смернице поузданих сајтова диктирају на којим веб страницама uBlock Origin треба да буде онемогућен. Један унос по реду.",
+    "description": "A concise description of the 'Trusted sites' pane."
   },
   "whitelistImport": {
     "message": "Увези и додај",
-    "description": "English: Import and append"
+    "description": "Button in the 'Trusted sites' pane"
   },
   "whitelistExport": {
     "message": "Извези",
-    "description": "English: Export"
+    "description": "Button in the 'Trusted sites' pane"
   },
   "whitelistExportFilename": {
-    "message": "моја-ublock-листа_дозвољених_домена{{datetime}}.txt",
-    "description": "English: my-ublock-whitelist_{{datetime}}.txt"
+    "message": "моји-ublock-поуздани-сајтови_{{datetime}}.txt",
+    "description": "The default filename to use for import/export purpose"
   },
   "whitelistApply": {
     "message": "Примени промене",
@@ -641,6 +717,10 @@
   },
   "loggerRowFiltererBuiltinAllowed": {
     "message": "дозвољено",
+    "description": "A keyword in the built-in row filtering expression"
+  },
+  "loggerRowFiltererBuiltinModified": {
+    "message": "измењено",
     "description": "A keyword in the built-in row filtering expression"
   },
   "loggerRowFiltererBuiltin1p": {
@@ -744,7 +824,7 @@
     "description": "Below this sentence, the filter list(s) in which the filter was found"
   },
   "loggerStaticFilteringFinderSentence2": {
-    "message": "Статички филтер <code>{{filter}}</code> није пронађен нити у једној тренутно омогућеној листи филтера",
+    "message": "Статички филтер није могуће пронаћи нити у једној тренутно омогућеној листи филтера",
     "description": "Message to show when a filter cannot be found in any filter lists"
   },
   "loggerSettingDiscardPrompt": {
@@ -803,21 +883,141 @@
     "message": "Markdown",
     "description": "Label for radio-button to pick export text format"
   },
+  "supportOpenButton": {
+    "message": "Отвори",
+    "description": "Text for button which open an external webpage in Support pane"
+  },
+  "supportReportSpecificButton": {
+    "message": "Креирај нови извештај",
+    "description": "Text for button which open an external webpage in Support pane"
+  },
+  "supportFindSpecificButton": {
+    "message": "Пронађи сличне извештаје",
+    "description": "A clickable link in the filter issue reporter section"
+  },
+  "supportS1H": {
+    "message": "Документација",
+    "description": "Header of 'Documentation' section in Support pane"
+  },
+  "supportS1P1": {
+    "message": "\nПрочитајте документацију на <code>uBlock/wiki</code> да бисте сазнали све о функцијама uBlock Origin-а.",
+    "description": "First paragraph of 'Documentation' section in Support pane"
+  },
+  "supportS2H": {
+    "message": "Питања и подршка",
+    "description": "Header of 'Questions and support' section in Support pane"
+  },
+  "supportS2P1": {
+    "message": "Одговори на питања и друге врсте подршке налазе се у подредиту <code>/r/uBlockOrigin</code>.",
+    "description": "First paragraph of 'Questions and support' section in Support pane"
+  },
+  "supportS3H": {
+    "message": "Проблеми са филтером/веб сајт не фукционише",
+    "description": "Header of 'Filter issues' section in Support pane"
+  },
+  "supportS3P1": {
+    "message": "Пријавите проблеме са филтерима на одређеним веб сајтовима на <span data-url=\"https://github.com/uBlockOrigin/uAssets/issues?q=is%3Aissue\"><code>uBlockOrigin/uAssets</code>, страници за праћење проблема</span>. <u>Неопходан је GitHub налог.</u>",
+    "description": "First paragraph of 'Filter issues' section in Support pane"
+  },
+  "supportS3P2": {
+    "message": "<b>Важно:</b> Избегавајте коришћење других блокатора сличне намене заједно са uBlock Origin-ом, јер то може изазвати проблеме са филтерима на одређеним веб сајтовима.",
+    "description": "Second paragraph of 'Filter issues' section in Support pane"
+  },
+  "supportS3P3": {
+    "message": "<b>Савет:</b> Уверите се да су ваше листе филтера ажуриране. <span data-url=\"logger-ui.html#_\">Управљач евиденцијом</span> је примарни алат за дијагностиковање проблема у вези са филтером.",
+    "description": "Third paragraph of 'Filter issues' section in Support pane"
+  },
+  "supportS4H": {
+    "message": "Пријава грешке",
+    "description": "Header of 'Bug report' section in Support pane"
+  },
+  "supportS4P1": {
+    "message": "Пријавите проблеме са самим uBlock Origin-ом на <span data-url=\"https://github.com/uBlockOrigin/uBlock-issues/issues?q=is%3Aissue\"><code>uBlockOrigin/uBlock-issue</code>, страници за праћење проблема</span>. <u>Неопходан је GitHub налог.</u>",
+    "description": "First paragraph of 'Bug report' section in Support pane"
+  },
+  "supportS5H": {
+    "message": "Информација о решавању проблема",
+    "description": "Header of 'Troubleshooting Information' section in Support pane"
+  },
+  "supportS5P1": {
+    "message": "Испод су техничке информације које могу бити корисне када волонтери покушавају да вам помогну да решите проблем.",
+    "description": "First paragraph of 'Troubleshooting Information' section in Support pane"
+  },
+  "supportS5P2": {
+    "message": "<b>Важно:</b> Потенцијално приватне или осетљиве информације се подразумевано редигују. Редиговане информације могу отежати решавање проблема.",
+    "description": "Second paragraph of 'Troubleshooting Information' section in Support pane"
+  },
+  "supportS6H": {
+    "message": "Пријављивање проблема са филтером",
+    "description": "Header of 'Report a filter issue' section in Support pane"
+  },
+  "supportS6P1S1": {
+    "message": "Да не бисте оптерећивали волонтере дуплим извештајима, проверите да ли је проблем већ пријављен.",
+    "description": "A paragraph in the filter issue reporter section"
+  },
+  "supportS6P2S1": {
+    "message": "Листе филтера се ажурирају свакодневно. Уверите се да ваш проблем није већ решен у најновијим листама филтера.\n",
+    "description": "A paragraph in the filter issue reporter section"
+  },
+  "supportS6P2S2": {
+    "message": "Проверите да ли проблем и даље постоји након поновног учитавања проблематичне веб странице.\n",
+    "description": "A paragraph in the filter issue reporter section"
+  },
+  "supportS6URL": {
+    "message": "Адреса веб странице:",
+    "description": "Label for the URL of the page"
+  },
+  "supportS6Select1": {
+    "message": "Веб страница...",
+    "description": "Label for widget to select type of issue"
+  },
+  "supportS6Select1Option0": {
+    "message": "-- Изаберите ставку --",
+    "description": "An entry in the widget used to select the type of issue"
+  },
+  "supportS6Select1Option1": {
+    "message": "Приказује рекламе или остатке реклама",
+    "description": "An entry in the widget used to select the type of issue"
+  },
+  "supportS6Select1Option2": {
+    "message": "Има преклапања или друге сметње",
+    "description": "An entry in the widget used to select the type of issue"
+  },
+  "supportS6Select1Option3": {
+    "message": "Открива uBlock Origin",
+    "description": "An entry in the widget used to select the type of issue"
+  },
+  "supportS6Select1Option4": {
+    "message": "Има проблеме у вези са приватношћу",
+    "description": "An entry in the widget used to select the type of issue"
+  },
+  "supportS6Select1Option5": {
+    "message": "Фукционише неправилно када је uBlock Origin омогућен",
+    "description": "An entry in the widget used to select the type of issue"
+  },
+  "supportS6Select1Option6": {
+    "message": "\nОтвара нежељене картице или прозоре",
+    "description": "An entry in the widget used to select the type of issue"
+  },
+  "supportS6Checkbox1": {
+    "message": "Изначите веб страницу као „NSFW“ (<a href=\"https://wikipedia.org/wiki/Not_safe_for_work\">“Није безбедна за рад”</a>)",
+    "description": "A checkbox to use for NSFW sites"
+  },
+  "supportRedact": {
+    "message": "Редигуј",
+    "description": "Text for 'Redact' button"
+  },
+  "supportUnredact": {
+    "message": "Поништи редиговање",
+    "description": "Text for 'Unredact' button"
+  },
+  "aboutPrivacyPolicy": {
+    "message": "Политика приватности",
+    "description": "Link to privacy policy on GitHub (English)"
+  },
   "aboutChangelog": {
     "message": "Списак измена",
     "description": ""
-  },
-  "aboutWiki": {
-    "message": "Вики",
-    "description": "English: project' wiki on GitHub"
-  },
-  "aboutSupport": {
-    "message": "Подршка",
-    "description": "A link for where to get support"
-  },
-  "aboutIssues": {
-    "message": "Пратилац проблема",
-    "description": "Text for a link to official issue tracker"
   },
   "aboutCode": {
     "message": "Изворни код (GPLv3)",
@@ -827,12 +1027,32 @@
     "message": "Сарадници",
     "description": "English: Contributors"
   },
+  "aboutSourceCode": {
+    "message": "Изворни код",
+    "description": "Link text to source code repo"
+  },
+  "aboutTranslations": {
+    "message": "Преводи",
+    "description": "Link text to translations repo"
+  },
+  "aboutFilterLists": {
+    "message": "Листе филтера",
+    "description": "Link text to uBO's own filter lists repo"
+  },
   "aboutDependencies": {
     "message": "Спољне зависности (компатибилно са GPLv3):",
     "description": "Shown in the About pane"
   },
+  "aboutCDNs": {
+    "message": "Сопствене листе филтера uBO-a се слободно хостују на следећим <a href=\"https://wikipedia.org/wiki/Content_delivery_network\">CDN-овима</a>:",
+    "description": "Shown in the About pane"
+  },
+  "aboutCDNsInfo": {
+    "message": "Насумично одабрани CDN се користи када листу филтера треба ажурирати.",
+    "description": "Shown in the About pane"
+  },
   "aboutBackupDataButton": {
-    "message": "Сачувај резервну копију у датотеку",
+    "message": "Сачувај резервну копију у датотеку...",
     "description": "Text for button to create a backup of all settings"
   },
   "aboutBackupFilename": {
@@ -864,8 +1084,12 @@
     "description": "English: Network error: {{msg}}"
   },
   "subscriberConfirm": {
-    "message": "uBlock₀: Додати следећу УРЛ адресу у вашу прилагођену листу филтера?\n\nНазив: \"{{title}}\"\nУРЛ: {{url}}",
-    "description": "English: The message seen by the user to confirm subscription to a ABP filter list"
+    "message": "Додати следећу URL адресу у вашу прилагођену листу филтера?\n\nНазив: \"{{title}}\"\nURL: {{url}}",
+    "description": "No longer used"
+  },
+  "subscribeButton": {
+    "message": "Претплати се",
+    "description": "For the button used to subscribe to a filter list"
   },
   "elapsedOneMinuteAgo": {
     "message": "пре један минут",
@@ -903,13 +1127,17 @@
     "message": "искључен",
     "description": "Firefox-specific: appears as 'uBlock₀ (off)'"
   },
+  "docblockedTitle": {
+    "message": "Страница је блокирана",
+    "description": "Used as a title for the document-blocked page"
+  },
   "docblockedPrompt1": {
     "message": "uBlock Origin је спречио учитавање следеће странице:",
-    "description": "English: uBlock₀ has prevented the following page from loading:"
+    "description": "Used in the strict-blocking page"
   },
   "docblockedPrompt2": {
     "message": "због следећег филтера",
-    "description": "English: Because of the following filter"
+    "description": "Used in the strict-blocking page"
   },
   "docblockedNoParamsPrompt": {
     "message": "без параметара",
@@ -927,6 +1155,10 @@
     "message": "Затвори овај прозор",
     "description": "English: Close this window"
   },
+  "docblockedDontWarn": {
+    "message": "Не упозоравај ме поново на овај сајт",
+    "description": "Label for checkbox in document-blocked page"
+  },
   "docblockedProceed": {
     "message": "Искључи строго блокирање за {{hostname}}",
     "description": "English: Disable strict blocking for {{hostname}} ..."
@@ -938,6 +1170,10 @@
   "docblockedDisablePermanent": {
     "message": "Трајно",
     "description": "English: Permanently"
+  },
+  "docblockedDisable": {
+    "message": "Настави",
+    "description": "Button text to navigate to the blocked page"
   },
   "cloudPush": {
     "message": "Извези у складиште у облаку",
@@ -979,9 +1215,21 @@
     "message": "бајтови",
     "description": ""
   },
+  "contextMenuBlockElementInFrame": {
+    "message": "Блокирај елемент у оквиру...",
+    "description": "An entry in the browser's contextual menu"
+  },
+  "contextMenuSubscribeToList": {
+    "message": "Претплатите се на листу филтера...",
+    "description": "An entry in the browser's contextual menu"
+  },
   "contextMenuTemporarilyAllowLargeMediaElements": {
     "message": "Привремено дозволи велике мултимедијалне елементе",
     "description": "A context menu entry, present when large media elements have been blocked on the current site"
+  },
+  "contextMenuViewSource": {
+    "message": "Прикажи изворни код…",
+    "description": "A context menu entry, to view the source code of the target resource"
   },
   "shortcutCapturePlaceholder": {
     "message": "Укуцајте пречицу",
@@ -995,13 +1243,45 @@
     "message": "Копирај у оставу",
     "description": "Label for buttons used to copy something to the clipboard"
   },
-  "toggleBlockingProfile": {
-    "message": "Укључи/искључи профил за блокирање",
-    "description": "Label for keyboard shortcut used to toggle blocking profile"
+  "genericSelectAll": {
+    "message": "Изабери све",
+    "description": "Label for buttons used to select all text in editor"
+  },
+  "toggleCosmeticFiltering": {
+    "message": "Укључи/искључи естетско филтрирање",
+    "description": "Label for keyboard shortcut used to toggle cosmetic filtering"
   },
   "relaxBlockingMode": {
     "message": "Опуштени режим блокирања",
-    "description": "Label for keyboard shortcut used to relax blocking mode (meant to replace 'Toggle blocking profile')"
+    "description": "Label for keyboard shortcut used to relax blocking mode"
+  },
+  "storageUsed": {
+    "message": "Искоришћеност складишта: {{value}} {{unit}}",
+    "description": " In Setting pane, renders as (example): Storage used: 13.2 MB"
+  },
+  "KB": {
+    "message": "kB",
+    "description": "short for 'kilobytes'"
+  },
+  "MB": {
+    "message": "MB",
+    "description": "short for 'megabytes'"
+  },
+  "GB": {
+    "message": "GB",
+    "description": "short for 'gigabytes'"
+  },
+  "clickToLoad": {
+    "message": "Кликните за учитавање",
+    "description": "Message used in frame placeholders"
+  },
+  "linterMainReport": {
+    "message": "Грешака: {{count}}",
+    "description": "Summary of number of errors as reported by the linter "
+  },
+  "unprocessedRequestTooltip": {
+    "message": "Није могуће правилно филтрирати при покретању прегледача. Поново учитајте страницу да бисте осигурали правилно филтрирање.",
+    "description": "A warning which will appear in the popup panel if needed"
   },
   "dummy": {
     "message": "This entry must be the last one",

@@ -24,9 +24,6 @@
 // `webext` is a promisified api of `chrome`. Entries are added as
 // the promisification of uBO progress.
 
-const webext = (( ) => {        // jshint ignore:line
-// >>>>> start of private scope
-
 const promisifyNoFail = function(thisArg, fnName, outFn = r => r) {
     const fn = thisArg[fnName];
     return function() {
@@ -73,6 +70,7 @@ const webext = {
         },
         onClicked: chrome.contextMenus.onClicked,
         remove: promisifyNoFail(chrome.contextMenus, 'remove'),
+        removeAll: promisifyNoFail(chrome.contextMenus, 'removeAll'),
     },
     // https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/privacy
     privacy: {
@@ -93,6 +91,7 @@ const webext = {
         get: promisifyNoFail(chrome.tabs, 'get', tab => tab instanceof Object ? tab : null),
         executeScript: promisifyNoFail(chrome.tabs, 'executeScript'),
         insertCSS: promisifyNoFail(chrome.tabs, 'insertCSS'),
+        removeCSS: promisifyNoFail(chrome.tabs, 'removeCSS'),
         query: promisifyNoFail(chrome.tabs, 'query', tabs => Array.isArray(tabs) ? tabs : []),
         reload: promisifyNoFail(chrome.tabs, 'reload'),
         remove: promisifyNoFail(chrome.tabs, 'remove'),
@@ -101,6 +100,7 @@ const webext = {
     // https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/webNavigation
     webNavigation: {
         getFrame: promisify(chrome.webNavigation, 'getFrame'),
+        getAllFrames: promisify(chrome.webNavigation, 'getAllFrames'),
     },
     // https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/windows
     windows: {
@@ -161,7 +161,4 @@ if ( chrome.tabs.removeCSS instanceof Function ) {
     webext.tabs.removeCSS = promisifyNoFail(chrome.tabs, 'removeCSS');
 }
 
-return webext;
-
-// <<<<< end of private scope
-})();
+export default webext;

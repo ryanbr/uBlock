@@ -28,7 +28,7 @@
     "description": "appears as tab name in dashboard"
   },
   "3pPageName": {
-    "message": "Φίλτρα τρίτων",
+    "message": "Λίστες φίλτρων",
     "description": "appears as tab name in dashboard"
   },
   "1pPageName": {
@@ -40,7 +40,7 @@
     "description": "appears as tab name in dashboard"
   },
   "whitelistPageName": {
-    "message": "Λίστα επιτρεπόμενων",
+    "message": "Έμπιστες τοποθεσίες",
     "description": "appears as tab name in dashboard"
   },
   "shortcutsPageName": {
@@ -53,6 +53,10 @@
   },
   "aboutPageName": {
     "message": "Σχετικά",
+    "description": "appears as tab name in dashboard"
+  },
+  "supportPageName": {
+    "message": "Υποστήριξη",
     "description": "appears as tab name in dashboard"
   },
   "assetViewerPageName": {
@@ -85,7 +89,7 @@
   },
   "popupBlockedStats": {
     "message": "{{count}} ή {{percent}}%",
-    "description": "Example: 15 or 13%"
+    "description": "Example: 15 (13%)"
   },
   "popupBlockedSinceInstallPrompt": {
     "message": "από την εγκατάσταση",
@@ -96,15 +100,15 @@
     "description": "English: or"
   },
   "popupBlockedOnThisPage_v2": {
-    "message": "Blocked on this page",
+    "message": "Αποκλεισμένα σε αυτή τη σελίδα",
     "description": "For the new mobile-friendly popup design"
   },
   "popupBlockedSinceInstall_v2": {
-    "message": "Blocked since install",
+    "message": "Φραγμένο από εγκατάσταση",
     "description": "For the new mobile-friendly popup design"
   },
   "popupDomainsConnected_v2": {
-    "message": "Domains connected",
+    "message": "Συνδεδεμένοι τομείς",
     "description": "For the new mobile-friendly popup design"
   },
   "popupTipDashboard": {
@@ -122,6 +126,10 @@
   "popupTipLog": {
     "message": "Πηγαίνετε στο αρχείο καταγραφής αιτημάτων",
     "description": "Tooltip used for the logger icon in the panel"
+  },
+  "popupTipReport": {
+    "message": "Αναφέρετε ένα πρόβλημα σε αυτόν τον ιστότοπο",
+    "description": "Tooltip used for the 'chat' icon in the panel"
   },
   "popupTipNoPopups": {
     "message": "Παρεμπόδιση αναδυόμενων παραθύρων για αυτόν τον ιστότοπο",
@@ -144,7 +152,7 @@
     "description": "Tooltip for the no-large-media per-site switch"
   },
   "popupTipNoLargeMedia2": {
-    "message": "Κάντε κλικ για φραγή πλέον μεγάλων στοιχείων πολυμέσων σε αυτή την ιστοσελίδα",
+    "message": "Κάντε κλικ για αναίρεση φραγής των μεγάλων στοιχείων πολυμέσων σε αυτή την τοποθεσία",
     "description": "Tooltip for the no-large-media per-site switch"
   },
   "popupTipNoCosmeticFiltering": {
@@ -152,11 +160,11 @@
     "description": "Tooltip for the no-cosmetic-filtering per-site switch"
   },
   "popupTipNoCosmeticFiltering1": {
-    "message": "Κάντε κλικ για να απενεργοποιήσετε το καλλυντικό φιλτράρισμα σε αυτή την σελίδα",
+    "message": "Κάντε κλικ για να απενεργοποιήσετε το καλλωπιστικό φιλτράρισμα σε αυτή την τοποθεσία",
     "description": "Tooltip for the no-cosmetic-filtering per-site switch"
   },
   "popupTipNoCosmeticFiltering2": {
-    "message": "Κάντε κλικ για να ενεργοποιήσετε το καλλυντικό φιλτράρισμα σε αυτή την σελίδα",
+    "message": "Κάντε κλικ για να ενεργοποιήσετε το καλλωπιστικό φιλτράρισμα σε αυτή την τοποθεσία",
     "description": "Tooltip for the no-cosmetic-filtering per-site switch"
   },
   "popupTipNoRemoteFonts": {
@@ -176,28 +184,36 @@
     "description": "Tooltip for the no-scripting per-site switch"
   },
   "popupTipNoScripting2": {
-    "message": "Κάντε κλικ για να μην εχετε το JavaScript απενεργοποιημένο για αυτήν την ιστοσελίδα",
+    "message": "Κάντε κλικ για να μην απενεργοποιείται πλέον η JavaScript σε αυτή την τοποθεσία",
     "description": "Tooltip for the no-scripting per-site switch"
   },
+  "popupNoPopups_v2": {
+    "message": "Αναδυόμενα παράθυρα",
+    "description": "Caption for the no-popups per-site switch"
+  },
   "popupNoLargeMedia_v2": {
-    "message": "Large media elements",
-    "description": "Tip for the no-large-media per-site switch"
+    "message": "Στοιχεία μεγάλων πολυμέσων",
+    "description": "Caption for the no-large-media per-site switch"
   },
   "popupNoCosmeticFiltering_v2": {
-    "message": "Cosmetic filtering",
-    "description": "Tip for the no-cosmetic-filtering per-site switch"
+    "message": "Καλλωπιστικά φίλτρα",
+    "description": "Caption for the no-cosmetic-filtering per-site switch"
   },
   "popupNoRemoteFonts_v2": {
-    "message": "Remote fonts",
-    "description": "Tip for the no-remote-fonts per-site switch"
+    "message": "Απομακρυσμένες γραμματοσειρές",
+    "description": "Caption for the no-remote-fonts per-site switch"
   },
   "popupNoScripting_v2": {
     "message": "JavaScript",
-    "description": "Tip for the no-scripting per-site switch"
+    "description": "Caption for the no-scripting per-site switch"
   },
   "popupMoreButton_v2": {
-    "message": "More",
-    "description": "Label to be used to toggle overview panel"
+    "message": "Περισσότερα",
+    "description": "Label to be used to show popup panel sections"
+  },
+  "popupLessButton_v2": {
+    "message": "Λιγότερα",
+    "description": "Label to be used to hide popup panel sections"
   },
   "popupTipGlobalRules": {
     "message": "Καθολικοί κανόνες: αυτή η στήλη είναι για κανόνες με εφαρμογή σε όλες τις τοποθεσίες.",
@@ -228,7 +244,7 @@
     "description": ""
   },
   "popup3pPassiveRulePrompt": {
-    "message": "3ου μέρους css/Εικόνες",
+    "message": "CSS/Εικόνες τρίτων",
     "description": ""
   },
   "popupInlineScriptRulePrompt": {
@@ -254,6 +270,18 @@
   "popupHitDomainCount": {
     "message": "{{count}} από {{total}}",
     "description": "appears in popup"
+  },
+  "popupVersion": {
+    "message": "Έκδοση",
+    "description": "Example of use: Version 1.26.4"
+  },
+  "popup3pScriptFilter": {
+    "message": "δέσμη ενεργειών",
+    "description": "Appears as an option to filter out firewall rows"
+  },
+  "popup3pFrameFilter": {
+    "message": "πλαίσιο",
+    "description": "Appears as an option to filter out firewall rows"
   },
   "pickerCreate": {
     "message": "Δημιουργία",
@@ -284,7 +312,7 @@
     "description": "English: Click, Ctrl-click"
   },
   "pickerContextMenuEntry": {
-    "message": "Αποκλεισμός στοιχείου",
+    "message": "Φραγή στοιχείου...",
     "description": "An entry in the browser's contextual menu"
   },
   "settingsCollapseBlockedPrompt": {
@@ -296,7 +324,7 @@
     "description": "English: Show the number of blocked requests on the icon"
   },
   "settingsTooltipsPrompt": {
-    "message": "Απενεργοποιήστε τις αιωρούμενες επεξηγήσεις",
+    "message": "Απενεργοποίηση υποδείξεων",
     "description": "A checkbox in the Settings pane"
   },
   "settingsContextMenuPrompt": {
@@ -307,20 +335,28 @@
     "message": "Λειτουργία φιλική προς χρήστες με αχρωματοψία",
     "description": "English: Color-blind friendly"
   },
+  "settingsAppearance": {
+    "message": "Εμφάνιση",
+    "description": "Section for controlling user interface appearance"
+  },
+  "settingsThemeLabel": {
+    "message": "Θέμα",
+    "description": "Label for checkbox to enable a custom dark theme"
+  },
+  "settingsThemeAccent0Label": {
+    "message": "Προσαρμοσμένο χρώμα έμφασης",
+    "description": "Label for checkbox to pick an accent color"
+  },
   "settingsCloudStorageEnabledPrompt": {
     "message": "Ενεργοποίηση υποστήριξης cloud storage",
     "description": ""
   },
   "settingsAdvancedUserPrompt": {
     "message": "Είμαι προχωρημένος χρήστης (<a href='https://github.com/gorhill/uBlock/wiki/Advanced-user-features'>Aπαραίτητη ανάγνωση</a>)",
-    "description": ""
-  },
-  "settingsAdvancedUserSettings": {
-    "message": "ρυθμίσεις για προχωρημένους",
-    "description": "For the tooltip of a link which gives access to advanced settings"
+    "description": "Checkbox to let user access advanced, technical features"
   },
   "settingsPrefetchingDisabledPrompt": {
-    "message": "Απενεργοποίηση πρόωρης φόρτωσης (για να αποτραπεί κάθε σύνδεση σε μπλοκαρισμένες αιτήσεις δικτύου)",
+    "message": "Απενεργοποίηση προ-φόρτωσης (για να αποτραπεί κάθε σύνδεση σε αποκλεισμένες αιτήσεις δικτύου)",
     "description": "English: "
   },
   "settingsHyperlinkAuditingDisabledPrompt": {
@@ -336,7 +372,7 @@
     "description": ""
   },
   "settingPerSiteSwitchGroupSynopsis": {
-    "message": "Αυτές οι προεπιλεγμένες συμπεριφορές μπορούν να παρακαμφθούν ανα-τοποθεσία",
+    "message": "Αυτές οι προεπιλεγμένες συμπεριφορές μπορούν να παρακαμφθούν ανά τοποθεσία",
     "description": ""
   },
   "settingsNoCosmeticFilteringPrompt": {
@@ -352,16 +388,28 @@
     "description": ""
   },
   "settingsNoScriptingPrompt": {
-    "message": "Απενεργοποίηση του JavaScript",
+    "message": "Απενεργοποίηση JavaScript",
     "description": "The default state for the per-site no-scripting switch"
   },
   "settingsNoCSPReportsPrompt": {
     "message": "Φραγή αναφορών CSP",
     "description": "background information: https://github.com/gorhill/uBlock/issues/3150"
   },
-  "settingsStorageUsed": {
-    "message": "Αποθηκευτικός χώρος σε χρήση: {{value}} bytes",
-    "description": "English: Storage used: {{}} bytes"
+  "settingsUncloakCnamePrompt": {
+    "message": "Ξεσκέπασμα/εμφάνιση κανονικών ονομάτων CNAME",
+    "description": "background information: https://github.com/uBlockOrigin/uBlock-issues/issues/1513"
+  },
+  "settingsAdvanced": {
+    "message": "Για προχωρημένους",
+    "description": "Section for controlling advanced-user settings"
+  },
+  "settingsAdvancedSynopsis": {
+    "message": "Χαρακτηριστικά κατάλληλα μόνο για τεχνικούς χρήστες.",
+    "description": "Description of section controlling advanced-user settings"
+  },
+  "settingsAdvancedUserSettings": {
+    "message": "ρυθμίσεις για προχωρημένους",
+    "description": "For the tooltip of a link which gives access to advanced settings"
   },
   "settingsLastRestorePrompt": {
     "message": "Τελευταία ανάκτηση:",
@@ -396,7 +444,7 @@
     "description": "English: Parse and enforce Adblock+ element hiding filters."
   },
   "3pParseAllABPHideFiltersInfo": {
-    "message": "<p>Η επιλογή αυτή επιτρέπει την ανάλυση και επιβολή των συμβατών με τα <a href=\"https://adblockplus.org/en/faq_internal#elemhide\">&ldquo;κρυμμένα στοιχεία&rdquo; του Adblock Plus φίλτρων</a>. Τα φίλτρα αυτά είναι ουσιαστικά κοσμητικά, χρησιμεύουν στην απόκρυψη στοιχείων από μια σελίδα στην οποία θεωρούνται οπτική όχληση και δεν μπορούν να αποκλειστούν με την, βασισμένη σε αιτήματα δικτύου, μηχανή φιλτραρίσματος.</p><p>Η ενεργοποίηση αυτής της λειτουργίας αυξάνει το αποτύπωμα μνήμης του <i>uBlock₀</i>.</p>",
+    "message": "Τα καλλωπιστικά φίλτρα χρησιμεύουν για να κρύβουν εκείνα τα στοιχεία σε μια ιστοσελίδα που οπτικά θεωρούνται ενοχλητικά, και τα οποία δεν μπορούν να αποκλειστούν με τις μηχανές φιλτραρίσματος που βασίζονται σε αιτήματα δικτύου.",
     "description": "Describes the purpose of the 'Parse and enforce cosmetic filters' feature."
   },
   "3pIgnoreGenericCosmeticFilters": {
@@ -406,6 +454,10 @@
   "3pIgnoreGenericCosmeticFiltersInfo": {
     "message": "<p>Τα γενικά κοσμητικά φίλτρα είναι εκείνα τα κοσμητικά φίλτρα που εφαρμόζονται σε όλες τις ιστοσελίδες.<p>Αν και γίνεται αποτελεσματική διαχείρισή τους από το uBlock₀, τα γενικά κοσμητικά φίλτρα ενδέχεται να καταναλώσουν σημαντική μνήμη και να υπερφορτώσουν τη CPU σε μερικές ιστοσελίδες, ειδικά για μεγάλες μακροχρόνιες.<p>Η ενεργοποίηση αυτής της επιλογής θα εξαλείψει την υπερφόρτωση μνήμης και CPU στις ιστοσελίδες ως αποτέλεσμα της διαχείρισης γενικών κοσμητικών φίλτρων, ενώ ενδέχεται να μειώσει την κατανάλωση μνήμης του ίδιου του uBlock₀.<p>Προτείνεται η ενεργοποίηση αυτής της επιλογής στις λιγότερο ισχυρές συσκευές.",
     "description": "Describes the purpose of the 'Ignore generic cosmetic filters' feature."
+  },
+  "3pSuspendUntilListsAreLoaded": {
+    "message": "Αναστολή της δραστηριότητας δικτύου μέχρι να φορτωθούν όλες οι λίστες φίλτρων",
+    "description": "A checkbox in the 'Filter lists' pane"
   },
   "3pListsOfBlockedHostsHeader": {
     "message": "Λίστες αποκλεισμένων hosts",
@@ -417,35 +469,35 @@
   },
   "3pGroupDefault": {
     "message": "Τοπικά",
-    "description": "Header for the uBlock filters section in 'Filter lists pane'"
+    "description": "Filter lists section name"
   },
   "3pGroupAds": {
     "message": "Διαφημίσεις",
-    "description": "English: Ads"
+    "description": "Filter lists section name"
   },
   "3pGroupPrivacy": {
     "message": "Ιδιωτικό απόρρητο",
-    "description": "English: Privacy"
+    "description": "Filter lists section name"
   },
   "3pGroupMalware": {
     "message": "Τομείς κακόβουλου λογισμικού",
-    "description": "English: Malware domains"
+    "description": "Filter lists section name"
   },
   "3pGroupAnnoyances": {
     "message": "Ενοχλήσεις",
-    "description": "The header identifying the filter lists in the category 'annoyances'"
+    "description": "Filter lists section name"
   },
   "3pGroupMultipurpose": {
     "message": "Πολλαπλών χρήσεων",
-    "description": "English: Multipurpose"
+    "description": "Filter lists section name"
   },
   "3pGroupRegions": {
     "message": "Περιοχές, γλώσσες",
-    "description": "English: Regions, languages"
+    "description": "Filter lists section name"
   },
   "3pGroupCustom": {
     "message": "Προσαρμοσμένη",
-    "description": "English: Custom"
+    "description": "Filter lists section name"
   },
   "3pImport": {
     "message": "Εισαγωγή...",
@@ -458,6 +510,10 @@
   "3pExternalListObsolete": {
     "message": "απαρχαιωμένη.",
     "description": "used as a tooltip for the out-of-date icon beside a list"
+  },
+  "3pViewContent": {
+    "message": "εμφάνιση περιεχομένου",
+    "description": "used as a tooltip for eye icon beside a list"
   },
   "3pLastUpdate": {
     "message": "Τελευταία ενημέρωση: {{ago}}",
@@ -475,13 +531,17 @@
     "message": "Ένα φίλτρο ανά γραμμή. Φίλτρο μπορεί να είναι ένα απλό όνομα κεντρικού υπολογιστή (hostname) ή ένα, συμβατό με το Adblock Plus, φίλτρο. Γραμμές με το πρόθεμα &lsquo;!&rsquo; θα παραβλέπονται.",
     "description": "Short information about how to create custom filters"
   },
+  "1pTrustWarning": {
+    "message": "Μην προσθέτετε φίλτρα από μη αξιόπιστες πηγές.",
+    "description": "Warning against copy-pasting filters from random sources"
+  },
   "1pImport": {
     "message": "Εισαγωγή και προσάρτηση",
-    "description": "English: Import and append"
+    "description": "Button in the 'My filters' pane"
   },
   "1pExport": {
     "message": "Εξαγωγή",
-    "description": "English: Export"
+    "description": "Button in the 'My filters' pane"
   },
   "1pExportFilename": {
     "message": "τα-στατικά-ublock-φίλτρα-μου_{{datetime}}.txt",
@@ -520,12 +580,12 @@
     "description": "Will discard manually-edited content and exit manual-edit mode"
   },
   "rulesImport": {
-    "message": "Εισαγωγή από αρχείο...",
+    "message": "Εισαγωγή από αρχείο…",
     "description": ""
   },
   "rulesExport": {
     "message": "Εξαγωγή σε αρχείο",
-    "description": ""
+    "description": "Button in the 'My rules' pane"
   },
   "rulesDefaultFileName": {
     "message": "οι-δυναμικοί-ublock-κανόνες-μου_{{datetime}}.txt",
@@ -539,21 +599,37 @@
     "message": "Συντακτικό κανόνων: <code>προέλευση προορισμός τύπος ενέργεια</code> (<a href='https://github.com/gorhill/uBlock/wiki/Dynamic-filtering:-rule-syntax'>πλήρης τεκμηρίωση</a>).",
     "description": "English: dynamic rule syntax and full documentation."
   },
+  "rulesSort": {
+    "message": "Ταξινόμηση:",
+    "description": "English: label for sort option."
+  },
+  "rulesSortByType": {
+    "message": "Τύπος κανόνα",
+    "description": "English: a sort option for list of rules."
+  },
+  "rulesSortBySource": {
+    "message": "Πηγή",
+    "description": "English: a sort option for list of rules."
+  },
+  "rulesSortByDestination": {
+    "message": "Προορισμός",
+    "description": "English: a sort option for list of rules."
+  },
   "whitelistPrompt": {
     "message": "Η λίστα σας με τα ονόματα κόμβων (host names) στα οποία το uBlock θα είναι απενεργοποιημένο. Μια καταχώρηση ανά γραμμή. Άκυρα ονόματα κόμβων θα παρακάμπτονται σιωπηλά.",
-    "description": "English: An overview of the content of the dashboard's Whitelist pane."
+    "description": "A concise description of the 'Trusted sites' pane."
   },
   "whitelistImport": {
     "message": "Εισαγωγή και προσάρτηση",
-    "description": "English: Import and append"
+    "description": "Button in the 'Trusted sites' pane"
   },
   "whitelistExport": {
     "message": "Εξαγωγή",
-    "description": "English: Export"
+    "description": "Button in the 'Trusted sites' pane"
   },
   "whitelistExportFilename": {
-    "message": "λίστα-ublock-επιτρεπόμενων_{{datetime}}.txt",
-    "description": "English: my-ublock-whitelist_{{datetime}}.txt"
+    "message": "ublock-έμπιστες-τοποθεσίες_{{datetime}}.txt",
+    "description": "The default filename to use for import/export purpose"
   },
   "whitelistApply": {
     "message": "Εφαρμογή αλλαγών",
@@ -643,12 +719,16 @@
     "message": "επιτρέπεται",
     "description": "A keyword in the built-in row filtering expression"
   },
+  "loggerRowFiltererBuiltinModified": {
+    "message": "επεξεργασμένο",
+    "description": "A keyword in the built-in row filtering expression"
+  },
   "loggerRowFiltererBuiltin1p": {
-    "message": "1st-party",
+    "message": "Πρωτομερής",
     "description": "A keyword in the built-in row filtering expression"
   },
   "loggerRowFiltererBuiltin3p": {
-    "message": "3rd-party",
+    "message": "Τριτομερής",
     "description": "A keyword in the built-in row filtering expression"
   },
   "loggerEntryDetailsHeader": {
@@ -672,11 +752,11 @@
     "description": "Label to identify a context field (typically a hostname)"
   },
   "loggerEntryDetailsRootContext": {
-    "message": "Root context",
+    "message": "Πλαίσιο ρίζας",
     "description": "Label to identify a root context field (typically a hostname)"
   },
   "loggerEntryDetailsPartyness": {
-    "message": "Partyness",
+    "message": "Μέρος αιτήματος",
     "description": "Label to identify a field providing partyness information"
   },
   "loggerEntryDetailsType": {
@@ -688,7 +768,7 @@
     "description": "Label to identify the URL of an entry"
   },
   "loggerURLFilteringHeader": {
-    "message": "Φιλτράρισμα δυναμικών συνδέσμων",
+    "message": "Κανόνας URL",
     "description": "Small header to identify the dynamic URL filtering section"
   },
   "loggerURLFilteringContextLabel": {
@@ -744,7 +824,7 @@
     "description": "Below this sentence, the filter list(s) in which the filter was found"
   },
   "loggerStaticFilteringFinderSentence2": {
-    "message": "Το στατικό φίλτρo <code>{{filter}}</code> δεν βρέθηκε σε καμία από τις λίστες φίλτρων που έχουν ενεργοποιηθεί αυτήν τη στιγμή",
+    "message": "Το στατικό φίλτρο δεν βρέθηκε σε καμία από τις λίστες φίλτρων που έχουν ενεργοποιηθεί αυτήν τη στιγμή",
     "description": "Message to show when a filter cannot be found in any filter lists"
   },
   "loggerSettingDiscardPrompt": {
@@ -776,7 +856,7 @@
     "description": "A label for the time column"
   },
   "loggerSettingHideColumnFilter": {
-    "message": "{{input}} Φίτρο/Κανόνας",
+    "message": "{{input}} Φίλτρο/κανόνας",
     "description": "A label for the filter or rule column"
   },
   "loggerSettingHideColumnContext": {
@@ -784,7 +864,7 @@
     "description": "A label for the context column"
   },
   "loggerSettingHideColumnPartyness": {
-    "message": "{{input}} Partyness",
+    "message": "{{input}} μέρος αιτήματος",
     "description": "A label for the partyness column"
   },
   "loggerExportFormatList": {
@@ -796,28 +876,148 @@
     "description": "Label for radio-button to pick export format"
   },
   "loggerExportEncodePlain": {
-    "message": "Plain",
+    "message": "Απλό",
     "description": "Label for radio-button to pick export text format"
   },
   "loggerExportEncodeMarkdown": {
     "message": "Markdown",
     "description": "Label for radio-button to pick export text format"
   },
+  "supportOpenButton": {
+    "message": "Άνοιγμα",
+    "description": "Text for button which open an external webpage in Support pane"
+  },
+  "supportReportSpecificButton": {
+    "message": "Δημιουργία νέας αναφοράς",
+    "description": "Text for button which open an external webpage in Support pane"
+  },
+  "supportFindSpecificButton": {
+    "message": "Βρείτε παρόμοιες αναφορές",
+    "description": "A clickable link in the filter issue reporter section"
+  },
+  "supportS1H": {
+    "message": "Οδηγίες",
+    "description": "Header of 'Documentation' section in Support pane"
+  },
+  "supportS1P1": {
+    "message": "Διαβάστε τις οδηγίες στο <code>uBlock/wiki</code> για να μάθετε για όλες τις δυνατότητες του uBlock Origin.",
+    "description": "First paragraph of 'Documentation' section in Support pane"
+  },
+  "supportS2H": {
+    "message": "Ερωτήσεις και υποστήριξη",
+    "description": "Header of 'Questions and support' section in Support pane"
+  },
+  "supportS2P1": {
+    "message": "Απαντήσεις σε ερωτήσεις και άλλα είδη υποστήριξης βοήθειας παρέχονται στο subreddit <code>/r/uBlockOrigin</code>.",
+    "description": "First paragraph of 'Questions and support' section in Support pane"
+  },
+  "supportS3H": {
+    "message": "Προβλήματα φίλτρου/ιστότοπος είναι κατεστραμμένος",
+    "description": "Header of 'Filter issues' section in Support pane"
+  },
+  "supportS3P1": {
+    "message": "Αναφέρετε προβλήματα φίλτρου με συγκεκριμένους ιστότοπους στο <span data-url=\"https://github.com/uBlockOrigin/uAssets/issues?q=is%3Aissue\"><code>uBlockOrigin/uAssets</code> issue tracker</span>. Απαιτείται λογαριασμός GitHub.",
+    "description": "First paragraph of 'Filter issues' section in Support pane"
+  },
+  "supportS3P2": {
+    "message": "<b>Σημαντικό:</b> Αποφύγετε τη χρήση άλλων blocker με παρόμοιο σκοπό μαζί με το uBlock Origin, καθώς αυτό μπορεί να προκαλέσει προβλήματα φιλτραρίσματος σε συγκεκριμένους ιστότοπους.",
+    "description": "Second paragraph of 'Filter issues' section in Support pane"
+  },
+  "supportS3P3": {
+    "message": "<b>Συμβουλές:</b> Βεβαιωθείτε ότι οι λίστες φίλτρων σας είναι ενημερωμένες. <span data-url=\"logger-ui.html#_\">Ο καταγραφέας</span> είναι το κύριο εργαλείο για τη διάγνωση προβλημάτων που σχετίζονται με το φίλτρο.",
+    "description": "Third paragraph of 'Filter issues' section in Support pane"
+  },
+  "supportS4H": {
+    "message": "Αναφορά σφαλμάτων",
+    "description": "Header of 'Bug report' section in Support pane"
+  },
+  "supportS4P1": {
+    "message": "Αναφέρετε προβλήματα με το ίδιο το uBlock Origin στο <span data-url=\"https://github.com/uBlockOrigin/uBlock-issues/issues?q=is%3Aissue\"><code>uBlockOrigin/uBlock-issue</code> issue tracker</span>. Απαιτείται λογαριασμός GitHub.",
+    "description": "First paragraph of 'Bug report' section in Support pane"
+  },
+  "supportS5H": {
+    "message": "Πληροφορίες αντιμετώπισης προβλημάτων",
+    "description": "Header of 'Troubleshooting Information' section in Support pane"
+  },
+  "supportS5P1": {
+    "message": "Παρακάτω υπάρχουν τεχνικές πληροφορίες που μπορεί να είναι χρήσιμες όταν εθελοντές προσπαθούν να σας βοηθήσουν να λύσετε ένα πρόβλημα.",
+    "description": "First paragraph of 'Troubleshooting Information' section in Support pane"
+  },
+  "supportS5P2": {
+    "message": "<b>Σημαντικό:</b> Πιθανώς ιδιωτικές ή ευαίσθητες πληροφορίες αναπροσαρμόζονται από προεπιλογή. Οι αναδιατυπωμένες πληροφορίες ενδέχεται να δυσκολέψουν την επίλυση ενός προβλήματος.",
+    "description": "Second paragraph of 'Troubleshooting Information' section in Support pane"
+  },
+  "supportS6H": {
+    "message": "Αναφέρετε ένα πρόβλημα φίλτρου",
+    "description": "Header of 'Report a filter issue' section in Support pane"
+  },
+  "supportS6P1S1": {
+    "message": "Για να αποφύγετε την επιβάρυνση των εθελοντών με διπλές αναφορές, βεβαιωθείτε ότι το ζήτημα δεν έχει ήδη αναφερθεί.",
+    "description": "A paragraph in the filter issue reporter section"
+  },
+  "supportS6P2S1": {
+    "message": "Οι λίστες φίλτρων ενημερώνονται καθημερινά. Βεβαιωθείτε ότι το πρόβλημά σας δεν έχει ήδη αντιμετωπιστεί στις πιο πρόσφατες λίστες φίλτρων.",
+    "description": "A paragraph in the filter issue reporter section"
+  },
+  "supportS6P2S2": {
+    "message": "Βεβαιωθείτε ότι το πρόβλημα εξακολουθεί να υπάρχει μετά τη φόρτωση εκ νέου της προβληματικής ιστοσελίδας.",
+    "description": "A paragraph in the filter issue reporter section"
+  },
+  "supportS6URL": {
+    "message": "Διεύθυνση της ιστοσελίδας:",
+    "description": "Label for the URL of the page"
+  },
+  "supportS6Select1": {
+    "message": "Η ιστοσελίδα...",
+    "description": "Label for widget to select type of issue"
+  },
+  "supportS6Select1Option0": {
+    "message": "-- Επιλέξτε μια καταχώρηση --",
+    "description": "An entry in the widget used to select the type of issue"
+  },
+  "supportS6Select1Option1": {
+    "message": "Εμφανίζει διαφημίσεις ή υπολείμματα διαφημίσεων",
+    "description": "An entry in the widget used to select the type of issue"
+  },
+  "supportS6Select1Option2": {
+    "message": "Έχει επικαλύψεις ή άλλες ενοχλήσεις",
+    "description": "An entry in the widget used to select the type of issue"
+  },
+  "supportS6Select1Option3": {
+    "message": "Ανιχνεύει το uBlock Origin",
+    "description": "An entry in the widget used to select the type of issue"
+  },
+  "supportS6Select1Option4": {
+    "message": "Έχει ζητήματα που σχετίζονται με το απόρρητο",
+    "description": "An entry in the widget used to select the type of issue"
+  },
+  "supportS6Select1Option5": {
+    "message": "Μη λειτουργικό όταν το uBlock Origin είναι ενεργοποιημένο",
+    "description": "An entry in the widget used to select the type of issue"
+  },
+  "supportS6Select1Option6": {
+    "message": "Ανοίγει ανεπιθύμητες καρτέλες ή παράθυρα",
+    "description": "An entry in the widget used to select the type of issue"
+  },
+  "supportS6Checkbox1": {
+    "message": "Επισημάνετε την ιστοσελίδα ως &ldquo;NSFW&rdquo; (<a href=\"https://wikipedia.org/wiki/Not_safe_for_work\">&ldquo;Not Safe For Work&rdquo;</a>)",
+    "description": "A checkbox to use for NSFW sites"
+  },
+  "supportRedact": {
+    "message": "Redact",
+    "description": "Text for 'Redact' button"
+  },
+  "supportUnredact": {
+    "message": "Unredact",
+    "description": "Text for 'Unredact' button"
+  },
+  "aboutPrivacyPolicy": {
+    "message": "Πολιτική Απορρήτου",
+    "description": "Link to privacy policy on GitHub (English)"
+  },
   "aboutChangelog": {
     "message": "Αρχείο καταγραφής αλλαγών",
     "description": ""
-  },
-  "aboutWiki": {
-    "message": "Wiki",
-    "description": "English: project' wiki on GitHub"
-  },
-  "aboutSupport": {
-    "message": "Υποστήριξη",
-    "description": "A link for where to get support"
-  },
-  "aboutIssues": {
-    "message": "Ιχνηλάτης ζητημάτων",
-    "description": "Text for a link to official issue tracker"
   },
   "aboutCode": {
     "message": "Πηγαίος κώδικας (GPLv3)",
@@ -827,12 +1027,32 @@
     "message": "Συνεισφέροντες",
     "description": "English: Contributors"
   },
+  "aboutSourceCode": {
+    "message": "Πηγαίος κώδικας",
+    "description": "Link text to source code repo"
+  },
+  "aboutTranslations": {
+    "message": "Μεταφράσεις",
+    "description": "Link text to translations repo"
+  },
+  "aboutFilterLists": {
+    "message": "Λίστες φίλτρων",
+    "description": "Link text to uBO's own filter lists repo"
+  },
   "aboutDependencies": {
-    "message": "External dependencies (GPLv3-compatible):",
+    "message": "Εξωτερικές εξαρτήσεις (συμβατές με GPLv3):",
+    "description": "Shown in the About pane"
+  },
+  "aboutCDNs": {
+    "message": "Οι λίστες φίλτρων του uBO φιλοξενούνται ελεύθερα στα ακόλουθα <a href=\"https://wikipedia.org/wiki/Content_delivery_network\">CDNs</a>:",
+    "description": "Shown in the About pane"
+  },
+  "aboutCDNsInfo": {
+    "message": "Ένα τυχαία επιλεγμένο CDN χρησιμοποιείται όταν πρέπει να ενημερωθεί μια λίστα φίλτρων",
     "description": "Shown in the About pane"
   },
   "aboutBackupDataButton": {
-    "message": "Δημιουργία αντιγράφου ασφαλείας",
+    "message": "Δημιουργία αντιγράφου ασφαλείας σε αρχείο...",
     "description": "Text for button to create a backup of all settings"
   },
   "aboutBackupFilename": {
@@ -860,12 +1080,16 @@
     "description": "Message asking user to confirm reset"
   },
   "errorCantConnectTo": {
-    "message": "Αδυναμία σύνδεσης με {{url}}",
+    "message": "Σφάλμα δικτύου: {{msg}}",
     "description": "English: Network error: {{msg}}"
   },
   "subscriberConfirm": {
     "message": "uBlock₀: Προσθήκη του παρακάτω URL στις προσαρμοσμένες λίστες φίλτρων σας;\n\nΤίτλος: \"{{title}}\"\nURL: {{url}}",
-    "description": "English: The message seen by the user to confirm subscription to a ABP filter list"
+    "description": "No longer used"
+  },
+  "subscribeButton": {
+    "message": "Εγγραφή",
+    "description": "For the button used to subscribe to a filter list"
   },
   "elapsedOneMinuteAgo": {
     "message": "πριν από ένα λεπτό",
@@ -903,13 +1127,17 @@
     "message": "απενεργοποιημένο",
     "description": "Firefox-specific: appears as 'uBlock₀ (off)'"
   },
+  "docblockedTitle": {
+    "message": "Η σελίδα αποκλείστηκε",
+    "description": "Used as a title for the document-blocked page"
+  },
   "docblockedPrompt1": {
     "message": "Το uBlock₀ έχει αποτρέψει τη φόρτωση της παρακάτω σελίδας:",
-    "description": "English: uBlock₀ has prevented the following page from loading:"
+    "description": "Used in the strict-blocking page"
   },
   "docblockedPrompt2": {
     "message": "Εξαιτίας του ακόλουθου φίλτρου",
-    "description": "English: Because of the following filter"
+    "description": "Used in the strict-blocking page"
   },
   "docblockedNoParamsPrompt": {
     "message": "χωρίς παραμέτρους",
@@ -927,8 +1155,12 @@
     "message": "Κλείσιμο του παραθύρου",
     "description": "English: Close this window"
   },
+  "docblockedDontWarn": {
+    "message": "Να μην προειδοποιηθώ ξανά για αυτόν τον ιστότοπο",
+    "description": "Label for checkbox in document-blocked page"
+  },
   "docblockedProceed": {
-    "message": "Απενεργοποιήστε αυστηρό μπλοκάρισμα για {{hostname}}",
+    "message": "Απενεργοποίηση αυστηρής φραγής για το {{hostname}}",
     "description": "English: Disable strict blocking for {{hostname}} ..."
   },
   "docblockedDisableTemporary": {
@@ -938,6 +1170,10 @@
   "docblockedDisablePermanent": {
     "message": "Μόνιμα",
     "description": "English: Permanently"
+  },
+  "docblockedDisable": {
+    "message": "Συνέχεια",
+    "description": "Button text to navigate to the blocked page"
   },
   "cloudPush": {
     "message": "Εξαγωγή στο cloud storage",
@@ -952,11 +1188,11 @@
     "description": "tooltip"
   },
   "cloudNoData": {
-    "message": "...\n...",
+    "message": "…\n…",
     "description": ""
   },
   "cloudDeviceNamePrompt": {
-    "message": "Το όνομα αυτής της συσκευής:",
+    "message": "Όνομα αυτής της συσκευής:",
     "description": "used as a prompt for the user to provide a custom device name"
   },
   "advancedSettingsWarning": {
@@ -979,29 +1215,73 @@
     "message": "bytes",
     "description": ""
   },
+  "contextMenuBlockElementInFrame": {
+    "message": "Στοιχείο μπλοκ στο πλαίσιο...",
+    "description": "An entry in the browser's contextual menu"
+  },
+  "contextMenuSubscribeToList": {
+    "message": "Εγγραφή σε λιστα φιλτρων",
+    "description": "An entry in the browser's contextual menu"
+  },
   "contextMenuTemporarilyAllowLargeMediaElements": {
     "message": "Να επιτρέπονται προσωρινά μεγάλα στοιχεία πολυμέσων",
     "description": "A context menu entry, present when large media elements have been blocked on the current site"
+  },
+  "contextMenuViewSource": {
+    "message": "Προβολή πηγαίου κώδικα…",
+    "description": "A context menu entry, to view the source code of the target resource"
   },
   "shortcutCapturePlaceholder": {
     "message": "Πληκτρολογήστε μια συντόμευση",
     "description": "Placeholder string for input field used to capture a keyboard shortcut"
   },
   "genericMergeViewScrollLock": {
-    "message": "Toggle locked scrolling",
+    "message": "Εναλλαγή κλειδώματος ολίσθησης",
     "description": "Tooltip for the button used to lock scrolling between the views in the 'My rules' pane"
   },
   "genericCopyToClipboard": {
     "message": "Αντιγραφή στο πρόχειρο",
     "description": "Label for buttons used to copy something to the clipboard"
   },
-  "toggleBlockingProfile": {
-    "message": "Toggle blocking profile",
-    "description": "Label for keyboard shortcut used to toggle blocking profile"
+  "genericSelectAll": {
+    "message": "Επιλογή όλων",
+    "description": "Label for buttons used to select all text in editor"
+  },
+  "toggleCosmeticFiltering": {
+    "message": "Εναλλαγή διακοσμητικού φιλτραρίσματος",
+    "description": "Label for keyboard shortcut used to toggle cosmetic filtering"
   },
   "relaxBlockingMode": {
-    "message": "Relax blocking mode",
-    "description": "Label for keyboard shortcut used to relax blocking mode (meant to replace 'Toggle blocking profile')"
+    "message": "Χαλάρωση κατάστασης φραγής",
+    "description": "Label for keyboard shortcut used to relax blocking mode"
+  },
+  "storageUsed": {
+    "message": "Χώρος σε χρήση: {{value}} {{unit}}",
+    "description": " In Setting pane, renders as (example): Storage used: 13.2 MB"
+  },
+  "KB": {
+    "message": "KB",
+    "description": "short for 'kilobytes'"
+  },
+  "MB": {
+    "message": "MB",
+    "description": "short for 'megabytes'"
+  },
+  "GB": {
+    "message": "GB",
+    "description": "short for 'gigabytes'"
+  },
+  "clickToLoad": {
+    "message": "Κάντε κλικ για φόρτωση",
+    "description": "Message used in frame placeholders"
+  },
+  "linterMainReport": {
+    "message": "Σφάλματα: {{count}}",
+    "description": "Summary of number of errors as reported by the linter "
+  },
+  "unprocessedRequestTooltip": {
+    "message": "Δεν ήταν δυνατό το σωστό φιλτράρισμα κατά την εκκίνηση του προγράμματος περιήγησης.\nΦορτώστε ξανά τη σελίδα για να διασφαλίσετε το σωστό φιλτράρισμα",
+    "description": "A warning which will appear in the popup panel if needed"
   },
   "dummy": {
     "message": "Αυτή η καταχώρηση θα πρέπει να είναι τελευταία",

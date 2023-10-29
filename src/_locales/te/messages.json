@@ -12,15 +12,15 @@
     "description": "English: uBlock₀ — Dashboard"
   },
   "dashboardUnsavedWarning": {
-    "message": "Warning! You have unsaved changes",
+    "message": "హెచ్చరిక! మీరు భద్రపరచని మార్పులు ఉన్నాయి",
     "description": "A warning in the dashboard when navigating away from unsaved changes"
   },
   "dashboardUnsavedWarningStay": {
-    "message": "Stay",
+    "message": "ఉండు",
     "description": "Label for button to prevent navigating away from unsaved changes"
   },
   "dashboardUnsavedWarningIgnore": {
-    "message": "Ignore",
+    "message": "వదిలేయి",
     "description": "Label for button to ignore unsaved changes"
   },
   "settingsPageName": {
@@ -40,7 +40,7 @@
     "description": "appears as tab name in dashboard"
   },
   "whitelistPageName": {
-    "message": "నేను నమ్మే సైట్ల జాబితా",
+    "message": "నమ్మే సైట్లు",
     "description": "appears as tab name in dashboard"
   },
   "shortcutsPageName": {
@@ -53,6 +53,10 @@
   },
   "aboutPageName": {
     "message": "మా గురించి",
+    "description": "appears as tab name in dashboard"
+  },
+  "supportPageName": {
+    "message": "Support",
     "description": "appears as tab name in dashboard"
   },
   "assetViewerPageName": {
@@ -85,7 +89,7 @@
   },
   "popupBlockedStats": {
     "message": "{{count}} లేదా {{percent}}%",
-    "description": "Example: 15 or 13%"
+    "description": "Example: 15 (13%)"
   },
   "popupBlockedSinceInstallPrompt": {
     "message": "సంస్థాపన నుండి",
@@ -96,15 +100,15 @@
     "description": "English: or"
   },
   "popupBlockedOnThisPage_v2": {
-    "message": "Blocked on this page",
+    "message": "ఈ పేజిలో నిరోధించినవి",
     "description": "For the new mobile-friendly popup design"
   },
   "popupBlockedSinceInstall_v2": {
-    "message": "Blocked since install",
+    "message": "స్థాపించినప్పటి నుండి నిరోధించినవి",
     "description": "For the new mobile-friendly popup design"
   },
   "popupDomainsConnected_v2": {
-    "message": "Domains connected",
+    "message": "అనుసందానమైన డొమైన్లు",
     "description": "For the new mobile-friendly popup design"
   },
   "popupTipDashboard": {
@@ -122,6 +126,10 @@
   "popupTipLog": {
     "message": "అభ్యర్ధనల చిట్టా తెరువుము",
     "description": "Tooltip used for the logger icon in the panel"
+  },
+  "popupTipReport": {
+    "message": "Report an issue on this website",
+    "description": "Tooltip used for the 'chat' icon in the panel"
   },
   "popupTipNoPopups": {
     "message": "ఈ వెబ్సైట్ లో అన్ని పాప్అప్స్ ని నిషేధించు/అనుమతించు",
@@ -172,32 +180,40 @@
     "description": "Tooltip for the no-remote-fonts per-site switch"
   },
   "popupTipNoScripting1": {
-    "message": "Click to disable JavaScript on this site",
+    "message": "ఈ సైటులో జావాస్క్రిప్టును అచేతనం చేయయానికి నొక్కండి",
     "description": "Tooltip for the no-scripting per-site switch"
   },
   "popupTipNoScripting2": {
-    "message": "Click to no longer disable JavaScript on this site",
+    "message": "ఈ సైట్‌లో జావాస్క్రిప్ట్‌ను ఇకపై నిలిపివేయడానికి క్లిక్ చేయండి",
     "description": "Tooltip for the no-scripting per-site switch"
   },
+  "popupNoPopups_v2": {
+    "message": "పాప్-అప్ విండోలు",
+    "description": "Caption for the no-popups per-site switch"
+  },
   "popupNoLargeMedia_v2": {
-    "message": "Large media elements",
-    "description": "Tip for the no-large-media per-site switch"
+    "message": "పెద్ద మీడియా అంశాలు",
+    "description": "Caption for the no-large-media per-site switch"
   },
   "popupNoCosmeticFiltering_v2": {
-    "message": "Cosmetic filtering",
-    "description": "Tip for the no-cosmetic-filtering per-site switch"
+    "message": "నిశ్చలాత్మక వడపోత",
+    "description": "Caption for the no-cosmetic-filtering per-site switch"
   },
   "popupNoRemoteFonts_v2": {
-    "message": "Remote fonts",
-    "description": "Tip for the no-remote-fonts per-site switch"
+    "message": "రిమోట్ ఫాంట్‌లు",
+    "description": "Caption for the no-remote-fonts per-site switch"
   },
   "popupNoScripting_v2": {
-    "message": "JavaScript",
-    "description": "Tip for the no-scripting per-site switch"
+    "message": "జావాస్క్రిప్ట్",
+    "description": "Caption for the no-scripting per-site switch"
   },
   "popupMoreButton_v2": {
-    "message": "More",
-    "description": "Label to be used to toggle overview panel"
+    "message": "మరిన్ని",
+    "description": "Label to be used to show popup panel sections"
+  },
+  "popupLessButton_v2": {
+    "message": "తక్కువ",
+    "description": "Label to be used to hide popup panel sections"
   },
   "popupTipGlobalRules": {
     "message": "సామాన్య నియమాలు: ఈ నిలువరుసలో వున్న నియమాలు అన్ని సైట్లకు వర్తిస్తాయి.",
@@ -255,6 +271,18 @@
     "message": "{{total}} లో {{count}}",
     "description": "appears in popup"
   },
+  "popupVersion": {
+    "message": "సంస్కరణ",
+    "description": "Example of use: Version 1.26.4"
+  },
+  "popup3pScriptFilter": {
+    "message": "script",
+    "description": "Appears as an option to filter out firewall rows"
+  },
+  "popup3pFrameFilter": {
+    "message": "frame",
+    "description": "Appears as an option to filter out firewall rows"
+  },
   "pickerCreate": {
     "message": "సృష్టించు",
     "description": "English: Create"
@@ -307,17 +335,25 @@
     "message": "వర్ణ అంధులకనుకూలమైన",
     "description": "English: Color-blind friendly"
   },
+  "settingsAppearance": {
+    "message": "Appearance",
+    "description": "Section for controlling user interface appearance"
+  },
+  "settingsThemeLabel": {
+    "message": "థీమ్",
+    "description": "Label for checkbox to enable a custom dark theme"
+  },
+  "settingsThemeAccent0Label": {
+    "message": "Custom accent color",
+    "description": "Label for checkbox to pick an accent color"
+  },
   "settingsCloudStorageEnabledPrompt": {
     "message": "క్లౌడ్ లో పొందుపర్చడాన్న్ది అనుమతించు",
     "description": ""
   },
   "settingsAdvancedUserPrompt": {
-    "message": "మీరు నిపుణత కలిగిన వినియోగాదారులితే (<a href='https://github.com/gorhill/uBlock/wiki/Advanced-user-features'>ఇది తప్పనిసరిగా చదవాలి</a>)",
-    "description": ""
-  },
-  "settingsAdvancedUserSettings": {
-    "message": "అధునాతన అమరికలు",
-    "description": "For the tooltip of a link which gives access to advanced settings"
+    "message": "మీరు నిపుణత కలిగిన వినియోగాదారులైతే (<a href='https://github.com/gorhill/uBlock/wiki/Advanced-user-features'>అవసరమైన సమాచారం</a>)",
+    "description": "Checkbox to let user access advanced, technical features"
   },
   "settingsPrefetchingDisabledPrompt": {
     "message": "అంశాలను ముందుగానే తీసుకురావడాన్ని నిషేధించు (ఎవైనా అవాంఛనీయ అనుసంధానాలను నివారించడానికి)",
@@ -352,16 +388,28 @@
     "description": ""
   },
   "settingsNoScriptingPrompt": {
-    "message": "Disable JavaScript",
+    "message": "జావాస్క్రిప్ట్‌ను ఆపివేయి",
     "description": "The default state for the per-site no-scripting switch"
   },
   "settingsNoCSPReportsPrompt": {
     "message": "CSP నివేదికలను నిరోధించు",
     "description": "background information: https://github.com/gorhill/uBlock/issues/3150"
   },
-  "settingsStorageUsed": {
-    "message": "వాడుతున్న నిలువల పరిమాణం: {{value}} బైట్స్",
-    "description": "English: Storage used: {{}} bytes"
+  "settingsUncloakCnamePrompt": {
+    "message": "కానానికల్ పేర్లను తెరవండి",
+    "description": "background information: https://github.com/uBlockOrigin/uBlock-issues/issues/1513"
+  },
+  "settingsAdvanced": {
+    "message": "ఆధునిక",
+    "description": "Section for controlling advanced-user settings"
+  },
+  "settingsAdvancedSynopsis": {
+    "message": "Features suitable only for technical users",
+    "description": "Description of section controlling advanced-user settings"
+  },
+  "settingsAdvancedUserSettings": {
+    "message": "అధునాతన అమరికలు",
+    "description": "For the tooltip of a link which gives access to advanced settings"
   },
   "settingsLastRestorePrompt": {
     "message": "గత పునరుద్ధారణ:",
@@ -396,7 +444,7 @@
     "description": "English: Parse and enforce Adblock+ element hiding filters."
   },
   "3pParseAllABPHideFiltersInfo": {
-    "message": "<p>ఈ ఎంపిక  <a href=\"https://adblockplus.org/en/faq_internal#elemhide\">Adblock Plus-అనుకూల &ldquo;అంశాల దపరికాన్ని&rdquo; వడపోతలను</a> పదనిరుపనచేసి లాగుపరుస్తుంది. ఈ వడపోతలు చాలావరకు కాస్మెటిక్ అయివుంటాయి, అవి నెట్వర్క్ అభ్యర్ధన నిరోదన ద్వారా నిరోధించాబడలేని అవాంఛిథ అంశాలను దాచుటకు ఉపకరిస్తాయి.</p><p>ఈ ఎంపిక ను ఎంచుకున్నయేడల uBlock₀ యొక్క మెమరీ వాడుక పెరిగే ఆస్కారమున్నది</p>",
+    "message": "<p>ఈ ఎంపిక <a href=\"https://adblockplus.org/en/faq_internal#elemhide\">Adblock Plus-అనుకూల &ldquo;అంశాల దాచిపెట్టే&rdquo; ఫిల్టర్లు ని</a> పదనిరుపనచేసి అమలుపరుస్తుంది. ఈ వఫిల్టర్లు చాలావరకు కాస్మెటిక్ అయివుంటాయి, అవి నెట్వర్క్ అభ్యర్ధన నిరోదన ద్వారా నిరోధించాబడలేని అవాంఛిథ అంశాలను దాచుటకు ఉపకరిస్తాయి.</p><p>ఈ ఎంపిక ను ఎంచుకున్నయేడల uBlock₀ యొక్క మెమరీ వాడుక పెరిగే ఆస్కారమున్నది</p>",
     "description": "Describes the purpose of the 'Parse and enforce cosmetic filters' feature."
   },
   "3pIgnoreGenericCosmeticFilters": {
@@ -404,8 +452,12 @@
     "description": "This will cause uBO to ignore all generic cosmetic filters."
   },
   "3pIgnoreGenericCosmeticFiltersInfo": {
-    "message": "<p>సాధారణ కాస్మెటిక్ వడపోతలు అన్ని సైట్లపై ఉపయోగించబడుతాయి.<p>వీటిని uBlock₀ సమర్థవంతంగా ఉపయోగించగలిగినా, కొన్ని భారీ లేదా దీర్ఘకాలికంగా వీక్షిస్తున్న పేజీలలో CPU ఇంకా RAM వాడుకను ఇవి పెంచగలవు.<p>ఈ ఎంపికను ఎంచుకోవడంవలన, సాధారణ కాస్మెటిక్ వడపోతల కొరకు అదనపు CPU ఉపయోగాన్ని నివారిస్తుంది, పైగా uBlock₀ యొక్క RAM వాడుక తగ్గడానికి తోడ్పడుతుంది.<p>అల్పసామర్ధ్య పరికరాలలో దీన్ని ఎంచుకోవడం శ్రేయస్కరం.",
+    "message": "<p>సాధారణ కాస్మెటిక్ ఫిల్టర్లు అన్ని సైట్లపై ఉపయోగించబడుతాయి.<p>వీటిని uBlock₀ సమర్థవంతంగా ఉపయోగించగలిగినా, కొన్ని భారీ లేదా దీర్ఘకాలికంగా వీక్షిస్తున్న పేజీలలో CPU ఇంకా RAM వాడుకను ఇవి పెంచగలవు.<p>ఈ ఎంపికను ఎంచుకోవడంవలన, సాధారణ కాస్మెటిక్ ఫిల్టర్లు కొరకు అదనపు CPU ఉపయోగాన్ని నివారిస్తుంది, పైగా uBlock₀ యొక్క RAM వాడుక తగ్గడానికి తోడ్పడుతుంది.<p>అల్పసామర్ధ్య పరికరాలలో దీన్ని ఎంచుకోవడం శ్రేయస్కరం.",
     "description": "Describes the purpose of the 'Ignore generic cosmetic filters' feature."
+  },
+  "3pSuspendUntilListsAreLoaded": {
+    "message": "Suspend network activity until all filter lists are loaded",
+    "description": "A checkbox in the 'Filter lists' pane"
   },
   "3pListsOfBlockedHostsHeader": {
     "message": "నిరోధించబడిన చిరునామాల జాబితా",
@@ -417,35 +469,35 @@
   },
   "3pGroupDefault": {
     "message": "అంతర్నిర్మితం",
-    "description": "Header for the uBlock filters section in 'Filter lists pane'"
+    "description": "Filter lists section name"
   },
   "3pGroupAds": {
     "message": "ప్రకటనలు",
-    "description": "English: Ads"
+    "description": "Filter lists section name"
   },
   "3pGroupPrivacy": {
     "message": "గోప్యత",
-    "description": "English: Privacy"
+    "description": "Filter lists section name"
   },
   "3pGroupMalware": {
     "message": "మాల్వేర్ డొమైన్లు",
-    "description": "English: Malware domains"
+    "description": "Filter lists section name"
   },
   "3pGroupAnnoyances": {
     "message": "అసౌకర్యాల పట్టిక",
-    "description": "The header identifying the filter lists in the category 'annoyances'"
+    "description": "Filter lists section name"
   },
   "3pGroupMultipurpose": {
     "message": "బహూలార్ధక",
-    "description": "English: Multipurpose"
+    "description": "Filter lists section name"
   },
   "3pGroupRegions": {
     "message": "ప్రాంతాలు, భాషలు",
-    "description": "English: Regions, languages"
+    "description": "Filter lists section name"
   },
   "3pGroupCustom": {
     "message": "సొంత నిర్దేషణ",
-    "description": "English: Custom"
+    "description": "Filter lists section name"
   },
   "3pImport": {
     "message": "దిగుమతిచేయు...",
@@ -459,12 +511,16 @@
     "message": "పాతబడింది",
     "description": "used as a tooltip for the out-of-date icon beside a list"
   },
+  "3pViewContent": {
+    "message": "దీన్ని చూపించు",
+    "description": "used as a tooltip for eye icon beside a list"
+  },
   "3pLastUpdate": {
     "message": "గత నవీకరణ: {{ago}}.\nనవీకరించుటకు క్లిక్ చెయ్యండి.",
     "description": "used as a tooltip for the clock icon beside a list"
   },
   "3pUpdating": {
-    "message": "నవీకరిస్తున్నది...",
+    "message": "నవీకరిస్తోంది...",
     "description": "used as a tooltip for the spinner icon beside a list"
   },
   "3pNetworkError": {
@@ -475,13 +531,17 @@
     "message": "ఒక్కో పంక్తిలో ఒక ఫిల్టర్ నమోదు. పేర్కొనబడే ఫిల్టర్, కేవలం హోస్టుపేరు లేదా Adblock Plusకి అనువైన ఫిల్టర్ కావొచ్చు. పంక్తిలో మొదట &lsquo;!&rsquo; ఉన్నచో ఆ పంక్తి పరిగణలోకి తీసుకొబడదు.",
     "description": "Short information about how to create custom filters"
   },
+  "1pTrustWarning": {
+    "message": "Do not add filters from untrusted sources.",
+    "description": "Warning against copy-pasting filters from random sources"
+  },
   "1pImport": {
     "message": "దిగుమతిచేసి పోడిగించుము",
-    "description": "English: Import and append"
+    "description": "Button in the 'My filters' pane"
   },
   "1pExport": {
     "message": "ఎగుమతి చేయు",
-    "description": "English: Export"
+    "description": "Button in the 'My filters' pane"
   },
   "1pExportFilename": {
     "message": "my-ublock-static-filters_{{datetime}}.txt",
@@ -525,7 +585,7 @@
   },
   "rulesExport": {
     "message": "ఫైల్కు ఎగుమతి చేయుము",
-    "description": ""
+    "description": "Button in the 'My rules' pane"
   },
   "rulesDefaultFileName": {
     "message": "my-ublock-dynamic-rules_{{datetime}}.txt",
@@ -539,21 +599,37 @@
     "message": "నియమనిర్మాన పద్ధతి: <code>మూలం గమ్యం రకం చర్య</code> (<a href='https://github.com/gorhill/uBlock/wiki/Dynamic-filtering:-rule-syntax'>పూర్తి వివరాలు</a>).",
     "description": "English: dynamic rule syntax and full documentation."
   },
+  "rulesSort": {
+    "message": "క్రమబద్ధీకరించు",
+    "description": "English: label for sort option."
+  },
+  "rulesSortByType": {
+    "message": "రూల్ రకం",
+    "description": "English: a sort option for list of rules."
+  },
+  "rulesSortBySource": {
+    "message": "మూలం",
+    "description": "English: a sort option for list of rules."
+  },
+  "rulesSortByDestination": {
+    "message": "గమ్యం",
+    "description": "English: a sort option for list of rules."
+  },
   "whitelistPrompt": {
     "message": "uBlock Origin అచేతనబడించిన హోస్టూల జాబితా, ఇది మీరు కూర్చినది,. ఒక్కో పంక్తికి ఒక్కో నమోదు. చెల్లని నమోదులు మౌనంగా విస్మరించబడుతాయి.",
-    "description": "English: An overview of the content of the dashboard's Whitelist pane."
+    "description": "A concise description of the 'Trusted sites' pane."
   },
   "whitelistImport": {
     "message": "దిగుమతిచేసి పోడిగించుము",
-    "description": "English: Import and append"
+    "description": "Button in the 'Trusted sites' pane"
   },
   "whitelistExport": {
     "message": "ఎగుమతి",
-    "description": "English: Export"
+    "description": "Button in the 'Trusted sites' pane"
   },
   "whitelistExportFilename": {
     "message": "my-ublock-whitelist_{{datetime}}.txt",
-    "description": "English: my-ublock-whitelist_{{datetime}}.txt"
+    "description": "The default filename to use for import/export purpose"
   },
   "whitelistApply": {
     "message": "మార్పులను భద్రపరచు",
@@ -588,35 +664,35 @@
     "description": "Appears in the logger's tab selector"
   },
   "loggerReloadTip": {
-    "message": "Reload the tab content",
+    "message": "టాబ్ కంటెంట్‌ను మళ్లీ లోడ్ చేయండి",
     "description": "Tooltip for the reload button in the logger page"
   },
   "loggerDomInspectorTip": {
-    "message": "Toggle the DOM inspector",
+    "message": "DOM ఇన్స్పెక్టర్ను టోగుల్ చేయండి",
     "description": "Tooltip for the DOM inspector button in the logger page"
   },
   "loggerPopupPanelTip": {
-    "message": "Toggle the popup panel",
+    "message": "పాపప్ ప్యానెల్‌ను టోగుల్ చేయండి",
     "description": "Tooltip for the popup panel button in the logger page"
   },
   "loggerInfoTip": {
-    "message": "uBlock Origin wiki: The logger",
+    "message": "uBlock మూలం వికీ: లాగర్",
     "description": "Tooltip for the top-right info label in the logger page"
   },
   "loggerClearTip": {
-    "message": "Clear logger",
+    "message": "లాగర్ క్లియర్",
     "description": "Tooltip for the eraser in the logger page; used to blank the content of the logger"
   },
   "loggerPauseTip": {
-    "message": "Pause logger (discard all incoming data)",
+    "message": "లాగర్ను పాజ్ చేయండి (అన్ని ఇన్కమింగ్ డేటాను విస్మరించండి)",
     "description": "Tooltip for the pause button in the logger page"
   },
   "loggerUnpauseTip": {
-    "message": "Unpause logger",
+    "message": "లాగర్ను పాజ్ చేయండి",
     "description": "Tooltip for the play button in the logger page"
   },
   "loggerRowFiltererButtonTip": {
-    "message": "Toggle logger filtering",
+    "message": "లాగర్ ఫిల్టరింగ్‌ను టోగుల్ చేయండి",
     "description": "Tooltip for the row filterer button in the logger page"
   },
   "logFilterPrompt": {
@@ -624,11 +700,11 @@
     "description": "Placeholder string for logger output filtering input field"
   },
   "loggerRowFiltererBuiltinTip": {
-    "message": "Logger filtering options",
+    "message": "లాగర్ ఫిల్టరింగ్ ఎంపికలు",
     "description": "Tooltip for the button to bring up logger output filtering options"
   },
   "loggerRowFiltererBuiltinNot": {
-    "message": "Not",
+    "message": "కాదు",
     "description": "A keyword in the built-in row filtering expression"
   },
   "loggerRowFiltererBuiltinEventful": {
@@ -636,19 +712,23 @@
     "description": "A keyword in the built-in row filtering expression: all items corresponding to uBO doing something (blocked, allowed, redirected, etc.)"
   },
   "loggerRowFiltererBuiltinBlocked": {
-    "message": "blocked",
+    "message": "నిరోధించబడినవి",
     "description": "A keyword in the built-in row filtering expression"
   },
   "loggerRowFiltererBuiltinAllowed": {
-    "message": "allowed",
+    "message": "అనుమతించబడింది",
+    "description": "A keyword in the built-in row filtering expression"
+  },
+  "loggerRowFiltererBuiltinModified": {
+    "message": "సవరించబడింది",
     "description": "A keyword in the built-in row filtering expression"
   },
   "loggerRowFiltererBuiltin1p": {
-    "message": "1st-party",
+    "message": "మొదటి పార్టీ",
     "description": "A keyword in the built-in row filtering expression"
   },
   "loggerRowFiltererBuiltin3p": {
-    "message": "3rd-party",
+    "message": "మూడవ పార్టీ",
     "description": "A keyword in the built-in row filtering expression"
   },
   "loggerEntryDetailsHeader": {
@@ -656,11 +736,11 @@
     "description": "Small header to identify the 'Details' pane for a specific logger entry"
   },
   "loggerEntryDetailsFilter": {
-    "message": "Filter",
+    "message": "ఫిల్టర్",
     "description": "Label to identify a filter field"
   },
   "loggerEntryDetailsFilterList": {
-    "message": "Filter list",
+    "message": "ఫిల్టర్ జాబితా",
     "description": "Label to identify a filter list field"
   },
   "loggerEntryDetailsRule": {
@@ -672,11 +752,11 @@
     "description": "Label to identify a context field (typically a hostname)"
   },
   "loggerEntryDetailsRootContext": {
-    "message": "Root context",
+    "message": "రూట్ సందర్భం",
     "description": "Label to identify a root context field (typically a hostname)"
   },
   "loggerEntryDetailsPartyness": {
-    "message": "Partyness",
+    "message": "పార్టీనెస్",
     "description": "Label to identify a field providing partyness information"
   },
   "loggerEntryDetailsType": {
@@ -748,43 +828,43 @@
     "description": "Message to show when a filter cannot be found in any filter lists"
   },
   "loggerSettingDiscardPrompt": {
-    "message": "Logger entries which do not fulfill all three conditions below will be automatically discarded:",
+    "message": "దిగువ మూడు షరతులను నెరవేర్చని లాగర్ ఎంట్రీలు స్వయంచాలకంగా విస్మరించబడతాయి:",
     "description": "Logger setting: A sentence to describe the purpose of the settings below"
   },
   "loggerSettingPerEntryMaxAge": {
-    "message": "Preserve entries from the last {{input}} minutes",
+    "message": "చివరి {{input}} నిమిషాల నుండి ఎంట్రీలను భద్రపరచండి",
     "description": "A logger setting"
   },
   "loggerSettingPerTabMaxLoads": {
-    "message": "Preserve at most {{input}} page loads per tab",
+    "message": "ప్రతి ట్యాబ్‌కు గరిష్టంగా {{input}} పేజీ లోడ్లను భద్రపరచండి",
     "description": "A logger setting"
   },
   "loggerSettingPerTabMaxEntries": {
-    "message": "Preserve at most {{input}} entries per tab",
+    "message": "ప్రతి ట్యాబ్‌కు గరిష్టంగా {{input}} ఎంట్రీలను భద్రపరచండి",
     "description": "A logger setting"
   },
   "loggerSettingPerEntryLineCount": {
-    "message": "Use {{input}} lines per entry in vertically expanded mode",
+    "message": "నిలువుగా విస్తరించిన మోడ్‌లో ప్రతి ఎంట్రీకి {{input}} పంక్తులను ఉపయోగించండి",
     "description": "A logger setting"
   },
   "loggerSettingHideColumnsPrompt": {
-    "message": "Hide columns:",
+    "message": "నిలువు వరుసలను దాచు:",
     "description": "Logger settings: a sentence to describe the purpose of the checkboxes below"
   },
   "loggerSettingHideColumnTime": {
-    "message": "{{input}} Time",
+    "message": "{{input}} సమయం",
     "description": "A label for the time column"
   },
   "loggerSettingHideColumnFilter": {
-    "message": "{{input}} Filter/rule",
+    "message": "{{input}} ఫిల్టర్ / నియమం",
     "description": "A label for the filter or rule column"
   },
   "loggerSettingHideColumnContext": {
-    "message": "{{input}} Context",
+    "message": "{{input}} e సందర్భం",
     "description": "A label for the context column"
   },
   "loggerSettingHideColumnPartyness": {
-    "message": "{{input}} Partyness",
+    "message": "{{input}}పార్టీనెస్",
     "description": "A label for the partyness column"
   },
   "loggerExportFormatList": {
@@ -800,24 +880,144 @@
     "description": "Label for radio-button to pick export text format"
   },
   "loggerExportEncodeMarkdown": {
-    "message": "Markdown",
+    "message": "మార్క్డౌన్",
     "description": "Label for radio-button to pick export text format"
+  },
+  "supportOpenButton": {
+    "message": "తెరవండి",
+    "description": "Text for button which open an external webpage in Support pane"
+  },
+  "supportReportSpecificButton": {
+    "message": "Create new report",
+    "description": "Text for button which open an external webpage in Support pane"
+  },
+  "supportFindSpecificButton": {
+    "message": "Find similar reports",
+    "description": "A clickable link in the filter issue reporter section"
+  },
+  "supportS1H": {
+    "message": "Documentation",
+    "description": "Header of 'Documentation' section in Support pane"
+  },
+  "supportS1P1": {
+    "message": "Read the documentation at <code>uBlock/wiki</code> to learn about all of uBlock Origin's features.",
+    "description": "First paragraph of 'Documentation' section in Support pane"
+  },
+  "supportS2H": {
+    "message": "Questions and support",
+    "description": "Header of 'Questions and support' section in Support pane"
+  },
+  "supportS2P1": {
+    "message": "Answers to questions and other kinds of help support is provided on the subreddit <code>/r/uBlockOrigin</code>.",
+    "description": "First paragraph of 'Questions and support' section in Support pane"
+  },
+  "supportS3H": {
+    "message": "Filter issues/website is broken",
+    "description": "Header of 'Filter issues' section in Support pane"
+  },
+  "supportS3P1": {
+    "message": "Report filter issues with specific websites to the <span data-url=\"https://github.com/uBlockOrigin/uAssets/issues?q=is%3Aissue\"><code>uBlockOrigin/uAssets</code> issue tracker</span>. <u>Requires a GitHub account.</u>",
+    "description": "First paragraph of 'Filter issues' section in Support pane"
+  },
+  "supportS3P2": {
+    "message": "<b>Important:</b> Avoid using other similarly-purposed blockers along with uBlock Origin, as this may cause filter issues on specific websites.",
+    "description": "Second paragraph of 'Filter issues' section in Support pane"
+  },
+  "supportS3P3": {
+    "message": "<b>Tips:</b> Be sure your filter lists are up to date. <span data-url=\"logger-ui.html#_\">The logger</span> is the primary tool to diagnose filter-related issues.",
+    "description": "Third paragraph of 'Filter issues' section in Support pane"
+  },
+  "supportS4H": {
+    "message": "Bug report",
+    "description": "Header of 'Bug report' section in Support pane"
+  },
+  "supportS4P1": {
+    "message": "Report issues with uBlock Origin itself to the <span data-url=\"https://github.com/uBlockOrigin/uBlock-issues/issues?q=is%3Aissue\"><code>uBlockOrigin/uBlock-issue</code> issue tracker</span>. <u>Requires a GitHub account.</u>",
+    "description": "First paragraph of 'Bug report' section in Support pane"
+  },
+  "supportS5H": {
+    "message": "Troubleshooting Information",
+    "description": "Header of 'Troubleshooting Information' section in Support pane"
+  },
+  "supportS5P1": {
+    "message": "Below is technical information that might be useful when volunteers are trying to help you solve a problem.",
+    "description": "First paragraph of 'Troubleshooting Information' section in Support pane"
+  },
+  "supportS5P2": {
+    "message": "<b>Important:</b> Potentially private or sensitive information is redacted by default. Redacted information may make it more difficult to solve a problem.",
+    "description": "Second paragraph of 'Troubleshooting Information' section in Support pane"
+  },
+  "supportS6H": {
+    "message": "Report a filter issue",
+    "description": "Header of 'Report a filter issue' section in Support pane"
+  },
+  "supportS6P1S1": {
+    "message": "To avoid burdening volunteers with duplicate reports, please verify that the issue has not already been reported.",
+    "description": "A paragraph in the filter issue reporter section"
+  },
+  "supportS6P2S1": {
+    "message": "Filter lists are updated daily. Be sure your issue has not already been addressed in the most recent filter lists.",
+    "description": "A paragraph in the filter issue reporter section"
+  },
+  "supportS6P2S2": {
+    "message": "Verify that the issue still exists after reloading the problematic webpage.",
+    "description": "A paragraph in the filter issue reporter section"
+  },
+  "supportS6URL": {
+    "message": "Address of the web page:",
+    "description": "Label for the URL of the page"
+  },
+  "supportS6Select1": {
+    "message": "The web page…",
+    "description": "Label for widget to select type of issue"
+  },
+  "supportS6Select1Option0": {
+    "message": "-- Pick an entry --",
+    "description": "An entry in the widget used to select the type of issue"
+  },
+  "supportS6Select1Option1": {
+    "message": "Shows ads or ad leftovers",
+    "description": "An entry in the widget used to select the type of issue"
+  },
+  "supportS6Select1Option2": {
+    "message": "Has overlays or other nuisances",
+    "description": "An entry in the widget used to select the type of issue"
+  },
+  "supportS6Select1Option3": {
+    "message": "Detects uBlock Origin",
+    "description": "An entry in the widget used to select the type of issue"
+  },
+  "supportS6Select1Option4": {
+    "message": "Has privacy-related issues",
+    "description": "An entry in the widget used to select the type of issue"
+  },
+  "supportS6Select1Option5": {
+    "message": "Malfunctions when uBlock Origin is enabled",
+    "description": "An entry in the widget used to select the type of issue"
+  },
+  "supportS6Select1Option6": {
+    "message": "Opens unwanted tabs or windows",
+    "description": "An entry in the widget used to select the type of issue"
+  },
+  "supportS6Checkbox1": {
+    "message": "Label the web page as “NSFW” (<a href=\"https://wikipedia.org/wiki/Not_safe_for_work\">“Not Safe For Work”</a>)",
+    "description": "A checkbox to use for NSFW sites"
+  },
+  "supportRedact": {
+    "message": "Redact",
+    "description": "Text for 'Redact' button"
+  },
+  "supportUnredact": {
+    "message": "Unredact",
+    "description": "Text for 'Unredact' button"
+  },
+  "aboutPrivacyPolicy": {
+    "message": "గోప్యతా విధానం",
+    "description": "Link to privacy policy on GitHub (English)"
   },
   "aboutChangelog": {
     "message": "మార్పుల సంచిక",
     "description": ""
-  },
-  "aboutWiki": {
-    "message": "వికి",
-    "description": "English: project' wiki on GitHub"
-  },
-  "aboutSupport": {
-    "message": "సహాయము",
-    "description": "A link for where to get support"
-  },
-  "aboutIssues": {
-    "message": "సమస్యా సంచిక",
-    "description": "Text for a link to official issue tracker"
   },
   "aboutCode": {
     "message": "మూలం (GPLv3)",
@@ -827,8 +1027,28 @@
     "message": "ప్రాజెక్ట్కు సహాయ పడిన వారు",
     "description": "English: Contributors"
   },
+  "aboutSourceCode": {
+    "message": "మూల కోడ్",
+    "description": "Link text to source code repo"
+  },
+  "aboutTranslations": {
+    "message": "అనువాదాలు",
+    "description": "Link text to translations repo"
+  },
+  "aboutFilterLists": {
+    "message": "జాబితాలను ఫిల్టర్ చేయండి",
+    "description": "Link text to uBO's own filter lists repo"
+  },
   "aboutDependencies": {
-    "message": "External dependencies (GPLv3-compatible):",
+    "message": "బాహ్య ఆధారపడటం (GPLv3- అనుకూలమైనది):",
+    "description": "Shown in the About pane"
+  },
+  "aboutCDNs": {
+    "message": "uBO యొక్క సొంత ఫిల్టర్ జాబితాలు కింది వాటిలో ఉచితంగా హోస్ట్ చేయబడతాయి <a href=\"https://wikipedia.org/wiki/Content_delivery_network\">CDNs</a>:",
+    "description": "Shown in the About pane"
+  },
+  "aboutCDNsInfo": {
+    "message": "ఫిల్టర్ జాబితాను అప్‌డేట్ చేయాల్సిన అవసరం వచ్చినప్పుడు యాదృచ్ఛికంగా ఎంచుకున్న CDN ఉపయోగించబడుతుంది",
     "description": "Shown in the About pane"
   },
   "aboutBackupDataButton": {
@@ -844,7 +1064,7 @@
     "description": "English: Restore from file..."
   },
   "aboutResetDataButton": {
-    "message": "సంస్థాపన ఐచ్చికాలను పునరుద్దరించు...",
+    "message": "సంస్థాపన అమరికలను పునరుద్దరించు...",
     "description": "English: Reset to default settings..."
   },
   "aboutRestoreDataConfirm": {
@@ -864,8 +1084,12 @@
     "description": "English: Network error: {{msg}}"
   },
   "subscriberConfirm": {
-    "message": "uBlock₀: ఈ URLని మీ నిర్దేశిత వడపోత పట్టికకు జతపరచాలా?\n\nశీర్షిక: \"{{title}}\"\nURL: {{url}}",
-    "description": "English: The message seen by the user to confirm subscription to a ABP filter list"
+    "message": "uBlock₀: ఈ URLని మీ నిర్దేశిత ఫిల్టర్ పట్టికకు జతపరచాలా?\n\nశీర్షిక: \"{{title}}\"\nURL: {{url}}",
+    "description": "No longer used"
+  },
+  "subscribeButton": {
+    "message": "సభ్యత్వాన్ని పొందండి",
+    "description": "For the button used to subscribe to a filter list"
   },
   "elapsedOneMinuteAgo": {
     "message": "ఒక నిమిషం క్రితం",
@@ -903,13 +1127,17 @@
     "message": "అచేతనం",
     "description": "Firefox-specific: appears as 'uBlock₀ (off)'"
   },
+  "docblockedTitle": {
+    "message": "Page blocked",
+    "description": "Used as a title for the document-blocked page"
+  },
   "docblockedPrompt1": {
     "message": "ఈ తరువాయి పేజిని uBlock Origin బ్రౌజరులోకి ఎక్కిన్చనివ్వలేదు:",
-    "description": "English: uBlock₀ has prevented the following page from loading:"
+    "description": "Used in the strict-blocking page"
   },
   "docblockedPrompt2": {
     "message": "ఇది ఈ క్రింది వడపోతననుసారించి తీసుకోబడిన చర్య",
-    "description": "English: Because of the following filter"
+    "description": "Used in the strict-blocking page"
   },
   "docblockedNoParamsPrompt": {
     "message": "పారామితులు లేని",
@@ -927,6 +1155,10 @@
     "message": "విండో మూయుము",
     "description": "English: Close this window"
   },
+  "docblockedDontWarn": {
+    "message": "Don't warn me again about this site",
+    "description": "Label for checkbox in document-blocked page"
+  },
   "docblockedProceed": {
     "message": "{{hostname}} తో అనుసంధానాన్ని అనుమతించాలా?",
     "description": "English: Disable strict blocking for {{hostname}} ..."
@@ -938,6 +1170,10 @@
   "docblockedDisablePermanent": {
     "message": "శాశ్వతంగా",
     "description": "English: Permanently"
+  },
+  "docblockedDisable": {
+    "message": "Proceed",
+    "description": "Button text to navigate to the blocked page"
   },
   "cloudPush": {
     "message": "క్లౌడ్ లో పొందుపరచు",
@@ -952,7 +1188,7 @@
     "description": "tooltip"
   },
   "cloudNoData": {
-    "message": "...\n...",
+    "message": "…\n…",
     "description": ""
   },
   "cloudDeviceNamePrompt": {
@@ -979,29 +1215,73 @@
     "message": "బైట్లు",
     "description": ""
   },
+  "contextMenuBlockElementInFrame": {
+    "message": "ఫ్రేమ్‌లో మూలకాన్ని బ్లాక్ చేయండి ...",
+    "description": "An entry in the browser's contextual menu"
+  },
+  "contextMenuSubscribeToList": {
+    "message": "ఫిల్టర్ జాబితాకు సభ్యత్వం పొందండి ...",
+    "description": "An entry in the browser's contextual menu"
+  },
   "contextMenuTemporarilyAllowLargeMediaElements": {
     "message": "భారి దృశ్య/శ్రవణ అంశాలను తాత్కాలికంగా అనుమతించు",
     "description": "A context menu entry, present when large media elements have been blocked on the current site"
+  },
+  "contextMenuViewSource": {
+    "message": "View source code…",
+    "description": "A context menu entry, to view the source code of the target resource"
   },
   "shortcutCapturePlaceholder": {
     "message": "షార్ట్కట్ టైప్ చేయండి",
     "description": "Placeholder string for input field used to capture a keyboard shortcut"
   },
   "genericMergeViewScrollLock": {
-    "message": "Toggle locked scrolling",
+    "message": "లాక్ చేసిన స్క్రోలింగ్‌ను టోగుల్ చేయండి",
     "description": "Tooltip for the button used to lock scrolling between the views in the 'My rules' pane"
   },
   "genericCopyToClipboard": {
-    "message": "Copy to clipboard",
+    "message": "క్లిప్‌బోర్డ్‌కు కాపీ చేయండి",
     "description": "Label for buttons used to copy something to the clipboard"
   },
-  "toggleBlockingProfile": {
-    "message": "Toggle blocking profile",
-    "description": "Label for keyboard shortcut used to toggle blocking profile"
+  "genericSelectAll": {
+    "message": "Select all",
+    "description": "Label for buttons used to select all text in editor"
+  },
+  "toggleCosmeticFiltering": {
+    "message": "Toggle cosmetic filtering",
+    "description": "Label for keyboard shortcut used to toggle cosmetic filtering"
   },
   "relaxBlockingMode": {
-    "message": "Relax blocking mode",
-    "description": "Label for keyboard shortcut used to relax blocking mode (meant to replace 'Toggle blocking profile')"
+    "message": "నిరోధించే మోడ్‌ను రిలాక్స్ చేయండి",
+    "description": "Label for keyboard shortcut used to relax blocking mode"
+  },
+  "storageUsed": {
+    "message": "ఉపయోగించిన నిల్వ: {{value}} {{unit}}",
+    "description": " In Setting pane, renders as (example): Storage used: 13.2 MB"
+  },
+  "KB": {
+    "message": "కేబీ",
+    "description": "short for 'kilobytes'"
+  },
+  "MB": {
+    "message": "ఏంబీ",
+    "description": "short for 'megabytes'"
+  },
+  "GB": {
+    "message": "జీబీ",
+    "description": "short for 'gigabytes'"
+  },
+  "clickToLoad": {
+    "message": "లోడ్ చేయడానికి క్లిక్ చేయండి",
+    "description": "Message used in frame placeholders"
+  },
+  "linterMainReport": {
+    "message": "Errors: {{count}}",
+    "description": "Summary of number of errors as reported by the linter "
+  },
+  "unprocessedRequestTooltip": {
+    "message": "Could not filter properly at browser launch. Reload the page to ensure proper filtering.",
+    "description": "A warning which will appear in the popup panel if needed"
   },
   "dummy": {
     "message": "ఇది అంతిమంగా వుండాల్సిన నమోదు",

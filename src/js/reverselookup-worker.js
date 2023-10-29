@@ -19,30 +19,26 @@
     Home: https://github.com/gorhill/uBlock
 */
 
-/* global onmessage, postMessage */
-
 'use strict';
 
 /******************************************************************************/
 
-const reBlockStart = /^#block-start-(\d+)\n/gm;
 let listEntries = Object.create(null);
 
 /******************************************************************************/
 
-const extractBlocks = function(content, begId, endId) {
-    reBlockStart.lastIndex = 0;
+// https://github.com/uBlockOrigin/uBlock-issues/issues/2092
+//   Order of ids matters
+
+const extractBlocks = function(content, ...ids) {
     const out = [];
-    let match = reBlockStart.exec(content);
-    while ( match !== null ) {
-        const beg = match.index + match[0].length;
-        const blockId = parseInt(match[1], 10);
-        if ( blockId >= begId && blockId < endId ) {
-            const end = content.indexOf('#block-end-' + match[1], beg);
-            out.push(content.slice(beg, end));
-            reBlockStart.lastIndex = end;
-        }
-        match = reBlockStart.exec(content);
+    for ( const id of ids ) {
+        const pattern = `#block-start-${id}\n`;
+        let beg = content.indexOf(pattern);
+        if ( beg === -1 ) { continue; }
+        beg += pattern.length;
+        const end = content.indexOf(`#block-end-${id}`, beg);
+        out.push(content.slice(beg, end));
     }
     return out.join('\n');
 };
@@ -59,7 +55,10 @@ const fromNetFilter = function(details) {
     for ( const assetKey in listEntries ) {
         const entry = listEntries[assetKey];
         if ( entry === undefined ) { continue; }
-        const content = extractBlocks(entry.content, 0, 1);
+        if ( entry.networkContent === undefined ) {
+            entry.networkContent = extractBlocks(entry.content, 'NETWORK_FILTERS:GOOD');
+        }
+        const content = entry.networkContent;
         let pos = 0;
         for (;;) {
             pos = content.indexOf(compiledFilter, pos);
@@ -87,10 +86,7 @@ const fromNetFilter = function(details) {
     const response = {};
     response[details.rawFilter] = lists;
 
-    postMessage({
-        id: details.id,
-        response: response
-    });
+    self.postMessage({ id: details.id, response });
 };
 
 /******************************************************************************/
@@ -101,21 +97,21 @@ const fromNetFilter = function(details) {
 // The filter is its raw representation, not its compiled version. This is
 // because the cosmetic filtering engine can't translate a live cosmetic
 // filter into its compiled version. Reason is I do not want to burden
-// cosmetic filtering with the resource overhead of being able to re-compile
+// cosmetic filtering with the resource overhead of being able to recompile
 // live cosmetic filters. I want the cosmetic filtering code to be left
 // completely unaffected by reverse lookup requirements.
 //
 // Mainly, given a CSS selector and a hostname as context, we will derive
-// various versions of compiled filters and see if there are matches. This way
-// the whole CPU cost is incurred by the reverse lookup code -- in a worker
-// thread, and the cosmetic filtering engine incurs no cost at all.
+// various versions of compiled filters and see if there are matches. This
+// way the whole CPU cost is incurred by the reverse lookup code -- in a
+// worker thread, and the cosmetic filtering engine incurs no cost at all.
 //
 // For this though, the reverse lookup code here needs some knowledge of
 // the inners of the cosmetic filtering engine.
 // FilterContainer.fromCompiledContent() is our reference code to create
 // the various compiled versions.
 
-const fromCosmeticFilter = function(details) {
+const fromExtendedFilter = function(details) {
     const match = /^#@?#\^?/.exec(details.rawFilter);
     const prefix = match[0];
     const exception = prefix.charAt(1) === '@';
@@ -124,7 +120,9 @@ const fromCosmeticFilter = function(details) {
     const hostname = details.hostname;
 
     // The longer the needle, the lower the number of false positives.
-    const needle = selector.match(/\w+/g).reduce(function(a, b) {
+    // https://github.com/uBlockOrigin/uBlock-issues/issues/1139
+    //   Mind that there is no guarantee a selector has `\w` characters.
+    const needle = selector.match(/\w+|\*/g).reduce(function(a, b) {
         return a.length > b.length ? a : b;
     });
 
@@ -152,9 +150,14 @@ const fromCosmeticFilter = function(details) {
     }
 
     const hostnameMatches = hn => {
-        return hn === '' ||
-               reHostname.test(hn) ||
-               reEntity !== undefined && reEntity.test(hn);
+        if ( hn === '' ) { return true; }
+        if ( hn.charCodeAt(0) === 0x2F /* / */ ) {
+            return (new RegExp(hn.slice(1,-1))).test(hostname);
+        }
+        if ( reHostname.test(hn) ) { return true; }
+        if ( reEntity === undefined ) { return false; }
+        if ( reEntity.test(hn) ) { return true; }
+        return false;
     };
 
     const response = Object.create(null);
@@ -162,9 +165,18 @@ const fromCosmeticFilter = function(details) {
     for ( const assetKey in listEntries ) {
         const entry = listEntries[assetKey];
         if ( entry === undefined ) { continue; }
-        let content = extractBlocks(entry.content, 1000, 2000),
-            isProcedural,
-            found;
+        if ( entry.extendedContent === undefined ) {
+            entry.extendedContent = extractBlocks(
+                entry.content,
+                'COSMETIC_FILTERS:SPECIFIC',
+                'COSMETIC_FILTERS:GENERIC',
+                'SCRIPTLET_FILTERS',
+                'HTML_FILTERS',
+                'HTTPHEADER_FILTERS'
+            );
+        }
+        const content = entry.extendedContent;
+        let found;
         let pos = 0;
         while ( (pos = content.indexOf(needle, pos)) !== -1 ) {
             let beg = content.lastIndexOf('\n', pos);
@@ -176,53 +188,33 @@ const fromCosmeticFilter = function(details) {
             const filterType = fargs[0];
 
             // https://github.com/gorhill/uBlock/issues/2763
-            if ( filterType >= 0 && filterType <= 5 && details.ignoreGeneric ) {
-                continue;
-            }
+            if ( filterType === 0 && details.ignoreGeneric ) { continue; }
 
             // Do not confuse cosmetic filters with HTML ones.
             if ( (filterType === 64) !== isHtmlFilter ) { continue; }
 
             switch ( filterType ) {
             // Lowly generic cosmetic filters
-            case 0: // simple id-based
-                if (
-                    exception === false &&
-                    fargs[1] === selector.slice(1) &&
-                    selector.charAt(0) === '#'
-                ) {
-                    found = prefix + selector;
-                }
-                break;
-            case 2: // simple class-based
-                if (
-                    exception === false &&
-                    fargs[1] === selector.slice(1) &&
-                    selector.charAt(0) === '.'
-                ) {
-                    found = prefix + selector;
-                }
-                break;
-            case 1: // complex id-based
-            case 3: // complex class-based
-                if ( exception === false && fargs[2] === selector ) {
-                    found = prefix + selector;
-                }
+            case 0:
+                if ( exception ) { break; }
+                if ( fargs[2] !== selector ) { break; }
+                found = prefix + selector;
                 break;
             // Highly generic cosmetic filters
             case 4: // simple highly generic
             case 5: // complex highly generic
-            case 7: // generic exception
-                if ( fargs[1] === selector ) {
-                    found = prefix + selector;
-                }
+                if ( exception ) { break; }
+                if ( fargs[1] !== selector ) { break; }
+                found = prefix + selector;
                 break;
             // Specific cosmetic filtering
+            // Generic exception
             case 8:
             // HTML filtering
-            case 64:
+            // Response header filtering
+            case 64: {
                 if ( exception !== ((fargs[2] & 0b001) !== 0) ) { break; }
-                isProcedural = (fargs[2] & 0b010) !== 0;
+                const isProcedural = (fargs[2] & 0b010) !== 0;
                 if (
                     isProcedural === false && fargs[3] !== selector ||
                     isProcedural && JSON.parse(fargs[3]).raw !== selector
@@ -241,10 +233,11 @@ const fromCosmeticFilter = function(details) {
                 }
                 found = fargs[1] + prefix + selector;
                 break;
+            }
             // Scriptlet injection
             case 32:
                 if ( exception !== ((fargs[2] & 0b001) !== 0) ) { break; }
-                if ( fargs[3] !== selector ) { break; }
+                if ( fargs[3] !== details.compiled ) { break; }
                 if ( hostnameMatches(fargs[1]) ) {
                     found = fargs[1] + prefix + selector;
                 }
@@ -264,15 +257,12 @@ const fromCosmeticFilter = function(details) {
         }
     }
 
-    postMessage({
-        id: details.id,
-        response: response
-    });
+    self.postMessage({ id: details.id, response });
 };
 
 /******************************************************************************/
 
-onmessage = function(e) { // jshint ignore:line
+self.onmessage = function(e) {
     const msg = e.data;
 
     switch ( msg.what ) {
@@ -288,8 +278,8 @@ onmessage = function(e) { // jshint ignore:line
         fromNetFilter(msg);
         break;
 
-    case 'fromCosmeticFilter':
-        fromCosmeticFilter(msg);
+    case 'fromExtendedFilter':
+        fromExtendedFilter(msg);
         break;
     }
 };

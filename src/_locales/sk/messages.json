@@ -40,7 +40,7 @@
     "description": "appears as tab name in dashboard"
   },
   "whitelistPageName": {
-    "message": "Biela listina",
+    "message": "Dôveryhodné stránky",
     "description": "appears as tab name in dashboard"
   },
   "shortcutsPageName": {
@@ -53,6 +53,10 @@
   },
   "aboutPageName": {
     "message": "O doplnku",
+    "description": "appears as tab name in dashboard"
+  },
+  "supportPageName": {
+    "message": "Podpora",
     "description": "appears as tab name in dashboard"
   },
   "assetViewerPageName": {
@@ -85,7 +89,7 @@
   },
   "popupBlockedStats": {
     "message": "{{count}} alebo {{percent}}%",
-    "description": "Example: 15 or 13%"
+    "description": "Example: 15 (13%)"
   },
   "popupBlockedSinceInstallPrompt": {
     "message": "od inštalácie",
@@ -122,6 +126,10 @@
   "popupTipLog": {
     "message": "Otvoriť Zaznamenávač",
     "description": "Tooltip used for the logger icon in the panel"
+  },
+  "popupTipReport": {
+    "message": "Nahlásiť problém na tejto webovej stránke",
+    "description": "Tooltip used for the 'chat' icon in the panel"
   },
   "popupTipNoPopups": {
     "message": "Žiadne vyskakovacie okná pre túto stránku",
@@ -179,25 +187,33 @@
     "message": "Kliknutím už nebude úplne zakázaný JavaScript na tejto stránke",
     "description": "Tooltip for the no-scripting per-site switch"
   },
+  "popupNoPopups_v2": {
+    "message": "Vyskakovacie okná",
+    "description": "Caption for the no-popups per-site switch"
+  },
   "popupNoLargeMedia_v2": {
     "message": "Veľké mediálne prvky",
-    "description": "Tip for the no-large-media per-site switch"
+    "description": "Caption for the no-large-media per-site switch"
   },
   "popupNoCosmeticFiltering_v2": {
     "message": "Kozmetické filtrovanie",
-    "description": "Tip for the no-cosmetic-filtering per-site switch"
+    "description": "Caption for the no-cosmetic-filtering per-site switch"
   },
   "popupNoRemoteFonts_v2": {
     "message": "Vzdialené písma",
-    "description": "Tip for the no-remote-fonts per-site switch"
+    "description": "Caption for the no-remote-fonts per-site switch"
   },
   "popupNoScripting_v2": {
     "message": "JavaScript",
-    "description": "Tip for the no-scripting per-site switch"
+    "description": "Caption for the no-scripting per-site switch"
   },
   "popupMoreButton_v2": {
     "message": "Viac",
-    "description": "Label to be used to toggle overview panel"
+    "description": "Label to be used to show popup panel sections"
+  },
+  "popupLessButton_v2": {
+    "message": "Menej",
+    "description": "Label to be used to hide popup panel sections"
   },
   "popupTipGlobalRules": {
     "message": "Globálne pravidlá: tento stĺpec slúži pre pravidlá, ktoré platia pre všetky weby.",
@@ -255,6 +271,18 @@
     "message": "{{count}} z {{total}}",
     "description": "appears in popup"
   },
+  "popupVersion": {
+    "message": "Verzia",
+    "description": "Example of use: Version 1.26.4"
+  },
+  "popup3pScriptFilter": {
+    "message": "skript",
+    "description": "Appears as an option to filter out firewall rows"
+  },
+  "popup3pFrameFilter": {
+    "message": "rámec",
+    "description": "Appears as an option to filter out firewall rows"
+  },
   "pickerCreate": {
     "message": "Vytvoriť",
     "description": "English: Create"
@@ -284,7 +312,7 @@
     "description": "English: Click, Ctrl-click"
   },
   "pickerContextMenuEntry": {
-    "message": "Zablokovať prvok",
+    "message": "Zablokovať prvok…",
     "description": "An entry in the browser's contextual menu"
   },
   "settingsCollapseBlockedPrompt": {
@@ -307,17 +335,25 @@
     "message": "Režim pre farboslepých",
     "description": "English: Color-blind friendly"
   },
+  "settingsAppearance": {
+    "message": "Vzhľad",
+    "description": "Section for controlling user interface appearance"
+  },
+  "settingsThemeLabel": {
+    "message": "Téma",
+    "description": "Label for checkbox to enable a custom dark theme"
+  },
+  "settingsThemeAccent0Label": {
+    "message": "Vlastná farba témy",
+    "description": "Label for checkbox to pick an accent color"
+  },
   "settingsCloudStorageEnabledPrompt": {
     "message": "Povoliť podporu cloudového úložiska",
     "description": ""
   },
   "settingsAdvancedUserPrompt": {
-    "message": "Som pokročilý používateľ (<a href='https://github.com/gorhill/uBlock/wiki/Advanced-user-features'>povinne prečítať</a>)",
-    "description": ""
-  },
-  "settingsAdvancedUserSettings": {
-    "message": "pokročilé nastavenia",
-    "description": "For the tooltip of a link which gives access to advanced settings"
+    "message": "Som pokročilý používateľ",
+    "description": "Checkbox to let user access advanced, technical features"
   },
   "settingsPrefetchingDisabledPrompt": {
     "message": "Zakázať prednačítavanie (zakáže akékoľvek pripojenie pre zablokované sieťové požiadavky)",
@@ -359,9 +395,21 @@
     "message": "Zablokovať CSP hlásenia",
     "description": "background information: https://github.com/gorhill/uBlock/issues/3150"
   },
-  "settingsStorageUsed": {
-    "message": "Využité miesto: {{value}} bajtov",
-    "description": "English: Storage used: {{}} bytes"
+  "settingsUncloakCnamePrompt": {
+    "message": "Odhaliť kanonické mená",
+    "description": "background information: https://github.com/uBlockOrigin/uBlock-issues/issues/1513"
+  },
+  "settingsAdvanced": {
+    "message": "Pokročilé",
+    "description": "Section for controlling advanced-user settings"
+  },
+  "settingsAdvancedSynopsis": {
+    "message": "Funkcie vhodné iba pre pokročilých používateľov.",
+    "description": "Description of section controlling advanced-user settings"
+  },
+  "settingsAdvancedUserSettings": {
+    "message": "pokročilé nastavenia",
+    "description": "For the tooltip of a link which gives access to advanced settings"
   },
   "settingsLastRestorePrompt": {
     "message": "Posledná obnova:",
@@ -396,7 +444,7 @@
     "description": "English: Parse and enforce Adblock+ element hiding filters."
   },
   "3pParseAllABPHideFiltersInfo": {
-    "message": "<p>Táto možnosť povoľuje analyzovanie a vynútenie <a href=\"https://adblockplus.org/en/faq_internal#elemhide\">filtrov &ldquo;skrývajúcich prvky&rdquo; a kompatibilných s Adblock Plus</a>. Tieto filtre sú prevažne kozmetické. Skrývajú prvky webových stránok, ktoré sú vizuálne otravné a nemôžu byť zablokované filtrovaním sieťových požiadavkov.</p><p>Povolenie tejto funkcie zvyšujte nároky <i>uBlock₀</i>na pamäť.</p>",
+    "message": "Kozmetické filtre slúžia na skrytie prvkov na webovej stránke, ktoré sa považujú za vizuálne obťažujúce a ktoré nemôžu byť zablokované filtrovaním sieťových požiadavkov.",
     "description": "Describes the purpose of the 'Parse and enforce cosmetic filters' feature."
   },
   "3pIgnoreGenericCosmeticFilters": {
@@ -404,8 +452,12 @@
     "description": "This will cause uBO to ignore all generic cosmetic filters."
   },
   "3pIgnoreGenericCosmeticFiltersInfo": {
-    "message": "<p>Generické kozmetické filtre sú tie kozmetické filtre, ktoré sú určené na použitie na všetkých webových stránkach.<p>Aj keď ich uBlock₀ používa efektívne, generické kozmetické filtre môžu stále prispievať k zaťaženiu pamäte a procesora na niektorých webových stránkach, a to najmä na veľkých a zložitých.<p>Zapnutím tejto možnosti sa zníži zaťaženie pamäte a procesora v dôsledku použitia generických kozmetických filtrov pre webové stránky, a taktiež sa znížia nároky samotného rozšírenia uBlock₀ na pamäť.<p>Odporúča sa povoliť túto možnosť na menej výkonných zariadení.",
+    "message": "Generické kozmetické filtre sú tie kozmetické filtre, ktoré sú určené na použitie na všetkých webových stránkach. Zapnutím tejto možnosti sa zníži zaťaženie pamäte a procesora v dôsledku použitia generických kozmetických filtrov.\n\nOdporúča sa povoliť túto možnosť na menej výkonných zariadeniach.",
     "description": "Describes the purpose of the 'Ignore generic cosmetic filters' feature."
+  },
+  "3pSuspendUntilListsAreLoaded": {
+    "message": "Pozastaviť sieťovú aktivitu, kým sa nenačítajú všetky zoznamy filtrov",
+    "description": "A checkbox in the 'Filter lists' pane"
   },
   "3pListsOfBlockedHostsHeader": {
     "message": "Zoznamy zablokovaných hostiteľov",
@@ -417,35 +469,35 @@
   },
   "3pGroupDefault": {
     "message": "Vstavané",
-    "description": "Header for the uBlock filters section in 'Filter lists pane'"
+    "description": "Filter lists section name"
   },
   "3pGroupAds": {
     "message": "Reklamy",
-    "description": "English: Ads"
+    "description": "Filter lists section name"
   },
   "3pGroupPrivacy": {
     "message": "Súkromie",
-    "description": "English: Privacy"
+    "description": "Filter lists section name"
   },
   "3pGroupMalware": {
     "message": "Domény malvéru",
-    "description": "English: Malware domains"
+    "description": "Filter lists section name"
   },
   "3pGroupAnnoyances": {
     "message": "Obťažujúce",
-    "description": "The header identifying the filter lists in the category 'annoyances'"
+    "description": "Filter lists section name"
   },
   "3pGroupMultipurpose": {
     "message": "Viacúčelové",
-    "description": "English: Multipurpose"
+    "description": "Filter lists section name"
   },
   "3pGroupRegions": {
     "message": "Regióny, jazyky",
-    "description": "English: Regions, languages"
+    "description": "Filter lists section name"
   },
   "3pGroupCustom": {
     "message": "Vlastné",
-    "description": "English: Custom"
+    "description": "Filter lists section name"
   },
   "3pImport": {
     "message": "Importovať...",
@@ -458,6 +510,10 @@
   "3pExternalListObsolete": {
     "message": "Zastarané.",
     "description": "used as a tooltip for the out-of-date icon beside a list"
+  },
+  "3pViewContent": {
+    "message": "zobraziť obsah",
+    "description": "used as a tooltip for eye icon beside a list"
   },
   "3pLastUpdate": {
     "message": "Posledná aktualizácia: {{ago}}.\nKliknutím vynútite aktualizáciu.",
@@ -475,13 +531,17 @@
     "message": "Jeden filter na riadok. Filter môže byť jednoduchý názov hostiteľa alebo filter kompatibilný s Adblock Plus. Riadky začínajúce s <code>!</code> budú ignorované.",
     "description": "Short information about how to create custom filters"
   },
+  "1pTrustWarning": {
+    "message": "Nepridávajte filtre z nedôveryhodných zdrojov.",
+    "description": "Warning against copy-pasting filters from random sources"
+  },
   "1pImport": {
     "message": "Importovať a pripojiť",
-    "description": "English: Import and append"
+    "description": "Button in the 'My filters' pane"
   },
   "1pExport": {
     "message": "Exportovať",
-    "description": "English: Export"
+    "description": "Button in the 'My filters' pane"
   },
   "1pExportFilename": {
     "message": "ublock-moje-statické-filtre_{{datetime}}.txt",
@@ -524,8 +584,8 @@
     "description": ""
   },
   "rulesExport": {
-    "message": "Exportovať zo súboru",
-    "description": ""
+    "message": "Exportovať do súboru",
+    "description": "Button in the 'My rules' pane"
   },
   "rulesDefaultFileName": {
     "message": "ublock-moje-dynamické-pravidlá_{{datetime}}.txt",
@@ -539,21 +599,37 @@
     "message": "Syntax pravidla: <code>zdroj cieľ typ akcia</code> (<a href='https://github.com/gorhill/uBlock/wiki/Dynamic-filtering:-rule-syntax'>úplná dokumentácia</a>).",
     "description": "English: dynamic rule syntax and full documentation."
   },
+  "rulesSort": {
+    "message": "Zoradiť:",
+    "description": "English: label for sort option."
+  },
+  "rulesSortByType": {
+    "message": "Typ pravidla",
+    "description": "English: a sort option for list of rules."
+  },
+  "rulesSortBySource": {
+    "message": "Zdroj",
+    "description": "English: a sort option for list of rules."
+  },
+  "rulesSortByDestination": {
+    "message": "Cieľ",
+    "description": "English: a sort option for list of rules."
+  },
   "whitelistPrompt": {
-    "message": "Zoznam hostiteľov, pre ktoré webové stránky bude uBlock Origin zakázaný. Jedna položka na riadok. Neplatní hostitelia budú ignorovaní a zakomentovaní.",
-    "description": "English: An overview of the content of the dashboard's Whitelist pane."
+    "message": "Zoznam dôveryhodných stránok pre ktoré bude uBlock Origin zakázaný. Jedna položka na riadok.",
+    "description": "A concise description of the 'Trusted sites' pane."
   },
   "whitelistImport": {
     "message": "Importovať a pripojiť",
-    "description": "English: Import and append"
+    "description": "Button in the 'Trusted sites' pane"
   },
   "whitelistExport": {
     "message": "Exportovať",
-    "description": "English: Export"
+    "description": "Button in the 'Trusted sites' pane"
   },
   "whitelistExportFilename": {
-    "message": "ublock-moja-biela-listina_{{datetime}}.txt",
-    "description": "English: my-ublock-whitelist_{{datetime}}.txt"
+    "message": "ublock-doveryhodne-stranky_{{datetime}}.txt",
+    "description": "The default filename to use for import/export purpose"
   },
   "whitelistApply": {
     "message": "Použiť zmeny",
@@ -641,6 +717,10 @@
   },
   "loggerRowFiltererBuiltinAllowed": {
     "message": "povolené",
+    "description": "A keyword in the built-in row filtering expression"
+  },
+  "loggerRowFiltererBuiltinModified": {
+    "message": "zmenené",
     "description": "A keyword in the built-in row filtering expression"
   },
   "loggerRowFiltererBuiltin1p": {
@@ -744,7 +824,7 @@
     "description": "Below this sentence, the filter list(s) in which the filter was found"
   },
   "loggerStaticFilteringFinderSentence2": {
-    "message": "Statický filter <code>{{filter}}</code> sa nepodarilo nájsť v žiadnom momentálne povolenom zozname filtrov",
+    "message": "Statický filter sa nepodarilo nájsť v žiadnom momentálne povolenom zozname filtrov",
     "description": "Message to show when a filter cannot be found in any filter lists"
   },
   "loggerSettingDiscardPrompt": {
@@ -803,21 +883,141 @@
     "message": "Formátované",
     "description": "Label for radio-button to pick export text format"
   },
+  "supportOpenButton": {
+    "message": "Otvoriť",
+    "description": "Text for button which open an external webpage in Support pane"
+  },
+  "supportReportSpecificButton": {
+    "message": "Vytvoriť nové hlásenie",
+    "description": "Text for button which open an external webpage in Support pane"
+  },
+  "supportFindSpecificButton": {
+    "message": "Vyhľadať podobné hlásenia",
+    "description": "A clickable link in the filter issue reporter section"
+  },
+  "supportS1H": {
+    "message": "Dokumentácia",
+    "description": "Header of 'Documentation' section in Support pane"
+  },
+  "supportS1P1": {
+    "message": "Prečítajte si dokumentáciu na <code>uBlock/wiki</code> a dozviete sa o všetkých funkciách uBlock Origin.",
+    "description": "First paragraph of 'Documentation' section in Support pane"
+  },
+  "supportS2H": {
+    "message": "Otázky a podpora",
+    "description": "Header of 'Questions and support' section in Support pane"
+  },
+  "supportS2P1": {
+    "message": "Odpovede na otázky a iné druhy podpory pomoci sa poskytujú na subreddite <code>/r/uBlockOrigin</code>.",
+    "description": "First paragraph of 'Questions and support' section in Support pane"
+  },
+  "supportS3H": {
+    "message": "Problémy s filtrom/webová stránka je nefunkčná",
+    "description": "Header of 'Filter issues' section in Support pane"
+  },
+  "supportS3P1": {
+    "message": "Nahlásenie problémov s filtrom s konkrétnymi webovými stránkami na <span data-url=\"https://github.com/uBlockOrigin/uAssets/issues?q=is%3Aissue\"><code>uBlockOrigin/uAssets</code> issue tracker</span>. Vyžaduje sa GitHub účet.",
+    "description": "First paragraph of 'Filter issues' section in Support pane"
+  },
+  "supportS3P2": {
+    "message": "<b>Dôležité:</b> Vyhnite sa používaniu iných podobne zameraných blokátorov spolu s uBlock Origin, pretože to môže spôsobiť problémy s filtrovaním na konkrétnych webových stránkach.",
+    "description": "Second paragraph of 'Filter issues' section in Support pane"
+  },
+  "supportS3P3": {
+    "message": "<b>Tipy:</b> Uistite sa, že je váš zoznam filtrov aktuálny. <span data-url=\"logger-ui.html#_\">Záznamenávač</span> je primárnym nástrojom na diagnostiku problémov súvisiacich s filtrami.",
+    "description": "Third paragraph of 'Filter issues' section in Support pane"
+  },
+  "supportS4H": {
+    "message": "Nahlásiť chybu",
+    "description": "Header of 'Bug report' section in Support pane"
+  },
+  "supportS4P1": {
+    "message": "Nahlásenie problémov so samotným uBlock Origin na<span data-url=\"https://github.com/uBlockOrigin/uBlock-issues/issues?q=is%3Aissue\"><code>uBlockOrigin/uBlock-issue</code> issue tracker</span>. <u>Vyžaduje sa GitHub účet.</u>",
+    "description": "First paragraph of 'Bug report' section in Support pane"
+  },
+  "supportS5H": {
+    "message": "Informácie o riešení problémov",
+    "description": "Header of 'Troubleshooting Information' section in Support pane"
+  },
+  "supportS5P1": {
+    "message": "Nasledujú technické informácie, ktoré môžu byť užitočné, keď sa vám dobrovoľníci pokúšajú pomôcť vyriešiť problém.",
+    "description": "First paragraph of 'Troubleshooting Information' section in Support pane"
+  },
+  "supportS5P2": {
+    "message": "<b>Dôležité:</b> Potenciálne súkromné alebo citlivé informácie sú štandardne upravované. Upravené informácie môžu sťažiť riešenie problému.",
+    "description": "Second paragraph of 'Troubleshooting Information' section in Support pane"
+  },
+  "supportS6H": {
+    "message": "Nahlásiť problém s filtrom",
+    "description": "Header of 'Report a filter issue' section in Support pane"
+  },
+  "supportS6P1S1": {
+    "message": "Aby ste dobrovoľníkov nezaťažovali duplicitnými hláseniami, overte si, či už problém nebol nahlásený.",
+    "description": "A paragraph in the filter issue reporter section"
+  },
+  "supportS6P2S1": {
+    "message": "Zoznamy filtrov sa aktualizujú denne. Uistite sa, že váš problém už nebol riešený v najnovších zoznamoch filtrov.",
+    "description": "A paragraph in the filter issue reporter section"
+  },
+  "supportS6P2S2": {
+    "message": "Overte, či problém pretrváva aj po opätovnom načítaní problematickej webovej stránky.",
+    "description": "A paragraph in the filter issue reporter section"
+  },
+  "supportS6URL": {
+    "message": "Adresa webovej stránky:",
+    "description": "Label for the URL of the page"
+  },
+  "supportS6Select1": {
+    "message": "Webová stránka…",
+    "description": "Label for widget to select type of issue"
+  },
+  "supportS6Select1Option0": {
+    "message": "-- Vyberte položku --",
+    "description": "An entry in the widget used to select the type of issue"
+  },
+  "supportS6Select1Option1": {
+    "message": "Zobrazuje reklamy alebo zvyšky reklám",
+    "description": "An entry in the widget used to select the type of issue"
+  },
+  "supportS6Select1Option2": {
+    "message": "Je prekrytá alebo má iné nedostatky",
+    "description": "An entry in the widget used to select the type of issue"
+  },
+  "supportS6Select1Option3": {
+    "message": "Deteguje uBlock Origin",
+    "description": "An entry in the widget used to select the type of issue"
+  },
+  "supportS6Select1Option4": {
+    "message": "Má problémy súvisiace so súkromím",
+    "description": "An entry in the widget used to select the type of issue"
+  },
+  "supportS6Select1Option5": {
+    "message": "Má problém s funkčnosťou, keď je povolený uBlock Origin",
+    "description": "An entry in the widget used to select the type of issue"
+  },
+  "supportS6Select1Option6": {
+    "message": "Otvára nechcené karty alebo okná",
+    "description": "An entry in the widget used to select the type of issue"
+  },
+  "supportS6Checkbox1": {
+    "message": "Označiť webstránku ako &ldquo;NSFW&rdquo; (<a href=\"https://wikipedia.org/wiki/Not_safe_for_work\">Nie je bezpečné pre prácu&rdquo;)",
+    "description": "A checkbox to use for NSFW sites"
+  },
+  "supportRedact": {
+    "message": "Upravovať",
+    "description": "Text for 'Redact' button"
+  },
+  "supportUnredact": {
+    "message": "Neupravovať",
+    "description": "Text for 'Unredact' button"
+  },
+  "aboutPrivacyPolicy": {
+    "message": "Zásady ochrany osobných údajov",
+    "description": "Link to privacy policy on GitHub (English)"
+  },
   "aboutChangelog": {
     "message": "Zoznam zmien",
     "description": ""
-  },
-  "aboutWiki": {
-    "message": "Wiki",
-    "description": "English: project' wiki on GitHub"
-  },
-  "aboutSupport": {
-    "message": "Podpora",
-    "description": "A link for where to get support"
-  },
-  "aboutIssues": {
-    "message": "Zoznam problémov",
-    "description": "Text for a link to official issue tracker"
   },
   "aboutCode": {
     "message": "Zdrojový kód (GPLv3)",
@@ -827,8 +1027,28 @@
     "message": "Prispievatelia",
     "description": "English: Contributors"
   },
+  "aboutSourceCode": {
+    "message": "Zdrojový kód",
+    "description": "Link text to source code repo"
+  },
+  "aboutTranslations": {
+    "message": "Preklady",
+    "description": "Link text to translations repo"
+  },
+  "aboutFilterLists": {
+    "message": "Zoznam filtrov",
+    "description": "Link text to uBO's own filter lists repo"
+  },
   "aboutDependencies": {
     "message": "Externé závislosti (kompatibilné s GPLv3):",
+    "description": "Shown in the About pane"
+  },
+  "aboutCDNs": {
+    "message": "Vlastné zoznamy filtrov uBO sú voľne dostupné na nasledujúcich <a href=\"https://wikipedia.org/wiki/Content_delivery_network\">CDN</a>:",
+    "description": "Shown in the About pane"
+  },
+  "aboutCDNsInfo": {
+    "message": "Pri aktualizácii zoznamu filtrov sa použije náhodne vybraná CDN.",
     "description": "Shown in the About pane"
   },
   "aboutBackupDataButton": {
@@ -865,7 +1085,11 @@
   },
   "subscriberConfirm": {
     "message": "uBlock₀: Pridať nasledujúcu URL do zoznamu vlastných filtrov?\n\nNázov: \"{{title}}\"\nURL: {{url}}",
-    "description": "English: The message seen by the user to confirm subscription to a ABP filter list"
+    "description": "No longer used"
+  },
+  "subscribeButton": {
+    "message": "Pridať",
+    "description": "For the button used to subscribe to a filter list"
   },
   "elapsedOneMinuteAgo": {
     "message": "pred minútou",
@@ -903,13 +1127,17 @@
     "message": "vypnutý",
     "description": "Firefox-specific: appears as 'uBlock₀ (off)'"
   },
+  "docblockedTitle": {
+    "message": "Blokovaná stránka",
+    "description": "Used as a title for the document-blocked page"
+  },
   "docblockedPrompt1": {
     "message": "uBlock Origin zabránil načítaniu nasledujúcej stránky:",
-    "description": "English: uBlock₀ has prevented the following page from loading:"
+    "description": "Used in the strict-blocking page"
   },
   "docblockedPrompt2": {
     "message": "Kvôli nasledujúcemu filtru",
-    "description": "English: Because of the following filter"
+    "description": "Used in the strict-blocking page"
   },
   "docblockedNoParamsPrompt": {
     "message": "bez parametrov",
@@ -927,6 +1155,10 @@
     "message": "Zatvoriť toto okno",
     "description": "English: Close this window"
   },
+  "docblockedDontWarn": {
+    "message": "Už ma na túto stránku neupozorňovať",
+    "description": "Label for checkbox in document-blocked page"
+  },
   "docblockedProceed": {
     "message": "Zakázať prísne blokovanie pre {{hostname}}",
     "description": "English: Disable strict blocking for {{hostname}} ..."
@@ -938,6 +1170,10 @@
   "docblockedDisablePermanent": {
     "message": "Natrvalo",
     "description": "English: Permanently"
+  },
+  "docblockedDisable": {
+    "message": "Pokračovať",
+    "description": "Button text to navigate to the blocked page"
   },
   "cloudPush": {
     "message": "Exportovať do cloudového úložiska",
@@ -952,7 +1188,7 @@
     "description": "tooltip"
   },
   "cloudNoData": {
-    "message": "...\n...",
+    "message": "…\n…",
     "description": ""
   },
   "cloudDeviceNamePrompt": {
@@ -979,9 +1215,21 @@
     "message": "bajtov",
     "description": ""
   },
+  "contextMenuBlockElementInFrame": {
+    "message": "Zablokovať prvok v ráme…",
+    "description": "An entry in the browser's contextual menu"
+  },
+  "contextMenuSubscribeToList": {
+    "message": "Prihlásiť sa k odberu zoznamu filtrov…",
+    "description": "An entry in the browser's contextual menu"
+  },
   "contextMenuTemporarilyAllowLargeMediaElements": {
     "message": "Dočasne povoliť veľké multimediálne prvky",
     "description": "A context menu entry, present when large media elements have been blocked on the current site"
+  },
+  "contextMenuViewSource": {
+    "message": "Zobraziť zdrojový kód…",
+    "description": "A context menu entry, to view the source code of the target resource"
   },
   "shortcutCapturePlaceholder": {
     "message": "Zadajte klávesovú skratku",
@@ -995,13 +1243,45 @@
     "message": "Kopírovať do schránky",
     "description": "Label for buttons used to copy something to the clipboard"
   },
-  "toggleBlockingProfile": {
-    "message": "Prepnúť profil blokovania",
-    "description": "Label for keyboard shortcut used to toggle blocking profile"
+  "genericSelectAll": {
+    "message": "Vybrať všetko",
+    "description": "Label for buttons used to select all text in editor"
+  },
+  "toggleCosmeticFiltering": {
+    "message": "Prepnúť kozmetické filtrovanie",
+    "description": "Label for keyboard shortcut used to toggle cosmetic filtering"
   },
   "relaxBlockingMode": {
     "message": "Zmierniť režim blokovania",
-    "description": "Label for keyboard shortcut used to relax blocking mode (meant to replace 'Toggle blocking profile')"
+    "description": "Label for keyboard shortcut used to relax blocking mode"
+  },
+  "storageUsed": {
+    "message": "Využité miesto: {{value}} {{unit}}",
+    "description": " In Setting pane, renders as (example): Storage used: 13.2 MB"
+  },
+  "KB": {
+    "message": "KB",
+    "description": "short for 'kilobytes'"
+  },
+  "MB": {
+    "message": "MB",
+    "description": "short for 'megabytes'"
+  },
+  "GB": {
+    "message": "GB",
+    "description": "short for 'gigabytes'"
+  },
+  "clickToLoad": {
+    "message": "Kliknite pre načítanie",
+    "description": "Message used in frame placeholders"
+  },
+  "linterMainReport": {
+    "message": "Chyby: {{count}}",
+    "description": "Summary of number of errors as reported by the linter "
+  },
+  "unprocessedRequestTooltip": {
+    "message": "Pri spustení prehliadača sa nepodarilo správne filtrovať.\nZnova načítajte stránku, aby ste zaistili správne filtrovanie",
+    "description": "A warning which will appear in the popup panel if needed"
   },
   "dummy": {
     "message": "This entry must be the last one",

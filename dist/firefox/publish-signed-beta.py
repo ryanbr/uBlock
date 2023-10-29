@@ -13,7 +13,6 @@ import tempfile
 import time
 import zipfile
 
-from distutils.version import LooseVersion
 from string import Template
 
 # - Download target (raw) uBlock0.firefox.xpi from GitHub
@@ -153,6 +152,7 @@ print('Downloaded raw package saved as {0}'.format(raw_xpi_filepath))
 #
 # Convert the package to a self-hosted one: add `update_url` to the manifest
 #
+min_browser_version = '68';
 
 print('Converting raw xpi package into self-hosted xpi package...')
 with zipfile.ZipFile(raw_xpi_filepath, 'r') as zipin:
@@ -161,6 +161,7 @@ with zipfile.ZipFile(raw_xpi_filepath, 'r') as zipin:
             data = zipin.read(item.filename)
             if item.filename == 'manifest.json':
                 manifest = json.loads(bytes.decode(data))
+                min_browser_version = manifest['browser_specific_settings']['gecko']['strict_min_version']
                 manifest['browser_specific_settings']['gecko']['update_url'] = 'https://raw.githubusercontent.com/{0}/{1}/master/dist/firefox/updates.json'.format(github_owner, github_repo)
                 data = json.dumps(manifest, indent=2, separators=(',', ': '), sort_keys=True).encode()
             zipout.writestr(item, data)
@@ -190,18 +191,18 @@ def get_jwt_auth():
         'iat': datetime.datetime.utcnow(),
         'exp': datetime.datetime.utcnow() + datetime.timedelta(seconds=15),
     }
-    return 'JWT ' + jwt.encode(jwt_payload, amo_secret).decode()
+    return 'JWT ' + jwt.encode(jwt_payload, amo_secret)
 
 print('Ask AMO to sign self-hosted xpi package...')
 with open(unsigned_xpi_filepath, 'rb') as f:
     # https://blog.mozilla.org/addons/2019/11/11/security-improvements-in-amo-upload-tools/
     #   "We recommend allowing up to 15 minutes."
     interval = 60                   # check every 60 seconds
-    countdown = 15 * 60 / interval  # for at most 15 minutes
+    countdown = 60 * 60 / interval  # for at most 60 minutes
     headers = { 'Authorization': get_jwt_auth(), }
     data = { 'channel': 'unlisted' }
     files = { 'upload': f, }
-    signing_url = 'https://addons.mozilla.org/api/v3/addons/{0}/versions/{1}/'.format(extension_id, ext_version)
+    signing_url = 'https://addons.mozilla.org/api/v4/addons/{0}/versions/{1}/'.format(extension_id, ext_version)
     print('Submitting package to be signed...')
     response = requests.put(signing_url, headers=headers, data=data, files=files)
     if response.status_code != 202:
@@ -291,21 +292,30 @@ if response.status_code != 204:
 # package is higher version than current one.
 #
 
+# Be sure we are in sync with potentially modified files on remote
+r = subprocess.run(['git', 'pull', 'origin', 'master'], stdout=subprocess.PIPE)
+rout = bytes.decode(r.stdout).strip()
+
+def int_from_version(version):
+    parts = version.split('.')
+    if len(parts) == 3:
+        parts.append('0')
+    return int(parts[0])*10e9 + int(parts[1])*10e6 + int(parts[2])*10e3 + int(parts[3])
+
 print('Update GitHub to point to newly signed self-hosted xpi package...')
 updates_json_filepath = os.path.join(projdir, 'dist', 'firefox', 'updates.json')
 with open(updates_json_filepath) as f:
     updates_json = json.load(f)
     f.close()
     previous_version = updates_json['addons'][extension_id]['updates'][0]['version']
-    if LooseVersion(ext_version) > LooseVersion(previous_version):
+    if int_from_version(ext_version) > int_from_version(previous_version):
         with open(os.path.join(projdir, 'dist', 'firefox', 'updates.template.json')) as f:
             template_json = Template(f.read())
             f.close()
-            updates_json = template_json.substitute(ext_version=ext_version, tag_version=tag_version)
+            updates_json = template_json.substitute(ext_version=ext_version, tag_version=tag_version, min_browser_version=min_browser_version)
             with open(updates_json_filepath, 'w') as f:
                 f.write(updates_json)
                 f.close()
-        # Automatically git add/commit if needed.
         # - Stage the changed file
         r = subprocess.run(['git', 'status', '-s', updates_json_filepath], stdout=subprocess.PIPE)
         rout = bytes.decode(r.stdout).strip()

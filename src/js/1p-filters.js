@@ -19,25 +19,36 @@
     Home: https://github.com/gorhill/uBlock
 */
 
-/* global CodeMirror, uDom, uBlockDashboard */
+/* global CodeMirror, uBlockDashboard */
 
 'use strict';
 
+import { i18n$ } from './i18n.js';
+import { dom, qs$ } from './dom.js';
+import './codemirror/ubo-static-filtering.js';
+
 /******************************************************************************/
 
-(( ) => {
-
-/******************************************************************************/
-
-const cmEditor = new CodeMirror(
-    document.getElementById('userFilters'),
-    {
-        autofocus: true,
-        lineNumbers: true,
-        lineWrapping: true,
-        styleActiveLine: true,
-    }
-);
+const cmEditor = new CodeMirror(qs$('#userFilters'), {
+    autoCloseBrackets: true,
+    autofocus: true,
+    extraKeys: {
+        'Ctrl-Space': 'autocomplete',
+        'Tab': 'toggleComment',
+    },
+    foldGutter: true,
+    gutters: [
+        'CodeMirror-linenumbers',
+        { className: 'CodeMirror-lintgutter', style: 'width: 11px' },
+    ],
+    lineNumbers: true,
+    lineWrapping: true,
+    matchBrackets: true,
+    maxScanLines: 1,
+    styleActiveLine: {
+        nonEmpty: true,
+    },
+});
 
 uBlockDashboard.patchCodeMirrorEditor(cmEditor);
 
@@ -45,110 +56,184 @@ let cachedUserFilters = '';
 
 /******************************************************************************/
 
-// This is to give a visual hint that the content of user blacklist has changed.
+// Add auto-complete ability to the editor. Polling is used as the suggested
+// hints also depend on the tabs currently opened.
 
-const userFiltersChanged = function(changed) {
-    if ( typeof changed !== 'boolean' ) {
-        changed = self.hasUnsavedData();
-    }
-    uDom.nodeFromId('userFiltersApply').disabled = !changed;
-    uDom.nodeFromId('userFiltersRevert').disabled = !changed;
-};
+{
+    let hintUpdateToken = 0;
+
+    const getHints = async function() {
+        const hints = await vAPI.messaging.send('dashboard', {
+            what: 'getAutoCompleteDetails',
+            hintUpdateToken
+        });
+        if ( hints instanceof Object === false ) { return; }
+        if ( hints.hintUpdateToken !== undefined ) {
+            cmEditor.setOption('uboHints', hints);
+            hintUpdateToken = hints.hintUpdateToken;
+        }
+        timer.on(2503);
+    };
+
+    const timer = vAPI.defer.create(( ) => {
+        getHints();
+    });
+
+    getHints();
+}
+
+vAPI.messaging.send('dashboard', {
+    what: 'getTrustedScriptletTokens',
+}).then(tokens => {
+    cmEditor.setOption('trustedScriptletTokens', tokens);
+});
 
 /******************************************************************************/
 
-const renderUserFilters = async function() {
+function getEditorText() {
+    const text = cmEditor.getValue().replace(/\s+$/, '');
+    return text === '' ? text : text + '\n';
+}
+
+function setEditorText(text) {
+    cmEditor.setValue(text.replace(/\s+$/, '') + '\n\n');
+}
+
+/******************************************************************************/
+
+function userFiltersChanged(changed) {
+    if ( typeof changed !== 'boolean' ) {
+        changed = self.hasUnsavedData();
+    }
+    qs$('#userFiltersApply').disabled = !changed;
+    qs$('#userFiltersRevert').disabled = !changed;
+}
+
+/******************************************************************************/
+
+// https://github.com/gorhill/uBlock/issues/3704
+//   Merge changes to user filters occurring in the background with changes
+//   made in the editor. The code assumes that no deletion occurred in the
+//   background.
+
+function threeWayMerge(newContent) {
+    const prvContent = cachedUserFilters.trim().split(/\n/);
+    const differ = new self.diff_match_patch();
+    const newChanges = differ.diff(
+        prvContent,
+        newContent.trim().split(/\n/)
+    );
+    const usrChanges = differ.diff(
+        prvContent,
+        getEditorText().trim().split(/\n/)
+    );
+    const out = [];
+    let i = 0, j = 0, k = 0;
+    while ( i < prvContent.length ) {
+        for ( ; j < newChanges.length; j++ ) {
+            const change = newChanges[j];
+            if ( change[0] !== 1 ) { break; }
+            out.push(change[1]);
+        }
+        for ( ; k < usrChanges.length; k++ ) {
+            const change = usrChanges[k];
+            if ( change[0] !== 1 ) { break; }
+            out.push(change[1]);
+        }
+        if ( k === usrChanges.length || usrChanges[k][0] !== -1 ) {
+            out.push(prvContent[i]);
+        }
+        i += 1; j += 1; k += 1;
+    }
+    for ( ; j < newChanges.length; j++ ) {
+        const change = newChanges[j];
+        if ( change[0] !== 1 ) { continue; }
+        out.push(change[1]);
+    }
+    for ( ; k < usrChanges.length; k++ ) {
+        const change = usrChanges[k];
+        if ( change[0] !== 1 ) { continue; }
+        out.push(change[1]);
+    }
+    return out.join('\n');
+}
+
+/******************************************************************************/
+
+async function renderUserFilters(merge = false) {
     const details = await vAPI.messaging.send('dashboard', {
         what: 'readUserFilters',
     });
     if ( details instanceof Object === false || details.error ) { return; }
 
-    let content = details.content.trim();
-    cachedUserFilters = content;
-    if ( content.length !== 0 ) {
-        content += '\n';
-    }
-    cmEditor.setValue(content);
+    cmEditor.setOption('trustedSource', details.trustedSource === true);
 
-    userFiltersChanged(false);
-};
+    const newContent = details.content.trim();
+
+    if ( merge && self.hasUnsavedData() ) {
+        setEditorText(threeWayMerge(newContent));
+        userFiltersChanged(true);
+    } else {
+        setEditorText(newContent);
+        userFiltersChanged(false);
+    }
+
+    cachedUserFilters = newContent;
+}
 
 /******************************************************************************/
 
-const handleImportFilePicker = function() {
-    // https://github.com/chrisaljoudi/uBlock/issues/1004
-    // Support extraction of filters from ABP backup file
-    const abpImporter = function(s) {
-        const reAbpSubscriptionExtractor = /\n\[Subscription\]\n+url=~[^\n]+([\x08-\x7E]*?)(?:\[Subscription\]|$)/ig;
-        const reAbpFilterExtractor = /\[Subscription filters\]([\x08-\x7E]*?)(?:\[Subscription\]|$)/i;
-        let matches = reAbpSubscriptionExtractor.exec(s);
-        // Not an ABP backup file
-        if ( matches === null ) { return s; }
-        const out = [];
-        do {
-            if ( matches.length === 2 ) {
-                let filterMatch = reAbpFilterExtractor.exec(matches[1].trim());
-                if ( filterMatch !== null && filterMatch.length === 2 ) {
-                    out.push(filterMatch[1].trim().replace(/\\\[/g, '['));
-                }
-            }
-            matches = reAbpSubscriptionExtractor.exec(s);
-        } while ( matches !== null );
-        return out.join('\n');
-    };
-
-    const fileReaderOnLoadHandler = function() {
-        let content = abpImporter(this.result);
-        content = uBlockDashboard.mergeNewLines(
-            cmEditor.getValue().trim(),
-            content
-        );
+function handleImportFilePicker(ev) {
+    const file = ev.target.files[0];
+    if ( file === undefined || file.name === '' ) { return; }
+    if ( file.type.indexOf('text') !== 0 ) { return; }
+    const fr = new FileReader();
+    fr.onload = function() {
+        if ( typeof fr.result !== 'string' ) { return; }
+        const content = uBlockDashboard.mergeNewLines(getEditorText(), fr.result);
         cmEditor.operation(( ) => {
             const cmPos = cmEditor.getCursor();
-            cmEditor.setValue(`${content}\n`);
+            setEditorText(content);
             cmEditor.setCursor(cmPos);
             cmEditor.focus();
         });
     };
-    const file = this.files[0];
-    if ( file === undefined || file.name === '' ) { return; }
-    if ( file.type.indexOf('text') !== 0 ) { return; }
-    const fr = new FileReader();
-    fr.onload = fileReaderOnLoadHandler;
     fr.readAsText(file);
-};
+}
 
-/******************************************************************************/
+dom.on('#importFilePicker', 'change', handleImportFilePicker);
 
-const startImportFilePicker = function() {
-    const input = document.getElementById('importFilePicker');
+function startImportFilePicker() {
+    const input = qs$('#importFilePicker');
     // Reset to empty string, this will ensure an change event is properly
     // triggered if the user pick a file, even if it is the same as the last
     // one picked.
     input.value = '';
     input.click();
-};
+}
+
+dom.on('#importUserFiltersFromFile', 'click', startImportFilePicker);
 
 /******************************************************************************/
 
-const exportUserFiltersToFile = function() {
-    const val = cmEditor.getValue().trim();
+function exportUserFiltersToFile() {
+    const val = getEditorText();
     if ( val === '' ) { return; }
-    const filename = vAPI.i18n('1pExportFilename')
+    const filename = i18n$('1pExportFilename')
         .replace('{{datetime}}', uBlockDashboard.dateNowToSensibleString())
         .replace(/ +/g, '_');
     vAPI.download({
         'url': 'data:text/plain;charset=utf-8,' + encodeURIComponent(val + '\n'),
         'filename': filename
     });
-};
+}
 
 /******************************************************************************/
 
-const applyChanges = async function() {
+async function applyChanges() {
     const details = await vAPI.messaging.send('dashboard', {
         what: 'writeUserFilters',
-        content: cmEditor.getValue(),
+        content: getEditorText(),
     });
     if ( details instanceof Object === false || details.error ) { return; }
 
@@ -157,29 +242,25 @@ const applyChanges = async function() {
     vAPI.messaging.send('dashboard', {
         what: 'reloadAllFilters',
     });
-};
+}
 
-const revertChanges = function() {
-    let content = cachedUserFilters;
-    if ( content.length !== 0 ) {
-        content += '\n';
-    }
-    cmEditor.setValue(content);
-};
+function revertChanges() {
+    setEditorText(cachedUserFilters);
+}
 
 /******************************************************************************/
 
-const getCloudData = function() {
-    return cmEditor.getValue();
-};
+function getCloudData() {
+    return getEditorText();
+}
 
-const setCloudData = function(data, append) {
+function setCloudData(data, append) {
     if ( typeof data !== 'string' ) { return; }
     if ( append ) {
-        data = uBlockDashboard.mergeNewLines(cmEditor.getValue(), data);
+        data = uBlockDashboard.mergeNewLines(getEditorText(), data);
     }
     cmEditor.setValue(data);
-};
+}
 
 self.cloud.onPush = getCloudData;
 self.cloud.onPull = setCloudData;
@@ -187,40 +268,69 @@ self.cloud.onPull = setCloudData;
 /******************************************************************************/
 
 self.hasUnsavedData = function() {
-    return cmEditor.getValue().trim() !== cachedUserFilters;
+    return getEditorText().trim() !== cachedUserFilters;
 };
 
 /******************************************************************************/
 
 // Handle user interaction
-uDom('#importUserFiltersFromFile').on('click', startImportFilePicker);
-uDom('#importFilePicker').on('change', handleImportFilePicker);
-uDom('#exportUserFiltersToFile').on('click', exportUserFiltersToFile);
-uDom('#userFiltersApply').on('click', ( ) => { applyChanges(); });
-uDom('#userFiltersRevert').on('click', revertChanges);
+dom.on('#exportUserFiltersToFile', 'click', exportUserFiltersToFile);
+dom.on('#userFiltersApply', 'click', ( ) => { applyChanges(); });
+dom.on('#userFiltersRevert', 'click', revertChanges);
 
-// https://github.com/gorhill/uBlock/issues/3706
-//   Save/restore cursor position
-//
-// CoreMirror reference: https://codemirror.net/doc/manual.html#api_selection
-renderUserFilters().then(( ) => {
+(async ( ) => {
+    await renderUserFilters();
+
     cmEditor.clearHistory();
-    return vAPI.localStorage.getItemAsync('myFiltersCursorPosition');
-}).then(line => {
-    if ( typeof line === 'number' ) {
-        cmEditor.setCursor(line, 0);
+
+    // https://github.com/gorhill/uBlock/issues/3706
+    //   Save/restore cursor position
+    {
+        const line = await vAPI.localStorage.getItemAsync('myFiltersCursorPosition');
+        if ( typeof line === 'number' ) {
+            cmEditor.setCursor(line, 0);
+        }
+        cmEditor.focus();
     }
-    cmEditor.on('cursorActivity', ( ) => {
-        const line = cmEditor.getCursor().line;
-        if ( vAPI.localStorage.getItem('myFiltersCursorPosition') !== line ) {
-            vAPI.localStorage.setItem('myFiltersCursorPosition', line);
+
+    // https://github.com/gorhill/uBlock/issues/3706
+    //   Save/restore cursor position
+    {
+        let curline = 0;
+        cmEditor.on('cursorActivity', ( ) => {
+            if ( timer.ongoing() ) { return; }
+            if ( cmEditor.getCursor().line === curline ) { return; }
+            timer.on(701);
+        });
+        const timer = vAPI.defer.create(( ) => {
+            curline = cmEditor.getCursor().line;
+            vAPI.localStorage.setItem('myFiltersCursorPosition', curline);
+        });
+    }
+
+    // https://github.com/gorhill/uBlock/issues/3704
+    //   Merge changes to user filters occurring in the background
+    vAPI.broadcastListener.add(msg => {
+        switch ( msg.what ) {
+        case 'userFiltersUpdated': {
+            cmEditor.startOperation();
+            const scroll = cmEditor.getScrollInfo();
+            const selections = cmEditor.listSelections();
+            renderUserFilters(true).then(( ) => {
+                cmEditor.clearHistory();
+                cmEditor.setSelection(selections[0].anchor, selections[0].head);
+                cmEditor.scrollTo(scroll.left, scroll.top);
+                cmEditor.endOperation();
+            });
+            break;
+        }
+        default:
+            break;
         }
     });
-});
+})();
 
 cmEditor.on('changes', userFiltersChanged);
 CodeMirror.commands.save = applyChanges;
 
 /******************************************************************************/
-
-})();

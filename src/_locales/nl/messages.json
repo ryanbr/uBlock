@@ -40,7 +40,7 @@
     "description": "appears as tab name in dashboard"
   },
   "whitelistPageName": {
-    "message": "Whitelist",
+    "message": "Vertrouwde websites",
     "description": "appears as tab name in dashboard"
   },
   "shortcutsPageName": {
@@ -53,6 +53,10 @@
   },
   "aboutPageName": {
     "message": "Over",
+    "description": "appears as tab name in dashboard"
+  },
+  "supportPageName": {
+    "message": "Ondersteuning",
     "description": "appears as tab name in dashboard"
   },
   "assetViewerPageName": {
@@ -84,8 +88,8 @@
     "description": "English: on this page"
   },
   "popupBlockedStats": {
-    "message": "{{count}} of {{percent}}%",
-    "description": "Example: 15 or 13%"
+    "message": "{{count}} ({{percent}}%)",
+    "description": "Example: 15 (13%)"
   },
   "popupBlockedSinceInstallPrompt": {
     "message": "sinds installatie",
@@ -112,16 +116,20 @@
     "description": "English: Click to open the dashboard"
   },
   "popupTipZapper": {
-    "message": "Elementwissermodus openen",
+    "message": "Element­wisser­modus openen",
     "description": "Tooltip for the element-zapper icon in the popup panel"
   },
   "popupTipPicker": {
-    "message": "Elementkiezermodus openen",
+    "message": "Element­kiezer­modus openen",
     "description": "English: Enter element picker mode"
   },
   "popupTipLog": {
     "message": "Logger openen",
     "description": "Tooltip used for the logger icon in the panel"
+  },
+  "popupTipReport": {
+    "message": "Een probleem op deze website melden",
+    "description": "Tooltip used for the 'chat' icon in the panel"
   },
   "popupTipNoPopups": {
     "message": "Alle pop-ups voor deze website in-/uitschakelen",
@@ -179,25 +187,33 @@
     "message": "Klik om JavaScript op deze website niet meer uit te schakelen",
     "description": "Tooltip for the no-scripting per-site switch"
   },
+  "popupNoPopups_v2": {
+    "message": "Pop-upvensters",
+    "description": "Caption for the no-popups per-site switch"
+  },
   "popupNoLargeMedia_v2": {
     "message": "Grote media-elementen",
-    "description": "Tip for the no-large-media per-site switch"
+    "description": "Caption for the no-large-media per-site switch"
   },
   "popupNoCosmeticFiltering_v2": {
     "message": "Cosmetische filters",
-    "description": "Tip for the no-cosmetic-filtering per-site switch"
+    "description": "Caption for the no-cosmetic-filtering per-site switch"
   },
   "popupNoRemoteFonts_v2": {
     "message": "Externe lettertypen",
-    "description": "Tip for the no-remote-fonts per-site switch"
+    "description": "Caption for the no-remote-fonts per-site switch"
   },
   "popupNoScripting_v2": {
     "message": "JavaScript",
-    "description": "Tip for the no-scripting per-site switch"
+    "description": "Caption for the no-scripting per-site switch"
   },
   "popupMoreButton_v2": {
     "message": "Meer",
-    "description": "Label to be used to toggle overview panel"
+    "description": "Label to be used to show popup panel sections"
+  },
+  "popupLessButton_v2": {
+    "message": "Minder",
+    "description": "Label to be used to hide popup panel sections"
   },
   "popupTipGlobalRules": {
     "message": "Algemene regels: deze kolom is voor regels die op alle websites van toepassing zijn.",
@@ -255,6 +271,18 @@
     "message": "{{count}} van {{total}}",
     "description": "appears in popup"
   },
+  "popupVersion": {
+    "message": "Versie",
+    "description": "Example of use: Version 1.26.4"
+  },
+  "popup3pScriptFilter": {
+    "message": "script",
+    "description": "Appears as an option to filter out firewall rows"
+  },
+  "popup3pFrameFilter": {
+    "message": "frame",
+    "description": "Appears as an option to filter out firewall rows"
+  },
   "pickerCreate": {
     "message": "Aanmaken",
     "description": "English: Create"
@@ -284,11 +312,11 @@
     "description": "English: Click, Ctrl-click"
   },
   "pickerContextMenuEntry": {
-    "message": "Element blokkeren...",
+    "message": "Element blokkeren…",
     "description": "An entry in the browser's contextual menu"
   },
   "settingsCollapseBlockedPrompt": {
-    "message": "Tijdelijke aanduidingen van geblokkeerde elementen verbergen",
+    "message": "Aanduidingen van geblokkeerde elementen verbergen",
     "description": "English: Hide placeholders of blocked elements"
   },
   "settingsIconBadgePrompt": {
@@ -300,24 +328,32 @@
     "description": "A checkbox in the Settings pane"
   },
   "settingsContextMenuPrompt": {
-    "message": "Waar mogelijk gebruikmaken van het contextmenu",
+    "message": "Contextmenu gebruiken waar mogelijk",
     "description": "English: Make use of context menu where appropriate"
   },
   "settingsColorBlindPrompt": {
     "message": "Vriendelijk voor kleurenblinden",
     "description": "English: Color-blind friendly"
   },
+  "settingsAppearance": {
+    "message": "Vormgeving",
+    "description": "Section for controlling user interface appearance"
+  },
+  "settingsThemeLabel": {
+    "message": "Thema",
+    "description": "Label for checkbox to enable a custom dark theme"
+  },
+  "settingsThemeAccent0Label": {
+    "message": "Aangepaste accentkleur",
+    "description": "Label for checkbox to pick an accent color"
+  },
   "settingsCloudStorageEnabledPrompt": {
     "message": "Ondersteuning voor cloudopslag inschakelen",
     "description": ""
   },
   "settingsAdvancedUserPrompt": {
-    "message": "Ik ben een ervaren gebruiker (<a href='https://github.com/gorhill/uBlock/wiki/Advanced-user-features'>Lees dit eerst</a>)",
-    "description": ""
-  },
-  "settingsAdvancedUserSettings": {
-    "message": "geavanceerde instellingen",
-    "description": "For the tooltip of a link which gives access to advanced settings"
+    "message": "Ik ben een ervaren gebruiker",
+    "description": "Checkbox to let user access advanced, technical features"
   },
   "settingsPrefetchingDisabledPrompt": {
     "message": "Vooraf ophalen uitschakelen (om verbindingen voor geblokkeerde netwerkaanvragen te voorkomen)",
@@ -359,9 +395,21 @@
     "message": "CSP-rapporten blokkeren",
     "description": "background information: https://github.com/gorhill/uBlock/issues/3150"
   },
-  "settingsStorageUsed": {
-    "message": "Gebruikte opslagruimte: {{value}} bytes",
-    "description": "English: Storage used: {{}} bytes"
+  "settingsUncloakCnamePrompt": {
+    "message": "Canonieke namen onthullen",
+    "description": "background information: https://github.com/uBlockOrigin/uBlock-issues/issues/1513"
+  },
+  "settingsAdvanced": {
+    "message": "Geavanceerd",
+    "description": "Section for controlling advanced-user settings"
+  },
+  "settingsAdvancedSynopsis": {
+    "message": "Alleen voor technische gebruikers geschikte functies",
+    "description": "Description of section controlling advanced-user settings"
+  },
+  "settingsAdvancedUserSettings": {
+    "message": "geavanceerde instellingen",
+    "description": "For the tooltip of a link which gives access to advanced settings"
   },
   "settingsLastRestorePrompt": {
     "message": "Laatste terugzetactie:",
@@ -376,7 +424,7 @@
     "description": "Appears at the top of the _3rd-party filters_ pane"
   },
   "3pListsOfBlockedHostsPerListStats": {
-    "message": "{{used}} van {{total}} gebruikt",
+    "message": "{{used}} van de {{total}} gebruikt",
     "description": "Appears aside each filter list in the _3rd-party filters_ pane"
   },
   "3pAutoUpdatePrompt1": {
@@ -396,7 +444,7 @@
     "description": "English: Parse and enforce Adblock+ element hiding filters."
   },
   "3pParseAllABPHideFiltersInfo": {
-    "message": "<p>Deze optie schakelt het inlezen en toepassen van <a href=\"https://adblockplus.org/en/faq_internal#elemhide\">Adblock Plus-compatibele &lsquo;elementverbergende&rsquo; filters</a> in. Deze filters zijn puur cosmetisch; ze verbergen elementen in de webpagina die visueel storend kunnen zijn en niet door de op netwerkaanvragen gebaseerde filter-engine kunnen worden geblokkeerd.</p><p>Het inschakelen van deze functie verhoogt het geheugengebruik van uBlock₀.</p>",
+    "message": "Cosmetische filters dienen voor het verbergen van elementen in een webpagina die visueel storend kunnen zijn en niet door de op netwerkaanvragen gebaseerde filter-engines kunnen worden geblokkeerd.",
     "description": "Describes the purpose of the 'Parse and enforce cosmetic filters' feature."
   },
   "3pIgnoreGenericCosmeticFilters": {
@@ -404,8 +452,12 @@
     "description": "This will cause uBO to ignore all generic cosmetic filters."
   },
   "3pIgnoreGenericCosmeticFiltersInfo": {
-    "message": "<p>Algemene cosmetische filters zijn die cosmetische filters die zijn bedoeld om op alle websites te worden toegepast.<p>Hoewel ze efficiënt door uBlock₀ worden verwerkt, kunnen algemene cosmetische filters op sommige webpagina’s toch bijdragen aan meetbare geheugen- en cpu-overhead, met name op grote pagina’s en die met een lange levensduur.<p>Het inschakelen van deze optie elimineert de aan webpagina’s toegevoegde geheugen- en cpu-overhead als gevolg van het verwerken van algemene cosmetische filters, en verlaagt tevens het geheugengebruik van uBlock₀ zelf.<p>Het wordt aanbevolen deze optie op minder krachtige apparaten in te schakelen.",
+    "message": "Algemene cosmetische filters zijn die cosmetische filters die zijn bedoeld om op alle websites te worden toegepast. Het inschakelen van deze optie elimineert de aan webpagina’s toegevoegde geheugen- en cpu-overhead als gevolg van het verwerken van algemene cosmetische filters.\n\nHet wordt aanbevolen deze optie op minder krachtige apparaten in te schakelen.",
     "description": "Describes the purpose of the 'Ignore generic cosmetic filters' feature."
+  },
+  "3pSuspendUntilListsAreLoaded": {
+    "message": "Netwerkactiviteit onderbreken totdat alle filterlijsten zijn geladen",
+    "description": "A checkbox in the 'Filter lists' pane"
   },
   "3pListsOfBlockedHostsHeader": {
     "message": "Lijst van geblokkeerde hosts",
@@ -417,38 +469,38 @@
   },
   "3pGroupDefault": {
     "message": "Ingebouwd",
-    "description": "Header for the uBlock filters section in 'Filter lists pane'"
+    "description": "Filter lists section name"
   },
   "3pGroupAds": {
     "message": "Advertenties",
-    "description": "English: Ads"
+    "description": "Filter lists section name"
   },
   "3pGroupPrivacy": {
     "message": "Privacy",
-    "description": "English: Privacy"
+    "description": "Filter lists section name"
   },
   "3pGroupMalware": {
-    "message": "Malwaredomeinen",
-    "description": "English: Malware domains"
+    "message": "Bescherming tegen malware, beveiliging",
+    "description": "Filter lists section name"
   },
   "3pGroupAnnoyances": {
     "message": "Storende elementen",
-    "description": "The header identifying the filter lists in the category 'annoyances'"
+    "description": "Filter lists section name"
   },
   "3pGroupMultipurpose": {
     "message": "Multifunctioneel",
-    "description": "English: Multipurpose"
+    "description": "Filter lists section name"
   },
   "3pGroupRegions": {
     "message": "Gebieden, talen",
-    "description": "English: Regions, languages"
+    "description": "Filter lists section name"
   },
   "3pGroupCustom": {
     "message": "Aangepast",
-    "description": "English: Custom"
+    "description": "Filter lists section name"
   },
   "3pImport": {
-    "message": "Importeren...",
+    "message": "Importeren…",
     "description": "The label for the checkbox used to import external filter lists"
   },
   "3pExternalListsHint": {
@@ -459,12 +511,16 @@
     "message": "Verouderd.",
     "description": "used as a tooltip for the out-of-date icon beside a list"
   },
+  "3pViewContent": {
+    "message": "inhoud weergeven",
+    "description": "used as a tooltip for eye icon beside a list"
+  },
   "3pLastUpdate": {
     "message": "Laatst bijgewerkt: {{ago}}.\nKlik om een update af te dwingen.",
     "description": "used as a tooltip for the clock icon beside a list"
   },
   "3pUpdating": {
-    "message": "Bijwerken...",
+    "message": "Bijwerken…",
     "description": "used as a tooltip for the spinner icon beside a list"
   },
   "3pNetworkError": {
@@ -472,16 +528,20 @@
     "description": "used as a tooltip for error icon beside a list"
   },
   "1pFormatHint": {
-    "message": "Eén filter per regel. Een filter kan een gewone hostnaam of een Adblock Plus-compatibel filter zijn. Regels beginnend met <code>!</code> worden genegeerd.",
+    "message": "Eén filter per regel. Een filter kan een gewone hostnaam of een EasyList-compatibel filter zijn. Regels beginnend met <code>!</code> worden genegeerd.",
     "description": "Short information about how to create custom filters"
   },
+  "1pTrustWarning": {
+    "message": "Voeg geen filters van niet-vertrouwde bronnen toe.",
+    "description": "Warning against copy-pasting filters from random sources"
+  },
   "1pImport": {
-    "message": "Importeren en toevoegen...",
-    "description": "English: Import and append"
+    "message": "Importeren en toevoegen…",
+    "description": "Button in the 'My filters' pane"
   },
   "1pExport": {
-    "message": "Exporteren...",
-    "description": "English: Export"
+    "message": "Exporteren…",
+    "description": "Button in the 'My filters' pane"
   },
   "1pExportFilename": {
     "message": "mijn-ublock-statische-filters_{{datetime}}.txt",
@@ -520,12 +580,12 @@
     "description": "Will discard manually-edited content and exit manual-edit mode"
   },
   "rulesImport": {
-    "message": "Importeren uit bestand...",
+    "message": "Importeren uit bestand…",
     "description": ""
   },
   "rulesExport": {
-    "message": "Exporteren naar bestand...",
-    "description": ""
+    "message": "Exporteren naar bestand…",
+    "description": "Button in the 'My rules' pane"
   },
   "rulesDefaultFileName": {
     "message": "mijn-ublock-dynamische-regels_{{datetime}}.txt",
@@ -539,21 +599,37 @@
     "message": "Regelsyntaxis: <code>bron bestemming type actie</code> (<a href='https://github.com/gorhill/uBlock/wiki/Dynamic-filtering:-rule-syntax'>volledige documentatie</a>).",
     "description": "English: dynamic rule syntax and full documentation."
   },
+  "rulesSort": {
+    "message": "Sorteren:",
+    "description": "English: label for sort option."
+  },
+  "rulesSortByType": {
+    "message": "Regeltype",
+    "description": "English: a sort option for list of rules."
+  },
+  "rulesSortBySource": {
+    "message": "Bron",
+    "description": "English: a sort option for list of rules."
+  },
+  "rulesSortByDestination": {
+    "message": "Bestemming",
+    "description": "English: a sort option for list of rules."
+  },
   "whitelistPrompt": {
-    "message": "De whitelist-instructies schrijven voor op welke webpagina’s uBlock Origin dient te worden uitgeschakeld. Eén vermelding per regel. Ongeldige instructies worden zonder mededeling genegeerd en uitgecommentarieerd.",
-    "description": "English: An overview of the content of the dashboard's Whitelist pane."
+    "message": "De vertrouwde-website-instructies schrijven voor op welke webpagina’s uBlock Origin dient te worden uitgeschakeld. Eén vermelding per regel.",
+    "description": "A concise description of the 'Trusted sites' pane."
   },
   "whitelistImport": {
-    "message": "Importeren en toevoegen...",
-    "description": "English: Import and append"
+    "message": "Importeren en toevoegen…",
+    "description": "Button in the 'Trusted sites' pane"
   },
   "whitelistExport": {
-    "message": "Exporteren...",
-    "description": "English: Export"
+    "message": "Exporteren…",
+    "description": "Button in the 'Trusted sites' pane"
   },
   "whitelistExportFilename": {
-    "message": "mijn-ublock-whitelist_{{datetime}}.txt",
-    "description": "English: my-ublock-whitelist_{{datetime}}.txt"
+    "message": "mijn-ublock-vertrouwde-websites_{{datetime}}.txt",
+    "description": "The default filename to use for import/export purpose"
   },
   "whitelistApply": {
     "message": "Wijzigingen toepassen",
@@ -641,6 +717,10 @@
   },
   "loggerRowFiltererBuiltinAllowed": {
     "message": "toegestaan",
+    "description": "A keyword in the built-in row filtering expression"
+  },
+  "loggerRowFiltererBuiltinModified": {
+    "message": "aangepast",
     "description": "A keyword in the built-in row filtering expression"
   },
   "loggerRowFiltererBuiltin1p": {
@@ -744,7 +824,7 @@
     "description": "Below this sentence, the filter list(s) in which the filter was found"
   },
   "loggerStaticFilteringFinderSentence2": {
-    "message": "Statisch filter <code>{{filter}}</code> kon niet in een van de momenteel ingeschakelde filterlijsten worden gevonden",
+    "message": "Statisch filter kon niet in een van de momenteel ingeschakelde filterlijsten worden gevonden",
     "description": "Message to show when a filter cannot be found in any filter lists"
   },
   "loggerSettingDiscardPrompt": {
@@ -803,21 +883,141 @@
     "message": "Markdown",
     "description": "Label for radio-button to pick export text format"
   },
+  "supportOpenButton": {
+    "message": "Openen",
+    "description": "Text for button which open an external webpage in Support pane"
+  },
+  "supportReportSpecificButton": {
+    "message": "Nieuwe melding maken",
+    "description": "Text for button which open an external webpage in Support pane"
+  },
+  "supportFindSpecificButton": {
+    "message": "Soortgelijke meldingen zoeken",
+    "description": "A clickable link in the filter issue reporter section"
+  },
+  "supportS1H": {
+    "message": "Documentatie",
+    "description": "Header of 'Documentation' section in Support pane"
+  },
+  "supportS1P1": {
+    "message": "Lees de documentatie op <code>uBlock/wiki</code> voor meer info over alle functies van uBlock Origin.",
+    "description": "First paragraph of 'Documentation' section in Support pane"
+  },
+  "supportS2H": {
+    "message": "Vragen en ondersteuning",
+    "description": "Header of 'Questions and support' section in Support pane"
+  },
+  "supportS2P1": {
+    "message": "Antwoorden op vragen en andere soorten ondersteuning worden geleverd op de subreddit <code>/r/uBlockOrigin</code>.",
+    "description": "First paragraph of 'Questions and support' section in Support pane"
+  },
+  "supportS3H": {
+    "message": "Filterproblemen/website werkt niet",
+    "description": "Header of 'Filter issues' section in Support pane"
+  },
+  "supportS3P1": {
+    "message": "Meld filterproblemen met specifieke websites in de <span data-url=\"https://github.com/uBlockOrigin/uAssets/issues?q=is%3Aissue\"><code>uBlockOrigin/uAssets</code>-probleemtracker</span>. <u>Vereist een GitHub-account.</u>",
+    "description": "First paragraph of 'Filter issues' section in Support pane"
+  },
+  "supportS3P2": {
+    "message": "<b>Belangrijk:</b> vermijd het gebruik van andere adblockers voor dezelfde doeleinden in combinatie met uBlock Origin, omdat dit op bepaalde websites problemen kan geven.",
+    "description": "Second paragraph of 'Filter issues' section in Support pane"
+  },
+  "supportS3P3": {
+    "message": "<b>Tips:</b> zorg ervoor dat uw filterlijsten up-to-date zijn. <span data-url=\"logger-ui.html#_\">De logger</span> is het primaire hulpmiddel voor het analyseren van filtergerelateerde problemen.",
+    "description": "Third paragraph of 'Filter issues' section in Support pane"
+  },
+  "supportS4H": {
+    "message": "Bugmelding",
+    "description": "Header of 'Bug report' section in Support pane"
+  },
+  "supportS4P1": {
+    "message": "Meld problemen met uBlock Origin zelf in de <span data-url=\"https://github.com/uBlockOrigin/uBlock-issues/issues?q=is%3Aissue\"><code>uBlockOrigin/uBlock-issue</code>-probleemtracker</span>. <u>Vereist een GitHub-account.</u>",
+    "description": "First paragraph of 'Bug report' section in Support pane"
+  },
+  "supportS5H": {
+    "message": "Probleemoplossingsinformatie",
+    "description": "Header of 'Troubleshooting Information' section in Support pane"
+  },
+  "supportS5P1": {
+    "message": "Hieronder bevindt zich technische informatie die handig kan zijn wanneer vrijwilligers u proberen te helpen bij het oplossen van een probleem.",
+    "description": "First paragraph of 'Troubleshooting Information' section in Support pane"
+  },
+  "supportS5P2": {
+    "message": "<b>Belangrijk:</b> mogelijk gevoelige of privégegevens worden standaard geredigeerd. Geredigeerde gegevens kunnen het oplossen van een probleem bemoeilijken.",
+    "description": "Second paragraph of 'Troubleshooting Information' section in Support pane"
+  },
+  "supportS6H": {
+    "message": "Een filterprobleem melden",
+    "description": "Header of 'Report a filter issue' section in Support pane"
+  },
+  "supportS6P1S1": {
+    "message": "Controleer of het probleem niet eerder is gemeld om te voorkomen dat vrijwilligers met dubbele meldingen worden belast.",
+    "description": "A paragraph in the filter issue reporter section"
+  },
+  "supportS6P2S1": {
+    "message": "Filterlijsten worden dagelijks bijgewerkt. Controleer of uw probleem niet al in de meest recente filterlijsten is verholpen.",
+    "description": "A paragraph in the filter issue reporter section"
+  },
+  "supportS6P2S2": {
+    "message": "Controleer of het probleem nog steeds bestaat na vernieuwen van de problematische webpagina.",
+    "description": "A paragraph in the filter issue reporter section"
+  },
+  "supportS6URL": {
+    "message": "Adres van de webpagina:",
+    "description": "Label for the URL of the page"
+  },
+  "supportS6Select1": {
+    "message": "De webpagina…",
+    "description": "Label for widget to select type of issue"
+  },
+  "supportS6Select1Option0": {
+    "message": "-- Maak een keuze --",
+    "description": "An entry in the widget used to select the type of issue"
+  },
+  "supportS6Select1Option1": {
+    "message": "Toont advertenties of restanten",
+    "description": "An entry in the widget used to select the type of issue"
+  },
+  "supportS6Select1Option2": {
+    "message": "Heeft overlappingen of andere ongemakken",
+    "description": "An entry in the widget used to select the type of issue"
+  },
+  "supportS6Select1Option3": {
+    "message": "Detecteert uBlock Origin",
+    "description": "An entry in the widget used to select the type of issue"
+  },
+  "supportS6Select1Option4": {
+    "message": "Heeft privacy-gerelateerde problemen",
+    "description": "An entry in the widget used to select the type of issue"
+  },
+  "supportS6Select1Option5": {
+    "message": "Werkt niet als uBlock Origin is ingeschakeld",
+    "description": "An entry in the widget used to select the type of issue"
+  },
+  "supportS6Select1Option6": {
+    "message": "Opent ongewenste tabbladen of vensters",
+    "description": "An entry in the widget used to select the type of issue"
+  },
+  "supportS6Checkbox1": {
+    "message": "De webpagina labelen als ‘NSFW’ (<a href=\"https://nl.wikipedia.org/wiki/NSFW\">‘Not Safe For Work’</a>)",
+    "description": "A checkbox to use for NSFW sites"
+  },
+  "supportRedact": {
+    "message": "Redigeren",
+    "description": "Text for 'Redact' button"
+  },
+  "supportUnredact": {
+    "message": "Redigeren ongedaan maken",
+    "description": "Text for 'Unredact' button"
+  },
+  "aboutPrivacyPolicy": {
+    "message": "Privacybeleid",
+    "description": "Link to privacy policy on GitHub (English)"
+  },
   "aboutChangelog": {
     "message": "Wijzigingenlogboek",
     "description": ""
-  },
-  "aboutWiki": {
-    "message": "Wiki",
-    "description": "English: project' wiki on GitHub"
-  },
-  "aboutSupport": {
-    "message": "Ondersteuning",
-    "description": "A link for where to get support"
-  },
-  "aboutIssues": {
-    "message": "Probleemtracker",
-    "description": "Text for a link to official issue tracker"
   },
   "aboutCode": {
     "message": "Broncode (GPLv3)",
@@ -827,12 +1027,32 @@
     "message": "Medewerkers",
     "description": "English: Contributors"
   },
+  "aboutSourceCode": {
+    "message": "Broncode",
+    "description": "Link text to source code repo"
+  },
+  "aboutTranslations": {
+    "message": "Vertalingen",
+    "description": "Link text to translations repo"
+  },
+  "aboutFilterLists": {
+    "message": "Filterlijsten",
+    "description": "Link text to uBO's own filter lists repo"
+  },
   "aboutDependencies": {
     "message": "Externe afhankelijkheden (GPLv3-compatibel):",
     "description": "Shown in the About pane"
   },
+  "aboutCDNs": {
+    "message": "uBO’s eigen filterlijsten zijn gratis beschikbaar op de volgende <a href=\"https://wikipedia.org/wiki/Content_delivery_network\">CDN’s</a>:",
+    "description": "Shown in the About pane"
+  },
+  "aboutCDNsInfo": {
+    "message": "Als een filterlijst moet worden bijgewerkt, wordt een willekeurig gekozen CDN gebruikt.",
+    "description": "Shown in the About pane"
+  },
   "aboutBackupDataButton": {
-    "message": "Back-up maken naar bestand...",
+    "message": "Back-up maken naar bestand…",
     "description": "Text for button to create a backup of all settings"
   },
   "aboutBackupFilename": {
@@ -840,11 +1060,11 @@
     "description": "English: my-ublock-backup_{{datetime}}.txt"
   },
   "aboutRestoreDataButton": {
-    "message": "Terugzetten uit bestand...",
+    "message": "Terugzetten uit bestand…",
     "description": "English: Restore from file..."
   },
   "aboutResetDataButton": {
-    "message": "Standaardinstellingen terugzetten...",
+    "message": "Standaardinstellingen terugzetten…",
     "description": "English: Reset to default settings..."
   },
   "aboutRestoreDataConfirm": {
@@ -864,8 +1084,12 @@
     "description": "English: Network error: {{msg}}"
   },
   "subscriberConfirm": {
-    "message": "uBlock₀: de volgende URL aan uw lijsten met aangepaste filters toevoegen?\n\nTitel: ‘{{title}}’\nURL: {{url}}",
-    "description": "English: The message seen by the user to confirm subscription to a ABP filter list"
+    "message": "De volgende URL aan uw lijsten met aangepaste filters toevoegen?\n\nTitel: ‘{{title}}’\nURL: {{url}}",
+    "description": "No longer used"
+  },
+  "subscribeButton": {
+    "message": "Abonneren",
+    "description": "For the button used to subscribe to a filter list"
   },
   "elapsedOneMinuteAgo": {
     "message": "een minuut geleden",
@@ -903,13 +1127,17 @@
     "message": "uitgeschakeld",
     "description": "Firefox-specific: appears as 'uBlock₀ (off)'"
   },
+  "docblockedTitle": {
+    "message": "Pagina geblokkeerd",
+    "description": "Used as a title for the document-blocked page"
+  },
   "docblockedPrompt1": {
     "message": "uBlock₀ heeft het laden van de volgende pagina voorkomen:",
-    "description": "English: uBlock₀ has prevented the following page from loading:"
+    "description": "Used in the strict-blocking page"
   },
   "docblockedPrompt2": {
-    "message": "vanwege het volgende filter",
-    "description": "English: Because of the following filter"
+    "message": "vanwege het volgende filter:",
+    "description": "Used in the strict-blocking page"
   },
   "docblockedNoParamsPrompt": {
     "message": "zonder parameters",
@@ -927,6 +1155,10 @@
     "message": "Dit venster sluiten",
     "description": "English: Close this window"
   },
+  "docblockedDontWarn": {
+    "message": "Mij niet meer waarschuwen over deze website",
+    "description": "Label for checkbox in document-blocked page"
+  },
   "docblockedProceed": {
     "message": "Strenge blokkering voor {{hostname}} uitschakelen",
     "description": "English: Disable strict blocking for {{hostname}} ..."
@@ -938,6 +1170,10 @@
   "docblockedDisablePermanent": {
     "message": "Permanent",
     "description": "English: Permanently"
+  },
+  "docblockedDisable": {
+    "message": "Doorgaan",
+    "description": "Button text to navigate to the blocked page"
   },
   "cloudPush": {
     "message": "Exporteren naar cloudopslag",
@@ -952,7 +1188,7 @@
     "description": "tooltip"
   },
   "cloudNoData": {
-    "message": "... \n...",
+    "message": "…\n…",
     "description": ""
   },
   "cloudDeviceNamePrompt": {
@@ -979,9 +1215,21 @@
     "message": "bytes",
     "description": ""
   },
+  "contextMenuBlockElementInFrame": {
+    "message": "Element in frame blokkeren…",
+    "description": "An entry in the browser's contextual menu"
+  },
+  "contextMenuSubscribeToList": {
+    "message": "Abonneren op filterlijst…",
+    "description": "An entry in the browser's contextual menu"
+  },
   "contextMenuTemporarilyAllowLargeMediaElements": {
     "message": "Grote media-elementen tijdelijk toestaan",
     "description": "A context menu entry, present when large media elements have been blocked on the current site"
+  },
+  "contextMenuViewSource": {
+    "message": "Broncode weergeven…",
+    "description": "A context menu entry, to view the source code of the target resource"
   },
   "shortcutCapturePlaceholder": {
     "message": "Typ een sneltoets",
@@ -995,13 +1243,45 @@
     "message": "Kopiëren naar klembord",
     "description": "Label for buttons used to copy something to the clipboard"
   },
-  "toggleBlockingProfile": {
-    "message": "Blokkeringsprofiel omschakelen",
-    "description": "Label for keyboard shortcut used to toggle blocking profile"
+  "genericSelectAll": {
+    "message": "Alles selecteren",
+    "description": "Label for buttons used to select all text in editor"
+  },
+  "toggleCosmeticFiltering": {
+    "message": "Cosmetische filters in-/uitschakelen",
+    "description": "Label for keyboard shortcut used to toggle cosmetic filtering"
   },
   "relaxBlockingMode": {
     "message": "Blokkeringsmodus beperken",
-    "description": "Label for keyboard shortcut used to relax blocking mode (meant to replace 'Toggle blocking profile')"
+    "description": "Label for keyboard shortcut used to relax blocking mode"
+  },
+  "storageUsed": {
+    "message": "Gebruikte opslagruimte: {{value}} {{unit}}",
+    "description": " In Setting pane, renders as (example): Storage used: 13.2 MB"
+  },
+  "KB": {
+    "message": "KB",
+    "description": "short for 'kilobytes'"
+  },
+  "MB": {
+    "message": "MB",
+    "description": "short for 'megabytes'"
+  },
+  "GB": {
+    "message": "GB",
+    "description": "short for 'gigabytes'"
+  },
+  "clickToLoad": {
+    "message": "Klik om te laden",
+    "description": "Message used in frame placeholders"
+  },
+  "linterMainReport": {
+    "message": "Fouten: {{count}}",
+    "description": "Summary of number of errors as reported by the linter "
+  },
+  "unprocessedRequestTooltip": {
+    "message": "Kon niet goed filteren bij het starten van de browser. Vernieuw de pagina voor een juiste filtering.",
+    "description": "A warning which will appear in the popup panel if needed"
   },
   "dummy": {
     "message": "This entry must be the last one",

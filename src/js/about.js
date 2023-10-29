@@ -19,22 +19,16 @@
     Home: https://github.com/gorhill/uBlock
 */
 
-/* global uDom */
-
 'use strict';
+
+import { dom } from './dom.js';
 
 /******************************************************************************/
 
 (async ( ) => {
-    document.querySelector(
-        '[href="logger-ui.html"]'
-    ).addEventListener(
-        'click',
-        self.uBlockDashboard.openOrSelectPage
-    );
-
     const appData = await vAPI.messaging.send('dashboard', {
         what: 'getAppData',
     });
-    uDom('#aboutNameVer').text(appData.name + ' v' + appData.version);
+
+    dom.text('#aboutNameVer', appData.name + ' ' + appData.version);
 })();

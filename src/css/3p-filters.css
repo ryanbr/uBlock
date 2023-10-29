@@ -1,183 +1,250 @@
 @keyframes spin {
-    0% { transform: rotate(0deg); -webkit-transform: rotate(0deg); }
-    100% { transform: rotate(360deg); -webkit-transform: rotate(360deg); }
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
     }
-ul {
-    list-style-type: none;
-    padding-left: 1em;
-    padding-right: 0;
+body {
+    margin-bottom: 6rem;
     }
-body[dir="rtl"] ul {
-    padding-left: 0;
-    padding-right: 1em;
+#actions {
+    background-color: var(--surface-1);
+    padding: var(--default-gap-small) 0 var(--default-gap-xsmall) 0;
+    position: sticky;
+    top: 0;
+    z-index: 10;
     }
-ul.root {
+#buttonUpdate.active {
+    pointer-events: none;
+    }
+#buttonUpdate.active .fa-icon svg {
+    animation: spin 1s linear infinite;
+    transform-origin: 50%;
+    }
+
+body.updating #actions,
+body.working #actions {
+    cursor: progress;
+    }
+body.updating #actions button,
+body.working #actions button {
+    pointer-events: none;
+    }
+
+.listExpander {
+    font-size: 18px;
     padding: 0;
     }
-#options li {
-    margin-bottom: 0.5em;
+.listExpander:first-child {
+    justify-content: flex-start;
+    min-width: 20px;
     }
+.listExpander:not(:first-child) {
+    color: var(--checkbox-checked-ink);
+        fill: var(--checkbox-checked-ink);
+    }
+.listExpander svg {
+    transform: rotate(90deg);
+    transform-origin: 50%;
+    }
+
+#lists .fa-icon:hover {
+    transform: scale(1.25);
+    }
+
+#lists .rootstats.expanded .listExpander svg {
+    transform: rotate(180deg);
+    }
+
+#lists .searchbar {
+    align-items: center;
+    column-gap: var(--default-gap-xxsmall);
+    display: inline-flex;
+    margin-block-start: calc(var(--font-size) * 0.75);
+    margin-inline-start: var(--checkbox-size);
+    position: relative;
+    }
+#lists .searchbar input {
+    padding-inline-start: var(--default-gap-large);
+    }
+#lists .searchbar .fa-icon {
+    color: var(--ink-4);
+        fill: var(--ink-4);
+    left: 4px;
+    position: absolute;
+    transform: none;
+    }
+#lists.searchMode > .listEntries .listEntries,
+#lists.searchMode > .listEntries .listEntry.searchMatch {
+    display: flex !important;
+    }
+#lists.searchMode > .listEntries .listEntry {
+    display: none;
+    }
+#lists.searchMode > .listEntries .listExpander {
+    visibility: hidden;
+    }
+
 #listsOfBlockedHostsPrompt {
     cursor: pointer;
     }
-#listsOfBlockedHostsPrompt:before {
-    color: #888;
-    content: '\2212  ';
+
+#lists .listEntries {
+    display: flex;
+    flex-direction: column;
+    margin-inline-start: var(--checkbox-size);
     }
-body.hideUnused #listsOfBlockedHostsPrompt:before {
-    content: '+  ';
+#lists > .listEntries {
+    margin-inline-start: 0;
     }
-#lists {
-    margin: 0.5em 0 0 0;
-    padding: 0;
-    }
-#lists > li {
-    margin: 0.5em 0 0 0;
-    padding: 0;
-    list-style-type: none;
-    }
-.groupEntry .geDetails {
-    cursor: pointer;
-    }
-.groupEntry:not([data-groupkey="user"]) .geDetails:before {
-    color: #888;
-    content: '\2212  ';
-    }
-.groupEntry.hideUnused:not([data-groupkey="user"]) .geDetails:before {
-    content: '+  ';
-    }
-.groupEntry .geName {
-    pointer-events: none;
-    }
-.groupEntry .geCount {
-    font-size: 90%;
-    pointer-events: none;
-    }
-.groupEntry > ul {
-    margin: 0.25em 0 0 0;
-    padding-left: 1em;
-    }
-.listEntry {
-    margin: 0 auto 0 auto;
-    padding: 0.2em 0;
+#lists .listEntry {
+    align-items: flex-start;
+    flex-direction: column;
+    margin-bottom: 0;
+    margin-inline-start: 0;
     white-space: nowrap;
     }
-.groupEntry:not([data-groupkey="user"]) .listEntry.unused {
+#lists .listEntry[data-key="user"] {
+    margin-top: 0;
+    }
+#lists .listEntry > .detailbar {
+    column-gap: calc(var(--default-gap-xxsmall) + 2px);
+    display: inline-flex;
+    }
+#lists .listEntry[data-key="user"] > .detailbar {
     display: none;
     }
-.listEntry > * {
-    margin-right: 0.5em;
-    unicode-bidi: embed;
+#lists .listEntry[data-role="node"].expanded > .detailbar .listExpander svg {
+    transform: rotate(180deg);
     }
-.listEntry.toRemove > input[type="checkbox"] {
-    visibility: hidden;
-    }
-.listEntry.toRemove > a.content {
-    text-decoration: line-through;
-    }
-.listEntry > .fa {
-    color: inherit;
+#lists .listEntry[data-parent="root"]:not(.expanded) > .listEntries > .listEntry:not(.checked):not(.isDefault):not(.stickied) {
     display: none;
-    font-size: 110%;
-    opacity: 0.5;
-    vertical-align: baseline;
     }
-.listEntry > a.towiki {
-    display: inline-block;
-    }
-.listEntry > a.fa:hover {
-    opacity: 1;
-    }
-.listEntry.support > a.support {
-    display: inline-block;
-    }
-.listEntry > a.remove,
-.listEntry > a.remove:visited {
-    color: darkred;
-    }
-.listEntry.external > a.remove {
-    display: inline-block;
-    }
-.listEntry.mustread > a.mustread {
-    display: inline-block;
-    }
-.listEntry.mustread > a.mustread:hover {
-    color: mediumblue;
-    }
-.listEntry > .counts {
+#lists .listEntry:not([data-parent="root"]):not(.expanded) > .listEntries > .listEntry {
     display: none;
-    font-size: smaller;
+    }
+#lists .nodestats {
+    align-self: flex-end;
+    color: var(--info0-ink);
+        fill: var(--info0-ink);
+    cursor: default;
+    font-size: var(--font-size-smaller);
 }
-.listEntry > input[type="checkbox"]:checked ~ .counts {
-    display: inline;
-}
-.dim {
-    opacity: 0.6;
+#lists .iconbar {
+    column-gap: var(--default-gap-xxsmall);
+    color: var(--info0-ink);
+        fill: var(--info0-ink);
+    display: inline-flex;
+    flex-direction: row;
+    font-size: 120%;
     }
-#buttonApply {
-    display: initial;
-    position: fixed;
-    right: 1em;
-    z-index: 10;
+#lists .iconbar a {
+    color: var(--info0-ink);
+        fill: var(--info0-ink);
     }
-body[dir=rtl] #buttonApply {
-    right: auto;
-    left: 1em;
-    }
-#buttonApply.disabled {
+#lists .iconbar .fa-icon {
     display: none;
     }
-.listEntry span.status {
-    color: #444;
+#lists .iconbar .content {
+    display: inline-flex;
+    }
+#lists .iconbar a.towiki {
+    display: inline-flex;
+    }
+#lists .listEntry > .detailbar .iconbar a.support {
+    display: inline-flex;
+    }
+#lists .listEntry > .detailbar .iconbar a.support[href="#"] {
+    display: none;
+    }
+#lists .iconbar .remove,
+#lists .iconbar .unsecure,
+#lists .iconbar .failed {
+    color: var(--info3-ink);
+        fill: var(--info3-ink);
+    cursor: pointer;
+    }
+#lists .listEntry.external > .detailbar .iconbar .remove {
+    display: inline-flex;
+    }
+#lists .listEntry > .detailbar .iconbar a.mustread {
+    color: var(--info1-ink);
+        fill: var(--info1-ink);
+    display: inline-flex;
+    }
+#lists .listEntry > .detailbar .iconbar a.mustread[href="#"] {
+    display: none;
+    }
+#lists .listEntry .leafstats {
+    align-items: flex-end;
+    color: var(--info0-ink);
+        fill: var(--info0-ink);
+    display: none;
+    font-size: var(--font-size-xsmall);
+    margin-inline-start: calc(var(--checkbox-size) + var(--checkbox-margin-end));
+}
+#lists .listEntry > .detailbar .leafstats {
+    margin-inline-start: 0;
+    }
+#lists .listEntry.checked > .leafstats,
+#lists .listEntry.checked > .detailbar .leafstats {
+    display: inline-flex;
+}
+#lists .iconbar .status {
     cursor: default;
     display: none;
 }
-.listEntry span.status:hover {
-    opacity: 1;
+#lists .listEntry.checked.unsecure > .detailbar .iconbar .unsecure {
+    display: inline-flex;
     }
-.listEntry span.unsecure {
-    color: darkred;
+#lists .listEntry.failed > .detailbar .iconbar .failed {
+    display: inline-flex;
     }
-.listEntry.unsecure > input[type="checkbox"]:checked ~ span.unsecure {
-    display: inline-block;
-    }
-.listEntry span.failed {
-    color: darkred;
-    }
-.listEntry.failed span.failed {
-    display: inline-block;
-    }
-.listEntry span.cache {
+#lists .iconbar .cache {
     cursor: pointer;
     }
-.listEntry.cached:not(.obsolete) > input[type="checkbox"]:checked ~ span.cache {
-    display: inline-block;
+#lists .listEntry.checked.cached:not(.obsolete) > .detailbar .iconbar .cache {
+    display: inline-flex;
     }
-.listEntry span.obsolete {
-    color: hsl(36, 100%, 40%);
+#lists .listEntry.cached.recent:not(.obsolete) > .detailbar .iconbar .cache {
+    color: var(--dashboard-happy-green);
+        fill: var(--dashboard-happy-green);
     }
-body:not(.updating) .listEntry.obsolete > input[type="checkbox"]:checked ~ span.obsolete {
-    display: inline-block;
+#lists .iconbar .obsolete {
+    color: var(--info2-ink);
+        fill: var(--info2-ink);
     }
-.listEntry span.updating {
-    transform-origin: 50% 46%;
+body:not(.updating) #lists .listEntry.checked.obsolete > .detailbar .iconbar .obsolete {
+    display: inline-flex;
     }
-body.updating .listEntry.obsolete > input[type="checkbox"]:checked ~ span.updating {
-    animation: spin 2s linear infinite;
-    display: inline-block;
+#lists .iconbar .updating {
+    transform-origin: 50%;
     }
-.listEntry.toImport > input[type="checkbox"] ~ textarea {
+body.updating #lists .listEntry.checked.obsolete > .detailbar .iconbar .updating {
+    animation: spin 1s steps(8) infinite;
+    display: inline-flex;
+    }
+
+#lists .listEntry.toRemove .checkbox {
+    visibility: hidden;
+    }
+#lists .listEntry.toRemove .listname {
+    text-decoration: line-through;
+    }
+
+#lists .listEntry[data-role="import"].expanded .listExpander svg {
+    transform: rotate(180deg);
+    }
+#lists .listEntry[data-role="import"].expanded textarea {
+    visibility: visible;
+    }
+#lists .listEntry[data-role="import"] textarea {
     border: 1px solid #ccc;
     box-sizing: border-box;
     display: block;
     font-size: smaller;
     height: 6em;
-    margin-left: 2em;
+    margin: 0;
     resize: vertical;
     visibility: hidden;
     white-space: pre;
-    width: calc(100% - 4em);
-    }
-.listEntry.toImport > input[type="checkbox"]:checked ~ textarea {
-    visibility: visible;
+    width: 100%;
     }

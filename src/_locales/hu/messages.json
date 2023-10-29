@@ -55,6 +55,10 @@
     "message": "Névjegy",
     "description": "appears as tab name in dashboard"
   },
+  "supportPageName": {
+    "message": "Támogatás",
+    "description": "appears as tab name in dashboard"
+  },
   "assetViewerPageName": {
     "message": "uBlock₀ - Eszköznézet",
     "description": "Title for the asset viewer page"
@@ -85,7 +89,7 @@
   },
   "popupBlockedStats": {
     "message": "{{count}} vagy {{percent}}%",
-    "description": "Example: 15 or 13%"
+    "description": "Example: 15 (13%)"
   },
   "popupBlockedSinceInstallPrompt": {
     "message": "telepítés óta",
@@ -122,6 +126,10 @@
   "popupTipLog": {
     "message": "Naplózott lekérések megtekintése",
     "description": "Tooltip used for the logger icon in the panel"
+  },
+  "popupTipReport": {
+    "message": "Az oldalon lévő probléma bejelentése",
+    "description": "Tooltip used for the 'chat' icon in the panel"
   },
   "popupTipNoPopups": {
     "message": "Oldal összes felugró ablakának blokkolása/engedélyezése",
@@ -164,7 +172,7 @@
     "description": "Tooltip for the no-remote-fonts per-site switch"
   },
   "popupTipNoRemoteFonts1": {
-    "message": "Kattints a távoli betűtípusok blokkolásához ezen a webhelyen",
+    "message": "Kattints a távoli fontok blokkolásához ezen a webhelyen",
     "description": "Tooltip for the no-remote-fonts per-site switch"
   },
   "popupTipNoRemoteFonts2": {
@@ -179,25 +187,33 @@
     "message": "Kattints, hogy JavaScript ne legyen teljesen letiltva ezen az oldalon",
     "description": "Tooltip for the no-scripting per-site switch"
   },
+  "popupNoPopups_v2": {
+    "message": "Felugró ablakok",
+    "description": "Caption for the no-popups per-site switch"
+  },
   "popupNoLargeMedia_v2": {
     "message": "Nagy média elemek",
-    "description": "Tip for the no-large-media per-site switch"
+    "description": "Caption for the no-large-media per-site switch"
   },
   "popupNoCosmeticFiltering_v2": {
     "message": "Kozmetikai szűrés",
-    "description": "Tip for the no-cosmetic-filtering per-site switch"
+    "description": "Caption for the no-cosmetic-filtering per-site switch"
   },
   "popupNoRemoteFonts_v2": {
     "message": "Távoli betűtípusok",
-    "description": "Tip for the no-remote-fonts per-site switch"
+    "description": "Caption for the no-remote-fonts per-site switch"
   },
   "popupNoScripting_v2": {
     "message": "JavaScript",
-    "description": "Tip for the no-scripting per-site switch"
+    "description": "Caption for the no-scripting per-site switch"
   },
   "popupMoreButton_v2": {
     "message": "Több",
-    "description": "Label to be used to toggle overview panel"
+    "description": "Label to be used to show popup panel sections"
+  },
+  "popupLessButton_v2": {
+    "message": "Kevesebb",
+    "description": "Label to be used to hide popup panel sections"
   },
   "popupTipGlobalRules": {
     "message": "Globális szabályok: ebben az oszlopban azok a szabályok vannak, amelyek minden weboldalra vonatkoznak.",
@@ -255,6 +271,18 @@
     "message": "{{count}}, összesen: {{total}}",
     "description": "appears in popup"
   },
+  "popupVersion": {
+    "message": "Verzió",
+    "description": "Example of use: Version 1.26.4"
+  },
+  "popup3pScriptFilter": {
+    "message": "szkript",
+    "description": "Appears as an option to filter out firewall rows"
+  },
+  "popup3pFrameFilter": {
+    "message": "keret",
+    "description": "Appears as an option to filter out firewall rows"
+  },
   "pickerCreate": {
     "message": "Létrehoz",
     "description": "English: Create"
@@ -307,17 +335,25 @@
     "message": "Színvak-barát",
     "description": "English: Color-blind friendly"
   },
+  "settingsAppearance": {
+    "message": "Kinézet",
+    "description": "Section for controlling user interface appearance"
+  },
+  "settingsThemeLabel": {
+    "message": "Téma",
+    "description": "Label for checkbox to enable a custom dark theme"
+  },
+  "settingsThemeAccent0Label": {
+    "message": "Egyedi akcentus szín",
+    "description": "Label for checkbox to pick an accent color"
+  },
   "settingsCloudStorageEnabledPrompt": {
     "message": "Felhőben tárolás bekapcsolása",
     "description": ""
   },
   "settingsAdvancedUserPrompt": {
     "message": "Haladó felhasználó vagyok (<a href='https://github.com/gorhill/uBlock/wiki/Advanced-user-features'>További tudnivalók</a>)",
-    "description": ""
-  },
-  "settingsAdvancedUserSettings": {
-    "message": "haladó beállítások",
-    "description": "For the tooltip of a link which gives access to advanced settings"
+    "description": "Checkbox to let user access advanced, technical features"
   },
   "settingsPrefetchingDisabledPrompt": {
     "message": "Előtöltés kikapcsolása (kapcsolódás megakadályozása blokkolt hálózati lekérésekhez)",
@@ -359,9 +395,21 @@
     "message": "CSP jelentések blokkolása",
     "description": "background information: https://github.com/gorhill/uBlock/issues/3150"
   },
-  "settingsStorageUsed": {
-    "message": "Tárolóhely használat: {{value}} byte",
-    "description": "English: Storage used: {{}} bytes"
+  "settingsUncloakCnamePrompt": {
+    "message": "Kanonikus nevek felfedése",
+    "description": "background information: https://github.com/uBlockOrigin/uBlock-issues/issues/1513"
+  },
+  "settingsAdvanced": {
+    "message": "Haladó",
+    "description": "Section for controlling advanced-user settings"
+  },
+  "settingsAdvancedSynopsis": {
+    "message": "Funkciók csak haladó felhasználóknak ",
+    "description": "Description of section controlling advanced-user settings"
+  },
+  "settingsAdvancedUserSettings": {
+    "message": "haladó beállítások",
+    "description": "For the tooltip of a link which gives access to advanced settings"
   },
   "settingsLastRestorePrompt": {
     "message": "Utolsó visszaállítás:",
@@ -407,6 +455,10 @@
     "message": "<p>Az általános kozmetikai szűrők azok a kozmetikai szűrők, amelyek minden weboldalra érvényesek.<p>Ugyan a uBlock₀ hatékonyan kezeli őket, az általános kozmetikai szűrők mégis mérhetően magasabb memória és CPU használatot eredményezhetnek néhány weboldalon, főleg nagy, és régóta futóak esetében.<p>Ennek az opciónak a bekapcsolása kiküszöböli az általános kozmetikai szűrők kezeléséből a weboldalakon adódó memória és CPU használat többletet, továbbá csökkenti a uBlock₀ által foglalt memóriát is.<p>Ajánlott bekapcsolni ezt az opciót a gyengébb eszközökön.",
     "description": "Describes the purpose of the 'Ignore generic cosmetic filters' feature."
   },
+  "3pSuspendUntilListsAreLoaded": {
+    "message": "Hálózati forgalom szüneteltetése, amíg a szűrőlisták be nem töltődtek",
+    "description": "A checkbox in the 'Filter lists' pane"
+  },
   "3pListsOfBlockedHostsHeader": {
     "message": "Blokkolt hostokat tartalmazó listák",
     "description": "English: Lists of blocked hosts"
@@ -417,35 +469,35 @@
   },
   "3pGroupDefault": {
     "message": "Beépített",
-    "description": "Header for the uBlock filters section in 'Filter lists pane'"
+    "description": "Filter lists section name"
   },
   "3pGroupAds": {
     "message": "Hirdetések",
-    "description": "English: Ads"
+    "description": "Filter lists section name"
   },
   "3pGroupPrivacy": {
     "message": "Adatvédelem",
-    "description": "English: Privacy"
+    "description": "Filter lists section name"
   },
   "3pGroupMalware": {
     "message": "Malware domainek",
-    "description": "English: Malware domains"
+    "description": "Filter lists section name"
   },
   "3pGroupAnnoyances": {
     "message": "Kellemetlenségek",
-    "description": "The header identifying the filter lists in the category 'annoyances'"
+    "description": "Filter lists section name"
   },
   "3pGroupMultipurpose": {
     "message": "Többcélú",
-    "description": "English: Multipurpose"
+    "description": "Filter lists section name"
   },
   "3pGroupRegions": {
     "message": "Régiók, nyelvek",
-    "description": "English: Regions, languages"
+    "description": "Filter lists section name"
   },
   "3pGroupCustom": {
     "message": "Saját",
-    "description": "English: Custom"
+    "description": "Filter lists section name"
   },
   "3pImport": {
     "message": "Importálás...",
@@ -458,6 +510,10 @@
   "3pExternalListObsolete": {
     "message": "Elavult.",
     "description": "used as a tooltip for the out-of-date icon beside a list"
+  },
+  "3pViewContent": {
+    "message": "tartalom megtekintése",
+    "description": "used as a tooltip for eye icon beside a list"
   },
   "3pLastUpdate": {
     "message": "Utolsó frissítés: {{ago}}.\nKattintson a frissítés kényszerítéséhez.",
@@ -475,13 +531,17 @@
     "message": "Soronként egy szűrő. A szűrő lehet egy hostnév, vagy egy Adblock Plus kompatibilis szűrő.\nA <code>!</code> kezdetű sorok figyelmen kívül maradnak.",
     "description": "Short information about how to create custom filters"
   },
+  "1pTrustWarning": {
+    "message": "Do not add filters from untrusted sources.",
+    "description": "Warning against copy-pasting filters from random sources"
+  },
   "1pImport": {
     "message": "Importál és hozzáad",
-    "description": "English: Import and append"
+    "description": "Button in the 'My filters' pane"
   },
   "1pExport": {
     "message": "Exportál",
-    "description": "English: Export"
+    "description": "Button in the 'My filters' pane"
   },
   "1pExportFilename": {
     "message": "ublock-statikus-szabalyaim_{{datetime}}.txt",
@@ -524,8 +584,8 @@
     "description": ""
   },
   "rulesExport": {
-    "message": "Exportálás fájlba",
-    "description": ""
+    "message": "Exportálás fájlba…",
+    "description": "Button in the 'My rules' pane"
   },
   "rulesDefaultFileName": {
     "message": "ublock-dinamikus-szabalyaim_{{datetime}}.txt",
@@ -539,21 +599,37 @@
     "message": "Szabály szintaxis: <code>forrás cél típus művelet</code> (<a href='https://github.com/gorhill/uBlock/wiki/Dynamic-filtering:-rule-syntax'>Teljes dokumentáció</a>).",
     "description": "English: dynamic rule syntax and full documentation."
   },
+  "rulesSort": {
+    "message": "Rendezés:",
+    "description": "English: label for sort option."
+  },
+  "rulesSortByType": {
+    "message": "Szabály típusa",
+    "description": "English: a sort option for list of rules."
+  },
+  "rulesSortBySource": {
+    "message": "Forrás",
+    "description": "English: a sort option for list of rules."
+  },
+  "rulesSortByDestination": {
+    "message": "Cél",
+    "description": "English: a sort option for list of rules."
+  },
   "whitelistPrompt": {
     "message": "Az alábbi listában felsorolt hostokon a kiegészítő nem fog működni. Soronként egy bejegyzés. Érvénytelen hostnevek figyelmen kívül maradnak.",
-    "description": "English: An overview of the content of the dashboard's Whitelist pane."
+    "description": "A concise description of the 'Trusted sites' pane."
   },
   "whitelistImport": {
     "message": "Importál és hozzáad",
-    "description": "English: Import and append"
+    "description": "Button in the 'Trusted sites' pane"
   },
   "whitelistExport": {
     "message": "Exportál",
-    "description": "English: Export"
+    "description": "Button in the 'Trusted sites' pane"
   },
   "whitelistExportFilename": {
-    "message": "ublock-kiveteleim_{{datetime}}.txt",
-    "description": "English: my-ublock-whitelist_{{datetime}}.txt"
+    "message": "ublock-feherlistam_{{datetime}}.txt",
+    "description": "The default filename to use for import/export purpose"
   },
   "whitelistApply": {
     "message": "Módosítások alkalmazása",
@@ -641,6 +717,10 @@
   },
   "loggerRowFiltererBuiltinAllowed": {
     "message": "engedélyezve",
+    "description": "A keyword in the built-in row filtering expression"
+  },
+  "loggerRowFiltererBuiltinModified": {
+    "message": "módosított",
     "description": "A keyword in the built-in row filtering expression"
   },
   "loggerRowFiltererBuiltin1p": {
@@ -803,21 +883,141 @@
     "message": "Markdown",
     "description": "Label for radio-button to pick export text format"
   },
+  "supportOpenButton": {
+    "message": "Megnyitás",
+    "description": "Text for button which open an external webpage in Support pane"
+  },
+  "supportReportSpecificButton": {
+    "message": "Hiba bejelentése",
+    "description": "Text for button which open an external webpage in Support pane"
+  },
+  "supportFindSpecificButton": {
+    "message": "Hasonló hibák keresése",
+    "description": "A clickable link in the filter issue reporter section"
+  },
+  "supportS1H": {
+    "message": "Dokumentáció",
+    "description": "Header of 'Documentation' section in Support pane"
+  },
+  "supportS1P1": {
+    "message": "Az uBlock Origin további funkcióihoz látogassa meg a dokumentációt itt: <code>uBlock/wiki</code>.",
+    "description": "First paragraph of 'Documentation' section in Support pane"
+  },
+  "supportS2H": {
+    "message": "Kérdések és támogatás",
+    "description": "Header of 'Questions and support' section in Support pane"
+  },
+  "supportS2P1": {
+    "message": "A felhasználói kérdésekre választ és további segítséget, támogatást az <code>/r/uBlockOrigin</code> subredditen nyújtunk.",
+    "description": "First paragraph of 'Questions and support' section in Support pane"
+  },
+  "supportS3H": {
+    "message": "Szűrőhibák/a weboldal nem működik megfelelően",
+    "description": "Header of 'Filter issues' section in Support pane"
+  },
+  "supportS3P1": {
+    "message": "Adott weboldalra vonatkozó szűrőhibákat jelentse a <span data-url=\"https://github.com/uBlockOrigin/uAssets/issues?q=is%3Aissue\"><code>uBlockOrigin/uAssets</code> hibakövetőn</span>. GitHub-fiók szükséges.",
+    "description": "First paragraph of 'Filter issues' section in Support pane"
+  },
+  "supportS3P2": {
+    "message": "<b>Fontos:</b> Ne használjon hasonló célú reklámblokkolókat az uBlock Originnal egyszerre, mert ez szűrőhibákat okozhat bizonyos weboldalakon.",
+    "description": "Second paragraph of 'Filter issues' section in Support pane"
+  },
+  "supportS3P3": {
+    "message": "<b>Tippek:</b> Bizonyosodjon meg arról, hogy a legfrissebb szűrőlistákat használja. <span data-url=\"logger-ui.html#_\">A napló<span> a legfontosabb eszköz a szűrőkkel kapcsolatos hibák diagnózisában.",
+    "description": "Third paragraph of 'Filter issues' section in Support pane"
+  },
+  "supportS4H": {
+    "message": "Hibajelentés",
+    "description": "Header of 'Bug report' section in Support pane"
+  },
+  "supportS4P1": {
+    "message": "Az uBlock Origin hibáit jelentse a <span data-url=\"https://github.com/uBlockOrigin/uAssets/issues?q=is%3Aissue\"><code>uBlockOrigin/uBlock-issue</code> hibakövetőn</span>. GitHub-fiók szükséges.",
+    "description": "First paragraph of 'Bug report' section in Support pane"
+  },
+  "supportS5H": {
+    "message": "Hibakeresési információ",
+    "description": "Header of 'Troubleshooting Information' section in Support pane"
+  },
+  "supportS5P1": {
+    "message": "Az alább található technikai információk segíthetnek önkénteseinknek megoldani a problémáját.",
+    "description": "First paragraph of 'Troubleshooting Information' section in Support pane"
+  },
+  "supportS5P2": {
+    "message": "<b>Fontos:</b> Az esetlegesen személyes vagy érzékeny adatok alapértelmezésből rejtve vannak. Az elrejtett információk megnehezíthetik a probléma megoldását.",
+    "description": "Second paragraph of 'Troubleshooting Information' section in Support pane"
+  },
+  "supportS6H": {
+    "message": "Szűrőhibák bejelentése",
+    "description": "Header of 'Report a filter issue' section in Support pane"
+  },
+  "supportS6P1S1": {
+    "message": "Az önkéntesek terhelésének csökkentése érdekében győződjön meg róla, hogy a hiba még nem lett bejelentve.",
+    "description": "A paragraph in the filter issue reporter section"
+  },
+  "supportS6P2S1": {
+    "message": "A szűrőlisták naponta frissülnek. Ügyeljen arra, hogy az Ön problémája ne szerepeljen már a legfrissebb szűrőlistákon.",
+    "description": "A paragraph in the filter issue reporter section"
+  },
+  "supportS6P2S2": {
+    "message": "Ellenőrizze, hogy a probléma a problémás weboldal újratöltése után is fennáll-e.",
+    "description": "A paragraph in the filter issue reporter section"
+  },
+  "supportS6URL": {
+    "message": "A  weboldal címe:",
+    "description": "Label for the URL of the page"
+  },
+  "supportS6Select1": {
+    "message": "A weboldal...",
+    "description": "Label for widget to select type of issue"
+  },
+  "supportS6Select1Option0": {
+    "message": "-- Válasszon egy opciót --",
+    "description": "An entry in the widget used to select the type of issue"
+  },
+  "supportS6Select1Option1": {
+    "message": "Hirdetéseket vagy hirdetés maradványokat jelenít meg",
+    "description": "An entry in the widget used to select the type of issue"
+  },
+  "supportS6Select1Option2": {
+    "message": "Zavaró elemeket tartalmaz",
+    "description": "An entry in the widget used to select the type of issue"
+  },
+  "supportS6Select1Option3": {
+    "message": "Érzékeli a uBlock Origin-t",
+    "description": "An entry in the widget used to select the type of issue"
+  },
+  "supportS6Select1Option4": {
+    "message": "Adatvédelmi problémákat vet fel",
+    "description": "An entry in the widget used to select the type of issue"
+  },
+  "supportS6Select1Option5": {
+    "message": "Hibásan működik, amikor az uBlock Origin be van kapcsolva",
+    "description": "An entry in the widget used to select the type of issue"
+  },
+  "supportS6Select1Option6": {
+    "message": "Kéretlen lapokat vagy ablakokat nyit meg",
+    "description": "An entry in the widget used to select the type of issue"
+  },
+  "supportS6Checkbox1": {
+    "message": "A weboldal megjelölése felnőtt tartalomként",
+    "description": "A checkbox to use for NSFW sites"
+  },
+  "supportRedact": {
+    "message": "Elrejtés",
+    "description": "Text for 'Redact' button"
+  },
+  "supportUnredact": {
+    "message": "Megjelenítés",
+    "description": "Text for 'Unredact' button"
+  },
+  "aboutPrivacyPolicy": {
+    "message": "Adatvédelmi szabályzat",
+    "description": "Link to privacy policy on GitHub (English)"
+  },
   "aboutChangelog": {
     "message": "Változások listája",
     "description": ""
-  },
-  "aboutWiki": {
-    "message": "Wiki",
-    "description": "English: project' wiki on GitHub"
-  },
-  "aboutSupport": {
-    "message": "Támogatás",
-    "description": "A link for where to get support"
-  },
-  "aboutIssues": {
-    "message": "Bugok és problémák",
-    "description": "Text for a link to official issue tracker"
   },
   "aboutCode": {
     "message": "Forráskód (GPLv3)",
@@ -827,12 +1027,32 @@
     "message": "Közreműködők",
     "description": "English: Contributors"
   },
+  "aboutSourceCode": {
+    "message": "Forráskód",
+    "description": "Link text to source code repo"
+  },
+  "aboutTranslations": {
+    "message": "Fordítások",
+    "description": "Link text to translations repo"
+  },
+  "aboutFilterLists": {
+    "message": "Szűrő listák",
+    "description": "Link text to uBO's own filter lists repo"
+  },
   "aboutDependencies": {
     "message": "Külső függőségek (GPLv3-kompatibilis):",
     "description": "Shown in the About pane"
   },
+  "aboutCDNs": {
+    "message": "Az uBO saját szűrőlistáit a következő ingyenes <a href=\"https://wikipedia.org/wiki/Content_delivery_network\">CDN-ek (angol)</a> szolgáltatják:",
+    "description": "Shown in the About pane"
+  },
+  "aboutCDNsInfo": {
+    "message": "A szűrőlisták frissítéséhez egy véletlenszerűen kiválasztott CDN-t használ a bővítmény",
+    "description": "Shown in the About pane"
+  },
   "aboutBackupDataButton": {
-    "message": "Biztonsági mentés fájlba...",
+    "message": "Biztonsági mentés fájlba",
     "description": "Text for button to create a backup of all settings"
   },
   "aboutBackupFilename": {
@@ -840,7 +1060,7 @@
     "description": "English: my-ublock-backup_{{datetime}}.txt"
   },
   "aboutRestoreDataButton": {
-    "message": "Biztonsági mentés visszaállítása fájlból...",
+    "message": "Visszaállítás fájlból...",
     "description": "English: Restore from file..."
   },
   "aboutResetDataButton": {
@@ -865,7 +1085,11 @@
   },
   "subscriberConfirm": {
     "message": "uBlock₀: Hozzáadja a következő URL-t a saját szűrő listákhoz?\n\nNév: \"{{title}}\"\nURL: \"{{url}}\"",
-    "description": "English: The message seen by the user to confirm subscription to a ABP filter list"
+    "description": "No longer used"
+  },
+  "subscribeButton": {
+    "message": "Feliratkozás",
+    "description": "For the button used to subscribe to a filter list"
   },
   "elapsedOneMinuteAgo": {
     "message": "egy perce",
@@ -903,13 +1127,17 @@
     "message": "kikapcsolva",
     "description": "Firefox-specific: appears as 'uBlock₀ (off)'"
   },
+  "docblockedTitle": {
+    "message": "Oldal blokkolva",
+    "description": "Used as a title for the document-blocked page"
+  },
   "docblockedPrompt1": {
     "message": "uBlock Origin nem engedte a következő lap betöltését:",
-    "description": "English: uBlock₀ has prevented the following page from loading:"
+    "description": "Used in the strict-blocking page"
   },
   "docblockedPrompt2": {
     "message": "A következő szűrő miatt",
-    "description": "English: Because of the following filter"
+    "description": "Used in the strict-blocking page"
   },
   "docblockedNoParamsPrompt": {
     "message": "paraméterek nélkül",
@@ -927,6 +1155,10 @@
     "message": "Ablak bezárása",
     "description": "English: Close this window"
   },
+  "docblockedDontWarn": {
+    "message": "Ne figyelmeztessen újra ennél az oldalnál",
+    "description": "Label for checkbox in document-blocked page"
+  },
   "docblockedProceed": {
     "message": "Kapcsolja ki a szigorú tiltást a(z) {{hostname}} részére",
     "description": "English: Disable strict blocking for {{hostname}} ..."
@@ -938,6 +1170,10 @@
   "docblockedDisablePermanent": {
     "message": "Véglegesen",
     "description": "English: Permanently"
+  },
+  "docblockedDisable": {
+    "message": "Továbblépés",
+    "description": "Button text to navigate to the blocked page"
   },
   "cloudPush": {
     "message": "Exportálás a felhőszolgáltatásba",
@@ -952,7 +1188,7 @@
     "description": "tooltip"
   },
   "cloudNoData": {
-    "message": "...\n...",
+    "message": "…\n…",
     "description": ""
   },
   "cloudDeviceNamePrompt": {
@@ -979,9 +1215,21 @@
     "message": "bájt",
     "description": ""
   },
+  "contextMenuBlockElementInFrame": {
+    "message": "Elem blokkolása a keretben",
+    "description": "An entry in the browser's contextual menu"
+  },
+  "contextMenuSubscribeToList": {
+    "message": "Feliratkozás szűrőlistára...",
+    "description": "An entry in the browser's contextual menu"
+  },
   "contextMenuTemporarilyAllowLargeMediaElements": {
     "message": "Nagyméretű média elemek ideiglenes engedélyezése",
     "description": "A context menu entry, present when large media elements have been blocked on the current site"
+  },
+  "contextMenuViewSource": {
+    "message": "Forráskód megtekintése…",
+    "description": "A context menu entry, to view the source code of the target resource"
   },
   "shortcutCapturePlaceholder": {
     "message": "Billentyűkombináció megadása",
@@ -995,13 +1243,45 @@
     "message": "Másolás a vágólapra",
     "description": "Label for buttons used to copy something to the clipboard"
   },
-  "toggleBlockingProfile": {
-    "message": "Profil blokkolás váltása",
-    "description": "Label for keyboard shortcut used to toggle blocking profile"
+  "genericSelectAll": {
+    "message": "Mindent kijelöl",
+    "description": "Label for buttons used to select all text in editor"
+  },
+  "toggleCosmeticFiltering": {
+    "message": "Kozmetikai szűrés kapcsolása",
+    "description": "Label for keyboard shortcut used to toggle cosmetic filtering"
   },
   "relaxBlockingMode": {
     "message": "Relaxáló blokkolási mód",
-    "description": "Label for keyboard shortcut used to relax blocking mode (meant to replace 'Toggle blocking profile')"
+    "description": "Label for keyboard shortcut used to relax blocking mode"
+  },
+  "storageUsed": {
+    "message": "Használt tárolás: {{value}} {{unit}}",
+    "description": " In Setting pane, renders as (example): Storage used: 13.2 MB"
+  },
+  "KB": {
+    "message": "KB",
+    "description": "short for 'kilobytes'"
+  },
+  "MB": {
+    "message": "MB",
+    "description": "short for 'megabytes'"
+  },
+  "GB": {
+    "message": "GB",
+    "description": "short for 'gigabytes'"
+  },
+  "clickToLoad": {
+    "message": "Kattints a betöltéshez",
+    "description": "Message used in frame placeholders"
+  },
+  "linterMainReport": {
+    "message": "Hibák: {{count}}",
+    "description": "Summary of number of errors as reported by the linter "
+  },
+  "unprocessedRequestTooltip": {
+    "message": "Nem sikerült megfelelően szűrni a böngésző indításakor. Töltse újra az oldalt a megfelelő szűrés biztosítása érdekében.",
+    "description": "A warning which will appear in the popup panel if needed"
   },
   "dummy": {
     "message": "Ez a bejegyzés utolsó kell hogy legyen",

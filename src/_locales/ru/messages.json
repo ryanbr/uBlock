@@ -40,7 +40,7 @@
     "description": "appears as tab name in dashboard"
   },
   "whitelistPageName": {
-    "message": "Белый список",
+    "message": "Доверенные сайты",
     "description": "appears as tab name in dashboard"
   },
   "shortcutsPageName": {
@@ -55,6 +55,10 @@
     "message": "О расширении",
     "description": "appears as tab name in dashboard"
   },
+  "supportPageName": {
+    "message": "Поддержка",
+    "description": "appears as tab name in dashboard"
+  },
   "assetViewerPageName": {
     "message": "uBlock₀ — Активы",
     "description": "Title for the asset viewer page"
@@ -64,7 +68,7 @@
     "description": "Title for the advanced settings page"
   },
   "popupPowerSwitchInfo": {
-    "message": "ЛКМ: отключить/включить uBlock₀ для этого сайта.\n\nCtrl+ЛКМ: отключить uBlock₀ только на этой странице.",
+    "message": "Клик: отключить/включить uBlock₀ для этого сайта.\n\nCtrl+клик: отключить uBlock₀ только на этой странице.",
     "description": "English: Click: disable/enable uBlock₀ for this site.\n\nCtrl+click: disable uBlock₀ only on this page."
   },
   "popupPowerSwitchInfo1": {
@@ -84,8 +88,8 @@
     "description": "English: on this page"
   },
   "popupBlockedStats": {
-    "message": "{{count}} или {{percent}}%",
-    "description": "Example: 15 or 13%"
+    "message": "{{count}} ({{percent}}%)",
+    "description": "Example: 15 (13%)"
   },
   "popupBlockedSinceInstallPrompt": {
     "message": "с момента установки",
@@ -100,7 +104,7 @@
     "description": "For the new mobile-friendly popup design"
   },
   "popupBlockedSinceInstall_v2": {
-    "message": "Заблокировано за все время",
+    "message": "Заблокировано с момента установки",
     "description": "For the new mobile-friendly popup design"
   },
   "popupDomainsConnected_v2": {
@@ -112,7 +116,7 @@
     "description": "English: Click to open the dashboard"
   },
   "popupTipZapper": {
-    "message": "Войти в режим затирания элементов",
+    "message": "Режим мгновенного временного скрытия элемента",
     "description": "Tooltip for the element-zapper icon in the popup panel"
   },
   "popupTipPicker": {
@@ -123,16 +127,20 @@
     "message": "Открыть логгер",
     "description": "Tooltip used for the logger icon in the panel"
   },
+  "popupTipReport": {
+    "message": "Сообщить о проблеме на данном сайте",
+    "description": "Tooltip used for the 'chat' icon in the panel"
+  },
   "popupTipNoPopups": {
     "message": "Вкл/Выкл блокировку всех всплывающих окон на этом сайте",
     "description": "Tooltip for the no-popups per-site switch"
   },
   "popupTipNoPopups1": {
-    "message": "Кликните для блокировки всех всплывающих окон на этом сайте",
+    "message": "Нажмите, чтобы блокировать все всплывающие окна на этом сайте",
     "description": "Tooltip for the no-popups per-site switch"
   },
   "popupTipNoPopups2": {
-    "message": "Кликните для отключения блокировки всех всплывающих окон на этом сайте",
+    "message": "Нажмите, чтобы отключить блокировку всех всплывающих окон на этом сайте",
     "description": "Tooltip for the no-popups per-site switch"
   },
   "popupTipNoLargeMedia": {
@@ -140,23 +148,23 @@
     "description": "Tooltip for the no-large-media per-site switch"
   },
   "popupTipNoLargeMedia1": {
-    "message": "Кликните для включения блокировки больших элементов мультимедиа на этом сайте",
+    "message": "Нажмите для включения блокировки больших медиа-элементов на этом сайте",
     "description": "Tooltip for the no-large-media per-site switch"
   },
   "popupTipNoLargeMedia2": {
-    "message": "Кликните для отключения блокировки больших элементов мультимедиа на этом сайте",
+    "message": "Нажмите для отключения блокировки больших медиа-элементов на этом сайте",
     "description": "Tooltip for the no-large-media per-site switch"
   },
   "popupTipNoCosmeticFiltering": {
-    "message": "Вкл/Выкл косметические фильтры на этом сайте",
+    "message": "Вкл/Выкл косметическую фильтрацию на этом сайте",
     "description": "Tooltip for the no-cosmetic-filtering per-site switch"
   },
   "popupTipNoCosmeticFiltering1": {
-    "message": "Кликните для отключения косметических фильтров на этом сайте",
+    "message": "Нажмите, чтобы отключить косметическую фильтрацию на этом сайте",
     "description": "Tooltip for the no-cosmetic-filtering per-site switch"
   },
   "popupTipNoCosmeticFiltering2": {
-    "message": "Кликните для включения косметических фильтров на этом сайте",
+    "message": "Нажмите, чтобы включить косметическую фильтрацию на этом сайте",
     "description": "Tooltip for the no-cosmetic-filtering per-site switch"
   },
   "popupTipNoRemoteFonts": {
@@ -164,40 +172,48 @@
     "description": "Tooltip for the no-remote-fonts per-site switch"
   },
   "popupTipNoRemoteFonts1": {
-    "message": "Кликните для включения блокировки удаленных шрифтов на этом сайте",
+    "message": "Нажмите для блокировки сторонних шрифтов на этом сайте",
     "description": "Tooltip for the no-remote-fonts per-site switch"
   },
   "popupTipNoRemoteFonts2": {
-    "message": "Кликните для отключения блокировки удаленных шрифтов на этом сайте",
+    "message": "Нажмите для отключения блокировки сторонних шрифтов на этом сайте",
     "description": "Tooltip for the no-remote-fonts per-site switch"
   },
   "popupTipNoScripting1": {
-    "message": "Кликните, чтобы отключить JavaScript на этом сайте",
+    "message": "Нажмите, чтобы отключить JavaScript на этом сайте",
     "description": "Tooltip for the no-scripting per-site switch"
   },
   "popupTipNoScripting2": {
     "message": "Кликните, чтобы перестать блокировать JavaScript на этом сайте",
     "description": "Tooltip for the no-scripting per-site switch"
   },
+  "popupNoPopups_v2": {
+    "message": "Всплывающие окна",
+    "description": "Caption for the no-popups per-site switch"
+  },
   "popupNoLargeMedia_v2": {
-    "message": "Большие медиа элементы",
-    "description": "Tip for the no-large-media per-site switch"
+    "message": "Большие медиа-элементы",
+    "description": "Caption for the no-large-media per-site switch"
   },
   "popupNoCosmeticFiltering_v2": {
     "message": "Косметическая фильтрация",
-    "description": "Tip for the no-cosmetic-filtering per-site switch"
+    "description": "Caption for the no-cosmetic-filtering per-site switch"
   },
   "popupNoRemoteFonts_v2": {
     "message": "Загружаемые шрифты",
-    "description": "Tip for the no-remote-fonts per-site switch"
+    "description": "Caption for the no-remote-fonts per-site switch"
   },
   "popupNoScripting_v2": {
     "message": "JavaScript",
-    "description": "Tip for the no-scripting per-site switch"
+    "description": "Caption for the no-scripting per-site switch"
   },
   "popupMoreButton_v2": {
-    "message": "Еще",
-    "description": "Label to be used to toggle overview panel"
+    "message": "Больше",
+    "description": "Label to be used to show popup panel sections"
+  },
+  "popupLessButton_v2": {
+    "message": "Меньше",
+    "description": "Label to be used to hide popup panel sections"
   },
   "popupTipGlobalRules": {
     "message": "Глобальные правила: этот столбец предназначен для правил, применяемых ко всем сайтам.",
@@ -255,6 +271,18 @@
     "message": "{{count}} из {{total}}",
     "description": "appears in popup"
   },
+  "popupVersion": {
+    "message": "Версия",
+    "description": "Example of use: Version 1.26.4"
+  },
+  "popup3pScriptFilter": {
+    "message": "скрипт",
+    "description": "Appears as an option to filter out firewall rows"
+  },
+  "popup3pFrameFilter": {
+    "message": "фрейм",
+    "description": "Appears as an option to filter out firewall rows"
+  },
   "pickerCreate": {
     "message": "Создать",
     "description": "English: Create"
@@ -307,17 +335,25 @@
     "message": "Цветовая схема для дальтоников",
     "description": "English: Color-blind friendly"
   },
+  "settingsAppearance": {
+    "message": "Настройки интерфейса",
+    "description": "Section for controlling user interface appearance"
+  },
+  "settingsThemeLabel": {
+    "message": "Тема",
+    "description": "Label for checkbox to enable a custom dark theme"
+  },
+  "settingsThemeAccent0Label": {
+    "message": "Выбрать акцент цветового оформления",
+    "description": "Label for checkbox to pick an accent color"
+  },
   "settingsCloudStorageEnabledPrompt": {
     "message": "Включить поддержку облачного хранилища",
     "description": ""
   },
   "settingsAdvancedUserPrompt": {
-    "message": "Я опытный пользователь (<a href='https://github.com/gorhill/uBlock/wiki/Advanced-user-features'>Обязательно к прочтению</a>)",
-    "description": ""
-  },
-  "settingsAdvancedUserSettings": {
-    "message": "расширенные настройки",
-    "description": "For the tooltip of a link which gives access to advanced settings"
+    "message": "Я — опытный пользователь",
+    "description": "Checkbox to let user access advanced, technical features"
   },
   "settingsPrefetchingDisabledPrompt": {
     "message": "Отключить предзагрузку для предотвращения подключений для заблокированных запросов",
@@ -356,12 +392,24 @@
     "description": "The default state for the per-site no-scripting switch"
   },
   "settingsNoCSPReportsPrompt": {
-    "message": "Блокировать CSP отчеты",
+    "message": "Блокировать CSP-отчёты",
     "description": "background information: https://github.com/gorhill/uBlock/issues/3150"
   },
-  "settingsStorageUsed": {
-    "message": "Места использовано: {{value}} байт",
-    "description": "English: Storage used: {{}} bytes"
+  "settingsUncloakCnamePrompt": {
+    "message": "Раскрывать CNAME записи",
+    "description": "background information: https://github.com/uBlockOrigin/uBlock-issues/issues/1513"
+  },
+  "settingsAdvanced": {
+    "message": "Расширенные настройки",
+    "description": "Section for controlling advanced-user settings"
+  },
+  "settingsAdvancedSynopsis": {
+    "message": "Функции, предназначенные для технических пользователей",
+    "description": "Description of section controlling advanced-user settings"
+  },
+  "settingsAdvancedUserSettings": {
+    "message": "расширенные настройки",
+    "description": "For the tooltip of a link which gives access to advanced settings"
   },
   "settingsLastRestorePrompt": {
     "message": "Последнее восстановление:",
@@ -380,7 +428,7 @@
     "description": "Appears aside each filter list in the _3rd-party filters_ pane"
   },
   "3pAutoUpdatePrompt1": {
-    "message": "Автообновление списков фильтров.",
+    "message": "Автообновление списков фильтров",
     "description": "A checkbox in the _3rd-party filters_ pane"
   },
   "3pUpdateNow": {
@@ -392,20 +440,24 @@
     "description": "A button in the in the _3rd-party filters_ pane"
   },
   "3pParseAllABPHideFiltersPrompt1": {
-    "message": "Парсить и применять косметические фильтры.",
+    "message": "Парсить и применять косметические фильтры",
     "description": "English: Parse and enforce Adblock+ element hiding filters."
   },
   "3pParseAllABPHideFiltersInfo": {
-    "message": "<p>Эта опция включает использование анализатора <a href=\"https://adblockplus.org/en/faq_internal#elemhide\">Adblock Plus-совместимых фильтров &ldquo;скрытия элементов&rdquo;</a>. Это косметические фильтры, дающие возможность скрыть ненужные элементы страницы, которые не могут быть заблокированы механизмом фильтрации сетевых запросов.</p><p>Использование данной опции увеличивает потребление памяти uBlock₀.</p>",
+    "message": "Косметические фильтры применяются на веб-странице для скрытия элементов, которые создают визуальные помехи, и которые не могут быть заблокированы механизмом фильтрации сетевых запросов.",
     "description": "Describes the purpose of the 'Parse and enforce cosmetic filters' feature."
   },
   "3pIgnoreGenericCosmeticFilters": {
-    "message": "Игнорировать общие косметические фильтры.",
+    "message": "Игнорировать общие косметические фильтры",
     "description": "This will cause uBO to ignore all generic cosmetic filters."
   },
   "3pIgnoreGenericCosmeticFiltersInfo": {
-    "message": "<p>Общие косметические фильтры — это те косметические фильтры, которые должны применяться на всех веб-сайтах.<p>Хотя uBlock₀ и обращается с ними эффективно, общие косметические фильтры всё равно могут потреблять ощутимое количество оперативной памяти и нагружать ЦПУ на некоторых, в особенности больших, страницах.<p>Включение этой опции снизит потребление памяти веб-страницами, и избавит процессор от обработки общих косметических фильтров, а также снизит потребление памяти самого uBlock₀.<p>Рекомендуется включить этот параметр на слабых устройствах.",
+    "message": "Общие косметические фильтры — это те косметические фильтры, которые должны применяться на всех веб-сайтах. Включение этой опции снизит потребление памяти и избавит процессор от обработки общих косметических фильтров на веб-страницах.\n\nРекомендуется включить эту опцию на недостаточно мощных устройствах.",
     "description": "Describes the purpose of the 'Ignore generic cosmetic filters' feature."
+  },
+  "3pSuspendUntilListsAreLoaded": {
+    "message": "Приостановить сетевую активность, пока не запустятся все списки фильтров",
+    "description": "A checkbox in the 'Filter lists' pane"
   },
   "3pListsOfBlockedHostsHeader": {
     "message": "Список заблокированных хостов",
@@ -417,35 +469,35 @@
   },
   "3pGroupDefault": {
     "message": "Встроенные",
-    "description": "Header for the uBlock filters section in 'Filter lists pane'"
+    "description": "Filter lists section name"
   },
   "3pGroupAds": {
     "message": "Реклама",
-    "description": "English: Ads"
+    "description": "Filter lists section name"
   },
   "3pGroupPrivacy": {
     "message": "Приватность",
-    "description": "English: Privacy"
+    "description": "Filter lists section name"
   },
   "3pGroupMalware": {
-    "message": "Вредоносные домены",
-    "description": "English: Malware domains"
+    "message": "Защита от вредоносных сайтов, безопасность",
+    "description": "Filter lists section name"
   },
   "3pGroupAnnoyances": {
     "message": "Раздражающие элементы",
-    "description": "The header identifying the filter lists in the category 'annoyances'"
+    "description": "Filter lists section name"
   },
   "3pGroupMultipurpose": {
     "message": "Многоцелевые",
-    "description": "English: Multipurpose"
+    "description": "Filter lists section name"
   },
   "3pGroupRegions": {
     "message": "Регионы, языки",
-    "description": "English: Regions, languages"
+    "description": "Filter lists section name"
   },
   "3pGroupCustom": {
     "message": "Пользовательские",
-    "description": "English: Custom"
+    "description": "Filter lists section name"
   },
   "3pImport": {
     "message": "Импортировать...",
@@ -459,12 +511,16 @@
     "message": "Устарел.",
     "description": "used as a tooltip for the out-of-date icon beside a list"
   },
+  "3pViewContent": {
+    "message": "показать содержимое",
+    "description": "used as a tooltip for eye icon beside a list"
+  },
   "3pLastUpdate": {
     "message": "Последнее обновление: {{ago}}.\nКликните для принудительного обновления.",
     "description": "used as a tooltip for the clock icon beside a list"
   },
   "3pUpdating": {
-    "message": "Обновляется...",
+    "message": "Обновление...",
     "description": "used as a tooltip for the spinner icon beside a list"
   },
   "3pNetworkError": {
@@ -472,16 +528,20 @@
     "description": "used as a tooltip for error icon beside a list"
   },
   "1pFormatHint": {
-    "message": "Одно правило на строку. Правилом может быть обычное имя сайта, или Adblock Plus-совместимый фильтр. Строки, начинающиеся с <code>!</code>, будут проигнорированы.",
+    "message": "Одно правило на строку. Правилом может быть имя сайта, или EasyList-совместимый фильтр. Строки, начинающиеся с <code>!</code>, будут проигнорированы.",
     "description": "Short information about how to create custom filters"
   },
+  "1pTrustWarning": {
+    "message": "Не добавляйте фильтры из ненадёжных источников.",
+    "description": "Warning against copy-pasting filters from random sources"
+  },
   "1pImport": {
-    "message": "Импортировать и добавить",
-    "description": "English: Import and append"
+    "message": "Импортировать и добавить…",
+    "description": "Button in the 'My filters' pane"
   },
   "1pExport": {
-    "message": "Экспортировать",
-    "description": "English: Export"
+    "message": "Экспортировать…",
+    "description": "Button in the 'My filters' pane"
   },
   "1pExportFilename": {
     "message": "my-ublock-static-filters_{{datetime}}.txt",
@@ -524,8 +584,8 @@
     "description": ""
   },
   "rulesExport": {
-    "message": "Экспорт в файл...",
-    "description": ""
+    "message": "Экспортировать в файл…",
+    "description": "Button in the 'My rules' pane"
   },
   "rulesDefaultFileName": {
     "message": "my-ublock-dynamic-rules_{{datetime}}.txt",
@@ -539,21 +599,37 @@
     "message": "Синтаксис правил: <code>источник назначение тип действие</code> (<a href='https://github.com/gorhill/uBlock/wiki/Dynamic-filtering:-rule-syntax'>полная документация</a>).",
     "description": "English: dynamic rule syntax and full documentation."
   },
+  "rulesSort": {
+    "message": "Сортировка:",
+    "description": "English: label for sort option."
+  },
+  "rulesSortByType": {
+    "message": "Тип правила",
+    "description": "English: a sort option for list of rules."
+  },
+  "rulesSortBySource": {
+    "message": "Источник",
+    "description": "English: a sort option for list of rules."
+  },
+  "rulesSortByDestination": {
+    "message": "Цель",
+    "description": "English: a sort option for list of rules."
+  },
   "whitelistPrompt": {
-    "message": "Белый список указывает на каких веб-страницах uBlock Origin должен быть отключен. Одна запись на строку. Некорректные записи будут без предупреждений проигнорированы и закомментированы.",
-    "description": "English: An overview of the content of the dashboard's Whitelist pane."
+    "message": "Записи доверенных сайтов указывают на каких веб-страницах uBlock Origin должен быть отключен. Одна запись на строку.",
+    "description": "A concise description of the 'Trusted sites' pane."
   },
   "whitelistImport": {
-    "message": "Импортировать и добавить",
-    "description": "English: Import and append"
+    "message": "Импортировать и добавить…",
+    "description": "Button in the 'Trusted sites' pane"
   },
   "whitelistExport": {
-    "message": "Экспортировать",
-    "description": "English: Export"
+    "message": "Экспортировать…",
+    "description": "Button in the 'Trusted sites' pane"
   },
   "whitelistExportFilename": {
-    "message": "my-ublock-whitelist_{{datetime}}.txt",
-    "description": "English: my-ublock-whitelist_{{datetime}}.txt"
+    "message": "my-ublock-trusted-sites_{{datetime}}.txt",
+    "description": "The default filename to use for import/export purpose"
   },
   "whitelistApply": {
     "message": "Применить изменения",
@@ -643,6 +719,10 @@
     "message": "allowed",
     "description": "A keyword in the built-in row filtering expression"
   },
+  "loggerRowFiltererBuiltinModified": {
+    "message": "модифицировано",
+    "description": "A keyword in the built-in row filtering expression"
+  },
   "loggerRowFiltererBuiltin1p": {
     "message": "1st-party",
     "description": "A keyword in the built-in row filtering expression"
@@ -700,7 +780,7 @@
     "description": "Label for the type selector"
   },
   "loggerStaticFilteringHeader": {
-    "message": "Стат. фильтр",
+    "message": "Статич. фильтр",
     "description": "Small header to identify the static filtering section"
   },
   "loggerStaticFilteringSentence": {
@@ -744,7 +824,7 @@
     "description": "Below this sentence, the filter list(s) in which the filter was found"
   },
   "loggerStaticFilteringFinderSentence2": {
-    "message": "Статический фильтр <code>{{filter}}</code> не найден ни в одном списке фильтров, включенных в данный момент",
+    "message": "Статический фильтр не найден ни в одном списке фильтров, включенных в данный момент",
     "description": "Message to show when a filter cannot be found in any filter lists"
   },
   "loggerSettingDiscardPrompt": {
@@ -803,21 +883,141 @@
     "message": "Markdown",
     "description": "Label for radio-button to pick export text format"
   },
+  "supportOpenButton": {
+    "message": "Открыть",
+    "description": "Text for button which open an external webpage in Support pane"
+  },
+  "supportReportSpecificButton": {
+    "message": "Создать новый отчет",
+    "description": "Text for button which open an external webpage in Support pane"
+  },
+  "supportFindSpecificButton": {
+    "message": "Найти похожие отчеты",
+    "description": "A clickable link in the filter issue reporter section"
+  },
+  "supportS1H": {
+    "message": "Документация",
+    "description": "Header of 'Documentation' section in Support pane"
+  },
+  "supportS1P1": {
+    "message": "Прочитайте документацию на <code>uBlock/wiki</code>, чтобы узнать обо всех возможностях uBlock Origin. ",
+    "description": "First paragraph of 'Documentation' section in Support pane"
+  },
+  "supportS2H": {
+    "message": "Вопросы и поддержка",
+    "description": "Header of 'Questions and support' section in Support pane"
+  },
+  "supportS2P1": {
+    "message": "Ответы на вопросы и другая помощь доступны в разделе <code>/r/uBlockOrigin</code> на reddit.",
+    "description": "First paragraph of 'Questions and support' section in Support pane"
+  },
+  "supportS3H": {
+    "message": "Проблемы фильтрации/сломанный сайт",
+    "description": "Header of 'Filter issues' section in Support pane"
+  },
+  "supportS3P1": {
+    "message": "Сообщайте о проблемах фильтрации на конкретных сайтах в раздел трекера <span data-url=\"https://github.com/uBlockOrigin/uAssets/issues?q=is%3Aissue\"><code>uBlockOrigin/uAssets</code></span>. <u>Требуется аккаунт GitHub.</u>",
+    "description": "First paragraph of 'Filter issues' section in Support pane"
+  },
+  "supportS3P2": {
+    "message": "<b>Важно:</b> Избегайте использования других блокировщиков схожего назначения совместно с uBlock Origin, так как это может привести к проблемам с фильтрацией на определенных сайтах.",
+    "description": "Second paragraph of 'Filter issues' section in Support pane"
+  },
+  "supportS3P3": {
+    "message": "<b>Советы:</b> убедитесь, что ваши списки фильтров обновлены. <span data-url=\"logger-ui.html#_\">Логгер</span> — основной инструмент диагностики проблем, связанных с фильтрами.",
+    "description": "Third paragraph of 'Filter issues' section in Support pane"
+  },
+  "supportS4H": {
+    "message": "Отчет об ошибке",
+    "description": "Header of 'Bug report' section in Support pane"
+  },
+  "supportS4P1": {
+    "message": "Сообщайте о собственных ошибках дополнения uBlock Origin в раздел трекера <span data-url=\"https://github.com/uBlockOrigin/uBlock-issues/issues?q=is%3Aissue\"><code>uBlockOrigin/uBlock-issue</code></span>. <u>Требуется GitHub аккаунт.</u>",
+    "description": "First paragraph of 'Bug report' section in Support pane"
+  },
+  "supportS5H": {
+    "message": "Диагностика неисправностей",
+    "description": "Header of 'Troubleshooting Information' section in Support pane"
+  },
+  "supportS5P1": {
+    "message": "Ниже представлена техническая информация, которая может быть полезна волонтерам, помогающим вам решить проблему.",
+    "description": "First paragraph of 'Troubleshooting Information' section in Support pane"
+  },
+  "supportS5P2": {
+    "message": "<b>Важно:</b> Предположительно конфиденциальная информация редактируется по умолчанию. Отредактированная информация может усложнить диагностику проблемы.",
+    "description": "Second paragraph of 'Troubleshooting Information' section in Support pane"
+  },
+  "supportS6H": {
+    "message": "Сообщить о проблемном фильтре",
+    "description": "Header of 'Report a filter issue' section in Support pane"
+  },
+  "supportS6P1S1": {
+    "message": "Чтобы не обременять волонтеров дублированными отчетами, пожалуйста, убедитесь, что о данной проблеме еще не сообщали",
+    "description": "A paragraph in the filter issue reporter section"
+  },
+  "supportS6P2S1": {
+    "message": "Списки фильтров обновляются ежедневно. Убедитесь, что ваша проблема не была решена в свежих списках фильтров.",
+    "description": "A paragraph in the filter issue reporter section"
+  },
+  "supportS6P2S2": {
+    "message": "Удостоверьтесь, что проблема воспроизводится даже после обновления проблемной страницы.",
+    "description": "A paragraph in the filter issue reporter section"
+  },
+  "supportS6URL": {
+    "message": "Адрес веб-страницы:",
+    "description": "Label for the URL of the page"
+  },
+  "supportS6Select1": {
+    "message": "Веб-страница...",
+    "description": "Label for widget to select type of issue"
+  },
+  "supportS6Select1Option0": {
+    "message": "--Выберите категорию--",
+    "description": "An entry in the widget used to select the type of issue"
+  },
+  "supportS6Select1Option1": {
+    "message": "Показывается реклама или ее заполнители",
+    "description": "An entry in the widget used to select the type of issue"
+  },
+  "supportS6Select1Option2": {
+    "message": "Всплывающие окна или другие помехи",
+    "description": "An entry in the widget used to select the type of issue"
+  },
+  "supportS6Select1Option3": {
+    "message": "Обнаруживается uBlock Origin",
+    "description": "An entry in the widget used to select the type of issue"
+  },
+  "supportS6Select1Option4": {
+    "message": "Проблемы, связанные с приватностью",
+    "description": "An entry in the widget used to select the type of issue"
+  },
+  "supportS6Select1Option5": {
+    "message": "Поломки, когда включен uBlock Origin",
+    "description": "An entry in the widget used to select the type of issue"
+  },
+  "supportS6Select1Option6": {
+    "message": "Открываются нежелательные вкладки или окна",
+    "description": "An entry in the widget used to select the type of issue"
+  },
+  "supportS6Checkbox1": {
+    "message": "Пометить веб-страницу как “NSFW” (<a href=\"https://wikipedia.org/wiki/Not_safe_for_work\">“Not Safe For Work”</a>)",
+    "description": "A checkbox to use for NSFW sites"
+  },
+  "supportRedact": {
+    "message": "Редактировать",
+    "description": "Text for 'Redact' button"
+  },
+  "supportUnredact": {
+    "message": "Отменить редактирование",
+    "description": "Text for 'Unredact' button"
+  },
+  "aboutPrivacyPolicy": {
+    "message": "Политика конфиденциальности",
+    "description": "Link to privacy policy on GitHub (English)"
+  },
   "aboutChangelog": {
     "message": "Список изменений",
     "description": ""
-  },
-  "aboutWiki": {
-    "message": "Вики",
-    "description": "English: project' wiki on GitHub"
-  },
-  "aboutSupport": {
-    "message": "Поддержка",
-    "description": "A link for where to get support"
-  },
-  "aboutIssues": {
-    "message": "Известные проблемы",
-    "description": "Text for a link to official issue tracker"
   },
   "aboutCode": {
     "message": "Исходный код (GPLv3)",
@@ -827,12 +1027,32 @@
     "message": "Участники",
     "description": "English: Contributors"
   },
+  "aboutSourceCode": {
+    "message": "Исходный код",
+    "description": "Link text to source code repo"
+  },
+  "aboutTranslations": {
+    "message": "Переводы",
+    "description": "Link text to translations repo"
+  },
+  "aboutFilterLists": {
+    "message": "Списки фильтров",
+    "description": "Link text to uBO's own filter lists repo"
+  },
   "aboutDependencies": {
     "message": "Внешние зависимости (GPLv3-совместимые):",
     "description": "Shown in the About pane"
   },
+  "aboutCDNs": {
+    "message": "Собственные списки фильтров uBO свободно размещены на следующих <a href=\"https://wikipedia.org/wiki/Content_delivery_network\">CDN</a>:",
+    "description": "Shown in the About pane"
+  },
+  "aboutCDNsInfo": {
+    "message": "При обновлении списка фильтров используется выбранный случайным образом CDN",
+    "description": "Shown in the About pane"
+  },
   "aboutBackupDataButton": {
-    "message": "Резервное копирование в файл...",
+    "message": "Резервное копирование в файл…",
     "description": "Text for button to create a backup of all settings"
   },
   "aboutBackupFilename": {
@@ -840,7 +1060,7 @@
     "description": "English: my-ublock-backup_{{datetime}}.txt"
   },
   "aboutRestoreDataButton": {
-    "message": "Восстановление из файла...",
+    "message": "Восстановить из файла...",
     "description": "English: Restore from file..."
   },
   "aboutResetDataButton": {
@@ -864,8 +1084,12 @@
     "description": "English: Network error: {{msg}}"
   },
   "subscriberConfirm": {
-    "message": "uBlock₀: добавить следующий адрес в ваш список фильтров?\n\nНазвание: \"{{title}}\"\nURL-адрес: {{url}}",
-    "description": "English: The message seen by the user to confirm subscription to a ABP filter list"
+    "message": "Добавить следующий адрес к пользовательским спискам фильтров?\n\nЗаголовок: \"{{title}}\"\nURL: {{url}}",
+    "description": "No longer used"
+  },
+  "subscribeButton": {
+    "message": "Подписаться",
+    "description": "For the button used to subscribe to a filter list"
   },
   "elapsedOneMinuteAgo": {
     "message": "минуту назад",
@@ -903,13 +1127,17 @@
     "message": "выключен",
     "description": "Firefox-specific: appears as 'uBlock₀ (off)'"
   },
+  "docblockedTitle": {
+    "message": "Страница заблокирована",
+    "description": "Used as a title for the document-blocked page"
+  },
   "docblockedPrompt1": {
     "message": "uBlock Origin предотвратил загрузку следующей страницы:",
-    "description": "English: uBlock₀ has prevented the following page from loading:"
+    "description": "Used in the strict-blocking page"
   },
   "docblockedPrompt2": {
     "message": "Из-за следующего фильтра",
-    "description": "English: Because of the following filter"
+    "description": "Used in the strict-blocking page"
   },
   "docblockedNoParamsPrompt": {
     "message": "без параметров",
@@ -927,6 +1155,10 @@
     "message": "Закрыть это окно",
     "description": "English: Close this window"
   },
+  "docblockedDontWarn": {
+    "message": "Не предупреждать меня больше про этот сайт",
+    "description": "Label for checkbox in document-blocked page"
+  },
   "docblockedProceed": {
     "message": "Отключить строгую блокировку для {{hostname}}",
     "description": "English: Disable strict blocking for {{hostname}} ..."
@@ -938,6 +1170,10 @@
   "docblockedDisablePermanent": {
     "message": "Навсегда",
     "description": "English: Permanently"
+  },
+  "docblockedDisable": {
+    "message": "Продолжить",
+    "description": "Button text to navigate to the blocked page"
   },
   "cloudPush": {
     "message": "Экспорт в облачное хранилище",
@@ -979,9 +1215,21 @@
     "message": "байт",
     "description": ""
   },
+  "contextMenuBlockElementInFrame": {
+    "message": "Заблокировать элемент во фрейме...",
+    "description": "An entry in the browser's contextual menu"
+  },
+  "contextMenuSubscribeToList": {
+    "message": "Установить список фильтров...",
+    "description": "An entry in the browser's contextual menu"
+  },
   "contextMenuTemporarilyAllowLargeMediaElements": {
     "message": "Временно разрешить большие медиа-элементы",
     "description": "A context menu entry, present when large media elements have been blocked on the current site"
+  },
+  "contextMenuViewSource": {
+    "message": "Показать исходный код...",
+    "description": "A context menu entry, to view the source code of the target resource"
   },
   "shortcutCapturePlaceholder": {
     "message": "Введите сочетание",
@@ -995,13 +1243,45 @@
     "message": "Скопировать в буфер",
     "description": "Label for buttons used to copy something to the clipboard"
   },
-  "toggleBlockingProfile": {
-    "message": "Переключение профиля блокировки",
-    "description": "Label for keyboard shortcut used to toggle blocking profile"
+  "genericSelectAll": {
+    "message": "Выбрать все",
+    "description": "Label for buttons used to select all text in editor"
+  },
+  "toggleCosmeticFiltering": {
+    "message": "Вкл/Выкл косметическую фильтрацию",
+    "description": "Label for keyboard shortcut used to toggle cosmetic filtering"
   },
   "relaxBlockingMode": {
     "message": "Ослабленный режим блокировки",
-    "description": "Label for keyboard shortcut used to relax blocking mode (meant to replace 'Toggle blocking profile')"
+    "description": "Label for keyboard shortcut used to relax blocking mode"
+  },
+  "storageUsed": {
+    "message": "Размер хранилища: {{value}} {{unit}}",
+    "description": " In Setting pane, renders as (example): Storage used: 13.2 MB"
+  },
+  "KB": {
+    "message": "KБ",
+    "description": "short for 'kilobytes'"
+  },
+  "MB": {
+    "message": "МБ",
+    "description": "short for 'megabytes'"
+  },
+  "GB": {
+    "message": "ГБ",
+    "description": "short for 'gigabytes'"
+  },
+  "clickToLoad": {
+    "message": "Нажмите, чтобы загрузить",
+    "description": "Message used in frame placeholders"
+  },
+  "linterMainReport": {
+    "message": "Ошибки: {{count}}",
+    "description": "Summary of number of errors as reported by the linter "
+  },
+  "unprocessedRequestTooltip": {
+    "message": "Не удалось выполнить фильтрацию при запуске браузера.\nПерезагрузите страницу, чтобы обеспечить фильтрацию.",
+    "description": "A warning which will appear in the popup panel if needed"
   },
   "dummy": {
     "message": "Эта запись должна быть последней",

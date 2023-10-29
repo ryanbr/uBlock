@@ -23,92 +23,165 @@
 
 /******************************************************************************/
 
-µBlock.FilteringContext = function(other) {
-    if ( other instanceof µBlock.FilteringContext ) {
-        return this.fromFilteringContext(other);
-    }
-    this.tstamp = 0;
-    this.realm = '';
-    this.id = undefined;
-    this.type = undefined;
-    this.url = undefined;
-    this.aliasURL = undefined;
-    this.hostname = undefined;
-    this.domain = undefined;
-    this.docId = undefined;
-    this.docOrigin = undefined;
-    this.docHostname = undefined;
-    this.docDomain = undefined;
-    this.tabId = undefined;
-    this.tabOrigin = undefined;
-    this.tabHostname = undefined;
-    this.tabDomain = undefined;
-    this.filter = undefined;
+import {
+    hostnameFromURI,
+    domainFromHostname,
+    originFromURI,
+} from './uri-utils.js';
+
+/******************************************************************************/
+
+// https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/webRequest/ResourceType
+
+// Long term, convert code wherever possible to work with integer-based type
+// values -- the assumption being that integer operations are faster than
+// string operations.
+
+const           NO_TYPE = 0;
+const            BEACON = 1 <<  0;
+const        CSP_REPORT = 1 <<  1;
+const              FONT = 1 <<  2;
+const             IMAGE = 1 <<  4;
+const          IMAGESET = 1 <<  4;
+const        MAIN_FRAME = 1 <<  5;
+const             MEDIA = 1 <<  6;
+const            OBJECT = 1 <<  7;
+const OBJECT_SUBREQUEST = 1 <<  7;
+const              PING = 1 <<  8;
+const            SCRIPT = 1 <<  9;
+const        STYLESHEET = 1 << 10;
+const         SUB_FRAME = 1 << 11;
+const         WEBSOCKET = 1 << 12;
+const    XMLHTTPREQUEST = 1 << 13;
+const       INLINE_FONT = 1 << 14;
+const     INLINE_SCRIPT = 1 << 15;
+const             OTHER = 1 << 16;
+const         FRAME_ANY = MAIN_FRAME | SUB_FRAME;
+const          FONT_ANY = FONT | INLINE_FONT;
+const        INLINE_ANY = INLINE_FONT | INLINE_SCRIPT;
+const          PING_ANY = BEACON | CSP_REPORT | PING;
+const        SCRIPT_ANY = SCRIPT | INLINE_SCRIPT;
+
+const typeStrToIntMap = {
+           'no_type': NO_TYPE,
+            'beacon': BEACON,
+        'csp_report': CSP_REPORT,
+              'font': FONT,
+             'image': IMAGE,
+          'imageset': IMAGESET,
+        'main_frame': MAIN_FRAME,
+             'media': MEDIA,
+            'object': OBJECT,
+ 'object_subrequest': OBJECT_SUBREQUEST,
+              'ping': PING,
+            'script': SCRIPT,
+        'stylesheet': STYLESHEET,
+         'sub_frame': SUB_FRAME,
+         'websocket': WEBSOCKET,
+    'xmlhttprequest': XMLHTTPREQUEST,
+       'inline-font': INLINE_FONT,
+     'inline-script': INLINE_SCRIPT,
+             'other': OTHER,
 };
 
-µBlock.FilteringContext.prototype = {
-    fromTabId: function(tabId) {
-        const tabContext = µBlock.tabContextManager.mustLookup(tabId);
-        this.tabOrigin = tabContext.origin;
-        this.tabHostname = tabContext.rootHostname;
-        this.tabDomain = tabContext.rootDomain;
-        this.tabId = tabContext.tabId;
-        return this;
-    },
-    // https://github.com/uBlockOrigin/uBlock-issues/issues/459
-    //   In case of a request for frame and if ever no context is specified,
-    //   assume the origin of the context is the same as the request itself.
-    fromWebrequestDetails: function(details) {
-        const tabId = details.tabId;
-        if ( tabId > 0 && details.type === 'main_frame' ) {
-            µBlock.tabContextManager.push(tabId, details.url);
+const    METHOD_NONE = 0;
+const METHOD_CONNECT = 1 << 1;
+const  METHOD_DELETE = 1 << 2;
+const     METHOD_GET = 1 << 3;
+const    METHOD_HEAD = 1 << 4;
+const METHOD_OPTIONS = 1 << 5;
+const   METHOD_PATCH = 1 << 6;
+const    METHOD_POST = 1 << 7;
+const     METHOD_PUT = 1 << 8;
+
+const methodStrToBitMap = {
+           '': METHOD_NONE,
+    'connect': METHOD_CONNECT,
+     'delete': METHOD_DELETE,
+        'get': METHOD_GET,
+       'head': METHOD_HEAD,
+    'options': METHOD_OPTIONS,
+      'patch': METHOD_PATCH,
+       'post': METHOD_POST,
+        'put': METHOD_PUT,
+    'CONNECT': METHOD_CONNECT,
+     'DELETE': METHOD_DELETE,
+        'GET': METHOD_GET,
+       'HEAD': METHOD_HEAD,
+    'OPTIONS': METHOD_OPTIONS,
+      'PATCH': METHOD_PATCH,
+       'POST': METHOD_POST,
+        'PUT': METHOD_PUT,
+};
+
+const methodBitToStrMap = new Map([
+    [ METHOD_NONE, '' ],
+    [ METHOD_CONNECT, 'connect' ],
+    [ METHOD_DELETE, 'delete' ],
+    [ METHOD_GET, 'get' ],
+    [ METHOD_HEAD, 'head' ],
+    [ METHOD_OPTIONS, 'options' ],
+    [ METHOD_PATCH, 'patch' ],
+    [ METHOD_POST, 'post' ],
+    [ METHOD_PUT, 'put' ],
+]);
+
+/******************************************************************************/
+
+const FilteringContext = class {
+    constructor(other) {
+        if ( other instanceof FilteringContext ) {
+            return this.fromFilteringContext(other);
         }
-        this.fromTabId(tabId);
+        this.tstamp = 0;
         this.realm = '';
-        this.id = details.requestId;
-        this.type = details.type;
-        this.setURL(details.url);
-        this.aliasURL = details.aliasURL || undefined;
-        this.docId = details.type !== 'sub_frame'
-            ? details.frameId
-            : details.parentFrameId;
-        if ( this.tabId > 0 ) {
-            if ( this.docId === 0 ) {
-                this.docOrigin = this.tabOrigin;
-                this.docHostname = this.tabHostname;
-                this.docDomain = this.tabDomain;
-            } else if ( details.documentUrl !== undefined ) {
-                this.setDocOriginFromURL(details.documentUrl);
-            } else {
-                const pageStore = µBlock.pageStoreFromTabId(this.tabId);
-                const docStore = pageStore && pageStore.getFrame(this.docId);
-                if ( docStore ) {
-                    this.setDocOriginFromURL(docStore.rawURL);
-                } else {
-                    this.setDocOrigin(this.tabOrigin);
-                }
-            }
-        } else if ( details.documentUrl !== undefined ) {
-            const origin = this.originFromURI(
-                µBlock.normalizePageURL(0, details.documentUrl)
-            );
-            this.setDocOrigin(origin).setTabOrigin(origin);
-        } else if ( this.docId === -1 || this.type.endsWith('_frame') ) {
-            const origin = this.originFromURI(this.url);
-            this.setDocOrigin(origin).setTabOrigin(origin);
-        } else {
-            this.setDocOrigin(this.tabOrigin);
-        }
+        this.id = undefined;
+        this.method = 0;
+        this.itype = NO_TYPE;
+        this.stype = undefined;
+        this.url = undefined;
+        this.aliasURL = undefined;
+        this.hostname = undefined;
+        this.domain = undefined;
+        this.docId = -1;
+        this.frameId = -1;
+        this.docOrigin = undefined;
+        this.docHostname = undefined;
+        this.docDomain = undefined;
+        this.tabId = undefined;
+        this.tabOrigin = undefined;
+        this.tabHostname = undefined;
+        this.tabDomain = undefined;
+        this.redirectURL = undefined;
         this.filter = undefined;
-        return this;
-    },
-    fromFilteringContext: function(other) {
+    }
+
+    get type() {
+        return this.stype;
+    }
+
+    set type(a) {
+        this.itype = typeStrToIntMap[a] || NO_TYPE;
+        this.stype = a;
+    }
+
+    isDocument() {
+        return (this.itype & FRAME_ANY) !== 0;
+    }
+
+    isFont() {
+        return (this.itype & FONT_ANY) !== 0;
+    }
+
+    fromFilteringContext(other) {
         this.realm = other.realm;
         this.type = other.type;
+        this.method = other.method;
         this.url = other.url;
         this.hostname = other.hostname;
         this.domain = other.domain;
         this.docId = other.docId;
+        this.frameId = other.frameId;
         this.docOrigin = other.docOrigin;
         this.docHostname = other.docHostname;
         this.docDomain = other.docDomain;
@@ -116,92 +189,116 @@
         this.tabOrigin = other.tabOrigin;
         this.tabHostname = other.tabHostname;
         this.tabDomain = other.tabDomain;
+        this.redirectURL = other.redirectURL;
         this.filter = undefined;
         return this;
-    },
-    duplicate: function() {
-        return (new µBlock.FilteringContext(this));
-    },
-    setRealm: function(a) {
+    }
+
+    fromDetails({ originURL, url, type }) {
+        this.setDocOriginFromURL(originURL)
+            .setURL(url)
+            .setType(type);
+        return this;
+    }
+
+    duplicate() {
+        return (new FilteringContext(this));
+    }
+
+    setRealm(a) {
         this.realm = a;
         return this;
-    },
-    setType: function(a) {
+    }
+
+    setType(a) {
         this.type = a;
         return this;
-    },
-    setURL: function(a) {
+    }
+
+    setURL(a) {
         if ( a !== this.url ) {
             this.hostname = this.domain = undefined;
             this.url = a;
         }
         return this;
-    },
-    getHostname: function() {
+    }
+
+    getHostname() {
         if ( this.hostname === undefined ) {
-            this.hostname = this.hostnameFromURI(this.url);
+            this.hostname = hostnameFromURI(this.url);
         }
         return this.hostname;
-    },
-    setHostname: function(a) {
+    }
+
+    setHostname(a) {
         if ( a !== this.hostname ) {
             this.domain = undefined;
             this.hostname = a;
         }
         return this;
-    },
-    getDomain: function() {
+    }
+
+    getDomain() {
         if ( this.domain === undefined ) {
-            this.domain = this.domainFromHostname(this.getHostname());
+            this.domain = domainFromHostname(this.getHostname());
         }
         return this.domain;
-    },
-    setDomain: function(a) {
+    }
+
+    setDomain(a) {
         this.domain = a;
         return this;
-    },
-    getDocOrigin: function() {
+    }
+
+    getDocOrigin() {
         if ( this.docOrigin === undefined ) {
             this.docOrigin = this.tabOrigin;
         }
         return this.docOrigin;
-    },
-    setDocOrigin: function(a) {
+    }
+
+    setDocOrigin(a) {
         if ( a !== this.docOrigin ) {
             this.docHostname = this.docDomain = undefined;
             this.docOrigin = a;
         }
         return this;
-    },
-    setDocOriginFromURL: function(a) {
-        return this.setDocOrigin(this.originFromURI(a));
-    },
-    getDocHostname: function() {
+    }
+
+    setDocOriginFromURL(a) {
+        return this.setDocOrigin(originFromURI(a));
+    }
+
+    getDocHostname() {
         if ( this.docHostname === undefined ) {
-            this.docHostname = this.hostnameFromURI(this.getDocOrigin());
+            this.docHostname = hostnameFromURI(this.getDocOrigin());
         }
         return this.docHostname;
-    },
-    setDocHostname: function(a) {
+    }
+
+    setDocHostname(a) {
         if ( a !== this.docHostname ) {
             this.docDomain = undefined;
             this.docHostname = a;
         }
         return this;
-    },
-    getDocDomain: function() {
+    }
+
+    getDocDomain() {
         if ( this.docDomain === undefined ) {
-            this.docDomain = this.domainFromHostname(this.getDocHostname());
+            this.docDomain = domainFromHostname(this.getDocHostname());
         }
         return this.docDomain;
-    },
-    setDocDomain: function(a) {
+    }
+
+    setDocDomain(a) {
         this.docDomain = a;
         return this;
-    },
-    // The idea is to minimize the amout of work done to figure out whether
+    }
+
+    // The idea is to minimize the amount of work done to figure out whether
     // the resource is 3rd-party to the document.
-    is3rdPartyToDoc: function() {
+    is3rdPartyToDoc() {
         let docDomain = this.getDocDomain();
         if ( docDomain === '' ) { docDomain = this.docHostname; }
         if ( this.domain !== undefined && this.domain !== '' ) {
@@ -212,56 +309,59 @@
         const i = hostname.length - docDomain.length;
         if ( i === 0 ) { return false; }
         return hostname.charCodeAt(i - 1) !== 0x2E /* '.' */;
-    },
-    setTabId: function(a) {
+    }
+
+    setTabId(a) {
         this.tabId = a;
         return this;
-    },
-    getTabOrigin: function() {
-        if ( this.tabOrigin === undefined ) {
-            const tabContext = µBlock.tabContextManager.mustLookup(this.tabId);
-            this.tabOrigin = tabContext.origin;
-            this.tabHostname = tabContext.rootHostname;
-            this.tabDomain = tabContext.rootDomain;
-        }
+    }
+
+    getTabOrigin() {
         return this.tabOrigin;
-    },
-    setTabOrigin: function(a) {
+    }
+
+    setTabOrigin(a) {
         if ( a !== this.tabOrigin ) {
             this.tabHostname = this.tabDomain = undefined;
             this.tabOrigin = a;
         }
         return this;
-    },
-    setTabOriginFromURL: function(a) {
-        return this.setTabOrigin(this.originFromURI(a));
-    },
-    getTabHostname: function() {
+    }
+
+    setTabOriginFromURL(a) {
+        return this.setTabOrigin(originFromURI(a));
+    }
+
+    getTabHostname() {
         if ( this.tabHostname === undefined ) {
-            this.tabHostname = this.hostnameFromURI(this.getTabOrigin());
+            this.tabHostname = hostnameFromURI(this.getTabOrigin());
         }
         return this.tabHostname;
-    },
-    setTabHostname: function(a) {
+    }
+
+    setTabHostname(a) {
         if ( a !== this.tabHostname ) {
             this.tabDomain = undefined;
             this.tabHostname = a;
         }
         return this;
-    },
-    getTabDomain: function() {
+    }
+
+    getTabDomain() {
         if ( this.tabDomain === undefined ) {
-            this.tabDomain = this.domainFromHostname(this.getTabHostname());
+            this.tabDomain = domainFromHostname(this.getTabHostname());
         }
         return this.tabDomain;
-    },
-    setTabDomain: function(a) {
+    }
+
+    setTabDomain(a) {
         this.docDomain = a;
         return this;
-    },
-    // The idea is to minimize the amout of work done to figure out whether
+    }
+
+    // The idea is to minimize the amount of work done to figure out whether
     // the resource is 3rd-party to the top document.
-    is3rdPartyToTab: function() {
+    is3rdPartyToTab() {
         let tabDomain = this.getTabDomain();
         if ( tabDomain === '' ) { tabDomain = this.tabHostname; }
         if ( this.domain !== undefined && this.domain !== '' ) {
@@ -272,27 +372,91 @@
         const i = hostname.length - tabDomain.length;
         if ( i === 0 ) { return false; }
         return hostname.charCodeAt(i - 1) !== 0x2E /* '.' */;
-    },
-    setFilter: function(a) {
+    }
+
+    setFilter(a) {
         this.filter = a;
         return this;
-    },
-    toLogger: function() {
-        this.tstamp = Date.now();
-        if ( this.domain === undefined ) {
-            void this.getDomain();
+    }
+
+    pushFilter(a) {
+        if ( this.filter === undefined ) {
+            return this.setFilter(a);
         }
-        if ( this.docDomain === undefined ) {
-            void this.getDocDomain();
+        if ( Array.isArray(this.filter) ) {
+            this.filter.push(a);
+        } else {
+            this.filter = [ this.filter, a ];
         }
-        if ( this.tabDomain === undefined ) {
-            void this.getTabDomain();
+        return this;
+    }
+
+    pushFilters(a) {
+        if ( this.filter === undefined ) {
+            return this.setFilter(a);
         }
-        µBlock.logger.writeOne(this);
-    },
-    originFromURI: µBlock.URI.originFromURI,
-    hostnameFromURI: µBlock.URI.hostnameFromURI,
-    domainFromHostname: µBlock.URI.domainFromHostname,
+        if ( Array.isArray(this.filter) ) {
+            this.filter.push(...a);
+        } else {
+            this.filter = [ this.filter, ...a ];
+        }
+        return this;
+    }
+
+    setMethod(a) {
+        this.method = methodStrToBitMap[a] || 0;
+        return this;
+    }
+
+    getMethodName() {
+        return FilteringContext.getMethodName(this.method);
+    }
+
+    static getMethod(a) {
+        return methodStrToBitMap[a] || 0;
+    }
+
+    static getMethodName(a) {
+        return methodBitToStrMap.get(a) || '';
+    }
 };
 
-µBlock.filteringContext = new µBlock.FilteringContext();
+/******************************************************************************/
+
+FilteringContext.prototype.BEACON = FilteringContext.BEACON = BEACON;
+FilteringContext.prototype.CSP_REPORT = FilteringContext.CSP_REPORT = CSP_REPORT;
+FilteringContext.prototype.FONT = FilteringContext.FONT = FONT;
+FilteringContext.prototype.IMAGE = FilteringContext.IMAGE = IMAGE;
+FilteringContext.prototype.IMAGESET = FilteringContext.IMAGESET = IMAGESET;
+FilteringContext.prototype.MAIN_FRAME = FilteringContext.MAIN_FRAME = MAIN_FRAME;
+FilteringContext.prototype.MEDIA = FilteringContext.MEDIA = MEDIA;
+FilteringContext.prototype.OBJECT = FilteringContext.OBJECT = OBJECT;
+FilteringContext.prototype.OBJECT_SUBREQUEST = FilteringContext.OBJECT_SUBREQUEST = OBJECT_SUBREQUEST;
+FilteringContext.prototype.PING = FilteringContext.PING = PING;
+FilteringContext.prototype.SCRIPT = FilteringContext.SCRIPT = SCRIPT;
+FilteringContext.prototype.STYLESHEET = FilteringContext.STYLESHEET = STYLESHEET;
+FilteringContext.prototype.SUB_FRAME = FilteringContext.SUB_FRAME = SUB_FRAME;
+FilteringContext.prototype.WEBSOCKET = FilteringContext.WEBSOCKET = WEBSOCKET;
+FilteringContext.prototype.XMLHTTPREQUEST = FilteringContext.XMLHTTPREQUEST = XMLHTTPREQUEST;
+FilteringContext.prototype.INLINE_FONT = FilteringContext.INLINE_FONT = INLINE_FONT;
+FilteringContext.prototype.INLINE_SCRIPT = FilteringContext.INLINE_SCRIPT = INLINE_SCRIPT;
+FilteringContext.prototype.OTHER = FilteringContext.OTHER = OTHER;
+FilteringContext.prototype.FRAME_ANY = FilteringContext.FRAME_ANY = FRAME_ANY;
+FilteringContext.prototype.FONT_ANY = FilteringContext.FONT_ANY = FONT_ANY;
+FilteringContext.prototype.INLINE_ANY = FilteringContext.INLINE_ANY = INLINE_ANY;
+FilteringContext.prototype.PING_ANY = FilteringContext.PING_ANY = PING_ANY;
+FilteringContext.prototype.SCRIPT_ANY = FilteringContext.SCRIPT_ANY = SCRIPT_ANY;
+
+FilteringContext.prototype.METHOD_NONE = FilteringContext.METHOD_NONE = METHOD_NONE;
+FilteringContext.prototype.METHOD_CONNECT = FilteringContext.METHOD_CONNECT = METHOD_CONNECT;
+FilteringContext.prototype.METHOD_DELETE = FilteringContext.METHOD_DELETE = METHOD_DELETE;
+FilteringContext.prototype.METHOD_GET = FilteringContext.METHOD_GET = METHOD_GET;
+FilteringContext.prototype.METHOD_HEAD = FilteringContext.METHOD_HEAD = METHOD_HEAD;
+FilteringContext.prototype.METHOD_OPTIONS = FilteringContext.METHOD_OPTIONS = METHOD_OPTIONS;
+FilteringContext.prototype.METHOD_PATCH = FilteringContext.METHOD_PATCH = METHOD_PATCH;
+FilteringContext.prototype.METHOD_POST = FilteringContext.METHOD_POST = METHOD_POST;
+FilteringContext.prototype.METHOD_PUT = FilteringContext.METHOD_PUT = METHOD_PUT;
+
+/******************************************************************************/
+
+export { FilteringContext };

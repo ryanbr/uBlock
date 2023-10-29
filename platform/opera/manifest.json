@@ -6,9 +6,10 @@
   "browser_action": {
     "default_icon": {
       "16": "img/icon_16.png",
-      "32": "img/icon_32.png"
+      "32": "img/icon_32.png",
+      "64": "img/icon_64.png"
     },
-    "default_popup": "popup.html",
+    "default_popup": "popup-fenix.html",
     "default_title": "uBlock Origin"
   },
   "commands": {
@@ -21,34 +22,58 @@
     "launch-logger": {
       "description": "__MSG_popupTipLog__"
     },
+    "open-dashboard": {
+      "description": "__MSG_popupTipDashboard__"
+    },
     "relax-blocking-mode": {
       "description": "__MSG_relaxBlockingMode__"
+    },
+    "toggle-cosmetic-filtering": {
+      "description": "__MSG_toggleCosmeticFiltering__"
     }
   },
   "content_scripts": [
     {
-      "all_frames": true,
+      "matches": [
+        "http://*/*",
+        "https://*/*"
+      ],
       "js": [
         "js/vapi.js",
         "js/vapi-client.js",
         "js/contentscript.js"
       ],
-      "matches": [
-        "http://*/*",
-        "https://*/*"
-      ],
+      "all_frames": true,
+      "match_about_blank": true,
       "run_at": "document_start"
     },
     {
-      "all_frames": false,
-      "js": [
-        "js/scriptlets/subscriber.js"
-      ],
       "matches": [
-        "http://*/*",
-        "https://*/*"
+        "https://easylist.to/*",
+        "https://*.fanboy.co.nz/*",
+        "https://filterlists.com/*",
+        "https://forums.lanik.us/*",
+        "https://github.com/*",
+        "https://*.github.io/*",
+        "https://*.letsblock.it/*"
       ],
-      "run_at": "document_idle"
+      "js": [
+        "/js/scriptlets/subscriber.js"
+      ],
+      "run_at": "document_idle",
+      "all_frames": false
+    },
+    {
+      "matches": [
+        "https://github.com/uBlockOrigin/*",
+        "https://ublockorigin.github.io/*",
+        "https://*.reddit.com/r/uBlockOrigin/*"
+      ],
+      "js": [
+        "/js/scriptlets/updater.js"
+      ],
+      "run_at": "document_idle",
+      "all_frames": false
     }
   ],
   "default_locale": "en",
@@ -61,7 +86,7 @@
   },
   "incognito": "split",
   "manifest_version": 2,
-  "minimum_opera_version": "40.0",
+  "minimum_opera_version": "60.0",
   "name": "uBlock Origin",
   "options_page": "dashboard.html",
   "permissions": [

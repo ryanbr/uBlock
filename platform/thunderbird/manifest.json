@@ -1,8 +1,8 @@
 {
-  "applications": {
+  "browser_specific_settings": {
     "gecko": {
       "id": "uBlock0@raymondhill.net",
-      "strict_min_version": "65.0"
+      "strict_min_version": "91.0"
     }
   },
   "author": "Raymond Hill & contributors",
@@ -16,7 +16,7 @@
       "32": "img/icon_32.png"
     },
     "default_title": "uBlock Origin",
-    "default_popup": "popup.html"
+    "default_popup": "popup-fenix.html"
   },
   "content_scripts": [
     {
@@ -30,16 +30,34 @@
         "/js/vapi-client.js",
         "/js/contentscript.js"
       ],
-      "run_at": "document_start",
-      "all_frames": true
+      "all_frames": true,
+      "match_about_blank": true,
+      "run_at": "document_start"
     },
     {
       "matches": [
-        "http://*/*",
-        "https://*/*"
+        "https://easylist.to/*",
+        "https://*.fanboy.co.nz/*",
+        "https://filterlists.com/*",
+        "https://forums.lanik.us/*",
+        "https://github.com/*",
+        "https://*.github.io/*",
+        "https://*.letsblock.it/*"
       ],
       "js": [
         "/js/scriptlets/subscriber.js"
+      ],
+      "run_at": "document_idle",
+      "all_frames": false
+    },
+    {
+      "matches": [
+        "https://github.com/uBlockOrigin/*",
+        "https://ublockorigin.github.io/*",
+        "https://*.reddit.com/r/uBlockOrigin/*"
+      ],
+      "js": [
+        "/js/scriptlets/updater.js"
       ],
       "run_at": "document_idle",
       "all_frames": false

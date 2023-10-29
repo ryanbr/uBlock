@@ -23,19 +23,24 @@
 
 /******************************************************************************/
 
-µBlock.staticFilteringReverseLookup = (( ) => {
+import staticNetFilteringEngine from './static-net-filtering.js';
+import µb from './background.js';
+import { CompiledListWriter } from './static-filtering-io.js';
+import { i18n$ } from './i18n.js';
+import * as sfp from './static-filtering-parser.js';
+
+import {
+    domainFromHostname,
+    hostnameFromURI,
+} from './uri-utils.js';
 
 /******************************************************************************/
 
-const workerTTL = 5 * 60 * 1000;
 const pendingResponses = new Map();
 
 let worker = null;
-let workerTTLTimer;
 let needLists = true;
 let messageId = 1;
-
-/******************************************************************************/
 
 const onWorkerMessage = function(e) {
     const msg = e.data;
@@ -44,13 +49,8 @@ const onWorkerMessage = function(e) {
     resolver(msg.response);
 };
 
-/******************************************************************************/
-
 const stopWorker = function() {
-    if ( workerTTLTimer !== undefined ) {
-        clearTimeout(workerTTLTimer);
-        workerTTLTimer = undefined;
-    }
+    workerTTLTimer.off();
     if ( worker === null ) { return; }
     worker.terminate();
     worker = null;
@@ -61,7 +61,8 @@ const stopWorker = function() {
     pendingResponses.clear();
 };
 
-/******************************************************************************/
+const workerTTLTimer = vAPI.defer.create(stopWorker);
+const workerTTL = { min: 5 };
 
 const initWorker = function() {
     if ( worker === null ) {
@@ -70,10 +71,7 @@ const initWorker = function() {
     }
 
     // The worker will be shutdown after n minutes without being used.
-    if ( workerTTLTimer !== undefined ) {
-        clearTimeout(workerTTLTimer);
-    }
-    workerTTLTimer = vAPI.setTimeout(stopWorker, workerTTL);
+    workerTTLTimer.offon(workerTTL);
 
     if ( needLists === false ) {
         return Promise.resolve();
@@ -99,7 +97,6 @@ const initWorker = function() {
         });
     };
 
-    const µb = µBlock;
     for ( const listKey in µb.availableFilterLists ) {
         if ( µb.availableFilterLists.hasOwnProperty(listKey) === false ) {
             continue;
@@ -109,7 +106,7 @@ const initWorker = function() {
         entries.set(listKey, {
             title: listKey !== µb.userFiltersPath ?
                 entry.title :
-                vAPI.i18n('1pPageName'),
+                i18n$('1pPageName'),
             supportURL: entry.supportURL || ''
         });
     }
@@ -128,25 +125,28 @@ const initWorker = function() {
     return Promise.all(promises);
 };
 
-/******************************************************************************/
-
 const fromNetFilter = async function(rawFilter) {
     if ( typeof rawFilter !== 'string' || rawFilter === '' ) { return; }
 
-    const µb = µBlock;
-    const writer = new µb.CompiledLineIO.Writer();
-    if ( µb.staticNetFilteringEngine.compile(rawFilter, writer) === false ) {
-        return;
-    }
+    const writer = new CompiledListWriter();
+    const parser = new sfp.AstFilterParser({
+        trustedSource: true,
+        maxTokenLength: staticNetFilteringEngine.MAX_TOKEN_LENGTH,
+        nativeCssHas: vAPI.webextFlavor.env.includes('native_css_has'),
+    });
+    parser.parse(rawFilter);
+
+    const compiler = staticNetFilteringEngine.createCompiler();
+    if ( compiler.compile(parser, writer) === false ) { return; }
 
     await initWorker();
 
     const id = messageId++;
     worker.postMessage({
         what: 'fromNetFilter',
-        id: id,
+        id,
         compiledFilter: writer.last(),
-        rawFilter: rawFilter
+        rawFilter,
     });
 
     return new Promise(resolve => {
@@ -154,43 +154,52 @@ const fromNetFilter = async function(rawFilter) {
     });
 };
 
-/******************************************************************************/
-
-const fromCosmeticFilter = async function(details) {
-    if ( typeof details.rawFilter !== 'string' || details.rawFilter === '' ) {
+const fromExtendedFilter = async function(details) {
+    if (
+        typeof details.rawFilter !== 'string' ||
+        details.rawFilter === ''
+    ) {
         return;
     }
 
     await initWorker();
 
     const id = messageId++;
-    const hostname = µBlock.URI.hostnameFromURI(details.url);
+    const hostname = hostnameFromURI(details.url);
+
+    const parser = new sfp.AstFilterParser({
+        trustedSource: true,
+        nativeCssHas: vAPI.webextFlavor.env.includes('native_css_has'),
+    });
+    parser.parse(details.rawFilter);
+    let compiled;
+    if ( parser.isScriptletFilter() ) {
+        compiled = JSON.stringify(parser.getScriptletArgs());
+    }
 
     worker.postMessage({
-        what: 'fromCosmeticFilter',
-        id: id,
-        domain: µBlock.URI.domainFromHostname(hostname),
-        hostname: hostname,
+        what: 'fromExtendedFilter',
+        id,
+        domain: domainFromHostname(hostname),
+        hostname,
         ignoreGeneric:
-            µBlock.staticNetFilteringEngine.matchStringReverse(
+            staticNetFilteringEngine.matchRequestReverse(
                 'generichide',
                 details.url
             ) === 2,
         ignoreSpecific:
-            µBlock.staticNetFilteringEngine.matchStringReverse(
+            staticNetFilteringEngine.matchRequestReverse(
                 'specifichide',
                 details.url
             ) === 2,
-        rawFilter: details.rawFilter
+        rawFilter: details.rawFilter,
+        compiled,
     });
 
     return new Promise(resolve => {
         pendingResponses.set(id, resolve);
     });
-
 };
-
-/******************************************************************************/
 
 // This tells the worker that filter lists may have changed.
 
@@ -202,15 +211,13 @@ const resetLists = function() {
 
 /******************************************************************************/
 
-return {
+const staticFilteringReverseLookup = {
     fromNetFilter,
-    fromCosmeticFilter,
+    fromExtendedFilter,
     resetLists,
     shutdown: stopWorker
 };
 
-/******************************************************************************/
-
-})();
+export default staticFilteringReverseLookup;
 
 /******************************************************************************/

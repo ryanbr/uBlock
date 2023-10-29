@@ -1,0 +1,54 @@
+{
+  "action": {
+    "default_area": "navbar",
+    "default_icon": {
+      "16": "img/icon_16.png",
+      "32": "img/icon_32.png",
+      "64": "img/icon_64.png"
+    },
+    "default_popup": "popup.html"
+  },
+  "author": "Raymond Hill",
+  "background": {
+    "scripts": [ "/js/background.js" ],
+    "type": "module"
+  },
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "uBOLite@raymondhill.net",
+      "strict_min_version": "114.0"
+    },
+    "gecko_android": {
+      "strict_min_version": "114.0"
+    }
+  },
+  "declarative_net_request": {
+    "rule_resources": [
+    ]
+  },
+  "default_locale": "en",
+  "description": "__MSG_extShortDesc__",
+  "icons": {
+    "16": "img/icon_16.png",
+    "32": "img/icon_32.png",
+    "64": "img/icon_64.png",
+    "128": "img/icon_128.png"
+  },
+  "manifest_version": 3,
+  "name": "__MSG_extName__",
+  "options_ui": {
+      "page": "dashboard.html"
+  },
+  "optional_permissions": [
+    "<all_urls>"
+  ],
+  "permissions": [
+    "activeTab",
+    "declarativeNetRequest",
+    "scripting",
+    "storage"
+  ],
+  "short_name": "uBO Lite",
+  "version": "1.0",
+  "web_accessible_resources": []
+}

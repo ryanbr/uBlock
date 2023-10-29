@@ -19,57 +19,115 @@
     Home: https://github.com/gorhill/uBlock
 */
 
-/* global CodeMirror, uDom, uBlockDashboard */
+/* global CodeMirror, uBlockDashboard */
 
 'use strict';
 
-/******************************************************************************/
-
-(( ) => {
-// >>>> Start of private namespace
+import { dom, qs$ } from './dom.js';
 
 /******************************************************************************/
 
-const noopFunc = function(){};
-
+let defaultSettings = new Map();
+let adminSettings = new Map();
 let beforeHash = '';
 
-const cmEditor = new CodeMirror(
-    document.getElementById('advancedSettings'),
-    {
-        autofocus: true,
-        lineNumbers: true,
-        lineWrapping: true,
-        styleActiveLine: true
-    }
-);
+/******************************************************************************/
+
+CodeMirror.defineMode('raw-settings', function() {
+    let lastSetting = '';
+
+    return {
+        token: function(stream) {
+            if ( stream.sol() ) {
+                stream.eatSpace();
+                const match = stream.match(/\S+/);
+                if ( match !== null && defaultSettings.has(match[0]) ) {
+                    lastSetting = match[0];
+                    return adminSettings.has(match[0])
+                        ? 'readonly keyword'
+                        : 'keyword';
+                }
+                stream.skipToEnd();
+                return 'line-cm-error';
+            }
+            stream.eatSpace();
+            const match = stream.match(/.*$/);
+            if ( match !== null ) {
+                if ( match[0].trim() !== defaultSettings.get(lastSetting) ) {
+                    return 'line-cm-strong';
+                }
+                if ( adminSettings.has(lastSetting) ) {
+                    return 'readonly';
+                }
+            }
+            stream.skipToEnd();
+            return null;
+        }
+    };
+});
+
+const cmEditor = new CodeMirror(qs$('#advancedSettings'), {
+    autofocus: true,
+    lineNumbers: true,
+    lineWrapping: false,
+    styleActiveLine: true
+});
 
 uBlockDashboard.patchCodeMirrorEditor(cmEditor);
 
 /******************************************************************************/
 
 const hashFromAdvancedSettings = function(raw) {
-    return raw.trim().replace(/\s*[\n\r]+\s*/g, '\n').replace(/[ \t]+/g, ' ');
+    const aa = typeof raw === 'string'
+        ? arrayFromString(raw)
+        : arrayFromObject(raw);
+    aa.sort((a, b) => a[0].localeCompare(b[0]));
+    return JSON.stringify(aa);
 };
 
 /******************************************************************************/
 
-// This is to give a visual hint that the content of user blacklist has changed.
+const arrayFromObject = function(o) {
+    const out = [];
+    for ( const k in o ) {
+        if ( o.hasOwnProperty(k) === false ) { continue; }
+        out.push([ k, `${o[k]}` ]);
+    }
+    return out;
+};
+
+const arrayFromString = function(s) {
+    const out = [];
+    for ( let line of s.split(/[\n\r]+/) ) {
+        line = line.trim();
+        if ( line === '' ) { continue; }
+        const pos = line.indexOf(' ');
+        let k, v;
+        if ( pos !== -1 ) {
+            k = line.slice(0, pos);
+            v = line.slice(pos + 1);
+        } else {
+            k = line;
+            v = '';
+        }
+        out.push([ k.trim(), v.trim() ]);
+    }
+    return out;
+};
+
+/******************************************************************************/
 
 const advancedSettingsChanged = (( ) => {
-    let timer;
-
     const handler = ( ) => {
-        timer = undefined;
-        const changed =
-            hashFromAdvancedSettings(cmEditor.getValue()) !== beforeHash;
-        uDom.nodeFromId('advancedSettingsApply').disabled = !changed;
-        CodeMirror.commands.save = changed ? applyChanges : noopFunc;
+        const changed = hashFromAdvancedSettings(cmEditor.getValue()) !== beforeHash;
+        qs$('#advancedSettingsApply').disabled = !changed;
+        CodeMirror.commands.save = changed ? applyChanges : function(){};
     };
 
+    const timer = vAPI.defer.create(handler);
+
     return function() {
-        if ( timer !== undefined ) { clearTimeout(timer); }
-        timer = vAPI.setTimeout(handler, 100);
+        timer.offon(200);
     };
 })();
 
@@ -78,26 +136,37 @@ cmEditor.on('changes', advancedSettingsChanged);
 /******************************************************************************/
 
 const renderAdvancedSettings = async function(first) {
-    const raw = await vAPI.messaging.send('dashboard', {
+    const details = await vAPI.messaging.send('dashboard', {
         what: 'readHiddenSettings',
     });
-
-    beforeHash = hashFromAdvancedSettings(raw);
+    defaultSettings = new Map(arrayFromObject(details.default));
+    adminSettings = new Map(arrayFromObject(details.admin));
+    beforeHash = hashFromAdvancedSettings(details.current);
     const pretty = [];
-    const lines = raw.split('\n');
+    const roLines = [];
+    const entries = arrayFromObject(details.current);
     let max = 0;
-    for ( const line of lines ) {
-        const pos = line.indexOf(' ');
-        if ( pos > max ) { max = pos; }
+    for ( const [ k ] of entries ) {
+        if ( k.length > max ) { max = k.length; }
     }
-    for ( const line of lines ) {
-        const pos = line.indexOf(' ');
-        pretty.push(' '.repeat(max - pos) + line);
+    for ( let i = 0; i < entries.length; i++ ) {
+        const [ k, v ] = entries[i];
+        pretty.push(' '.repeat(max - k.length) + `${k} ${v}`);
+        if ( adminSettings.has(k) ) {
+            roLines.push(i);
+        }
     }
     pretty.push('');
     cmEditor.setValue(pretty.join('\n'));
     if ( first ) {
         cmEditor.clearHistory();
+    }
+    for ( const line of roLines ) {
+        cmEditor.markText(
+            { line, ch: 0 },
+            { line: line + 1, ch: 0 },
+            { readOnly: true }
+        );
     }
     advancedSettingsChanged();
     cmEditor.focus();
@@ -115,17 +184,11 @@ const applyChanges = async function() {
 
 /******************************************************************************/
 
-uDom.nodeFromId('advancedSettings').addEventListener(
-    'input',
-    advancedSettingsChanged
-);
-uDom.nodeFromId('advancedSettingsApply').addEventListener('click', ( ) => {
+dom.on('#advancedSettings', 'input', advancedSettingsChanged);
+dom.on('#advancedSettingsApply', 'click', ( ) => {
     applyChanges();
 });
 
 renderAdvancedSettings(true);
 
 /******************************************************************************/
-
-// <<<< End of private namespace
-})();

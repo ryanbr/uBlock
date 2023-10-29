@@ -40,7 +40,7 @@
     "description": "appears as tab name in dashboard"
   },
   "whitelistPageName": {
-    "message": "Liste blanche",
+    "message": "Sites Web fiables",
     "description": "appears as tab name in dashboard"
   },
   "shortcutsPageName": {
@@ -53,6 +53,10 @@
   },
   "aboutPageName": {
     "message": "À propos",
+    "description": "appears as tab name in dashboard"
+  },
+  "supportPageName": {
+    "message": "Support",
     "description": "appears as tab name in dashboard"
   },
   "assetViewerPageName": {
@@ -85,7 +89,7 @@
   },
   "popupBlockedStats": {
     "message": "{{count}}, soit {{percent}}%",
-    "description": "Example: 15 or 13%"
+    "description": "Example: 15 (13%)"
   },
   "popupBlockedSinceInstallPrompt": {
     "message": "depuis toujours :",
@@ -122,6 +126,10 @@
   "popupTipLog": {
     "message": "Ouvrir le journal des requêtes",
     "description": "Tooltip used for the logger icon in the panel"
+  },
+  "popupTipReport": {
+    "message": "Rapporter un problème sur ce site Web",
+    "description": "Tooltip used for the 'chat' icon in the panel"
   },
   "popupTipNoPopups": {
     "message": "Activer/Désactiver le blocage des fenêtres pop-ups pour ce site",
@@ -179,25 +187,33 @@
     "message": "Cliquez pour cesser de désactiver JavaScript sur ce site",
     "description": "Tooltip for the no-scripting per-site switch"
   },
+  "popupNoPopups_v2": {
+    "message": "Fenêtres pop-ups",
+    "description": "Caption for the no-popups per-site switch"
+  },
   "popupNoLargeMedia_v2": {
     "message": "Médias de grande taille",
-    "description": "Tip for the no-large-media per-site switch"
+    "description": "Caption for the no-large-media per-site switch"
   },
   "popupNoCosmeticFiltering_v2": {
     "message": "Filtrage esthétique",
-    "description": "Tip for the no-cosmetic-filtering per-site switch"
+    "description": "Caption for the no-cosmetic-filtering per-site switch"
   },
   "popupNoRemoteFonts_v2": {
     "message": "Polices d'écriture distantes",
-    "description": "Tip for the no-remote-fonts per-site switch"
+    "description": "Caption for the no-remote-fonts per-site switch"
   },
   "popupNoScripting_v2": {
     "message": "JavaScript",
-    "description": "Tip for the no-scripting per-site switch"
+    "description": "Caption for the no-scripting per-site switch"
   },
   "popupMoreButton_v2": {
     "message": "Plus",
-    "description": "Label to be used to toggle overview panel"
+    "description": "Label to be used to show popup panel sections"
+  },
+  "popupLessButton_v2": {
+    "message": "Moins",
+    "description": "Label to be used to hide popup panel sections"
   },
   "popupTipGlobalRules": {
     "message": "Règles globales : Cette colonne concerne des règles qui s'appliquent partout.",
@@ -255,6 +271,18 @@
     "message": "{{count}} sur un total de {{total}}",
     "description": "appears in popup"
   },
+  "popupVersion": {
+    "message": "Version",
+    "description": "Example of use: Version 1.26.4"
+  },
+  "popup3pScriptFilter": {
+    "message": "script",
+    "description": "Appears as an option to filter out firewall rows"
+  },
+  "popup3pFrameFilter": {
+    "message": "cadre",
+    "description": "Appears as an option to filter out firewall rows"
+  },
   "pickerCreate": {
     "message": "Créer",
     "description": "English: Create"
@@ -284,7 +312,7 @@
     "description": "English: Click, Ctrl-click"
   },
   "pickerContextMenuEntry": {
-    "message": "Bloquer un élément",
+    "message": "Bloquer l'élément",
     "description": "An entry in the browser's contextual menu"
   },
   "settingsCollapseBlockedPrompt": {
@@ -307,17 +335,25 @@
     "message": "Mode Daltonien",
     "description": "English: Color-blind friendly"
   },
+  "settingsAppearance": {
+    "message": "Apparence",
+    "description": "Section for controlling user interface appearance"
+  },
+  "settingsThemeLabel": {
+    "message": "Thème",
+    "description": "Label for checkbox to enable a custom dark theme"
+  },
+  "settingsThemeAccent0Label": {
+    "message": "Couleur d'accentuation personnalisée",
+    "description": "Label for checkbox to pick an accent color"
+  },
   "settingsCloudStorageEnabledPrompt": {
     "message": "Activer le stockage des paramètres dans le nuage",
     "description": ""
   },
   "settingsAdvancedUserPrompt": {
-    "message": "Activer les fonctionnalités avancées (<a href='https://github.com/gorhill/uBlock/wiki/Advanced-user-features'>À lire</a>)",
-    "description": ""
-  },
-  "settingsAdvancedUserSettings": {
-    "message": "Paramètres avancés",
-    "description": "For the tooltip of a link which gives access to advanced settings"
+    "message": "Je suis un utilisateur/une utilisatrice avancé(e)",
+    "description": "Checkbox to let user access advanced, technical features"
   },
   "settingsPrefetchingDisabledPrompt": {
     "message": "Désactiver la prédiction des actions sur le réseau (afin d'empêcher toute connexion pour les requêtes réseau bloquées)",
@@ -359,9 +395,21 @@
     "message": "Bloquer les rapports CSP",
     "description": "background information: https://github.com/gorhill/uBlock/issues/3150"
   },
-  "settingsStorageUsed": {
-    "message": "Espace de stockage utilisé : {{value}} octet(s)",
-    "description": "English: Storage used: {{}} bytes"
+  "settingsUncloakCnamePrompt": {
+    "message": "Révéler les noms canoniques",
+    "description": "background information: https://github.com/uBlockOrigin/uBlock-issues/issues/1513"
+  },
+  "settingsAdvanced": {
+    "message": "Avancé",
+    "description": "Section for controlling advanced-user settings"
+  },
+  "settingsAdvancedSynopsis": {
+    "message": "Fonctionnalités convenant uniquement aux utilisateurs avancés",
+    "description": "Description of section controlling advanced-user settings"
+  },
+  "settingsAdvancedUserSettings": {
+    "message": "Paramètres avancés",
+    "description": "For the tooltip of a link which gives access to advanced settings"
   },
   "settingsLastRestorePrompt": {
     "message": "Date de la dernière restauration :",
@@ -396,7 +444,7 @@
     "description": "English: Parse and enforce Adblock+ element hiding filters."
   },
   "3pParseAllABPHideFiltersInfo": {
-    "message": "<p>Cette option permet de prendre en charge les filtres Adblock Plus de type <a href=\"https://adblockplus.org/en/faq_internal#elemhide\">&ldquo;element hiding&rdquo;</a>. Ces filtres ont principalement un impact visuel, servant à dissimuler des éléments nuisibles d'une page Web et qui ne sont pas blocables par le filtrage standard.</p><p>L'activation de cette fonctionnalité augmente l'empreinte mémoire de uBlock₀.</p>",
+    "message": "Les filtres esthétiques servent à cacher des éléments d'une page Web considérés comme une nuisance visuelle, et qui ne peuvent pas être bloqués par le filtrage réseau basé sur les requêtes.",
     "description": "Describes the purpose of the 'Parse and enforce cosmetic filters' feature."
   },
   "3pIgnoreGenericCosmeticFilters": {
@@ -404,8 +452,12 @@
     "description": "This will cause uBO to ignore all generic cosmetic filters."
   },
   "3pIgnoreGenericCosmeticFiltersInfo": {
-    "message": "<p>Les filtres esthétiques génériques sont des filtres esthétiques conçus pour être appliqués sur tous les sites Web.<p>Bien qu'ils soient pris en charge efficacement par uBlock₀, les filtres esthétiques génériques restent susceptibles de consommer des ressources supplémentaires en mémoire vive & en processeur central sur certaines pages Web, tout particulièrement ceux de grandes taille & longévité.<p>Ignorer ce type de filtrage esthétique réduira l'utilisation supplémentaire en RAM & en CPU sur les pages Web, diminuant également l'empreinte mémoire d'uBlock₀.<p>Il est recommandé d'activer ce paramètre sur des appareils modestes.",
+    "message": "Les filtres esthétiques génériques sont des filtres esthétiques conçus pour être appliqués sur tous les sites Web. Activer cette option réduira l'utilisation en mémoire et en processeur sur les pages Web.\n\nIl est recommandé d'activer ce paramètre sur des appareils à la puissance modeste.",
     "description": "Describes the purpose of the 'Ignore generic cosmetic filters' feature."
+  },
+  "3pSuspendUntilListsAreLoaded": {
+    "message": "Suspendre l'activité réseau jusqu'au chargement de toutes les listes de filtres",
+    "description": "A checkbox in the 'Filter lists' pane"
   },
   "3pListsOfBlockedHostsHeader": {
     "message": "Listes prédéfinies d'hôtes à bloquer",
@@ -417,35 +469,35 @@
   },
   "3pGroupDefault": {
     "message": "Intégrées",
-    "description": "Header for the uBlock filters section in 'Filter lists pane'"
+    "description": "Filter lists section name"
   },
   "3pGroupAds": {
     "message": "Publicités",
-    "description": "English: Ads"
+    "description": "Filter lists section name"
   },
   "3pGroupPrivacy": {
     "message": "Confidentialité",
-    "description": "English: Privacy"
+    "description": "Filter lists section name"
   },
   "3pGroupMalware": {
-    "message": "Domaines malveillants",
-    "description": "English: Malware domains"
+    "message": "Protection anti-malware et sécurité",
+    "description": "Filter lists section name"
   },
   "3pGroupAnnoyances": {
     "message": "Nuisances",
-    "description": "The header identifying the filter lists in the category 'annoyances'"
+    "description": "Filter lists section name"
   },
   "3pGroupMultipurpose": {
     "message": "Tout usage",
-    "description": "English: Multipurpose"
+    "description": "Filter lists section name"
   },
   "3pGroupRegions": {
-    "message": "Régions, langages",
-    "description": "English: Regions, languages"
+    "message": "Régions, langues",
+    "description": "Filter lists section name"
   },
   "3pGroupCustom": {
     "message": "Vos propres listes",
-    "description": "English: Custom"
+    "description": "Filter lists section name"
   },
   "3pImport": {
     "message": "Importer",
@@ -459,12 +511,16 @@
     "message": "Obsolète",
     "description": "used as a tooltip for the out-of-date icon beside a list"
   },
+  "3pViewContent": {
+    "message": "Voir le contenu",
+    "description": "used as a tooltip for eye icon beside a list"
+  },
   "3pLastUpdate": {
     "message": "Dernière mise à jour effectuée : {{ago}}\nCliquez pour forcer la mise à jour",
     "description": "used as a tooltip for the clock icon beside a list"
   },
   "3pUpdating": {
-    "message": "Mise à jour en cours...",
+    "message": "Mise à jour en cours…",
     "description": "used as a tooltip for the spinner icon beside a list"
   },
   "3pNetworkError": {
@@ -472,16 +528,20 @@
     "description": "used as a tooltip for error icon beside a list"
   },
   "1pFormatHint": {
-    "message": "Une règle par ligne. Une règle peut être un simple nom d'hôte, ou encore un filtre respectant la syntaxe des filtres Adblock Plus. Les lignes débutant par <code>!</code> seront ignorées.",
+    "message": "Une règle par ligne. Une règle peut être un simple nom d'hôte, ou encore une règle compatible EasyList. Les lignes débutant par <code>!</code> seront ignorées.",
     "description": "Short information about how to create custom filters"
+  },
+  "1pTrustWarning": {
+    "message": "Il est recommandé de ne pas ajouter de filtres en provenance de sources non fiables.",
+    "description": "Warning against copy-pasting filters from random sources"
   },
   "1pImport": {
     "message": "Importer",
-    "description": "English: Import and append"
+    "description": "Button in the 'My filters' pane"
   },
   "1pExport": {
     "message": "Exporter",
-    "description": "English: Export"
+    "description": "Button in the 'My filters' pane"
   },
   "1pExportFilename": {
     "message": "mes-filtres-statiques-ublock_{{datetime}}.txt",
@@ -520,12 +580,12 @@
     "description": "Will discard manually-edited content and exit manual-edit mode"
   },
   "rulesImport": {
-    "message": "Importer à partir du fichier",
+    "message": "Importer à partir du fichier…",
     "description": ""
   },
   "rulesExport": {
     "message": "Exporter vers un fichier",
-    "description": ""
+    "description": "Button in the 'My rules' pane"
   },
   "rulesDefaultFileName": {
     "message": "mes-regles-de-filtrage-dynamique-ublock_{{datetime}}.txt",
@@ -536,24 +596,40 @@
     "description": "English: List of your dynamic filtering rules."
   },
   "rulesFormatHint": {
-    "message": "Syntaxe : <code>source destination type action</code> (<a href='https://github.com/gorhill/uBlock/wiki/Dynamic-filtering:-rule-syntax'>Documentation complète en Anglais</a>)",
+    "message": "Syntaxe : <code>source destination type action</code> (<a href='https://github.com/gorhill/uBlock/wiki/Dynamic-filtering:-rule-syntax'>Documentation complète en anglais</a>)",
     "description": "English: dynamic rule syntax and full documentation."
   },
+  "rulesSort": {
+    "message": "Trier :",
+    "description": "English: label for sort option."
+  },
+  "rulesSortByType": {
+    "message": "Type de règle",
+    "description": "English: a sort option for list of rules."
+  },
+  "rulesSortBySource": {
+    "message": "Source",
+    "description": "English: a sort option for list of rules."
+  },
+  "rulesSortByDestination": {
+    "message": "Destination",
+    "description": "English: a sort option for list of rules."
+  },
   "whitelistPrompt": {
-    "message": "La liste blanche indique à uBlock Origin sur quels sites Web il ne doit pas opérer de filtrage. Renseignez une exception par ligne. Toute entrée invalide sera ignorée et vous n'en serez pas averti(e).",
-    "description": "English: An overview of the content of the dashboard's Whitelist pane."
+    "message": "Les directives de site de confiance indiquent sur quelles pages Web uBlock Origin devrait être désactivée. Une entrée par ligne.",
+    "description": "A concise description of the 'Trusted sites' pane."
   },
   "whitelistImport": {
     "message": "Importer",
-    "description": "English: Import and append"
+    "description": "Button in the 'Trusted sites' pane"
   },
   "whitelistExport": {
     "message": "Exporter",
-    "description": "English: Export"
+    "description": "Button in the 'Trusted sites' pane"
   },
   "whitelistExportFilename": {
-    "message": "ma-liste-blanche-ublock-{{datetime}}.txt",
-    "description": "English: my-ublock-whitelist_{{datetime}}.txt"
+    "message": "mes-sites-fiables-ublock-{{datetime}}.txt",
+    "description": "The default filename to use for import/export purpose"
   },
   "whitelistApply": {
     "message": "Appliquer",
@@ -641,6 +717,10 @@
   },
   "loggerRowFiltererBuiltinAllowed": {
     "message": "autorisée",
+    "description": "A keyword in the built-in row filtering expression"
+  },
+  "loggerRowFiltererBuiltinModified": {
+    "message": "Modifié",
     "description": "A keyword in the built-in row filtering expression"
   },
   "loggerRowFiltererBuiltin1p": {
@@ -803,21 +883,141 @@
     "message": "Markdown",
     "description": "Label for radio-button to pick export text format"
   },
+  "supportOpenButton": {
+    "message": "Ouvrir",
+    "description": "Text for button which open an external webpage in Support pane"
+  },
+  "supportReportSpecificButton": {
+    "message": "Créer un rapport",
+    "description": "Text for button which open an external webpage in Support pane"
+  },
+  "supportFindSpecificButton": {
+    "message": "Trouver des rapports similaires",
+    "description": "A clickable link in the filter issue reporter section"
+  },
+  "supportS1H": {
+    "message": "Documentation",
+    "description": "Header of 'Documentation' section in Support pane"
+  },
+  "supportS1P1": {
+    "message": "Lisez la documentation à <code>uBlock/wiki</code> pour apprendre toutes les fonctionnalités d'uBlock Origin.",
+    "description": "First paragraph of 'Documentation' section in Support pane"
+  },
+  "supportS2H": {
+    "message": "Questions et support",
+    "description": "Header of 'Questions and support' section in Support pane"
+  },
+  "supportS2P1": {
+    "message": "Les réponses aux questions et autres formes d'assistance sont fournies dans le subreddit <code>/r/uBlockOrigin</code>.",
+    "description": "First paragraph of 'Questions and support' section in Support pane"
+  },
+  "supportS3H": {
+    "message": "Problèmes de filtrage/Site Web non fonctionnel",
+    "description": "Header of 'Filter issues' section in Support pane"
+  },
+  "supportS3P1": {
+    "message": "Rapportez les problèmes de filtrage avec des sites Web spécifiques dans le <span data-url=\"https://github.com/uBlockOrigin/uAssets/issues?q=is%3Aissue\">suivi des problèmes</span>. <u>Nécessite un compte GitHub.</u>",
+    "description": "First paragraph of 'Filter issues' section in Support pane"
+  },
+  "supportS3P2": {
+    "message": "<b>Important :</b> Evitez d'utiliser des bloqueurs similaires à uBlock Origin en même temps que ce dernier, car cela peut causer des problèmes de filtrage sur certains sites Web.",
+    "description": "Second paragraph of 'Filter issues' section in Support pane"
+  },
+  "supportS3P3": {
+    "message": "<b>Astuces :</b> Assurez-vous que vos listes de filtres sont à jour. <span data-url=\"logger-ui.html#_\">Le journal des requêtes</span> est l'outil principal pour diagnostiquer des problèmes liés au filtrage.",
+    "description": "Third paragraph of 'Filter issues' section in Support pane"
+  },
+  "supportS4H": {
+    "message": "Rapporter un bogue",
+    "description": "Header of 'Bug report' section in Support pane"
+  },
+  "supportS4P1": {
+    "message": "Rapportez des problèmes avec l'extension uBlock Origin elle-même dans le <span data-url=\"https://github.com/uBlockOrigin/uBlock-issues/issues?q=is%3Aissue\">suivi des problèmes</span>. <u>Nécessite un compte GitHub.</u>",
+    "description": "First paragraph of 'Bug report' section in Support pane"
+  },
+  "supportS5H": {
+    "message": "Informations de dépannage",
+    "description": "Header of 'Troubleshooting Information' section in Support pane"
+  },
+  "supportS5P1": {
+    "message": "Veuillez trouver ci-dessous les informations techniques pouvant aider les bénévoles à vous assister dans la résolution de problème.",
+    "description": "First paragraph of 'Troubleshooting Information' section in Support pane"
+  },
+  "supportS5P2": {
+    "message": "<b>Important :</b> Les informations potentiellement privées ou sensibles sont retirées par défaut. Ainsi éditées, elles peuvent compliquer la résolution de problème.",
+    "description": "Second paragraph of 'Troubleshooting Information' section in Support pane"
+  },
+  "supportS6H": {
+    "message": "Rapporter un problème de filtre",
+    "description": "Header of 'Report a filter issue' section in Support pane"
+  },
+  "supportS6P1S1": {
+    "message": "Pour éviter d'encombrer les contributeurs avec des rapports en double, veuillez vérifier que le problème n'a pas déjà été rapporté.",
+    "description": "A paragraph in the filter issue reporter section"
+  },
+  "supportS6P2S1": {
+    "message": "Les listes de filtres sont actualisées tous les jours. Assurez-vous que votre problème n'ait pas déjà été résolu dans les listes de filtres les plus récentes.",
+    "description": "A paragraph in the filter issue reporter section"
+  },
+  "supportS6P2S2": {
+    "message": "Vérifiez que le problème persiste après avoir rechargé la page Web problématique.",
+    "description": "A paragraph in the filter issue reporter section"
+  },
+  "supportS6URL": {
+    "message": "Adresse de la page Web :",
+    "description": "Label for the URL of the page"
+  },
+  "supportS6Select1": {
+    "message": "La page Web…",
+    "description": "Label for widget to select type of issue"
+  },
+  "supportS6Select1Option0": {
+    "message": "-- Choisir un type --",
+    "description": "An entry in the widget used to select the type of issue"
+  },
+  "supportS6Select1Option1": {
+    "message": "affiche des publicités ou des résidus de publicité",
+    "description": "An entry in the widget used to select the type of issue"
+  },
+  "supportS6Select1Option2": {
+    "message": "a une surcouche ou d'autres nuisances",
+    "description": "An entry in the widget used to select the type of issue"
+  },
+  "supportS6Select1Option3": {
+    "message": "détecte uBlock Origin",
+    "description": "An entry in the widget used to select the type of issue"
+  },
+  "supportS6Select1Option4": {
+    "message": "a des problèmes de confidentialité",
+    "description": "An entry in the widget used to select the type of issue"
+  },
+  "supportS6Select1Option5": {
+    "message": "ne fonctionne pas correctement quand uBlock Origin est activée",
+    "description": "An entry in the widget used to select the type of issue"
+  },
+  "supportS6Select1Option6": {
+    "message": "ouvre des onglets ou fenêtres indésirables",
+    "description": "An entry in the widget used to select the type of issue"
+  },
+  "supportS6Checkbox1": {
+    "message": "Marquer le site Web en tant que \"NSFW\" (<a href=\"https://fr.wikipedia.org/wiki/Not_safe_for_work\">\"Not Safe For Work\", c'est-à-dire pour public averti/inapproprié au travail</a>)",
+    "description": "A checkbox to use for NSFW sites"
+  },
+  "supportRedact": {
+    "message": "Retirer les informations potentiellement privées ou sensibles",
+    "description": "Text for 'Redact' button"
+  },
+  "supportUnredact": {
+    "message": "Restaurer les informations potentiellement privées ou sensibles",
+    "description": "Text for 'Unredact' button"
+  },
+  "aboutPrivacyPolicy": {
+    "message": "Politique de confidentialité",
+    "description": "Link to privacy policy on GitHub (English)"
+  },
   "aboutChangelog": {
     "message": "Journal des changements",
     "description": ""
-  },
-  "aboutWiki": {
-    "message": "Documentation",
-    "description": "English: project' wiki on GitHub"
-  },
-  "aboutSupport": {
-    "message": "Support",
-    "description": "A link for where to get support"
-  },
-  "aboutIssues": {
-    "message": "Suivi des problèmes",
-    "description": "Text for a link to official issue tracker"
   },
   "aboutCode": {
     "message": "Code Source (Licence GPLv3)",
@@ -827,8 +1027,28 @@
     "message": "Contributeurs",
     "description": "English: Contributors"
   },
+  "aboutSourceCode": {
+    "message": "Code source",
+    "description": "Link text to source code repo"
+  },
+  "aboutTranslations": {
+    "message": "Traductions",
+    "description": "Link text to translations repo"
+  },
+  "aboutFilterLists": {
+    "message": "Listes de filtres",
+    "description": "Link text to uBO's own filter lists repo"
+  },
   "aboutDependencies": {
     "message": "Dépendances externes (compatibles GPLv3) :",
+    "description": "Shown in the About pane"
+  },
+  "aboutCDNs": {
+    "message": "Les propres listes de filtres d'uBO sont hébergées gratuitement sur les <a href=\"https://fr.wikipedia.org/wiki/R%C3%A9seau_de_diffusion_de_contenu\">RDC</a> suivants :",
+    "description": "Shown in the About pane"
+  },
+  "aboutCDNsInfo": {
+    "message": "Un RDC choisi aléatoirement est utilisé lorsqu'une liste de filtres doit être mise à jour.",
     "description": "Shown in the About pane"
   },
   "aboutBackupDataButton": {
@@ -840,11 +1060,11 @@
     "description": "English: my-ublock-backup_{{datetime}}.txt"
   },
   "aboutRestoreDataButton": {
-    "message": "Importer depuis un fichier",
+    "message": "Restaurer depuis un fichier…",
     "description": "English: Restore from file..."
   },
   "aboutResetDataButton": {
-    "message": "Paramètres par défaut",
+    "message": "Réinitialiser les réglages",
     "description": "English: Reset to default settings..."
   },
   "aboutRestoreDataConfirm": {
@@ -864,8 +1084,12 @@
     "description": "English: Network error: {{msg}}"
   },
   "subscriberConfirm": {
-    "message": "uBlock₀ : Ajouter la ressource Web suivante à votre sélection de listes de filtrage ?\n\nTitre : \"{{title}}\"\nURL : {{url}}",
-    "description": "English: The message seen by the user to confirm subscription to a ABP filter list"
+    "message": "Ajouter le lien suivant à votre sélection de listes de filtrage ?\n\nTitre : \"{{title}}\"\nLien : {{url}}",
+    "description": "No longer used"
+  },
+  "subscribeButton": {
+    "message": "Souscrire",
+    "description": "For the button used to subscribe to a filter list"
   },
   "elapsedOneMinuteAgo": {
     "message": "Il y a une minute",
@@ -903,13 +1127,17 @@
     "message": "Arrêt",
     "description": "Firefox-specific: appears as 'uBlock₀ (off)'"
   },
+  "docblockedTitle": {
+    "message": "Page bloquée",
+    "description": "Used as a title for the document-blocked page"
+  },
   "docblockedPrompt1": {
     "message": "uBlock₀ a empêché le chargement de la page suivante :",
-    "description": "English: uBlock₀ has prevented the following page from loading:"
+    "description": "Used in the strict-blocking page"
   },
   "docblockedPrompt2": {
     "message": "À cause du filtre suivant :",
-    "description": "English: Because of the following filter"
+    "description": "Used in the strict-blocking page"
   },
   "docblockedNoParamsPrompt": {
     "message": "sans paramètres",
@@ -927,6 +1155,10 @@
     "message": "Fermer cette fenêtre",
     "description": "English: Close this window"
   },
+  "docblockedDontWarn": {
+    "message": "Ne plus m'avertir à propos de ce site",
+    "description": "Label for checkbox in document-blocked page"
+  },
   "docblockedProceed": {
     "message": "Désactiver le blocage strict du domaine {{hostname}}",
     "description": "English: Disable strict blocking for {{hostname}} ..."
@@ -938,6 +1170,10 @@
   "docblockedDisablePermanent": {
     "message": "De manière définitive",
     "description": "English: Permanently"
+  },
+  "docblockedDisable": {
+    "message": "Poursuivre",
+    "description": "Button text to navigate to the blocked page"
   },
   "cloudPush": {
     "message": "Exporter vers le stockage dans le nuage",
@@ -979,9 +1215,21 @@
     "message": "octets",
     "description": ""
   },
+  "contextMenuBlockElementInFrame": {
+    "message": "Bloquer l'élément dans le cadre",
+    "description": "An entry in the browser's contextual menu"
+  },
+  "contextMenuSubscribeToList": {
+    "message": "Souscrire à la liste de filtres",
+    "description": "An entry in the browser's contextual menu"
+  },
   "contextMenuTemporarilyAllowLargeMediaElements": {
     "message": "Autoriser temporairement le chargement d'éléments médias à taille plus importante",
     "description": "A context menu entry, present when large media elements have been blocked on the current site"
+  },
+  "contextMenuViewSource": {
+    "message": "Voir la source…",
+    "description": "A context menu entry, to view the source code of the target resource"
   },
   "shortcutCapturePlaceholder": {
     "message": "Saisir un raccourci",
@@ -995,13 +1243,45 @@
     "message": "Copier vers le presse-papier",
     "description": "Label for buttons used to copy something to the clipboard"
   },
-  "toggleBlockingProfile": {
-    "message": "Changer le mode de blocage",
-    "description": "Label for keyboard shortcut used to toggle blocking profile"
+  "genericSelectAll": {
+    "message": "Sélectionner tout",
+    "description": "Label for buttons used to select all text in editor"
+  },
+  "toggleCosmeticFiltering": {
+    "message": "Commuter le filtrage esthétique",
+    "description": "Label for keyboard shortcut used to toggle cosmetic filtering"
   },
   "relaxBlockingMode": {
     "message": "Détendre le mode de blocage",
-    "description": "Label for keyboard shortcut used to relax blocking mode (meant to replace 'Toggle blocking profile')"
+    "description": "Label for keyboard shortcut used to relax blocking mode"
+  },
+  "storageUsed": {
+    "message": "Espace de stockage utilisé : {{value}} {{unit}}",
+    "description": " In Setting pane, renders as (example): Storage used: 13.2 MB"
+  },
+  "KB": {
+    "message": "Ko",
+    "description": "short for 'kilobytes'"
+  },
+  "MB": {
+    "message": "Mo",
+    "description": "short for 'megabytes'"
+  },
+  "GB": {
+    "message": "Go",
+    "description": "short for 'gigabytes'"
+  },
+  "clickToLoad": {
+    "message": "Cliquez pour charger",
+    "description": "Message used in frame placeholders"
+  },
+  "linterMainReport": {
+    "message": "Erreurs : {{count}}",
+    "description": "Summary of number of errors as reported by the linter "
+  },
+  "unprocessedRequestTooltip": {
+    "message": "Échec du filtrage au lancement du navigateur. Rechargez la page pour assurer un filtrage correct.",
+    "description": "A warning which will appear in the popup panel if needed"
   },
   "dummy": {
     "message": "This entry must be the last one",

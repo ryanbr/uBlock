@@ -19,15 +19,12 @@
     Home: https://github.com/gorhill/uBlock
 */
 
-/******************************************************************************/
-
 'use strict';
 
 /******************************************************************************/
 
-µBlock.canUseShortcuts = vAPI.commands instanceof Object;
-µBlock.canUpdateShortcuts = µBlock.canUseShortcuts &&
-                            typeof vAPI.commands.update === 'function';
+import µb from './background.js';
+import { hostnameFromURI } from './uri-utils.js';
 
 /******************************************************************************/
 
@@ -36,7 +33,7 @@
 // *****************************************************************************
 // start of local namespace
 
-if ( µBlock.canUseShortcuts === false ) { return; }
+if ( vAPI.commands instanceof Object === false ) { return; }
 
 const relaxBlockingMode = (( ) => {
     const reloadTimers = new Map();
@@ -44,12 +41,11 @@ const relaxBlockingMode = (( ) => {
     return function(tab) {
         if ( tab instanceof Object === false || tab.id <= 0 ) { return; }
 
-        const µb = µBlock;
-        const normalURL = µb.normalizePageURL(tab.id, tab.url);
+        const normalURL = µb.normalizeTabURL(tab.id, tab.url);
 
         if ( µb.getNetFilteringSwitch(normalURL) === false ) { return; }
 
-        const hn = µb.URI.hostnameFromURI(normalURL);
+        const hn = hostnameFromURI(normalURL);
         const curProfileBits = µb.blockingModeFromHostname(hn);
         let newProfileBits;
         for ( const profile of µb.liveBlockingProfiles ) {
@@ -61,6 +57,8 @@ const relaxBlockingMode = (( ) => {
 
         // TODO: Reset to original blocking profile?
         if ( newProfileBits === undefined ) { return; }
+
+        const noReload = (newProfileBits & 0b00000001) === 0;
 
         if (
             (curProfileBits & 0b00000010) !== 0 &&
@@ -78,6 +76,7 @@ const relaxBlockingMode = (( ) => {
                 (newProfileBits & 0b00000100) === 0
             ) {
                 µb.toggleFirewallRule({
+                    tabId: noReload ? tab.id : undefined,
                     srcHostname: hn,
                     desHostname: '*',
                     requestType: '3p',
@@ -109,56 +108,65 @@ const relaxBlockingMode = (( ) => {
         }
 
         // Reload the target tab?
-        if ( (newProfileBits & 0b00000001) === 0 ) { return; }
+        if ( noReload ) { return; }
 
         // Reload: use a timer to coalesce bursts of reload commands.
-        let timer = reloadTimers.get(tab.id);
-        if ( timer !== undefined ) {
-            clearTimeout(timer);
-        }
-        timer = vAPI.setTimeout(
-            tabId => {
+        const timer = reloadTimers.get(tab.id) || (( ) => {
+            const t = vAPI.defer.create(tabId => {
                 reloadTimers.delete(tabId);
                 vAPI.tabs.reload(tabId);
-            },
-            547,
-            tab.id
-        );
-        reloadTimers.set(tab.id, timer);
+            });
+            reloadTimers.set(tab.id, t);
+            return t;
+        })();
+        timer.offon(547, tab.id);
     };
 })();
 
 vAPI.commands.onCommand.addListener(async command => {
-    const µb = µBlock;
-
+    // Generic commands
+    if ( command === 'open-dashboard' ) {
+        µb.openNewTab({
+            url: 'dashboard.html',
+            select: true,
+            index: -1,
+        });
+        return;
+    }
+    // Tab-specific commands
+    const tab = await vAPI.tabs.getCurrent();
+    if ( tab instanceof Object === false ) { return; }
     switch ( command ) {
     case 'launch-element-picker':
     case 'launch-element-zapper': {
-        const tab = await vAPI.tabs.getCurrent();
-        if ( tab instanceof Object === false ) { return; }
         µb.epickerArgs.mouse = false;
         µb.elementPickerExec(
             tab.id,
+            0,
             undefined,
             command === 'launch-element-zapper'
         );
         break;
     }
     case 'launch-logger': {
-        const tab = await vAPI.tabs.getCurrent();
-        if ( tab instanceof Object === false ) { return; }
         const hash = tab.url.startsWith(vAPI.getURL(''))
             ? ''
             : `#_+${tab.id}`;
         µb.openNewTab({
             url: `logger-ui.html${hash}`,
             select: true,
-            index: -1
+            index: -1,
         });
         break;
     }
     case 'relax-blocking-mode':
-        relaxBlockingMode(await vAPI.tabs.getCurrent());
+        relaxBlockingMode(tab);
+        break;
+    case 'toggle-cosmetic-filtering':
+        µb.toggleHostnameSwitch({
+            name: 'no-cosmetic-filtering',
+            hostname: hostnameFromURI(µb.normalizeTabURL(tab.id, tab.url)),
+        });
         break;
     default:
         break;

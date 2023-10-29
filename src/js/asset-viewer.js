@@ -25,32 +25,88 @@
 
 /******************************************************************************/
 
+import { dom, qs$ } from './dom.js';
+import './codemirror/ubo-static-filtering.js';
+
+/******************************************************************************/
+
 (async ( ) => {
-    const params = new URL(document.location).searchParams;
-    const assetKey = params.get('url');
+    const subscribeURL = new URL(document.location);
+    const subscribeParams = subscribeURL.searchParams;
+    const assetKey = subscribeParams.get('url');
     if ( assetKey === null ) { return; }
 
-    const cmEditor = new CodeMirror(
-        document.getElementById('content'),
-        {
-            autofocus: true,
-            lineNumbers: true,
-            lineWrapping: true,
-            readOnly: true,
-            styleActiveLine: true,
-        }
-    );
+    const subscribeElem = subscribeParams.get('subscribe') !== null
+        ? qs$('#subscribe')
+        : null;
+    if ( subscribeElem !== null && subscribeURL.hash !== '#subscribed' ) {
+        const title = subscribeParams.get('title');
+        const promptElem = qs$('#subscribePrompt');
+        dom.text(promptElem.children[0], title);
+        const a = promptElem.children[1];
+        dom.text(a, assetKey);
+        dom.attr(a, 'href', assetKey);
+        dom.cl.remove(subscribeElem, 'hide');
+    }
+
+    const cmEditor = new CodeMirror(qs$('#content'), {
+        autofocus: true,
+        foldGutter: true,
+        gutters: [
+            'CodeMirror-linenumbers',
+            { className: 'CodeMirror-lintgutter', style: 'width: 11px' },
+        ],
+        lineNumbers: true,
+        lineWrapping: true,
+        matchBrackets: true,
+        maxScanLines: 1,
+        readOnly: true,
+        styleActiveLine: {
+            nonEmpty: true,
+        },
+    });
 
     uBlockDashboard.patchCodeMirrorEditor(cmEditor);
+
+    vAPI.messaging.send('dashboard', {
+        what: 'getAutoCompleteDetails'
+    }).then(hints => {
+        if ( hints instanceof Object === false ) { return; }
+        cmEditor.setOption('uboHints', hints);
+    });
+
+    vAPI.messaging.send('dashboard', {
+        what: 'getTrustedScriptletTokens',
+    }).then(tokens => {
+        cmEditor.setOption('trustedScriptletTokens', tokens);
+    });
 
     const details = await vAPI.messaging.send('default', {
         what : 'getAssetContent',
         url: assetKey,
     });
+    cmEditor.setOption('trustedSource', details.trustedSource === true);
     cmEditor.setValue(details && details.content || '');
-    if ( details.sourceURL ) {
-        const a = document.querySelector('.cm-search-widget .sourceURL');
-        a.setAttribute('href', details.sourceURL);
-        a.setAttribute('title', details.sourceURL);
+
+    if ( subscribeElem !== null ) {
+        dom.on('#subscribeButton', 'click', ( ) => {
+            dom.cl.add(subscribeElem, 'hide');
+            vAPI.messaging.send('scriptlets', {
+                what: 'applyFilterListSelection',
+                toImport: assetKey,
+            }).then(( ) => {
+                vAPI.messaging.send('scriptlets', {
+                    what: 'reloadAllFilters'
+                });
+            });
+        }, { once: true });
     }
+
+    if ( details.sourceURL ) {
+        const a = qs$('.cm-search-widget .sourceURL');
+        dom.attr(a, 'href', details.sourceURL);
+        dom.attr(a, 'title', details.sourceURL);
+    }
+
+    dom.cl.remove(dom.body, 'loading');
 })();

@@ -12,7 +12,7 @@
     "description": "English: uBlock₀ — Dashboard"
   },
   "dashboardUnsavedWarning": {
-    "message": "Peringatan! Anda memiliki perubahan yang belum disimpan",
+    "message": "Peringatan! Anda memiliki ubahan yang belum disimpan",
     "description": "A warning in the dashboard when navigating away from unsaved changes"
   },
   "dashboardUnsavedWarningStay": {
@@ -40,7 +40,7 @@
     "description": "appears as tab name in dashboard"
   },
   "whitelistPageName": {
-    "message": "Daftar Putih",
+    "message": "Situs Terpercaya",
     "description": "appears as tab name in dashboard"
   },
   "shortcutsPageName": {
@@ -55,6 +55,10 @@
     "message": "Tentang",
     "description": "appears as tab name in dashboard"
   },
+  "supportPageName": {
+    "message": "Dukungan",
+    "description": "appears as tab name in dashboard"
+  },
   "assetViewerPageName": {
     "message": "uBlock₀ — Penampil aset",
     "description": "Title for the asset viewer page"
@@ -64,7 +68,7 @@
     "description": "Title for the advanced settings page"
   },
   "popupPowerSwitchInfo": {
-    "message": "Klik: nonfungsi/fungsikan uBlock₀ untuk situs ini.\n\nCtrl+klik: nonfungsikan uBlock₀ hanya di halaman ini.",
+    "message": "Klik: nonaktif/aktifkan uBlock₀ untuk situs ini.\n\nCtrl+klik: nonaktifkan uBlock₀ hanya di laman ini.",
     "description": "English: Click: disable/enable uBlock₀ for this site.\n\nCtrl+click: disable uBlock₀ only on this page."
   },
   "popupPowerSwitchInfo1": {
@@ -85,7 +89,7 @@
   },
   "popupBlockedStats": {
     "message": "{{count}} atau {{percent}}%",
-    "description": "Example: 15 or 13%"
+    "description": "Example: 15 (13%)"
   },
   "popupBlockedSinceInstallPrompt": {
     "message": "sejak dipasang",
@@ -122,6 +126,10 @@
   "popupTipLog": {
     "message": "Buka pencatat log",
     "description": "Tooltip used for the logger icon in the panel"
+  },
+  "popupTipReport": {
+    "message": "Laporkan masalah situs web ini",
+    "description": "Tooltip used for the 'chat' icon in the panel"
   },
   "popupTipNoPopups": {
     "message": "Alihkan pemblokiran semua popup untuk situs ini",
@@ -179,25 +187,33 @@
     "message": "Klik untuk tidak lagi menonaktifkan total JavaScript di situs ini",
     "description": "Tooltip for the no-scripting per-site switch"
   },
+  "popupNoPopups_v2": {
+    "message": "Jendela pop-up",
+    "description": "Caption for the no-popups per-site switch"
+  },
   "popupNoLargeMedia_v2": {
     "message": "Elemen media besar",
-    "description": "Tip for the no-large-media per-site switch"
+    "description": "Caption for the no-large-media per-site switch"
   },
   "popupNoCosmeticFiltering_v2": {
     "message": "Filter tampilan",
-    "description": "Tip for the no-cosmetic-filtering per-site switch"
+    "description": "Caption for the no-cosmetic-filtering per-site switch"
   },
   "popupNoRemoteFonts_v2": {
     "message": "Fon eksternal",
-    "description": "Tip for the no-remote-fonts per-site switch"
+    "description": "Caption for the no-remote-fonts per-site switch"
   },
   "popupNoScripting_v2": {
     "message": "JavaScript",
-    "description": "Tip for the no-scripting per-site switch"
+    "description": "Caption for the no-scripting per-site switch"
   },
   "popupMoreButton_v2": {
-    "message": "Lainnya",
-    "description": "Label to be used to toggle overview panel"
+    "message": "Lebih banyak",
+    "description": "Label to be used to show popup panel sections"
+  },
+  "popupLessButton_v2": {
+    "message": "Lebih sedikit",
+    "description": "Label to be used to hide popup panel sections"
   },
   "popupTipGlobalRules": {
     "message": "Aturan global: kolom ini untuk aturan yang diterapkan ke semua situs.",
@@ -208,11 +224,11 @@
     "description": "Tooltip when hovering the top-most cell of the local-rules column."
   },
   "popupTipSaveRules": {
-    "message": "Klik untuk membuat ubahan anda permanen.",
+    "message": "Klik untuk membuat ubahan Anda permanen.",
     "description": "Tooltip when hovering over the padlock in the dynamic filtering pane."
   },
   "popupTipRevertRules": {
-    "message": "Klik untuk membatalkan ubahan anda.",
+    "message": "Klik untuk membatalkan ubahan Anda.",
     "description": "Tooltip when hovering over the eraser in the dynamic filtering pane."
   },
   "popupAnyRulePrompt": {
@@ -255,6 +271,18 @@
     "message": "{{count}} dari {{total}}",
     "description": "appears in popup"
   },
+  "popupVersion": {
+    "message": "Versi",
+    "description": "Example of use: Version 1.26.4"
+  },
+  "popup3pScriptFilter": {
+    "message": "skrip",
+    "description": "Appears as an option to filter out firewall rows"
+  },
+  "popup3pFrameFilter": {
+    "message": "frame",
+    "description": "Appears as an option to filter out firewall rows"
+  },
   "pickerCreate": {
     "message": "Buat",
     "description": "English: Create"
@@ -284,7 +312,7 @@
     "description": "English: Click, Ctrl-click"
   },
   "pickerContextMenuEntry": {
-    "message": "Blok elemen...",
+    "message": "Blokir elemen...",
     "description": "An entry in the browser's contextual menu"
   },
   "settingsCollapseBlockedPrompt": {
@@ -307,24 +335,32 @@
     "message": "Ramah buta warna",
     "description": "English: Color-blind friendly"
   },
+  "settingsAppearance": {
+    "message": "Tampilan",
+    "description": "Section for controlling user interface appearance"
+  },
+  "settingsThemeLabel": {
+    "message": "Tema",
+    "description": "Label for checkbox to enable a custom dark theme"
+  },
+  "settingsThemeAccent0Label": {
+    "message": "Warna aksen khusus",
+    "description": "Label for checkbox to pick an accent color"
+  },
   "settingsCloudStorageEnabledPrompt": {
-    "message": "Fungsikan dukungan penyimpanan awan",
+    "message": "Aktifkan dukungan penyimpanan awan",
     "description": ""
   },
   "settingsAdvancedUserPrompt": {
-    "message": "Saya pengguna tingkat lanjut (<a href='https://github.com/gorhill/uBlock/wiki/Advanced-user-features'>bacaan wajib</a>)",
-    "description": ""
-  },
-  "settingsAdvancedUserSettings": {
-    "message": "pengaturan lanjutan",
-    "description": "For the tooltip of a link which gives access to advanced settings"
+    "message": "Saya pengguna tingkat lanjut",
+    "description": "Checkbox to let user access advanced, technical features"
   },
   "settingsPrefetchingDisabledPrompt": {
-    "message": "Nonfungsikan pra-ambil (untuk mencegah sambungan apapun untuk permintaan jaringan yang diblokir)",
+    "message": "Nonaktifkan pra-ambil (untuk mencegah sambungan apapun untuk permintaan jaringan yang diblokir)",
     "description": "English: "
   },
   "settingsHyperlinkAuditingDisabledPrompt": {
-    "message": "Nonfungsikan pengauditan pranala",
+    "message": "Nonaktifkan pengauditan pranala",
     "description": "English: "
   },
   "settingsWebRTCIPAddressHiddenPrompt": {
@@ -359,9 +395,21 @@
     "message": "Blokir laporan CSP",
     "description": "background information: https://github.com/gorhill/uBlock/issues/3150"
   },
-  "settingsStorageUsed": {
-    "message": "Penyimpanan terpakai: {{value}} bita",
-    "description": "English: Storage used: {{}} bytes"
+  "settingsUncloakCnamePrompt": {
+    "message": "Ungkap nama kanonis",
+    "description": "background information: https://github.com/uBlockOrigin/uBlock-issues/issues/1513"
+  },
+  "settingsAdvanced": {
+    "message": "Tingkat lanjut",
+    "description": "Section for controlling advanced-user settings"
+  },
+  "settingsAdvancedSynopsis": {
+    "message": "Fitur ditujukan untuk pengguna tingkat lanjut.",
+    "description": "Description of section controlling advanced-user settings"
+  },
+  "settingsAdvancedUserSettings": {
+    "message": "pengaturan lanjutan",
+    "description": "For the tooltip of a link which gives access to advanced settings"
   },
   "settingsLastRestorePrompt": {
     "message": "Pemulihan terakhir:",
@@ -396,7 +444,7 @@
     "description": "English: Parse and enforce Adblock+ element hiding filters."
   },
   "3pParseAllABPHideFiltersInfo": {
-    "message": "<p>Opsi ini memfungsikan penguraian dan memaksa-jalankan <a href=\"https://adblockplus.org/en/faq_internal#elemhide\">filter &ldquo;penyembunyian elemen&rdquo; yang kompatibel dengan Adblock Plus</a>. Filter ini pada dasarnya hanya sekedar penyaring tampilan, berfungsi untuk menyembunyikan elemen di halaman web yang dianggap sebagai gangguan visual, dan tidak dapat diblokir oleh filter berbasis permintaan jaringan.</p><p>Memfungsikan fitur ini akan meningkatkan penggunaan memori <i>uBlock₀</i>.</p>",
+    "message": "Filter tampilan berfungsi untuk menyembunyikan elemen di halaman web yang dianggap sebagai gangguan visual, dan tidak bisa diblokir oleh filter berbasis permintaan jaringan.",
     "description": "Describes the purpose of the 'Parse and enforce cosmetic filters' feature."
   },
   "3pIgnoreGenericCosmeticFilters": {
@@ -404,8 +452,12 @@
     "description": "This will cause uBO to ignore all generic cosmetic filters."
   },
   "3pIgnoreGenericCosmeticFiltersInfo": {
-    "message": "<p>Filter tampilan generik adalah filter tampilan yang dibuat untuk diterapkan pada semua situs web.<p>Meskipun dikelola secara efisien oleh uBlock₀, filter tampilan generik masih dapat menyebabkan peningkatan overhead memori ram dan CPU pada beberapa halaman web, terutama untuk halaman berukuran besar dan jarang diperbarui dalam waktu lama.<p>Mengaktifkan opsi ini akan menghilangkan peningkatan overhead memori ram dan CPU pada halaman web akibat diterapkannya filter tampilan generik, dan juga mengurangi penggunaan memori ram uBlock₀ itu sendiri.<p>Direkomendasikan untuk mengaktifkan opsi ini pada perangkat dengan ram kecil atau kekuatan CPU yang lemah.",
+    "message": "Filter tampilan generik adalah filter tampilan yang dibuat untuk diterapkan pada semua situs web. Mengaktifkan opsi ini akan menghilangkan peningkatan overhead memori ram dan CPU pada halaman web akibat diterapkannya filter tampilan generik.\n\nDirekomendasikan untuk mengaktifkan opsi ini pada perangkat dengan performa rendah.",
     "description": "Describes the purpose of the 'Ignore generic cosmetic filters' feature."
+  },
+  "3pSuspendUntilListsAreLoaded": {
+    "message": "Tunda aktivitas jaringan sampai semua daftar filter dimuat",
+    "description": "A checkbox in the 'Filter lists' pane"
   },
   "3pListsOfBlockedHostsHeader": {
     "message": "Daftar host yang diblokir",
@@ -417,35 +469,35 @@
   },
   "3pGroupDefault": {
     "message": "Bawaan",
-    "description": "Header for the uBlock filters section in 'Filter lists pane'"
+    "description": "Filter lists section name"
   },
   "3pGroupAds": {
     "message": "Iklan",
-    "description": "English: Ads"
+    "description": "Filter lists section name"
   },
   "3pGroupPrivacy": {
     "message": "Privasi",
-    "description": "English: Privacy"
+    "description": "Filter lists section name"
   },
   "3pGroupMalware": {
     "message": "Domain malware",
-    "description": "English: Malware domains"
+    "description": "Filter lists section name"
   },
   "3pGroupAnnoyances": {
     "message": "Gangguan",
-    "description": "The header identifying the filter lists in the category 'annoyances'"
+    "description": "Filter lists section name"
   },
   "3pGroupMultipurpose": {
     "message": "Serbaguna",
-    "description": "English: Multipurpose"
+    "description": "Filter lists section name"
   },
   "3pGroupRegions": {
     "message": "Wilayah, bahasa",
-    "description": "English: Regions, languages"
+    "description": "Filter lists section name"
   },
   "3pGroupCustom": {
     "message": "Khusus",
-    "description": "English: Custom"
+    "description": "Filter lists section name"
   },
   "3pImport": {
     "message": "Impor...",
@@ -458,6 +510,10 @@
   "3pExternalListObsolete": {
     "message": "Sudah usang.",
     "description": "used as a tooltip for the out-of-date icon beside a list"
+  },
+  "3pViewContent": {
+    "message": "lihat konten",
+    "description": "used as a tooltip for eye icon beside a list"
   },
   "3pLastUpdate": {
     "message": "Pembaruan terakhir: {{ago}}.\nKlik untuk memaksa memperbarui.",
@@ -472,16 +528,20 @@
     "description": "used as a tooltip for error icon beside a list"
   },
   "1pFormatHint": {
-    "message": "Satu filter per baris. Filter dapat berupa nama host, atau filter yang kompatibel dengan Adblock Plus. Baris yang diawali dengan <code>!</code> akan diabaikan.",
+    "message": "Satu filter per baris. Filter dapat berupa nama hos, atau filter yang kompatibel dengan EasyList. Baris yang diawali dengan <code>!</code> akan diabaikan.",
     "description": "Short information about how to create custom filters"
+  },
+  "1pTrustWarning": {
+    "message": "Jangan tambah filter dari sumber yang tidak tepercaya.",
+    "description": "Warning against copy-pasting filters from random sources"
   },
   "1pImport": {
     "message": "Impor dan tambahkan",
-    "description": "English: Import and append"
+    "description": "Button in the 'My filters' pane"
   },
   "1pExport": {
     "message": "Ekspor",
-    "description": "English: Export"
+    "description": "Button in the 'My filters' pane"
   },
   "1pExportFilename": {
     "message": "my-ublock-static-filters_{{datetime}}.txt",
@@ -525,35 +585,51 @@
   },
   "rulesExport": {
     "message": "Ekspor ke berkas",
-    "description": ""
+    "description": "Button in the 'My rules' pane"
   },
   "rulesDefaultFileName": {
     "message": "my-ublock-dynamic-rules_{{datetime}}.txt",
     "description": "default file name to use"
   },
   "rulesHint": {
-    "message": "Daftar aturan filter dinamis anda.",
+    "message": "Daftar aturan filter dinamis Anda.",
     "description": "English: List of your dynamic filtering rules."
   },
   "rulesFormatHint": {
     "message": "Aturan sintaksis: <code>sumber tujuan jenis tindakan</code> (<a href='https://github.com/gorhill/uBlock/wiki/Dynamic-filtering:-rule-syntax'>dokumentasi lengkap</a>).",
     "description": "English: dynamic rule syntax and full documentation."
   },
+  "rulesSort": {
+    "message": "Urutkan:",
+    "description": "English: label for sort option."
+  },
+  "rulesSortByType": {
+    "message": "Tipe aturan",
+    "description": "English: a sort option for list of rules."
+  },
+  "rulesSortBySource": {
+    "message": "Sumber",
+    "description": "English: a sort option for list of rules."
+  },
+  "rulesSortByDestination": {
+    "message": "Tujuan",
+    "description": "English: a sort option for list of rules."
+  },
   "whitelistPrompt": {
-    "message": "Daftar putih domain atau halaman, uBlock Origin akan dinonaktifkan. Satu entri per baris. Entri yang tidak valid akan diabaikan dan dijadikan komentar.",
-    "description": "English: An overview of the content of the dashboard's Whitelist pane."
+    "message": "Arahan situs terpercaya menentukan pada halaman web mana uBlock Origin harus dinonaktifkan. Satu entri per baris.",
+    "description": "A concise description of the 'Trusted sites' pane."
   },
   "whitelistImport": {
     "message": "Impor dan tambahkan",
-    "description": "English: Import and append"
+    "description": "Button in the 'Trusted sites' pane"
   },
   "whitelistExport": {
     "message": "Ekspor",
-    "description": "English: Export"
+    "description": "Button in the 'Trusted sites' pane"
   },
   "whitelistExportFilename": {
-    "message": "my-ublock-whitelist_{{datetime}}.txt",
-    "description": "English: my-ublock-whitelist_{{datetime}}.txt"
+    "message": "my-ublock-trusted-sites_{{datetime}}.txt",
+    "description": "The default filename to use for import/export purpose"
   },
   "whitelistApply": {
     "message": "Terapkan perubahan",
@@ -628,7 +704,7 @@
     "description": "Tooltip for the button to bring up logger output filtering options"
   },
   "loggerRowFiltererBuiltinNot": {
-    "message": "Not",
+    "message": "Bukan",
     "description": "A keyword in the built-in row filtering expression"
   },
   "loggerRowFiltererBuiltinEventful": {
@@ -641,6 +717,10 @@
   },
   "loggerRowFiltererBuiltinAllowed": {
     "message": "diizinkan",
+    "description": "A keyword in the built-in row filtering expression"
+  },
+  "loggerRowFiltererBuiltinModified": {
+    "message": "diubah",
     "description": "A keyword in the built-in row filtering expression"
   },
   "loggerRowFiltererBuiltin1p": {
@@ -744,7 +824,7 @@
     "description": "Below this sentence, the filter list(s) in which the filter was found"
   },
   "loggerStaticFilteringFinderSentence2": {
-    "message": "Filter statis <code>{{filter}}</code> tidak dapat ditemukan di salah satu daftar filter yang aktif saat ini",
+    "message": "Filter statis tidak dapat ditemukan di semua daftar filter yang aktif saat ini",
     "description": "Message to show when a filter cannot be found in any filter lists"
   },
   "loggerSettingDiscardPrompt": {
@@ -803,21 +883,141 @@
     "message": "Markdown",
     "description": "Label for radio-button to pick export text format"
   },
+  "supportOpenButton": {
+    "message": "Buka",
+    "description": "Text for button which open an external webpage in Support pane"
+  },
+  "supportReportSpecificButton": {
+    "message": "Buat laporan baru",
+    "description": "Text for button which open an external webpage in Support pane"
+  },
+  "supportFindSpecificButton": {
+    "message": "Temukan laporan serupa",
+    "description": "A clickable link in the filter issue reporter section"
+  },
+  "supportS1H": {
+    "message": "Dokumentasi",
+    "description": "Header of 'Documentation' section in Support pane"
+  },
+  "supportS1P1": {
+    "message": "Baca dokumentasi di <code>uBlock/wiki</code> untuk mempelajari semua fitur uBlock Origin.",
+    "description": "First paragraph of 'Documentation' section in Support pane"
+  },
+  "supportS2H": {
+    "message": "Pertanyaan dan dukungan",
+    "description": "Header of 'Questions and support' section in Support pane"
+  },
+  "supportS2P1": {
+    "message": "Jawaban pertanyaan dan dukungan bantuan lainnya tersedia di subreddit <code>/r/uBlockOrigin</code>.",
+    "description": "First paragraph of 'Questions and support' section in Support pane"
+  },
+  "supportS3H": {
+    "message": "Masalah filter/situs web rusak",
+    "description": "Header of 'Filter issues' section in Support pane"
+  },
+  "supportS3P1": {
+    "message": "Laporkan masalah filter pada situs web ke <span data-url=\"https://github.com/uBlockOrigin/uAssets/issues?q=is%3Aissue\">pelacak masalah <code>uBlockOrigin/uAssets</code></span>. <u>Membutuhkan akun GitHub.</u>",
+    "description": "First paragraph of 'Filter issues' section in Support pane"
+  },
+  "supportS3P2": {
+    "message": "<b>Penting:</b> Hindari menggunakan pemblokir sejenis bersamaan dengan uBlock Origin, karena mungkin akan mengakibatkan terjadinya masalah filter pada situs web tertentu.",
+    "description": "Second paragraph of 'Filter issues' section in Support pane"
+  },
+  "supportS3P3": {
+    "message": "<b>Tips:</b> Pastikan filter Anda selalu yang terbaru. <span data-url=\"logger-ui.html#_\">Pencatat log</span> adalah utilitas utama untuk mendiagnosis masalah yang terkait dengan filter.",
+    "description": "Third paragraph of 'Filter issues' section in Support pane"
+  },
+  "supportS4H": {
+    "message": "Laporan bug",
+    "description": "Header of 'Bug report' section in Support pane"
+  },
+  "supportS4P1": {
+    "message": "Laporkan masalah ekstensi uBlock Origin ke <span data-url=\"https://github.com/uBlockOrigin/uBlock-issues/issues?q=is%3Aissue\">pelacak masalah <code>uBlockOrigin/uBlock-issue</code></span>. <u>Membutuhkan akun GitHub.</u>",
+    "description": "First paragraph of 'Bug report' section in Support pane"
+  },
+  "supportS5H": {
+    "message": "Informasi penyelesaian masalah",
+    "description": "Header of 'Troubleshooting Information' section in Support pane"
+  },
+  "supportS5P1": {
+    "message": "Di bawah ini adalah informasi teknis yang mungkin berguna saat sukarelawan berusaha membantu memecahkan masalah Anda.",
+    "description": "First paragraph of 'Troubleshooting Information' section in Support pane"
+  },
+  "supportS5P2": {
+    "message": "<b>Penting:</b> Informasi yang sifatnya privat dan sensitif disensor secara bawaan. Informasi yang disensor mungkin akan membuat proses memecahkan masalah semakin sulit.",
+    "description": "Second paragraph of 'Troubleshooting Information' section in Support pane"
+  },
+  "supportS6H": {
+    "message": "Laporkan masalah filter",
+    "description": "Header of 'Report a filter issue' section in Support pane"
+  },
+  "supportS6P1S1": {
+    "message": "Untuk menghindari membebani sukarelawan dengan laporan duplikat, harap verifikasi bahwa masalah tersebut belum dilaporkan.",
+    "description": "A paragraph in the filter issue reporter section"
+  },
+  "supportS6P2S1": {
+    "message": "Daftar filter diperbarui setiap hari. Pastikan masalah Anda belum teratasi dalam daftar filter terbaru.",
+    "description": "A paragraph in the filter issue reporter section"
+  },
+  "supportS6P2S2": {
+    "message": "Verifikasi bahwa masalah masih ada setelah memuat ulang halaman web yang bermasalah.",
+    "description": "A paragraph in the filter issue reporter section"
+  },
+  "supportS6URL": {
+    "message": "Alamat laman web:",
+    "description": "Label for the URL of the page"
+  },
+  "supportS6Select1": {
+    "message": "Laman web...",
+    "description": "Label for widget to select type of issue"
+  },
+  "supportS6Select1Option0": {
+    "message": "-- Pilih entri --",
+    "description": "An entry in the widget used to select the type of issue"
+  },
+  "supportS6Select1Option1": {
+    "message": "Menampilkan iklan atau sejenisnya",
+    "description": "An entry in the widget used to select the type of issue"
+  },
+  "supportS6Select1Option2": {
+    "message": "Memiliki overlay atau gangguan lainnya",
+    "description": "An entry in the widget used to select the type of issue"
+  },
+  "supportS6Select1Option3": {
+    "message": "Mendeteksi uBlock Origin",
+    "description": "An entry in the widget used to select the type of issue"
+  },
+  "supportS6Select1Option4": {
+    "message": "Memiliki masalah terkait privasi",
+    "description": "An entry in the widget used to select the type of issue"
+  },
+  "supportS6Select1Option5": {
+    "message": "Rusak saat uBlock Origin aktif",
+    "description": "An entry in the widget used to select the type of issue"
+  },
+  "supportS6Select1Option6": {
+    "message": "Membuka tab atau jendela yang tidak diinginkan",
+    "description": "An entry in the widget used to select the type of issue"
+  },
+  "supportS6Checkbox1": {
+    "message": "Beri label halaman web sebagai “TAUSB” (<a href=\"https://wikipedia.org/wiki/Not_safe_for_work\">“Tidak Aman Untuk Saat Bekerja”</a>)",
+    "description": "A checkbox to use for NSFW sites"
+  },
+  "supportRedact": {
+    "message": "Sensor",
+    "description": "Text for 'Redact' button"
+  },
+  "supportUnredact": {
+    "message": "Batal sensor",
+    "description": "Text for 'Unredact' button"
+  },
+  "aboutPrivacyPolicy": {
+    "message": "Kebijakan privasi",
+    "description": "Link to privacy policy on GitHub (English)"
+  },
   "aboutChangelog": {
     "message": "Catatan perubahan",
     "description": ""
-  },
-  "aboutWiki": {
-    "message": "Wiki",
-    "description": "English: project' wiki on GitHub"
-  },
-  "aboutSupport": {
-    "message": "Dukungan",
-    "description": "A link for where to get support"
-  },
-  "aboutIssues": {
-    "message": "Pelacak masalah",
-    "description": "Text for a link to official issue tracker"
   },
   "aboutCode": {
     "message": "Kode sumber (GPLv3)",
@@ -827,12 +1027,32 @@
     "message": "Kontributor",
     "description": "English: Contributors"
   },
+  "aboutSourceCode": {
+    "message": "Kode sumber",
+    "description": "Link text to source code repo"
+  },
+  "aboutTranslations": {
+    "message": "Terjemahan",
+    "description": "Link text to translations repo"
+  },
+  "aboutFilterLists": {
+    "message": "Daftar filter",
+    "description": "Link text to uBO's own filter lists repo"
+  },
   "aboutDependencies": {
     "message": "Dependensi eksternal (kompatibel GPLv3):",
     "description": "Shown in the About pane"
   },
+  "aboutCDNs": {
+    "message": "Daftar filter uBO sendiri dihosting secara gratis di <a href=\"https://wikipedia.org/wiki/Content_delivery_network\">CDN</a> berikut:",
+    "description": "Shown in the About pane"
+  },
+  "aboutCDNsInfo": {
+    "message": "CDN yang dipilih secara acak digunakan saat daftar filter perlu diperbarui",
+    "description": "Shown in the About pane"
+  },
   "aboutBackupDataButton": {
-    "message": "Cadangkan ke berkas",
+    "message": "Cadangkan ke berkas…",
     "description": "Text for button to create a backup of all settings"
   },
   "aboutBackupFilename": {
@@ -848,7 +1068,7 @@
     "description": "English: Reset to default settings..."
   },
   "aboutRestoreDataConfirm": {
-    "message": "Semua pengaturan anda akan ditimpa dengan data yang dicadangkan pada {{time}}, dan uBlock₀ akan memulai ulang.\n\nTimpa semua pengaturan yang ada dengan data cadangan?",
+    "message": "Semua pengaturan Anda akan ditimpa dengan data yang dicadangkan pada {{time}}, dan uBlock₀ akan memulai ulang.\n\nTimpa semua pengaturan yang ada dengan data cadangan?",
     "description": "Message asking user to confirm restore"
   },
   "aboutRestoreDataError": {
@@ -856,7 +1076,7 @@
     "description": "Message to display when an error occurred during restore"
   },
   "aboutResetDataConfirm": {
-    "message": "Semua pengaturan anda akan dihapus, dan uBlock₀ akan memulai ulang.\n\nKembalikan uBlock₀ ke pengaturan bawaan?",
+    "message": "Semua pengaturan Anda akan dihapus, dan uBlock₀ akan memulai ulang.\n\nKembalikan uBlock₀ ke pengaturan bawaan?",
     "description": "Message asking user to confirm reset"
   },
   "errorCantConnectTo": {
@@ -864,8 +1084,12 @@
     "description": "English: Network error: {{msg}}"
   },
   "subscriberConfirm": {
-    "message": "uBlock₀: Tambahkan URL berikut ke daftar filter tersesuai anda?\n\nJudul: \"{{title}}\"\nURL: {{url}}",
-    "description": "English: The message seen by the user to confirm subscription to a ABP filter list"
+    "message": "Tambah URL berikut ke ke daftar filter khusus Anda?\n\nJudul: \"{{title}}\"\nURL: {{url}}",
+    "description": "No longer used"
+  },
+  "subscribeButton": {
+    "message": "Berlangganan",
+    "description": "For the button used to subscribe to a filter list"
   },
   "elapsedOneMinuteAgo": {
     "message": "semenit yang lalu",
@@ -903,13 +1127,17 @@
     "message": "mati",
     "description": "Firefox-specific: appears as 'uBlock₀ (off)'"
   },
+  "docblockedTitle": {
+    "message": "Halaman diblokir",
+    "description": "Used as a title for the document-blocked page"
+  },
   "docblockedPrompt1": {
     "message": "uBlock Origin telah mencegah halaman berikut dimuat:",
-    "description": "English: uBlock₀ has prevented the following page from loading:"
+    "description": "Used in the strict-blocking page"
   },
   "docblockedPrompt2": {
     "message": "Disebabkan oleh filter berikut",
-    "description": "English: Because of the following filter"
+    "description": "Used in the strict-blocking page"
   },
   "docblockedNoParamsPrompt": {
     "message": "tanpa parameter",
@@ -927,8 +1155,12 @@
     "message": "Tutup jendela ini",
     "description": "English: Close this window"
   },
+  "docblockedDontWarn": {
+    "message": "Jangan ingatkan saya lagi tentang situs ini",
+    "description": "Label for checkbox in document-blocked page"
+  },
   "docblockedProceed": {
-    "message": "Nonfungsikan pemblokiran ketat untuk {{hostname}}",
+    "message": "Nonaktifkan pemblokiran ketat untuk {{hostname}}",
     "description": "English: Disable strict blocking for {{hostname}} ..."
   },
   "docblockedDisableTemporary": {
@@ -938,6 +1170,10 @@
   "docblockedDisablePermanent": {
     "message": "Permanen",
     "description": "English: Permanently"
+  },
+  "docblockedDisable": {
+    "message": "Lanjutkan",
+    "description": "Button text to navigate to the blocked page"
   },
   "cloudPush": {
     "message": "Ekspor ke penyimpanan awan",
@@ -960,7 +1196,7 @@
     "description": "used as a prompt for the user to provide a custom device name"
   },
   "advancedSettingsWarning": {
-    "message": "Peringatan! Ubah pengaturan lanjutan berikut dengan resiko anda sendiri.",
+    "message": "Peringatan! Ubah pengaturan lanjutan berikut dengan risiko Anda sendiri.",
     "description": "A warning to users at the top of 'Advanced settings' page"
   },
   "genericSubmit": {
@@ -979,9 +1215,21 @@
     "message": "byte",
     "description": ""
   },
+  "contextMenuBlockElementInFrame": {
+    "message": "Blokir elemen di dalam frame...",
+    "description": "An entry in the browser's contextual menu"
+  },
+  "contextMenuSubscribeToList": {
+    "message": "Berlangganan daftar filter...",
+    "description": "An entry in the browser's contextual menu"
+  },
   "contextMenuTemporarilyAllowLargeMediaElements": {
     "message": "Sementara izinkan elemen media besar",
     "description": "A context menu entry, present when large media elements have been blocked on the current site"
+  },
+  "contextMenuViewSource": {
+    "message": "Lihat kode sumber…",
+    "description": "A context menu entry, to view the source code of the target resource"
   },
   "shortcutCapturePlaceholder": {
     "message": "Ketik pintasan",
@@ -995,13 +1243,45 @@
     "message": "Salin ke papan klip",
     "description": "Label for buttons used to copy something to the clipboard"
   },
-  "toggleBlockingProfile": {
-    "message": "Aktif/Nonaktifkan pemblokiran profil",
-    "description": "Label for keyboard shortcut used to toggle blocking profile"
+  "genericSelectAll": {
+    "message": "Pilih semua",
+    "description": "Label for buttons used to select all text in editor"
+  },
+  "toggleCosmeticFiltering": {
+    "message": "Aktif/Nonaktifkan filter tampilan",
+    "description": "Label for keyboard shortcut used to toggle cosmetic filtering"
   },
   "relaxBlockingMode": {
     "message": "Perlonggar mode pemblokiran",
-    "description": "Label for keyboard shortcut used to relax blocking mode (meant to replace 'Toggle blocking profile')"
+    "description": "Label for keyboard shortcut used to relax blocking mode"
+  },
+  "storageUsed": {
+    "message": "Penyimpanan terpakai: {{value}} {{unit}}",
+    "description": " In Setting pane, renders as (example): Storage used: 13.2 MB"
+  },
+  "KB": {
+    "message": "KB",
+    "description": "short for 'kilobytes'"
+  },
+  "MB": {
+    "message": "MB",
+    "description": "short for 'megabytes'"
+  },
+  "GB": {
+    "message": "GB",
+    "description": "short for 'gigabytes'"
+  },
+  "clickToLoad": {
+    "message": "Klik untuk memuat",
+    "description": "Message used in frame placeholders"
+  },
+  "linterMainReport": {
+    "message": "Galat: {{count}}",
+    "description": "Summary of number of errors as reported by the linter "
+  },
+  "unprocessedRequestTooltip": {
+    "message": "Filter tidak dapat bekerja dengan baik saat peramban dimulai.\nMuat ulang halaman agar filter dapat bekerja dengan baik.",
+    "description": "A warning which will appear in the popup panel if needed"
   },
   "dummy": {
     "message": "Entri ini harus menjadi yang terakhir",
