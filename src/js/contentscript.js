@@ -1,6 +1,6 @@
 /*******************************************************************************
 
-    uBlock Origin - a browser extension to block requests.
+    uBlock Origin - a comprehensive, efficient content blocker
     Copyright (C) 2014-present Raymond Hill
 
     This program is free software: you can redistribute it and/or modify
@@ -459,28 +459,6 @@ vAPI.SafeAnimationFrame = class {
 
     vAPI.domWatcher = { start, addListener, removeListener };
 }
-
-/******************************************************************************/
-/******************************************************************************/
-/******************************************************************************/
-
-vAPI.injectScriptlet = function(doc, text) {
-    if ( !doc ) { return; }
-    let script, url;
-    try {
-        const blob = new self.Blob([ text ], { type: 'text/javascript; charset=utf-8' });
-        url = self.URL.createObjectURL(blob);
-        script = doc.createElement('script');
-        script.async = false;
-        script.src = url;
-        (doc.head || doc.documentElement || doc).appendChild(script);
-    } catch (ex) {
-    }
-    if ( url ) {
-        if ( script ) { script.remove(); }
-        self.URL.revokeObjectURL(url);
-    }
-};
 
 /******************************************************************************/
 /******************************************************************************/
@@ -1298,7 +1276,6 @@ vAPI.DOMFilterer = class {
         const {
             noSpecificCosmeticFiltering,
             noGenericCosmeticFiltering,
-            scriptletDetails,
         } = response;
 
         vAPI.noSpecificCosmeticFiltering = noSpecificCosmeticFiltering;
@@ -1318,16 +1295,6 @@ vAPI.DOMFilterer = class {
             domFilterer.exceptCSSRules(cfeDetails.exceptedFilters);
             domFilterer.convertedProceduralFilters = cfeDetails.convertedProceduralFilters;
             vAPI.userStylesheet.apply();
-        }
-
-        // Library of resources is located at:
-        // https://github.com/gorhill/uBlock/blob/master/assets/ublock/resources.txt
-        if ( scriptletDetails && typeof self.uBO_scriptletsInjected !== 'string' ) {
-            self.uBO_scriptletsInjected = scriptletDetails.filters;
-            if ( scriptletDetails.mainWorld ) {
-                vAPI.injectScriptlet(document, scriptletDetails.mainWorld);
-                vAPI.injectedScripts = scriptletDetails.mainWorld;
-            }
         }
 
         if ( vAPI.domSurveyor ) {

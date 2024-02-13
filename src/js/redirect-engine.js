@@ -1,6 +1,6 @@
 /*******************************************************************************
 
-    uBlock Origin - a browser extension to block requests.
+    uBlock Origin - a comprehensive, efficient content blocker
     Copyright (C) 2015-present Raymond Hill
 
     This program is free software: you can redistribute it and/or modify
@@ -38,6 +38,7 @@ const extToMimeMap = new Map([
     [  'gif', 'image/gif' ],
     [ 'html', 'text/html' ],
     [   'js', 'text/javascript' ],
+    [ 'json', 'application/json' ],
     [  'mp3', 'audio/mp3' ],
     [  'mp4', 'video/mp4' ],
     [  'png', 'image/png' ],

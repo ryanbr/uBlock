@@ -1,6 +1,6 @@
 /*******************************************************************************
 
-    uBlock Origin - a browser extension to block requests.
+    uBlock Origin - a comprehensive, efficient content blocker
     Copyright (C) 2014-present Raymond Hill
 
     This program is free software: you can redistribute it and/or modify
@@ -27,6 +27,7 @@
 
 import logger from './logger.js';
 import { FilteringContext } from './filtering-context.js';
+import { ubologSet } from './console.js';
 
 import {
     domainFromHostname,
@@ -48,9 +49,9 @@ const hiddenSettingsDefault = {
     allowGenericProceduralFilters: false,
     assetFetchTimeout: 30,
     autoCommentFilterTemplate: '{{date}} {{origin}}',
-    autoUpdateAssetFetchPeriod: 60,
+    autoUpdateAssetFetchPeriod: 15,
     autoUpdateDelayAfterLaunch: 105,
-    autoUpdatePeriod: 2,
+    autoUpdatePeriod: 1,
     benchmarkDatasetURL: 'unset',
     blockingProfiles: '11111/#F00 11010/#C0F 11001/#00F 00001',
     cacheStorageAPI: 'unset',
@@ -68,6 +69,7 @@ const hiddenSettingsDefault = {
     debugAssetsJson: false,
     debugScriptlets: false,
     debugScriptletInjector: false,
+    differentialUpdate: true,
     disableWebAssembly: false,
     extensionUpdateForceReload: false,
     filterAuthorMode: false,
@@ -92,6 +94,7 @@ const hiddenSettingsDefault = {
 if ( vAPI.webextFlavor.soup.has('devbuild') ) {
     hiddenSettingsDefault.consoleLogLevel = 'info';
     hiddenSettingsDefault.trustedListPrefixes += ' user-';
+    ubologSet(true);
 }
 
 const userSettingsDefault = {
@@ -141,10 +144,12 @@ if ( vAPI.webextFlavor.soup.has('firefox') ) {
 }
 
 const µBlock = {  // jshint ignore:line
-    userSettingsDefault: userSettingsDefault,
+    wakeupReason: '',
+
+    userSettingsDefault,
     userSettings: Object.assign({}, userSettingsDefault),
 
-    hiddenSettingsDefault: hiddenSettingsDefault,
+    hiddenSettingsDefault,
     hiddenSettingsAdmin: {},
     hiddenSettings: Object.assign({}, hiddenSettingsDefault),
 
@@ -181,8 +186,8 @@ const µBlock = {  // jshint ignore:line
 
     // Read-only
     systemSettings: {
-        compiledMagic: 56,  // Increase when compiled format changes
-        selfieMagic: 56,    // Increase when selfie format changes
+        compiledMagic: 57,  // Increase when compiled format changes
+        selfieMagic: 57,    // Increase when selfie format changes
     },
 
     // https://github.com/uBlockOrigin/uBlock-issues/issues/759#issuecomment-546654501
@@ -265,6 +270,10 @@ const µBlock = {  // jshint ignore:line
     uiAccentStylesheet: '',
 };
 
+µBlock.isReadyPromise = new Promise(resolve => {
+    µBlock.isReadyResolve = resolve;
+});
+
 µBlock.domainFromHostname = domainFromHostname;
 µBlock.hostnameFromURI = hostnameFromURI;
 
@@ -302,7 +311,6 @@ const µBlock = {  // jshint ignore:line
         }
         this.fromTabId(tabId); // Must be called AFTER tab context management
         this.realm = '';
-        this.id = details.requestId;
         this.setMethod(details.method);
         this.setURL(details.url);
         this.aliasURL = details.aliasURL || undefined;
@@ -364,8 +372,7 @@ const µBlock = {  // jshint ignore:line
 
     toLogger() {
         const details = {
-            id: this.id,
-            tstamp: Date.now(),
+            tstamp: 0,
             realm: this.realm,
             method: this.getMethodName(),
             type: this.stype,

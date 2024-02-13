@@ -1,6 +1,6 @@
 /*******************************************************************************
 
-    uBlock Origin - a browser extension to block requests.
+    uBlock Origin Lite - a comprehensive, MV3-compliant content blocker
     Copyright (C) 2022-present Raymond Hill
 
     This program is free software: you can redistribute it and/or modify
@@ -34,6 +34,7 @@ import {
 } from './ext.js';
 
 import {
+    broadcastMessage,
     hostnamesFromMatches,
     isDescendantHostnameOfIter,
     toBroaderHostname,
@@ -271,40 +272,69 @@ async function writeFilteringModeDetails(afterDetails) {
     localWrite('filteringModeDetails', data);
     sessionWrite('filteringModeDetails', data);
     readFilteringModeDetails.cache = unserializeModeDetails(data);
+
+    Promise.all([
+        getDefaultFilteringMode(),
+        getTrustedSites(),
+    ]).then(results => {
+        broadcastMessage({
+            defaultFilteringMode: results[0],
+            trustedSites: Array.from(results[1]),
+        });
+    });
 }
 
 /******************************************************************************/
 
 async function filteringModesToDNR(modes) {
     const dynamicRuleMap = await getDynamicRules();
-    const presentRule = dynamicRuleMap.get(TRUSTED_DIRECTIVE_BASE_RULE_ID);
+    const presentRule = dynamicRuleMap.get(TRUSTED_DIRECTIVE_BASE_RULE_ID+0);
     const presentNone = new Set(
         presentRule && presentRule.condition.requestDomains
     );
     if ( eqSets(presentNone, modes.none) ) { return; }
     const removeRuleIds = [];
     if ( presentRule !== undefined ) {
-        removeRuleIds.push(TRUSTED_DIRECTIVE_BASE_RULE_ID);
-        dynamicRuleMap.delete(TRUSTED_DIRECTIVE_BASE_RULE_ID);
+        removeRuleIds.push(TRUSTED_DIRECTIVE_BASE_RULE_ID+0);
+        removeRuleIds.push(TRUSTED_DIRECTIVE_BASE_RULE_ID+1);
+        dynamicRuleMap.delete(TRUSTED_DIRECTIVE_BASE_RULE_ID+0);
+        dynamicRuleMap.delete(TRUSTED_DIRECTIVE_BASE_RULE_ID+1);
     }
     const addRules = [];
-    if ( modes.none.size !== 0 ) {
-        const rule = {
-            id: TRUSTED_DIRECTIVE_BASE_RULE_ID,
+    const noneHostnames = [ ...modes.none ];
+    const notNoneHostnames = [ ...modes.basic, ...modes.optimal, ...modes.complete ];
+    if ( noneHostnames.length !== 0 ) {
+        const rule0 = {
+            id: TRUSTED_DIRECTIVE_BASE_RULE_ID+0,
             action: { type: 'allowAllRequests' },
             condition: {
                 resourceTypes: [ 'main_frame' ],
             },
             priority: 100,
         };
-        if (
-            modes.none.size !== 1 ||
-            modes.none.has('all-urls') === false
-        ) {
-            rule.condition.requestDomains = Array.from(modes.none);
+        if ( modes.none.has('all-urls') === false ) {
+            rule0.condition.requestDomains = noneHostnames.slice();
+        } else if ( notNoneHostnames.length !== 0 ) {
+            rule0.condition.excludedRequestDomains = notNoneHostnames.slice();
         }
-        addRules.push(rule);
-        dynamicRuleMap.set(TRUSTED_DIRECTIVE_BASE_RULE_ID, rule);
+        addRules.push(rule0);
+        dynamicRuleMap.set(TRUSTED_DIRECTIVE_BASE_RULE_ID+0, rule0);
+        // https://github.com/uBlockOrigin/uBOL-home/issues/114
+        const rule1 = {
+            id: TRUSTED_DIRECTIVE_BASE_RULE_ID+1,
+            action: { type: 'allow' },
+            condition: {
+                resourceTypes: [ 'script' ],
+            },
+            priority: 100,
+        };
+        if ( modes.none.has('all-urls') === false ) {
+            rule1.condition.initiatorDomains = noneHostnames.slice();
+        } else if ( notNoneHostnames.length !== 0 ) {
+            rule1.condition.excludedInitiatorDomains = notNoneHostnames.slice();
+        }
+        addRules.push(rule1);
+        dynamicRuleMap.set(TRUSTED_DIRECTIVE_BASE_RULE_ID+1, rule1);
     }
     const updateOptions = {};
     if ( addRules.length ) {
@@ -350,6 +380,35 @@ export function getDefaultFilteringMode() {
 
 export function setDefaultFilteringMode(afterLevel) {
     return setFilteringMode('all-urls', afterLevel);
+}
+
+/******************************************************************************/
+
+export async function getTrustedSites() {
+    const filteringModes = await getFilteringModeDetails();
+    return filteringModes.none;
+}
+
+export async function setTrustedSites(hostnames) {
+    const filteringModes = await getFilteringModeDetails();
+    const { none } = filteringModes;
+    const hnSet = new Set(hostnames);
+    let modified = false;
+    for ( const hn of none ) {
+        if ( hnSet.has(hn) ) {
+            hnSet.delete(hn);
+        } else {
+            none.delete(hn);
+            modified = true;
+        }
+    }
+    for ( const hn of hnSet ) {
+        const level = applyFilteringMode(filteringModes, hn, MODE_NONE);
+        if ( level !== MODE_NONE ) { continue; }
+        modified = true;
+    }
+    if ( modified === false ) { return; }
+    return writeFilteringModeDetails(filteringModes);
 }
 
 /******************************************************************************/

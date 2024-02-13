@@ -1,6 +1,6 @@
 /*******************************************************************************
 
-    uBlock Origin - a browser extension to block requests.
+    uBlock Origin - a comprehensive, efficient content blocker
     Copyright (C) 2014-present Raymond Hill
 
     This program is free software: you can redistribute it and/or modify
@@ -614,11 +614,11 @@ const renderPopup = function() {
         }
     }
 
-    dom.cl.toggle(
-        '#basicTools',
-        'canPick',
-        popupData.canElementPicker === true && isFiltering
-    );
+    const canPick = popupData.canElementPicker && isFiltering;
+
+    dom.cl.toggle('#gotoZap', 'canPick', canPick);
+    dom.cl.toggle('#gotoPick', 'canPick', canPick && popupData.userFiltersAreEnabled);
+    dom.cl.toggle('#gotoReport', 'canPick', canPick);
 
     let blocked, total;
     if ( popupData.pageCounts !== undefined ) {
@@ -675,7 +675,7 @@ const renderPopup = function() {
         total ? Math.min(total, 99).toLocaleString() : ''
     );
 
-    // Unprocesseed request(s) warning
+    // Unprocessed request(s) warning
     dom.cl.toggle(dom.root, 'warn', popupData.hasUnprocessedRequest === true);
 
     dom.cl.toggle(dom.html, 'colorBlind', popupData.colorBlindFriendly === true);
@@ -1479,6 +1479,7 @@ const getPopupData = async function(tabId, first = false) {
             selfURL.searchParams.get('portrait')
         ) {
             dom.cl.add(dom.root, 'portrait');
+            dom.cl.remove(dom.root, 'desktop');
         } else if ( dom.cl.has(dom.root, 'desktop') ) {
             await nextFrames(8);
             const main = qs$('#main');

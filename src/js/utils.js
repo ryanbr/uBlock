@@ -1,6 +1,6 @@
 /*******************************************************************************
 
-    uBlock Origin - a browser extension to block requests.
+    uBlock Origin - a comprehensive, efficient content blocker
     Copyright (C) 2014-present Raymond Hill
 
     This program is free software: you can redistribute it and/or modify
@@ -84,82 +84,10 @@ import µb from './background.js';
 
 /******************************************************************************/
 
-µb.MRUCache = class {
-    constructor(size) {
-        this.size = size;
-        this.array = [];
-        this.map = new Map();
-        this.resetTime = Date.now();
-    }
-    add(key, value) {
-        const found = this.map.has(key);
-        this.map.set(key, value);
-        if ( !found ) {
-            if ( this.array.length === this.size ) {
-                this.map.delete(this.array.pop());
-            }
-            this.array.unshift(key);
-        }
-    }
-    remove(key) {
-        if ( this.map.has(key) ) {
-            this.array.splice(this.array.indexOf(key), 1);
-        }
-    }
-    lookup(key) {
-        const value = this.map.get(key);
-        if ( value !== undefined && this.array[0] !== key ) {
-            let i = this.array.indexOf(key);
-            do {
-                this.array[i] = this.array[i-1];
-            } while ( --i );
-            this.array[0] = key;
-        }
-        return value;
-    }
-    reset() {
-        this.array = [];
-        this.map.clear();
-        this.resetTime = Date.now();
-    }
-};
-
-/******************************************************************************/
-
 // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions
 
 µb.escapeRegex = function(s) {
     return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-};
-
-/******************************************************************************/
-
-µb.fireEvent = function(name, details = undefined) {
-    if (
-        self instanceof Object &&
-        self.dispatchEvent instanceof Function &&
-        self.CustomEvent instanceof Function
-    ) {
-        self.dispatchEvent(new CustomEvent(name, { detail: details }));
-    }
-};
-
-µb.onEvent = function(name, fn) {
-    if (
-        self instanceof Object &&
-        self.addEventListener instanceof Function
-    ) {
-        self.addEventListener(name, fn);
-    }
-};
-
-/******************************************************************************/
-
-µb.filteringBehaviorChanged = function(details = {}) {
-    if ( typeof details.direction !== 'number' || details.direction >= 0 ) {
-        vAPI.net.handlerBehaviorChanged();
-    }
-    this.fireEvent('filteringBehaviorChanged', details);
 };
 
 /******************************************************************************/

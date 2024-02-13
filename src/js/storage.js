@@ -1,6 +1,6 @@
 /*******************************************************************************
 
-    uBlock Origin - a browser extension to block requests.
+    uBlock Origin - a comprehensive, efficient content blocker
     Copyright (C) 2014-present Raymond Hill
 
     This program is free software: you can redistribute it and/or modify
@@ -19,8 +19,6 @@
     Home: https://github.com/gorhill/uBlock
 */
 
-/* globals WebAssembly */
-
 'use strict';
 
 /******************************************************************************/
@@ -28,8 +26,9 @@
 import publicSuffixList from '../lib/publicsuffixlist/publicsuffixlist.js';
 import punycode from '../lib/punycode.js';
 
-import cosmeticFilteringEngine from './cosmetic-filtering.js';
 import io from './assets.js';
+import { broadcast, filteringBehaviorChanged, onBroadcast } from './broadcast.js';
+import cosmeticFilteringEngine from './cosmetic-filtering.js';
 import logger from './logger.js';
 import lz4Codec from './lz4.js';
 import staticExtFilteringEngine from './static-ext-filtering.js';
@@ -109,9 +108,9 @@ import {
     };
 
     const saveTimer = vAPI.defer.create(shouldSave);
-    const saveDelay = { min: 4 };
+    const saveDelay = { sec: 23 };
 
-    saveTimer.on(saveDelay);
+    saveTimer.onidle(saveDelay);
 
     µb.saveLocalSettings = function() {
         localSettingsLastSaved = Date.now();
@@ -243,7 +242,7 @@ import {
         if ( typeof hs[key] !== typeof hsDefault[key] ) { continue; }
         this.hiddenSettings[key] = hs[key];
     }
-    this.fireEvent('hiddenSettingsChanged');
+    broadcast({ what: 'hiddenSettingsChanged' });
 };
 
 // Note: Save only the settings which values differ from the default ones.
@@ -259,7 +258,8 @@ import {
     });
 };
 
-µb.onEvent('hiddenSettingsChanged', ( ) => {
+onBroadcast(msg => {
+    if ( msg.what !== 'hiddenSettingsChanged' ) { return; }
     const µbhs = µb.hiddenSettings;
     ubologSet(µbhs.consoleLogLevel === 'info');
     vAPI.net.setOptions({
@@ -391,7 +391,8 @@ import {
     return false;
 };
 
-µb.onEvent('hiddenSettingsChanged', ( ) => {
+onBroadcast(msg => {
+    if ( msg.what !== 'hiddenSettingsChanged' ) { return; }
     µb.parsedTrustedListPrefixes = [];
 });
 
@@ -614,9 +615,8 @@ import {
 
     // https://www.reddit.com/r/uBlockOrigin/comments/cj7g7m/
     // https://www.reddit.com/r/uBlockOrigin/comments/cnq0bi/
-    µb.filteringBehaviorChanged();
-
-    vAPI.messaging.broadcast({ what: 'userFiltersUpdated' });
+    filteringBehaviorChanged();
+    broadcast({ what: 'userFiltersUpdated' });
 };
 
 µb.createUserFilters = function(details) {
@@ -628,6 +628,10 @@ import {
     );
 };
 
+µb.userFiltersAreEnabled = function() {
+    return this.selectedFilterLists.includes(this.userFiltersPath);
+};
+
 /******************************************************************************/
 
 µb.autoSelectRegionalFilterLists = function(lists) {
@@ -635,6 +639,7 @@ import {
     for ( const key in lists ) {
         if ( lists.hasOwnProperty(key) === false ) { continue; }
         const list = lists[key];
+        if ( list.content !== 'filters' ) { continue; }
         if ( list.off !== true ) {
             selectedListKeys.push(key);
             continue;
@@ -844,24 +849,28 @@ import {
     let loadingPromise;
     let t0 = 0;
 
+    const elapsed = ( ) => `${Date.now() - t0} ms`;
+
     const onDone = ( ) => {
-        ubolog(`loadFilterLists() took ${Date.now()-t0} ms`);
+        ubolog(`loadFilterLists() All filters in memory at ${elapsed()}`);
 
         staticNetFilteringEngine.freeze();
         staticExtFilteringEngine.freeze();
         redirectEngine.freeze();
         vAPI.net.unsuspend();
-        µb.filteringBehaviorChanged();
+        filteringBehaviorChanged();
 
-        vAPI.storage.set({ 'availableFilterLists': µb.availableFilterLists });
+        ubolog(`loadFilterLists() All filters ready at ${elapsed()}`);
 
         logger.writeOne({
             realm: 'message',
             type: 'info',
-            text: 'Reloading all filter lists: done'
+            text: `Reloading all filter lists: done, took ${elapsed()}`
         });
 
-        vAPI.messaging.broadcast({
+        vAPI.storage.set({ 'availableFilterLists': µb.availableFilterLists });
+
+        broadcast({
             what: 'staticFilteringDataChanged',
             parseCosmeticFilters: µb.userSettings.parseAllABPHideFilters,
             ignoreGenericCosmeticFilters: µb.userSettings.ignoreGenericCosmeticFilters,
@@ -876,6 +885,7 @@ import {
     };
 
     const applyCompiledFilters = (assetKey, compiled) => {
+        ubolog(`loadFilterLists() Loading filters from ${assetKey} at ${elapsed()}`);
         const snfe = staticNetFilteringEngine;
         const sxfe = staticExtFilteringEngine;
         let acceptedCount = snfe.acceptedCount + sxfe.acceptedCount;
@@ -908,6 +918,8 @@ import {
         staticNetFilteringEngine.reset();
         µb.selfieManager.destroy();
         staticFilteringReverseLookup.resetLists();
+
+        ubolog(`loadFilterLists() All filters removed at ${elapsed()}`);
 
         // We need to build a complete list of assets to pull first: this is
         // because it *may* happens that some load operations are synchronous:
@@ -944,11 +956,14 @@ import {
 
     µb.loadFilterLists = function() {
         if ( loadingPromise instanceof Promise ) { return loadingPromise; }
+        ubolog('loadFilterLists() Start');
         t0 = Date.now();
         loadedListKeys.length = 0;
         loadingPromise = Promise.all([
             this.getAvailableLists().then(lists => onFilterListsReady(lists)),
-            this.loadRedirectResources(),
+            this.loadRedirectResources().then(( ) => {
+                ubolog(`loadFilterLists() Redirects/scriptlets ready at ${elapsed()}`);
+            }),
         ]).then(( ) => {
             onDone();
         });
@@ -981,7 +996,10 @@ import {
         return { assetKey, content: '' };
     }
 
-    const rawDetails = await io.get(assetKey, { silent: true });
+    const rawDetails = await io.get(assetKey, {
+        favorLocal: this.readyToFilter !== true,
+        silent: true,
+    });
     // Compiling an empty string results in an empty string.
     if ( rawDetails.content === '' ) {
         rawDetails.assetKey = assetKey;
@@ -1009,39 +1027,20 @@ import {
 µb.extractFilterListMetadata = function(assetKey, raw) {
     const listEntry = this.availableFilterLists[assetKey];
     if ( listEntry === undefined ) { return; }
-    // Metadata expected to be found at the top of content.
-    const head = raw.slice(0, 1024);
     // https://github.com/gorhill/uBlock/issues/313
     // Always try to fetch the name if this is an external filter list.
-    if ( listEntry.group === 'custom' ) {
-        let matches = head.match(/(?:^|\n)(?:!|# )[\t ]*Title[\t ]*:([^\n]+)/i);
-        const title = matches && matches[1].trim() || '';
-        if ( title !== '' && title !== listEntry.title ) {
-            listEntry.title = orphanizeString(title);
-            io.registerAssetSource(assetKey, { title });
-        }
-        matches = head.match(/(?:^|\n)(?:!|# )[\t ]*Homepage[\t ]*:[\t ]*(https?:\/\/\S+)\s/i);
-        const supportURL = matches && matches[1] || '';
-        if ( supportURL !== '' && supportURL !== listEntry.supportURL ) {
-            listEntry.supportURL = orphanizeString(supportURL);
-            io.registerAssetSource(assetKey, { supportURL });
+    if ( listEntry.group !== 'custom' ) { return; }
+    const data = io.extractMetadataFromList(raw, [ 'Title', 'Homepage' ]);
+    const props = {};
+    if ( data.title && data.title !== listEntry.title ) {
+        props.title = listEntry.title = orphanizeString(data.title);
+    }
+    if ( data.homepage && /^https?:\/\/\S+/.test(data.homepage) ) {
+        if ( data.homepage !== listEntry.supportURL ) {
+            props.supportURL = listEntry.supportURL = orphanizeString(data.homepage);
         }
     }
-    // Extract update frequency information
-    const matches = head.match(/(?:^|\n)(?:!|# )[\t ]*Expires[\t ]*:[\t ]*(\d+)[\t ]*(h)?/i);
-    if ( matches !== null ) {
-        let updateAfter = parseInt(matches[1], 10);
-        if ( isNaN(updateAfter) === false ) {
-            if ( matches[2] !== undefined ) {
-                updateAfter = Math.ceil(updateAfter / 12) / 2;
-            }
-            updateAfter = Math.max(updateAfter, 0.5);
-            if ( updateAfter !== listEntry.updateAfter ) {
-                listEntry.updateAfter = updateAfter;
-                io.registerAssetSource(assetKey, { updateAfter });
-            }
-        }
-    }
+    io.registerAssetSource(assetKey, props);
 };
 
 /******************************************************************************/
@@ -1118,6 +1117,7 @@ import {
     }
 
     compiler.finish(writer);
+    parser.finish();
 
     // https://github.com/uBlockOrigin/uBlock-issues/issues/1365
     //   Embed version into compiled list itself: it is encoded in as the
@@ -1255,6 +1255,8 @@ import {
     //   memory usage at selfie-load time. For some reasons.
 
     const create = async function() {
+        vAPI.alarms.clear('createSelfie');
+        createTimer.off();
         if ( µb.inMemoryFilters.length !== 0 ) { return; }
         if ( Object.keys(µb.availableFilterLists).length === 0 ) { return; }
         await Promise.all([
@@ -1328,10 +1330,22 @@ import {
             io.remove(/^selfie\//);
             µb.selfieIsInvalid = true;
         }
+        if ( µb.wakeupReason === 'createSelfie' ) {
+            µb.wakeupReason = '';
+            return createTimer.offon({ sec: 27 });
+        }
+        vAPI.alarms.create('createSelfie', {
+            delayInMinutes: µb.hiddenSettings.selfieAfter
+        });
         createTimer.offon({ min: µb.hiddenSettings.selfieAfter });
     };
 
     const createTimer = vAPI.defer.create(create);
+
+    vAPI.alarms.onAlarm.addListener(alarm => {
+        if ( alarm.name !== 'createSelfie') { return; }
+        µb.wakeupReason = 'createSelfie';
+    });
 
     µb.selfieManager = { load, destroy };
 }
@@ -1497,16 +1511,27 @@ import {
 
     const launchTimer = vAPI.defer.create(fetchDelay => {
         next = 0;
-        io.updateStart({ delay: fetchDelay, auto: true });
+        io.updateStart({ fetchDelay, auto: true });
     });
 
-    µb.scheduleAssetUpdater = async function(updateDelay) {
+    µb.scheduleAssetUpdater = async function(details = {}) {
         launchTimer.off();
 
-        if ( updateDelay === 0 ) {
+        if ( details.now ) {
             next = 0;
+            io.updateStart(details);
             return;
         }
+
+        if ( µb.userSettings.autoUpdate === false ) {
+            if ( Boolean(details.updateDelay) === false ) {
+                next = 0;
+                return;
+            }
+        }
+
+        let updateDelay = details.updateDelay ||
+            this.hiddenSettings.autoUpdatePeriod * 3600000;
 
         const now = Date.now();
         let needEmergencyUpdate = false;
@@ -1598,10 +1623,10 @@ import {
         } else if ( details.assetKey === 'ublock-badlists' ) {
             this.badLists = new Map();
         }
-        vAPI.messaging.broadcast({
+        broadcast({
             what: 'assetUpdated',
             key: details.assetKey,
-            cached: cached
+            cached,
         });
         // https://github.com/gorhill/uBlock/issues/2585
         //   Whenever an asset is overwritten, the current selfie is quite
@@ -1612,10 +1637,10 @@ import {
 
     // Update failed.
     if ( topic === 'asset-update-failed' ) {
-        vAPI.messaging.broadcast({
+        broadcast({
             what: 'assetUpdated',
             key: details.assetKey,
-            failed: true
+            failed: true,
         });
         return;
     }
@@ -1632,14 +1657,8 @@ import {
             }
             this.loadFilterLists();
         }
-        if ( this.userSettings.autoUpdate ) {
-            this.scheduleAssetUpdater(
-                this.hiddenSettings.autoUpdatePeriod * 3600000 || 25200000
-            );
-        } else {
-            this.scheduleAssetUpdater(0);
-        }
-        vAPI.messaging.broadcast({
+        this.scheduleAssetUpdater();
+        broadcast({
             what: 'assetsUpdated',
             assetKeys: details.assetKeys
         });

@@ -1,6 +1,6 @@
 /*******************************************************************************
 
-    uBlock Origin - a browser extension to block requests.
+    uBlock Origin - a comprehensive, efficient content blocker
     Copyright (C) 2015-present Raymond Hill
 
     This program is free software: you can redistribute it and/or modify
@@ -19,6 +19,8 @@
     Home: https://github.com/gorhill/uBlock
 */
 
+/* globals browser */
+
 'use strict';
 
 import { dom, qs$, qsa$ } from './dom.js';
@@ -29,79 +31,122 @@ import { dom, qs$, qsa$ } from './dom.js';
 
 /******************************************************************************/
 
-const showdomButton = qs$('#showdom');
-
-// Don't bother if the browser is not modern enough.
-if (
-    typeof Map === 'undefined' ||
-    Map.polyfill ||
-    typeof WeakMap === 'undefined'
-) {
-    dom.cl.add(showdomButton, 'disabled');
-    return;
-}
-
-/******************************************************************************/
-
 const logger = self.logger;
-var inspectorConnectionId;
-var inspectedTabId = 0;
-var inspectedURL = '';
-var inspectedHostname = '';
-var inspector = qs$('#domInspector');
-var domTree = qs$('#domTree');
-var uidGenerator = 1;
-var filterToIdMap = new Map();
+const showdomButton = qs$('#showdom');
+const inspector = qs$('#domInspector');
+const domTree = qs$('#domTree');
+const filterToIdMap = new Map();
 
-/******************************************************************************/
+let inspectedTabId = 0;
+let inspectedURL = '';
+let inspectedHostname = '';
+let uidGenerator = 1;
 
-const messaging = vAPI.messaging;
+/*******************************************************************************
+ * 
+ * How it works:
+ * 
+ * 1. The logger/inspector is enabled from the logger window
+ * 
+ * 2. The inspector content script is injected in the root frame of the tab
+ * currently selected in the logger
+ * 
+ * 3. The inspector content script asks the logger/inspector to establish
+ * a two-way communication channel
+ * 
+ * 3. The inspector content script embed an inspector frame in the document
+ * being inspected and waits for the inspector frame to be fully loaded
+ * 
+ * 4. The inspector content script sends a messaging port object to the
+ * embedded inspector frame for a two-way communication channel between
+ * the inspector frame and the inspector content script
+ * 
+ * 5. The inspector content script sends dom information to the
+ * logger/inspector
+ * 
+ * */
 
-vAPI.MessagingConnection.addListener(function(msg) {
-    if ( msg.from !== 'domInspector' || msg.to !== 'loggerUI' ) { return; }
-    switch ( msg.what ) {
-    case 'connectionBroken':
-        if ( inspectorConnectionId === msg.id ) {
-            filterToIdMap.clear();
-            logger.removeAllChildren(domTree);
-            inspectorConnectionId = undefined;
+const contentInspectorChannel = (( ) => {
+    let bcChannel;
+    let toContentPort;
+
+    const start = ( ) => {
+        bcChannel = new globalThis.BroadcastChannel('contentInspectorChannel');
+        bcChannel.onmessage = ev => {
+            const msg = ev.data || {};
+            connect(msg.tabId, msg.frameId);
+        };
+        browser.webNavigation.onDOMContentLoaded.addListener(onContentLoaded);
+    };
+
+    const shutdown = ( ) => {
+        browser.webNavigation.onDOMContentLoaded.removeListener(onContentLoaded);
+        disconnect();
+        bcChannel.close();
+        bcChannel.onmessage = null;
+        bcChannel = undefined;
+    };
+
+    const connect = (tabId, frameId) => {
+        disconnect();
+        try {
+            toContentPort = browser.tabs.connect(tabId, { frameId });
+            toContentPort.onMessage.addListener(onContentMessage);
+            toContentPort.onDisconnect.addListener(onContentDisconnect);
+        } catch(_) {
         }
+    };
+
+    const disconnect = ( ) => {
+        if ( toContentPort === undefined ) { return; }
+        toContentPort.onMessage.removeListener(onContentMessage);
+        toContentPort.onDisconnect.removeListener(onContentDisconnect);
+        toContentPort.disconnect();
+        toContentPort = undefined;
+    };
+
+    const send = msg => {
+        if ( toContentPort === undefined ) { return; }
+        toContentPort.postMessage(msg);
+    };
+
+    const onContentMessage = msg => {
+        if ( msg.what === 'domLayoutFull' ) {
+            inspectedURL = msg.url;
+            inspectedHostname = msg.hostname;
+            renderDOMFull(msg);
+        } else if ( msg.what === 'domLayoutIncremental' ) {
+            renderDOMIncremental(msg);
+        }
+    };
+
+    const onContentDisconnect = ( ) => {
+        disconnect();
+    };
+
+    const onContentLoaded = details => {
+        if ( details.tabId !== inspectedTabId ) { return; }
+        if ( details.frameId !== 0 ) { return; }
+        disconnect();
         injectInspector();
-        break;
-    case 'connectionMessage':
-        if ( msg.payload.what === 'domLayoutFull' ) {
-            inspectedURL = msg.payload.url;
-            inspectedHostname = msg.payload.hostname;
-            renderDOMFull(msg.payload);
-        } else if ( msg.payload.what === 'domLayoutIncremental' ) {
-            renderDOMIncremental(msg.payload);
-        }
-        break;
-    case 'connectionRequested':
-        if ( msg.tabId === undefined || msg.tabId !== inspectedTabId ) {
-            return;
-        }
-        filterToIdMap.clear();
-        logger.removeAllChildren(domTree);
-        inspectorConnectionId = msg.id;
-        return true;
-    }
-});
+    };
+
+    return { start, disconnect, send, shutdown };
+})();
 
 /******************************************************************************/
 
-const nodeFromDomEntry = function(entry) {
-    var node, value;
+const nodeFromDomEntry = entry => {
     const li = document.createElement('li');
     dom.attr(li, 'id', entry.nid);
     // expander/collapser
     li.appendChild(document.createElement('span'));
     // selector
-    node = document.createElement('code');
+    let node = document.createElement('code');
     node.textContent = entry.sel;
     li.appendChild(node);
     // descendant count
-    value = entry.cnt || 0;
+    let value = entry.cnt || 0;
     node = document.createElement('span');
     node.textContent = value !== 0 ? value.toLocaleString() : '';
     dom.attr(node, 'data-cnt', value);
@@ -114,7 +159,7 @@ const nodeFromDomEntry = function(entry) {
     dom.cl.add(node, 'filter');
     value = filterToIdMap.get(entry.filter);
     if ( value === undefined ) {
-        value = uidGenerator.toString();
+        value = `${uidGenerator}`;
         filterToIdMap.set(entry.filter, value);
         uidGenerator += 1;
     }
@@ -127,7 +172,7 @@ const nodeFromDomEntry = function(entry) {
 
 /******************************************************************************/
 
-const appendListItem = function(ul, li) {
+const appendListItem = (ul, li) => {
     ul.appendChild(li);
     // Ancestor nodes of a node which is affected by a cosmetic filter will
     // be marked as "containing cosmetic filters", for user convenience.
@@ -141,19 +186,16 @@ const appendListItem = function(ul, li) {
 
 /******************************************************************************/
 
-const renderDOMFull = function(response) {
-    var domTreeParent = domTree.parentElement;
-    var ul = domTreeParent.removeChild(domTree);
+const renderDOMFull = response => {
+    const domTreeParent = domTree.parentElement;
+    let ul = domTreeParent.removeChild(domTree);
     logger.removeAllChildren(domTree);
 
     filterToIdMap.clear();
 
-    var lvl = 0;
-    var entries = response.layout;
-    var n = entries.length;
-    var li, entry;
-    for ( var i = 0; i < n; i++ ) {
-        entry = entries[i];
+    let lvl = 0;
+    let li;
+    for ( const entry of response.layout ) {
         if ( entry.lvl === lvl ) {
             li = nodeFromDomEntry(entry);
             appendListItem(ul, li);
@@ -186,24 +228,21 @@ const renderDOMFull = function(response) {
     domTreeParent.appendChild(domTree);
 };
 
-// https://www.youtube.com/watch?v=IDGNA83mxDo
-
 /******************************************************************************/
 
-const patchIncremental = function(from, delta) {
-    var span, cnt;
-    var li = from.parentElement.parentElement;
-    var patchCosmeticHide = delta >= 0 &&
-                            dom.cl.has(from, 'isCosmeticHide') &&
-                            dom.cl.has(li, 'hasCosmeticHide') === false;
+const patchIncremental = (from, delta) => {
+    let li = from.parentElement.parentElement;
+    const patchCosmeticHide = delta >= 0 &&
+        dom.cl.has(from, 'isCosmeticHide') &&
+        dom.cl.has(li, 'hasCosmeticHide') === false;
     // Include descendants count when removing a node
     if ( delta < 0 ) {
         delta -= countFromNode(from);
     }
     for ( ; li.localName === 'li'; li = li.parentElement.parentElement ) {
-        span = li.children[2];
+        const span = li.children[2];
         if ( delta !== 0 ) {
-            cnt = countFromNode(li) + delta;
+            const cnt = countFromNode(li) + delta;
             span.textContent = cnt !== 0 ? cnt.toLocaleString() : '';
             dom.attr(span, 'data-cnt', cnt);
         }
@@ -215,15 +254,14 @@ const patchIncremental = function(from, delta) {
 
 /******************************************************************************/
 
-const renderDOMIncremental = function(response) {
+const renderDOMIncremental = response => {
     // Process each journal entry:
     //  1 = node added
     // -1 = node removed
-    var journal = response.journal;
-    var nodes = new Map(response.nodes);
-    var entry, previous, li, ul;
-    for ( var i = 0, n = journal.length; i < n; i++ ) {
-        entry = journal[i];
+    const nodes = new Map(response.nodes);
+    let li = null;
+    let ul = null;
+    for ( const entry of response.journal ) {
         // Remove node
         if ( entry.what === -1 ) {
             li = qs$(`#${entry.nid}`);
@@ -239,7 +277,7 @@ const renderDOMIncremental = function(response) {
         }
         // Add node as sibling
         if ( entry.what === 1 && entry.l ) {
-            previous = qs$(`#${entry.l}`);
+            const previous = qs$(`#${entry.l}`);
             // This should not happen
             if ( previous === null ) {
                 // throw new Error('No left sibling!?');
@@ -275,25 +313,22 @@ const renderDOMIncremental = function(response) {
 
 /******************************************************************************/
 
-const countFromNode = function(li) {
-    var span = li.children[2];
-    var cnt = parseInt(dom.attr(span, 'data-cnt'), 10);
+const countFromNode = li => {
+    const span = li.children[2];
+    const cnt = parseInt(dom.attr(span, 'data-cnt'), 10);
     return isNaN(cnt) ? 0 : cnt;
 };
 
 /******************************************************************************/
 
-const selectorFromNode = function(node) {
-    var selector = '';
-    var code;
+const selectorFromNode = node => {
+    let selector = '';
     while ( node !== null ) {
         if ( node.localName === 'li' ) {
-            code = qs$(node, 'code');
+            const code = qs$(node, 'code');
             if ( code !== null ) {
-                selector = code.textContent + ' > ' + selector;
-                if ( selector.indexOf('#') !== -1 ) {
-                    break;
-                }
+                selector = `${code.textContent} > ${selector}`;
+                if ( selector.includes('#') ) { break; }
             }
         }
         node = node.parentElement;
@@ -303,10 +338,10 @@ const selectorFromNode = function(node) {
 
 /******************************************************************************/
 
-const selectorFromFilter = function(node) {
+const selectorFromFilter = node => {
     while ( node !== null ) {
         if ( node.localName === 'li' ) {
-            var code = qs$(node, 'code:nth-of-type(2)');
+            const code = qs$(node, 'code:nth-of-type(2)');
             if ( code !== null ) {
                 return code.textContent;
             }
@@ -318,8 +353,8 @@ const selectorFromFilter = function(node) {
 
 /******************************************************************************/
 
-const nidFromNode = function(node) {
-    var li = node;
+const nidFromNode = node => {
+    let li = node;
     while ( li !== null ) {
         if ( li.localName === 'li' ) {
             return li.id || '';
@@ -331,7 +366,7 @@ const nidFromNode = function(node) {
 
 /******************************************************************************/
 
-const startDialog = (function() {
+const startDialog = (( ) => {
     let dialog;
     let textarea;
     let hideSelectors = [];
@@ -367,17 +402,17 @@ const startDialog = (function() {
     };
 
     const onClicked = function(ev) {
-        var target = ev.target;
+        const target = ev.target;
 
         ev.stopPropagation();
 
         if ( target.id === 'createCosmeticFilters' ) {
-            messaging.send('loggerUI', {
+            vAPI.messaging.send('loggerUI', {
                 what: 'createUserFilter',
                 filters: textarea.value,
             });
             // Force a reload for the new cosmetic filter(s) to take effect
-            messaging.send('loggerUI', {
+            vAPI.messaging.send('loggerUI', {
                 what: 'reloadTab',
                 tabId: inspectedTabId,
             });
@@ -386,7 +421,7 @@ const startDialog = (function() {
     };
 
     const showCommitted = function() {
-        vAPI.MessagingConnection.sendTo(inspectorConnectionId, {
+        contentInspectorChannel.send({
             what: 'showCommitted',
             hide: hideSelectors.join(',\n'),
             unhide: unhideSelectors.join(',\n')
@@ -394,7 +429,7 @@ const startDialog = (function() {
     };
 
     const showInteractive = function() {
-        vAPI.MessagingConnection.sendTo(inspectorConnectionId, {
+        contentInspectorChannel.send({
             what: 'showInteractive',
             hide: hideSelectors.join(',\n'),
             unhide: unhideSelectors.join(',\n')
@@ -444,13 +479,13 @@ const startDialog = (function() {
 
 /******************************************************************************/
 
-const onClicked = function(ev) {
+const onClicked = ev => {
     ev.stopPropagation();
 
     if ( inspectedTabId === 0 ) { return; }
 
-    var target = ev.target;
-    var parent = target.parentElement;
+    const target = ev.target;
+    const parent = target.parentElement;
 
     // Expand/collapse branch
     if (
@@ -473,7 +508,7 @@ const onClicked = function(ev) {
 
     // Toggle cosmetic filter
     if ( dom.cl.has(target, 'filter') ) {
-        vAPI.MessagingConnection.sendTo(inspectorConnectionId, {
+        contentInspectorChannel.send({
             what: 'toggleFilter',
             original: false,
             target: dom.cl.toggle(target, 'off'),
@@ -489,7 +524,7 @@ const onClicked = function(ev) {
     }
     // Toggle node
     else {
-        vAPI.MessagingConnection.sendTo(inspectorConnectionId, {
+        contentInspectorChannel.send({
             what: 'toggleNodes',
             original: true,
             target: dom.cl.toggle(target, 'off') === false,
@@ -505,21 +540,19 @@ const onClicked = function(ev) {
 
 /******************************************************************************/
 
-const onMouseOver = (function() {
+const onMouseOver = (( ) => {
     let mouseoverTarget = null;
 
-    const timerHandler = ( ) => {
-        vAPI.MessagingConnection.sendTo(inspectorConnectionId, {
+    const mouseoverTimer = vAPI.defer.create(( ) => {
+        contentInspectorChannel.send({
             what: 'highlightOne',
             selector: selectorFromNode(mouseoverTarget),
             nid: nidFromNode(mouseoverTarget),
             scrollTo: true
         });
-    };
+    });
 
-    const mouseoverTimer = vAPI.defer.create(timerHandler);
-
-    return function(ev) {
+    return ev => {
         if ( inspectedTabId === 0 ) { return; }
         // Convenience: skip real-time highlighting if shift key is pressed.
         if ( ev.shiftKey ) { return; }
@@ -533,31 +566,34 @@ const onMouseOver = (function() {
 
 /******************************************************************************/
 
-const currentTabId = function() {
+const currentTabId = ( ) => {
     if ( dom.cl.has(showdomButton, 'active') === false ) { return 0; }
     return logger.tabIdFromPageSelector();
 };
 
 /******************************************************************************/
 
-const injectInspector = function() {
-    const tabId = currentTabId();
-    if ( tabId <= 0 ) { return; }
-    inspectedTabId = tabId;
-    messaging.send('loggerUI', {
-        what: 'scriptlet',
-        tabId,
-        scriptlet: 'dom-inspector',
+const injectInspector = (( ) => {
+    const timer = vAPI.defer.create(( ) => {
+        const tabId = currentTabId();
+        if ( tabId <= 0 ) { return; }
+        inspectedTabId = tabId;
+        vAPI.messaging.send('loggerUI', {
+            what: 'scriptlet',
+            tabId,
+            scriptlet: 'dom-inspector',
+        });
     });
-};
+    return ( ) => {
+        shutdownInspector();
+        timer.offon(353);
+    };
+})();
 
 /******************************************************************************/
 
-const shutdownInspector = function() {
-    if ( inspectorConnectionId !== undefined ) {
-        vAPI.MessagingConnection.disconnectFrom(inspectorConnectionId);
-        inspectorConnectionId = undefined;
-    }
+const shutdownInspector = ( ) => {
+    contentInspectorChannel.disconnect();
     logger.removeAllChildren(domTree);
     dom.cl.remove(inspector, 'vExpanded');
     inspectedTabId = 0;
@@ -565,61 +601,81 @@ const shutdownInspector = function() {
 
 /******************************************************************************/
 
-const onTabIdChanged = function() {
+const onTabIdChanged = ( ) => {
     const tabId = currentTabId();
     if ( tabId <= 0 ) {
         return toggleOff();
     }
     if ( inspectedTabId !== tabId ) {
-        shutdownInspector();
         injectInspector();
     }
 };
 
 /******************************************************************************/
 
-const toggleVCompactView = function() {
-    const state = dom.cl.toggle(inspector, 'vExpanded');
-    const branches = qsa$('#domInspector li.branch');
+const toggleVExpandView = ( ) => {
+    const branches = qsa$('#domTree li.branch.show > ul > li.branch:not(.show)');
     for ( const branch of branches ) {
-        dom.cl.toggle(branch, 'show', state);
+        dom.cl.add(branch, 'show');
     }
 };
 
-const toggleHCompactView = function() {
+const toggleVCompactView = ( ) => {
+    const branches = qsa$('#domTree li.branch.show > ul > li:not(.show)');
+    const tohideSet = new Set();
+    for ( const branch of branches ) {
+        const node = branch.closest('li.branch.show');
+        if ( node.id === 'n1' ) { continue; }
+        tohideSet.add(node);
+    }
+    const tohideList = Array.from(tohideSet);
+    let i = tohideList.length - 1;
+    while ( i > 0 ) {
+        if ( tohideList[i-1].contains(tohideList[i]) ) {
+            tohideList.splice(i-1, 1);
+        } else if ( tohideList[i].contains(tohideList[i-1]) ) {
+            tohideList.splice(i, 1);
+        }
+        i -= 1;
+    }
+    for ( const node of tohideList ) {
+        dom.cl.remove(node, 'show');
+    }
+};
+
+const toggleHCompactView = ( ) => {
     dom.cl.toggle(inspector, 'hCompact');
 };
 
 /******************************************************************************/
 
-const revert = function() {
+const revert = ( ) => {
     dom.cl.remove('#domTree .off', 'off');
-    vAPI.MessagingConnection.sendTo(
-        inspectorConnectionId,
-        { what: 'resetToggledNodes' }
-    );
+    contentInspectorChannel.send({ what: 'resetToggledNodes' });
     dom.cl.add(qs$(inspector, '.permatoolbar .revert'), 'disabled');
     dom.cl.add(qs$(inspector, '.permatoolbar .commit'), 'disabled');
 };
 
 /******************************************************************************/
 
-const toggleOn = function() {
+const toggleOn = ( ) => {
     dom.cl.add('#inspectors', 'dom');
     window.addEventListener('beforeunload', toggleOff);
     document.addEventListener('tabIdChanged', onTabIdChanged);
     domTree.addEventListener('click', onClicked, true);
     domTree.addEventListener('mouseover', onMouseOver, true);
+    dom.on('#domInspector .vExpandToggler', 'click', toggleVExpandView);
     dom.on('#domInspector .vCompactToggler', 'click', toggleVCompactView);
     dom.on('#domInspector .hCompactToggler', 'click', toggleHCompactView);
     dom.on('#domInspector .permatoolbar .revert', 'click', revert);
     dom.on('#domInspector .permatoolbar .commit', 'click', startDialog);
+    contentInspectorChannel.start();
     injectInspector();
 };
 
 /******************************************************************************/
 
-const toggleOff = function() {
+const toggleOff = ( ) => {
     dom.cl.remove(showdomButton, 'active');
     dom.cl.remove('#inspectors', 'dom');
     shutdownInspector();
@@ -627,16 +683,18 @@ const toggleOff = function() {
     document.removeEventListener('tabIdChanged', onTabIdChanged);
     domTree.removeEventListener('click', onClicked, true);
     domTree.removeEventListener('mouseover', onMouseOver, true);
+    dom.off('#domInspector .vExpandToggler', 'click', toggleVExpandView);
     dom.off('#domInspector .vCompactToggler', 'click', toggleVCompactView);
     dom.off('#domInspector .hCompactToggler', 'click', toggleHCompactView);
     dom.off('#domInspector .permatoolbar .revert', 'click', revert);
     dom.off('#domInspector .permatoolbar .commit', 'click', startDialog);
+    contentInspectorChannel.shutdown();
     inspectedTabId = 0;
 };
 
 /******************************************************************************/
 
-const toggle = function() {
+const toggle = ( ) => {
     if ( dom.cl.toggle(showdomButton, 'active') ) {
         toggleOn();
     } else {

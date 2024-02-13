@@ -1,6 +1,6 @@
 /*******************************************************************************
 
-    uBlock Origin - a browser extension to block requests.
+    uBlock Origin - a comprehensive, efficient content blocker
     Copyright (C) 2015-present Raymond Hill
 
     This program is free software: you can redistribute it and/or modify
@@ -21,6 +21,7 @@
 
 'use strict';
 
+import { broadcast } from './broadcast.js';
 import { hostnameFromURI } from './uri-utils.js';
 import { i18n, i18n$ } from './i18n.js';
 import { dom, qs$, qsa$ } from './dom.js';
@@ -33,8 +34,9 @@ import { dom, qs$, qsa$ } from './dom.js';
 const messaging = vAPI.messaging;
 const logger = self.logger = { ownerId: Date.now() };
 const logDate = new Date();
-const logDateTimezoneOffset = logDate.getTimezoneOffset() * 60000;
+const logDateTimezoneOffset = logDate.getTimezoneOffset() * 60;
 const loggerEntries = [];
+let loggerEntryIdGenerator = 1;
 
 const COLUMN_TIMESTAMP = 0;
 const COLUMN_FILTER = 1;
@@ -318,13 +320,11 @@ const LogEntry = function(details) {
     if ( details instanceof Object === false ) { return; }
     const receiver = LogEntry.prototype;
     for ( const prop in receiver ) {
-        if (
-            details.hasOwnProperty(prop) &&
-            details[prop] !== receiver[prop]
-        ) {
-            this[prop] = details[prop];
-        }
+        if ( details.hasOwnProperty(prop) === false ) { continue; }
+        if ( details[prop] === receiver[prop] ) { continue; }
+        this[prop] = details[prop];
     }
+    this.id = `${loggerEntryIdGenerator++}`;
     if ( details.aliasURL !== undefined ) {
         this.aliased = true;
     }
@@ -345,7 +345,6 @@ LogEntry.prototype = {
     docHostname: '',
     domain: '',
     filter: undefined,
-    id: '',
     method: '',
     realm: '',
     tabDomain: '',
@@ -368,7 +367,7 @@ const createLogSeparator = function(details, text) {
     separator.textContent = '';
 
     const textContent = [];
-    logDate.setTime(separator.tstamp - logDateTimezoneOffset);
+    logDate.setTime((separator.tstamp - logDateTimezoneOffset) * 1000);
     textContent.push(
         // cell 0
         padTo2(logDate.getUTCHours()) + ':' +
@@ -377,7 +376,7 @@ const createLogSeparator = function(details, text) {
         // cell 1
         text
     );
-    separator.textContent = textContent.join('\t');
+    separator.textContent = textContent.join('\x1F');
 
     if ( details.voided ) {
         separator.voided = true;
@@ -464,7 +463,7 @@ const parseLogEntry = function(details) {
     const textContent = [];
 
     // Cell 0
-    logDate.setTime(details.tstamp - logDateTimezoneOffset);
+    logDate.setTime((details.tstamp - logDateTimezoneOffset) * 1000);
     textContent.push(
         padTo2(logDate.getUTCHours()) + ':' +
         padTo2(logDate.getUTCMinutes()) + ':' +
@@ -474,7 +473,13 @@ const parseLogEntry = function(details) {
     // Cell 1
     if ( details.realm === 'message' ) {
         textContent.push(details.text);
-        entry.textContent = textContent.join('\t');
+        if ( details.type ) {
+            textContent.push(details.type);
+        }
+        if ( details.keywords ) {
+            textContent.push(...details.keywords);
+        }
+        entry.textContent = textContent.join('\x1F') + '\x1F';
         return entry;
     }
 
@@ -545,7 +550,7 @@ const parseLogEntry = function(details) {
         textContent.push(`aliasURL=${details.aliasURL}`);
     }
 
-    entry.textContent = textContent.join('\t');
+    entry.textContent = textContent.join('\x1F');
     return entry;
 };
 
@@ -671,7 +676,7 @@ const viewPort = (( ) => {
             `  width: calc(calc(100% - ${reservedWidth}px) * ${cellWidths[COLUMN_FILTER]});`,
             '}',
             `#vwContent .logEntry > div.messageRealm > span:nth-of-type(${COLUMN_MESSAGE+1}) {`,
-            `  width: calc(100% - ${cellWidths[COLUMN_MESSAGE]}px);`,
+            `  width: calc(100% - ${cellWidths[COLUMN_TIMESTAMP]}px);`,
             '}',
             `#vwContent .logEntry > div > span:nth-of-type(${COLUMN_RESULT+1}) {`,
             `  width: ${cellWidths[COLUMN_RESULT]}px;`,
@@ -744,7 +749,7 @@ const viewPort = (( ) => {
 
         vwEntry.logEntry = details;
 
-        const cells = details.textContent.split('\t');
+        const cells = details.textContent.split('\x1F');
         const div = dom.clone(vwLogEntryTemplate);
         const divcl = div.classList;
         let span;
@@ -863,7 +868,7 @@ const viewPort = (( ) => {
 
         // Alias URL (CNAME, etc.)
         if ( cells.length > 8 ) {
-            const pos = details.textContent.lastIndexOf('\taliasURL=');
+            const pos = details.textContent.lastIndexOf('\x1FaliasURL=');
             if ( pos !== -1 ) {
                 dom.attr(div, 'data-aliasid', details.id);
             }
@@ -972,7 +977,7 @@ const viewPort = (( ) => {
 const updateCurrentTabTitle = (( ) => {
     const i18nCurrentTab = i18n$('loggerCurrentTab');
 
-    return function() {
+    return ( ) => {
         const select = qs$('#pageSelector');
         if ( select.value !== '_' || activeTabId === 0 ) { return; }
         const opt0 = qs$(select, '[value="_"]');
@@ -1033,8 +1038,7 @@ const synchronizeTabIds = function(newTabIds) {
         return newTabIds.get(a).localeCompare(newTabIds.get(b));
     });
     let j = 3;
-    for ( let i = 0; i < tabIds.length; i++ ) {
-        const tabId = tabIds[i];
+    for ( const tabId of tabIds ) {
         if ( tabId <= 0 ) { continue; }
         if ( j === select.options.length ) {
             select.appendChild(document.createElement('option'));
@@ -1621,9 +1625,10 @@ dom.on(document, 'keydown', ev => {
     const aliasURLFromID = function(id) {
         if ( id === '' ) { return ''; }
         for ( const entry of loggerEntries ) {
-            if ( entry.id !== id || entry.aliased ) { continue; }
-            const fields = entry.textContent.split('\t');
-            return fields[COLUMN_URL] || '';
+            if ( entry.id !== id ) { continue; }
+            const match = /\baliasURL=([^\x1F]+)/.exec(entry.textContent);
+            if ( match === null ) { return ''; }
+            return match[1];
         }
         return '';
     };
@@ -2053,12 +2058,30 @@ dom.on(document, 'keydown', ev => {
         }
     });
 
-    dom.on(
-        '#netInspector',
-        'click',
-        '.canDetails > span:not(:nth-of-type(4)):not(:nth-of-type(8))',
-        ev => { toggleOn(ev); }
-    );
+    // This is to detect text selection, in which case the click won't be
+    // interpreted as a request to open the details of the entry.
+    let selectionAtMouseDown;
+    let selectionAtTimer;
+    dom.on('#netInspector', 'mousedown', '.canDetails *', ev => {
+        if ( ev.button !== 0 ) { return; }
+        if ( selectionAtMouseDown !== undefined ) { return; }
+        selectionAtMouseDown =  document.getSelection().toString();
+    });
+
+    dom.on('#netInspector', 'click', '.canDetails *', ev => {
+        if ( ev.button !== 0 ) { return; }
+        if ( selectionAtTimer !== undefined ) {
+            clearTimeout(selectionAtTimer);
+        }
+        selectionAtTimer = setTimeout(( ) => {
+            selectionAtTimer = undefined;
+            const selectionAsOfNow = document.getSelection().toString();
+            const selectionHasChanged = selectionAsOfNow !== selectionAtMouseDown;
+            selectionAtMouseDown = undefined;
+            if ( selectionHasChanged && selectionAsOfNow !== '' ) { return; }
+            toggleOn(ev);
+        }, 333);
+    });
 
     dom.on(
         '#netInspector',
@@ -2150,16 +2173,12 @@ const rowFilterer = (( ) => {
         filters = builtinFilters.concat(userFilters);
     };
 
-    const filterOne = function(logEntry) {
-        if (
-            logEntry.dead ||
-            selectedTabId !== 0 &&
-            (
-                logEntry.tabId === undefined ||
-                logEntry.tabId > 0 && logEntry.tabId !== selectedTabId
-            )
-        ) {
-            return false;
+    const filterOne = logEntry => {
+        if ( logEntry.dead ) { return false; }
+        if ( selectedTabId !== 0 ) {
+            if ( logEntry.tabId !== undefined && logEntry.tabId > 0 ) {
+                if (logEntry.tabId !== selectedTabId ) { return false; }
+            }
         }
 
         if ( masterFilterSwitch === false || filters.length === 0 ) {
@@ -2252,6 +2271,23 @@ const rowFilterer = (( ) => {
         dom.cl.toggle(ev.target, 'on');
         builtinFilterExpression();
     });
+    dom.on('#filterInput > input', 'drop', ev => {
+        const dropItem = item => {
+            if ( item.kind !== 'string' ) { return false; }
+            if ( item.type !== 'text/plain' ) { return false; }
+            item.getAsString(s => {
+                qs$('#filterInput > input').value = s;
+                parseInput();
+                filterAll();
+            });
+            return true;
+        };
+        for ( const item of ev.dataTransfer.items ) {
+            if ( dropItem(item) === false ) { continue; }
+            ev.preventDefault();
+            break;
+        }
+    });
 
     // https://github.com/gorhill/uBlock/issues/404
     //   Ensure page state is in sync with the state of its various widgets.
@@ -2287,7 +2323,7 @@ const rowJanitor = (( ) => {
             ? opts.maxEntryCount
             : 0;
         const obsolete = typeof opts.maxAge === 'number'
-            ? Date.now() - opts.maxAge * 60000
+            ? Date.now() / 1000 - opts.maxAge * 60
             : 0;
 
         let i = rowIndex;
@@ -2666,16 +2702,16 @@ const loggerStats = (( ) => {
             const text = entry.textContent;
             const fields = [];
             let i = 0;
-            let beg = text.indexOf('\t');
+            let beg = text.indexOf('\x1F');
             if ( beg === 0 ) { continue; }
             let timeField = text.slice(0, beg);
             if ( options.time === 'anonymous' ) {
-                timeField = '+' + Math.round((entry.tstamp - t0) / 1000).toString();
+                timeField = '+' + Math.round(entry.tstamp - t0).toString();
             }
             fields.push(timeField);
             beg += 1;
             while ( beg < text.length ) {
-                let end = text.indexOf('\t', beg);
+                let end = text.indexOf('\x1F', beg);
                 if ( end === -1 ) { end = text.length; }
                 fields.push(text.slice(beg, end));
                 beg = end + 1;
@@ -3003,6 +3039,19 @@ dom.on(window, 'beforeunload', releaseView);
 dom.on('#pageSelector', 'change', pageSelectorChanged);
 dom.on('#netInspector .vCompactToggler', 'click', toggleVCompactView);
 dom.on('#pause', 'click', pauseNetInspector);
+
+dom.on('#logLevel', 'click', ev => {
+    const level = dom.cl.toggle(ev.currentTarget, 'active') ? 2 : 1;
+    broadcast({ what: 'loggerLevelChanged', level });
+});
+
+dom.on('#netInspector #vwContent', 'copy', ev => {
+    const selection = document.getSelection();
+    const text = selection.toString();
+    if ( /\x1F|\u200B/.test(text) === false ) { return; }
+    ev.clipboardData.setData('text/plain', text.replace(/\x1F|\u200B/g, '\t'));
+    ev.preventDefault();
+});
 
 // https://github.com/gorhill/uBlock/issues/507
 //   Ensure tab selector is in sync with URL hash

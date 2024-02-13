@@ -1,7 +1,7 @@
 /*******************************************************************************
 
-    uBlock Origin - a browser extension to block requests.
-    Copyright (C) 2019-present Raymond Hill
+    uBlock Origin - a comprehensive, efficient content blocker
+    Copyright (C) 2024-present Raymond Hill
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -19,21 +19,31 @@
     Home: https://github.com/gorhill/uBlock
 */
 
-(function() {
-    'use strict';
-    const noopfn = function() {
-    };
-    window.addthis = {
-        addEventListener: noopfn,
-        button: noopfn,
-        counter: noopfn,
-        init: noopfn,
-        layers: noopfn,
-        ready: noopfn,
-        sharecounters: {
-            getShareCounts: noopfn
-        },
-        toolbox: noopfn,
-        update: noopfn
-    };
+'use strict';
+
+/******************************************************************************/
+
+(( ) => {
+    if ( self.uBO_bcSecret instanceof self.BroadcastChannel === false ) { return; }
+    self.uBO_bcSecret.postMessage('setScriptletLogLevelToTwo');
 })();
+
+
+
+
+
+
+
+
+/*******************************************************************************
+
+    DO NOT:
+    - Remove the following code
+    - Add code beyond the following code
+    Reason:
+    - https://github.com/gorhill/uBlock/pull/3721
+    - uBO never uses the return value from injected content scripts
+
+**/
+
+void 0;

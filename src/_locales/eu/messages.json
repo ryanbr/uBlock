@@ -40,7 +40,7 @@
     "description": "appears as tab name in dashboard"
   },
   "whitelistPageName": {
-    "message": "Zerrenda zuria",
+    "message": "Konfidantzazko webguneak",
     "description": "appears as tab name in dashboard"
   },
   "shortcutsPageName": {
@@ -276,11 +276,11 @@
     "description": "Example of use: Version 1.26.4"
   },
   "popup3pScriptFilter": {
-    "message": "script",
+    "message": "scripta",
     "description": "Appears as an option to filter out firewall rows"
   },
   "popup3pFrameFilter": {
-    "message": "frame",
+    "message": "markoa",
     "description": "Appears as an option to filter out firewall rows"
   },
   "pickerCreate": {
@@ -532,7 +532,7 @@
     "description": "Short information about how to create custom filters"
   },
   "1pTrustWarning": {
-    "message": "Do not add filters from untrusted sources.",
+    "message": "Ez gehitu jatorri ezezaguneko iragazkirik",
     "description": "Warning against copy-pasting filters from random sources"
   },
   "1pImport": {
@@ -956,11 +956,11 @@
     "description": "A paragraph in the filter issue reporter section"
   },
   "supportS6P2S1": {
-    "message": "Filter lists are updated daily. Be sure your issue has not already been addressed in the most recent filter lists.",
+    "message": "Iragazki-zerrendak egunero eguneratzen dira. Begiratu zure kasua azken iragazki-zerrendetako baten konpondu den.",
     "description": "A paragraph in the filter issue reporter section"
   },
   "supportS6P2S2": {
-    "message": "Verify that the issue still exists after reloading the problematic webpage.",
+    "message": "Egiaztatu zure kasua arazoak eman dizkizun webgunea berriz kargatu ostean oraindik ere gertatzen den.",
     "description": "A paragraph in the filter issue reporter section"
   },
   "supportS6URL": {
@@ -1228,7 +1228,7 @@
     "description": "A context menu entry, present when large media elements have been blocked on the current site"
   },
   "contextMenuViewSource": {
-    "message": "View source code…",
+    "message": "Ikusi iturburu kodea…",
     "description": "A context menu entry, to view the source code of the target resource"
   },
   "shortcutCapturePlaceholder": {
@@ -1250,6 +1250,10 @@
   "toggleCosmeticFiltering": {
     "message": "Iragazte kosmetikoa txandakatu",
     "description": "Label for keyboard shortcut used to toggle cosmetic filtering"
+  },
+  "toggleJavascript": {
+    "message": "JavaScripta aktibatu/desaktibatu",
+    "description": "Label for keyboard shortcut used to toggle no-scripting switch"
   },
   "relaxBlockingMode": {
     "message": "Baretu blokeatze-modua",
@@ -1276,11 +1280,11 @@
     "description": "Message used in frame placeholders"
   },
   "linterMainReport": {
-    "message": "Errors: {{count}}",
+    "message": "Erroreak: {{count}}",
     "description": "Summary of number of errors as reported by the linter "
   },
   "unprocessedRequestTooltip": {
-    "message": "Could not filter properly at browser launch. Reload the page to ensure proper filtering.",
+    "message": "Iragazkia ezin izan da kargatu nabigatzailea irekitzeak. Kargatu berriz orria iragazkiak ondo funtzionatzen duela ziurtatzeko.",
     "description": "A warning which will appear in the popup panel if needed"
   },
   "dummy": {

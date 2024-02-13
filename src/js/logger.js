@@ -1,6 +1,6 @@
 /*******************************************************************************
 
-    uBlock Origin - a browser extension to block requests.
+    uBlock Origin - a comprehensive, efficient content blocker
     Copyright (C) 2015-present Raymond Hill
 
     This program is free software: you can redistribute it and/or modify
@@ -23,6 +23,10 @@
 
 /******************************************************************************/
 
+import { broadcast, broadcastToAll } from './broadcast.js';
+
+/******************************************************************************/
+
 let buffer = null;
 let lastReadTime = 0;
 let writePtr = 0;
@@ -40,37 +44,41 @@ const janitorTimer = vAPI.defer.create(( ) => {
     buffer = null;
     writePtr = 0;
     logger.ownerId = undefined;
-    vAPI.messaging.broadcast({ what: 'loggerDisabled' });
+    broadcastToAll({ what: 'loggerDisabled' });
 });
 
-const boxEntry = function(details) {
-    if ( details.tstamp === undefined ) {
-        details.tstamp = Date.now();
-    }
+const boxEntry = details => {
+    details.tstamp = Date.now() / 1000 | 0;
     return JSON.stringify(details);
+};
+
+const pushOne = box => {
+    if ( writePtr !== 0 && box === buffer[writePtr-1] ) { return; }
+    if ( writePtr === buffer.length ) {
+        buffer.push(box);
+    } else {
+        buffer[writePtr] = box;
+    }
+    writePtr += 1;
 };
 
 const logger = {
     enabled: false,
     ownerId: undefined,
-    writeOne: function(details) {
+    writeOne(details) {
         if ( buffer === null ) { return; }
-        const box = boxEntry(details);
-        if ( writePtr === buffer.length ) {
-            buffer.push(box);
-        } else {
-            buffer[writePtr] = box;
-        }
-        writePtr += 1;
+        pushOne(boxEntry(details));
     },
-    readAll: function(ownerId) {
+    readAll(ownerId) {
         this.ownerId = ownerId;
         if ( buffer === null ) {
             this.enabled = true;
             buffer = [];
             janitorTimer.on(logBufferObsoleteAfter);
+            broadcast({ what: 'loggerEnabled' });
         }
         const out = buffer.slice(0, writePtr);
+        buffer.fill('', 0, writePtr);
         writePtr = 0;
         lastReadTime = Date.now();
         return out;

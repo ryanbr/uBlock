@@ -4,43 +4,19 @@
     "description": "extension name."
   },
   "extShortDesc": {
-    "message": "Kísérleti, engedély nélküli tartalomblokkoló. A telepítés után azonnal blokkolja a hirdetéseket, nyomkövetőket, bányászokat és egyebeket.",
+    "message": "Kísérleti, engedélyt nem igénylő nélküli tartalomblokkoló. A telepítés után azonnal blokkolja a hirdetéseket, nyomkövetőket, bányászokat és egyebeket.",
     "description": "this will be in the Chrome web store: must be 132 characters or less"
   },
   "perRulesetStats": {
-    "message": "{{ruleCount}} szabály, {{filterCount}} hálózati szűrőből konvertálva",
+    "message": "{{ruleCount}} szabály, {{filterCount}} hálózati szűrőből átalakítva",
     "description": "Appears aside each filter list in the _3rd-party filters_ pane"
   },
   "dashboardName": {
     "message": "uBO Lite — Vezérlőpult",
     "description": "English: uBO Lite — Dashboard"
   },
-  "dashboardUnsavedWarning": {
-    "message": "Figyelem! Neked még vannak nem mentett változtatásaid",
-    "description": "A warning in the dashboard when navigating away from unsaved changes"
-  },
-  "dashboardUnsavedWarningStay": {
-    "message": "Tartózkodás",
-    "description": "Label for button to prevent navigating away from unsaved changes"
-  },
-  "dashboardUnsavedWarningIgnore": {
-    "message": "Kihagy",
-    "description": "Label for button to ignore unsaved changes"
-  },
   "settingsPageName": {
     "message": "Beállítások",
-    "description": "appears as tab name in dashboard"
-  },
-  "3pPageName": {
-    "message": "Külső szűrők",
-    "description": "appears as tab name in dashboard"
-  },
-  "1pPageName": {
-    "message": "Saját szűrők",
-    "description": "appears as tab name in dashboard"
-  },
-  "whitelistPageName": {
-    "message": "Megbízható eszközök",
     "description": "appears as tab name in dashboard"
   },
   "aboutPageName": {
@@ -48,7 +24,7 @@
     "description": "appears as tab name in dashboard"
   },
   "aboutPrivacyPolicy": {
-    "message": "Adatvédelmi Irányelvek",
+    "message": "Adatvédelmi irányelvek",
     "description": "Link to privacy policy on GitHub (English)"
   },
   "popupFilteringModeLabel": {
@@ -59,69 +35,13 @@
     "message": "Vezérlőpult megnyitása",
     "description": "English: Click to open the dashboard"
   },
-  "popupTipZapper": {
-    "message": "Lépjen be zapper módba",
-    "description": "Tooltip for the element-zapper icon in the popup panel"
-  },
-  "popupTipPicker": {
-    "message": "Lépjen be az elemválasztó módba",
-    "description": "English: Enter element picker mode"
-  },
-  "popupTipReport": {
-    "message": "Az oldalon lévő probléma bejelentése",
-    "description": "Tooltip used for the 'chat' icon in the panel"
-  },
-  "popupTipSaveRules": {
-    "message": "Kattintson a változtatások véglegessé tételéhez.",
-    "description": "Tooltip when hovering over the padlock in the dynamic filtering pane."
-  },
-  "popupTipRevertRules": {
-    "message": "Kattintson a gombra a módosítások visszaállításához.",
-    "description": "Tooltip when hovering over the eraser in the dynamic filtering pane."
-  },
   "popupMoreButton": {
     "message": "Több",
-    "description": "Label to be used to show popup panel sections"
-  },
-  "popupGrantGreatPowers": {
-    "message": "Kattintson az uBO Lite kiterjesztett hozzáférés engedélyezéséhez ezen az oldalon.\nA kiterjesztett hozzáféréssel a szűrés hatékonysága növekszik.",
-    "description": "Label to be used to show popup panel sections"
-  },
-  "popupRevokeGreatPowers": {
-    "message": "Kattintson a kiterjesztett hozzáférés visszavonásához ezen az oldalon.",
     "description": "Label to be used to show popup panel sections"
   },
   "popupLessButton": {
     "message": "Kevesebb",
     "description": "Label to be used to hide popup panel sections"
-  },
-  "settingsIconBadgePrompt": {
-    "message": "Jelenjen meg a blokkolt lekérések száma az ikonon",
-    "description": "English: Show the number of blocked requests on the icon"
-  },
-  "settingsAppearance": {
-    "message": "Kinézet",
-    "description": "Section for controlling user interface appearance"
-  },
-  "settingsThemeLabel": {
-    "message": "Téma",
-    "description": "Label for checkbox to enable a custom dark theme"
-  },
-  "settingsThemeAccent0Label": {
-    "message": "Kiemelőszín használata",
-    "description": "Label for checkbox to pick an accent color"
-  },
-  "settingsNoCSPReportsPrompt": {
-    "message": "Letiltás és jelentés",
-    "description": "background information: https://github.com/gorhill/uBlock/issues/3150"
-  },
-  "omnipotenceLabel": {
-    "message": "Engedélyezze a kiterjesztett szűrést az összes webhelyen",
-    "description": "Header for a ruleset section in 'Filter lists pane'"
-  },
-  "omnipotenceLegend": {
-    "message": "Az uBO Lite csak akkor tud kiterjesztett szűrést alkalmazni egy adott webhelyen, ha Ön kifejezetten megadja a bővítménynek az adott webhely adatainak módosítására vonatkozó engedélyeket. Ez a beállítás lehetővé teszi, hogy engedélyeket adjon a kiterjesztett szűréshez az összes webhelynek egyszerre.",
-    "description": "Header for a ruleset section in 'Filter lists pane'"
   },
   "3pGroupDefault": {
     "message": "Alapértelmezett",
@@ -151,44 +71,12 @@
     "message": "Régiók, nyelvek",
     "description": "Header for a ruleset section in 'Filter lists pane'"
   },
-  "1pFormatHint": {
-    "message": "Soronként egy szűrő. A szűrő lehet egyszerű gazdagépnév vagy EasyList-kompatibilis szűrő. A rendszer figyelmen kívül hagyja a <code>!</code> előtaggal ellátott sorokat.",
-    "description": "Short information about how to create custom filters"
-  },
-  "1pImport": {
-    "message": "Importál és hozzáad",
-    "description": "English: Import and append"
-  },
-  "1pExport": {
-    "message": "Exportál",
-    "description": "English: Export"
-  },
-  "1pExportFilename": {
-    "message": "my-ublock-static-filters_{{dátumidő}}.txt",
-    "description": "English: my-ublock-static-filters_{{datetime}}.txt"
-  },
-  "whitelistPrompt": {
-    "message": "A megbízható webhelyek direktívái határozzák meg, hogy mely weboldalakon kell letiltani az uBO Lite-ot. Soronként egy bejegyzés.",
-    "description": "A concise description of the 'Trusted sites' pane."
-  },
-  "whitelistImport": {
-    "message": "Importál és hozzáad",
-    "description": "English: Import and append"
-  },
-  "whitelistExport": {
-    "message": "Exportál",
-    "description": "English: Export"
-  },
-  "whitelistExportFilename": {
-    "message": "my-ublock-static-filters_{{datetime}}.txt",
-    "description": "The default filename to use for import/export purpose"
-  },
   "aboutChangelog": {
     "message": "Változások listája",
     "description": ""
   },
   "aboutCode": {
-    "message": "Source code (GPLv3)",
+    "message": "Forráskód (GPLv3)",
     "description": "English: Source code (GPLv3)"
   },
   "aboutContributors": {
@@ -204,24 +92,12 @@
     "description": "Link text to translations repo"
   },
   "aboutFilterLists": {
-    "message": "Szűrő listák",
+    "message": "Szűrőlisták",
     "description": "Link text to uBO's own filter lists repo"
   },
   "aboutDependencies": {
     "message": "Külső függőségek (GPLv3-kompatibilis):",
     "description": "Shown in the About pane"
-  },
-  "genericSubmit": {
-    "message": "Küldés",
-    "description": "for generic 'Submit' buttons"
-  },
-  "genericApplyChanges": {
-    "message": "Módosítások alkalmazása",
-    "description": "for generic 'Apply changes' buttons"
-  },
-  "genericRevert": {
-    "message": "Visszaállítás",
-    "description": "for generic 'Revert' buttons"
   },
   "firstRunSectionLabel": {
     "message": "Üdvözlünk",
@@ -267,8 +143,12 @@
     "message": "Speciális hálózati szűrés, valamint speciális és általános kiterjesztett szűrés a kiválasztott szűrőlistákból.\n\nSzéles körű engedély szükséges az adatok olvasásához és módosításához az összes webhelyen.\n\nAz általános kiterjesztett szűrés nagyobb weboldal-erőforrás-felhasználást eredményezhet.",
     "description": "This describes the 'complete' filtering mode"
   },
+  "noFilteringModeDescription": {
+    "message": "Azon hosztnevek listája, amelyek esetében nem történik szűrés",
+    "description": "A short description for the editable field which lists trusted sites"
+  },
   "behaviorSectionLabel": {
-    "message": "Működés",
+    "message": "Viselkedés",
     "description": "The header text for the 'Behavior' section"
   },
   "autoReloadLabel": {

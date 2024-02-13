@@ -1,6 +1,6 @@
 /*******************************************************************************
 
-    uBlock Origin - a browser extension to block requests.
+    uBlock Origin Lite - a comprehensive, MV3-compliant content blocker
     Copyright (C) 2014-present Raymond Hill
 
     This program is free software: you can redistribute it and/or modify
@@ -562,6 +562,13 @@ class PSelectorRoot extends PSelector {
     prime(input) {
         try {
             return super.prime(input);
+        } catch (ex) {
+        }
+        return [];
+    }
+    exec(input) {
+        try {
+            return super.exec(input);
         } catch (ex) {
         }
         return [];

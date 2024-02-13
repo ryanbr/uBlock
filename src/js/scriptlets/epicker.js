@@ -1,6 +1,6 @@
 /*******************************************************************************
 
-    uBlock Origin - a browser extension to block requests.
+    uBlock Origin - a comprehensive, efficient content blocker
     Copyright (C) 2014-present Raymond Hill
 
     This program is free software: you can redistribute it and/or modify
@@ -30,19 +30,13 @@
 
 /******************************************************************************/
 
-if ( typeof vAPI !== 'object' || vAPI === null ) {
-    return;
-}
+if ( typeof vAPI !== 'object' ) { return; }
+if ( typeof vAPI === null ) { return; }
 
-/******************************************************************************/
+if ( vAPI.pickerFrame ) { return; }
+vAPI.pickerFrame = true;
 
-const epickerId = vAPI.randomToken();
-let epickerConnectionId;
-
-let pickerRoot = document.querySelector(`[${vAPI.sessionId}]`);
-if ( pickerRoot !== null ) { return; }
-
-let pickerBootArgs;
+const pickerUniqueId = vAPI.randomToken();
 
 const reCosmeticAnchor = /^#(\$|\?|\$\?)?#/;
 
@@ -129,7 +123,7 @@ const highlightElements = function(elems, force) {
     const islands = [];
 
     for ( const elem of elems ) {
-        if ( elem === pickerRoot ) { continue; }
+        if ( elem === pickerFrame ) { continue; }
         targetElements.push(elem);
         const rect = getElementBoundingClientRect(elem);
         // Ignore offscreen areas
@@ -144,7 +138,7 @@ const highlightElements = function(elems, force) {
         );
     }
 
-    vAPI.MessagingConnection.sendTo(epickerConnectionId, {
+    pickerFramePort.postMessage({
         what: 'svgPaths',
         ocean: `M0 0h${ow}v${oh}h-${ow}z`,
         islands: islands.join(''),
@@ -555,10 +549,10 @@ const filtersFrom = function(x, y) {
     // https://www.reddit.com/r/uBlockOrigin/comments/qmjk36/
     //   Extract network candidates first.
     if ( typeof x === 'number' ) {
-        const magicAttr = `${vAPI.sessionId}-clickblind`;
-        pickerRoot.setAttribute(magicAttr, '');
+        const magicAttr = `${pickerUniqueId}-clickblind`;
+        pickerFrame.setAttribute(magicAttr, '');
         const elems = document.elementsFromPoint(x, y);
-        pickerRoot.removeAttribute(magicAttr);
+        pickerFrame.removeAttribute(magicAttr);
         for ( const elem of elems ) {
             netFilterFromElement(elem);
         }
@@ -738,7 +732,7 @@ const filterToDOMInterface = (( ) => {
         }
         const out = [];
         for ( const elem of elems ) {
-            if ( elem === pickerRoot ) { continue; }
+            if ( elem === pickerFrame ) { continue; }
             out.push({ elem, raw, style: vAPI.hideStyle });
         }
         return out;
@@ -816,7 +810,7 @@ const filterToDOMInterface = (( ) => {
         if ( Array.isArray(lastResultset) === false ) { return; }
         const rootElem = document.documentElement;
         for ( const { elem, style } of lastResultset ) {
-            if ( elem === pickerRoot ) { continue; }
+            if ( elem === pickerFrame ) { continue; }
             if ( style === undefined ) { continue; }
             if ( elem === rootElem && style === vAPI.hideStyle ) { continue; }
             let styleToken = vAPI.epickerStyleProxies.get(style);
@@ -900,7 +894,7 @@ const onOptimizeCandidates = function(details) {
         if ( r !== 0 ) { return r; }
         return a.selector.length - b.selector.length;
     });
-    vAPI.MessagingConnection.sendTo(epickerConnectionId, {
+    pickerFramePort.postMessage({
         what: 'candidatesOptimized',
         candidates: results.map(a => a.selector),
         slot: details.slot,
@@ -910,7 +904,7 @@ const onOptimizeCandidates = function(details) {
 /******************************************************************************/
 
 const showDialog = function(options) {
-    vAPI.MessagingConnection.sendTo(epickerConnectionId, {
+    pickerFramePort.postMessage({
         what: 'showDialog',
         url: self.location.href,
         netFilters: netFilterCandidates,
@@ -933,9 +927,9 @@ const elementFromPoint = (( ) => {
         } else {
             return null;
         }
-        if ( !pickerRoot ) { return null; }
-        const magicAttr = `${vAPI.sessionId}-clickblind`;
-        pickerRoot.setAttribute(magicAttr, '');
+        if ( !pickerFrame ) { return null; }
+        const magicAttr = `${pickerUniqueId}-clickblind`;
+        pickerFrame.setAttribute(magicAttr, '');
         let elem = document.elementFromPoint(x, y);
         if (
             elem === null || /* to skip following tests */
@@ -949,7 +943,7 @@ const elementFromPoint = (( ) => {
             elem = null;
         }
         // https://github.com/uBlockOrigin/uBlock-issues/issues/380
-        pickerRoot.removeAttribute(magicAttr);
+        pickerFrame.removeAttribute(magicAttr);
         return elem;
     };
 })();
@@ -1065,7 +1059,7 @@ const onViewportChanged = function() {
 // Auto-select a specific target, if any, and if possible
 
 const startPicker = function() {
-    pickerRoot.focus();
+    pickerFrame.focus();
 
     self.addEventListener('scroll', onViewportChanged, { passive: true });
     self.addEventListener('resize', onViewportChanged, { passive: true });
@@ -1102,7 +1096,7 @@ const startPicker = function() {
     if ( attr === undefined ) { return; }
     const elems = document.getElementsByTagName(tagName);
     for ( const elem of elems  ) {
-        if ( elem === pickerRoot ) { continue; }
+        if ( elem === pickerFrame ) { continue; }
         const srcs = resourceURLsFromElement(elem);
         if (
             (srcs.length !== 0 && srcs.includes(url) === false) ||
@@ -1141,18 +1135,21 @@ const quitPicker = function() {
     self.removeEventListener('resize', onViewportChanged, { passive: true });
     self.removeEventListener('keydown', onKeyPressed, true);
     vAPI.shutdown.remove(quitPicker);
-    vAPI.MessagingConnection.disconnectFrom(epickerConnectionId);
-    vAPI.MessagingConnection.removeListener(onConnectionMessage);
+    if ( pickerFramePort ) {
+        pickerFramePort.close();
+        pickerFramePort = null;
+    }
+    if ( pickerFrame ) {
+        pickerFrame.remove();
+        pickerFrame = null;
+    }
     vAPI.userStylesheet.remove(pickerCSS);
     vAPI.userStylesheet.apply();
-
-    if ( pickerRoot === null ) { return; }
-
-    pickerRoot.remove();
-    pickerRoot = null;
-
+    vAPI.pickerFrame = false;
     self.focus();
 };
+
+vAPI.shutdown.add(quitPicker);
 
 /******************************************************************************/
 
@@ -1160,6 +1157,7 @@ const onDialogMessage = function(msg) {
     switch ( msg.what ) {
         case 'start':
             startPicker();
+            if ( pickerFramePort === null ) { break; }
             if ( targetElements.length === 0 ) {
                 highlightElements([], true);
             }
@@ -1176,7 +1174,7 @@ const onDialogMessage = function(msg) {
             const resultset = filterToDOMInterface.queryAll(msg) || [];
             highlightElements(resultset.map(a => a.elem), true);
             if ( msg.filter === '!' ) { break; }
-            vAPI.MessagingConnection.sendTo(epickerConnectionId, {
+            pickerFramePort.postMessage({
                 what: 'resultsetDetails',
                 count: resultset.length,
                 opt: resultset.length !== 0 ? resultset[0].opt : undefined,
@@ -1215,23 +1213,6 @@ const onDialogMessage = function(msg) {
 
 /******************************************************************************/
 
-const onConnectionMessage = function(msg) {
-    if ( msg.from !== `epickerDialog-${epickerId}` ) { return; }
-    switch ( msg.what ) {
-        case 'connectionRequested':
-            epickerConnectionId = msg.id;
-            return true;
-        case 'connectionBroken':
-            quitPicker();
-            break;
-        case 'connectionMessage':
-            onDialogMessage(msg.payload);
-            break;
-    }
-};
-
-/******************************************************************************/
-
 // epicker-ui.html will be injected in the page through an iframe, and
 // is a sandboxed so as to prevent the page from interfering with its
 // content and behavior.
@@ -1248,25 +1229,6 @@ const onConnectionMessage = function(msg) {
 // sees is an iframe with a random attribute. The page can't see the content
 // of the iframe, and cannot interfere with its style properties. However the
 // page can remove the iframe.
-
-// We need extra messaging capabilities + fetch/process picker arguments.
-{
-    const results = await Promise.all([
-        vAPI.messaging.extend(),
-        vAPI.messaging.send('elementPicker', { what: 'elementPickerArguments' }),
-    ]);
-    if ( results[0] !== true ) { return; }
-    pickerBootArgs = results[1];
-    if ( typeof pickerBootArgs !== 'object' || pickerBootArgs === null ) {
-        return;
-    }
-    // Restore net filter union data if origin is the same.
-    const eprom = pickerBootArgs.eprom || null;
-    if ( eprom !== null && eprom.lastNetFilterSession === lastNetFilterSession ) {
-        lastNetFilterHostname = eprom.lastNetFilterHostname || '';
-        lastNetFilterUnion = eprom.lastNetFilterUnion || '';
-    }
-}
 
 // The DOM filterer will not be present when cosmetic filtering is disabled.
 const noCosmeticFiltering =
@@ -1302,17 +1264,17 @@ const pickerCSSStyle = [
     'width: 100%',
     'z-index: 2147483647',
     ''
-];
+].join(' !important;\n');
 
 
 const pickerCSS = `
-:root > [${vAPI.sessionId}] {
-    ${pickerCSSStyle.join(' !important;')}
+:root > [${pickerUniqueId}] {
+    ${pickerCSSStyle}
 }
-:root > [${vAPI.sessionId}-loaded] {
+:root > [${pickerUniqueId}-loaded] {
     visibility: visible !important;
 }
-:root [${vAPI.sessionId}-clickblind] {
+:root [${pickerUniqueId}-clickblind] {
     pointer-events: none !important;
 }
 `;
@@ -1320,24 +1282,53 @@ const pickerCSS = `
 vAPI.userStylesheet.add(pickerCSS);
 vAPI.userStylesheet.apply();
 
-pickerRoot = document.createElement('iframe');
-pickerRoot.setAttribute(vAPI.sessionId, '');
-document.documentElement.append(pickerRoot);
+let pickerBootArgs;
+let pickerFramePort = null;
 
-vAPI.shutdown.add(quitPicker);
-
-vAPI.MessagingConnection.addListener(onConnectionMessage);
-
-{
+const bootstrap = async ( ) => {
+    pickerBootArgs = await vAPI.messaging.send('elementPicker', {
+        what: 'elementPickerArguments',
+    });
+    if ( typeof pickerBootArgs !== 'object' ) { return; }
+    if ( pickerBootArgs === null ) { return; }
+    // Restore net filter union data if origin is the same.
+    const eprom = pickerBootArgs.eprom || null;
+    if ( eprom !== null && eprom.lastNetFilterSession === lastNetFilterSession ) {
+        lastNetFilterHostname = eprom.lastNetFilterHostname || '';
+        lastNetFilterUnion = eprom.lastNetFilterUnion || '';
+    }
     const url = new URL(pickerBootArgs.pickerURL);
-    url.searchParams.set('epid', epickerId);
     if ( pickerBootArgs.zap ) {
         url.searchParams.set('zap', '1');
     }
-    pickerRoot.addEventListener("load", function() {
-      pickerRoot.setAttribute(`${vAPI.sessionId}-loaded`, "");
+    return new Promise(resolve => {
+        const iframe = document.createElement('iframe');
+        iframe.setAttribute(pickerUniqueId, '');
+        document.documentElement.append(iframe);
+        iframe.addEventListener('load', ( ) => {
+            iframe.setAttribute(`${pickerUniqueId}-loaded`, '');
+            const channel = new MessageChannel();
+            pickerFramePort = channel.port1;
+            pickerFramePort.onmessage = ev => {
+                onDialogMessage(ev.data || {});
+            };
+            pickerFramePort.onmessageerror = ( ) => {
+                quitPicker();
+            };
+            iframe.contentWindow.postMessage(
+                { what: 'epickerStart' },
+                url.href,
+                [ channel.port2 ]
+            );
+            resolve(iframe);
+        }, { once: true });
+        iframe.contentWindow.location = url.href;
     });
-    pickerRoot.src = url.href;
+};
+
+let pickerFrame = await bootstrap();
+if ( Boolean(pickerFrame) === false ) {
+    quitPicker();
 }
 
 /******************************************************************************/

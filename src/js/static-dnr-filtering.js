@@ -1,6 +1,6 @@
 /*******************************************************************************
 
-    uBlock Origin - a browser extension to block requests.
+    uBlock Origin - a comprehensive, efficient content blocker
     Copyright (C) 2014-present Raymond Hill
 
     This program is free software: you can redistribute it and/or modify
@@ -299,17 +299,24 @@ function addToDNR(context, list) {
 
         if ( parser.isComment() ) {
             if ( line === `!#trusted on ${context.secret}` ) {
-                parser.trustedSource = true;
+                parser.options.trustedSource = true;
                 context.trustedSource = true;
             } else if ( line === `!#trusted off ${context.secret}` ) {
-                parser.trustedSource = false;
+                parser.options.trustedSource = false;
                 context.trustedSource = false;
             }
             continue;
         }
 
         if ( parser.isFilter() === false ) { continue; }
-        if ( parser.hasError() ) { continue; }
+        if ( parser.hasError() ) {
+            if ( parser.astError === sfp.AST_ERROR_OPTION_EXCLUDED ) {
+                context.invalid.add(`Incompatible with DNR: ${line}`);
+            } else {
+                context.invalid.add(`Rejected filter: ${line}`);
+            }
+            continue;
+        }
 
         if ( parser.isExtendedFilter() ) {
             addExtendedToDNR(context, parser);

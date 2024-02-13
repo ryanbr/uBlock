@@ -532,7 +532,7 @@
     "description": "Short information about how to create custom filters"
   },
   "1pTrustWarning": {
-    "message": "Do not add filters from untrusted sources.",
+    "message": "সন্দেহজনক উৎস থেকে ফিল্টারে কোন কিছু যোগ করবেন না।",
     "description": "Warning against copy-pasting filters from random sources"
   },
   "1pImport": {
@@ -1250,6 +1250,10 @@
   "toggleCosmeticFiltering": {
     "message": "সৌন্দর্য্যবর্ধক ফিল্টার চালু বা বন্ধ করুন",
     "description": "Label for keyboard shortcut used to toggle cosmetic filtering"
+  },
+  "toggleJavascript": {
+    "message": "Toggle JavaScript",
+    "description": "Label for keyboard shortcut used to toggle no-scripting switch"
   },
   "relaxBlockingMode": {
     "message": "রোধক মোড শিথিল করুন",

@@ -468,7 +468,7 @@
     "description": "English: Apply changes"
   },
   "3pGroupDefault": {
-    "message": "Inbyggd",
+    "message": "Inbyggda",
     "description": "Filter lists section name"
   },
   "3pGroupAds": {
@@ -496,7 +496,7 @@
     "description": "Filter lists section name"
   },
   "3pGroupCustom": {
-    "message": "Anpassad",
+    "message": "Anpassade",
     "description": "Filter lists section name"
   },
   "3pImport": {
@@ -536,11 +536,11 @@
     "description": "Warning against copy-pasting filters from random sources"
   },
   "1pImport": {
-    "message": "Importera och lägg till",
+    "message": "Importera och lägg till…",
     "description": "Button in the 'My filters' pane"
   },
   "1pExport": {
-    "message": "Exportera",
+    "message": "Exportera…",
     "description": "Button in the 'My filters' pane"
   },
   "1pExportFilename": {
@@ -584,7 +584,7 @@
     "description": ""
   },
   "rulesExport": {
-    "message": "Exportera till fil",
+    "message": "Exportera till fil…",
     "description": "Button in the 'My rules' pane"
   },
   "rulesDefaultFileName": {
@@ -620,11 +620,11 @@
     "description": "A concise description of the 'Trusted sites' pane."
   },
   "whitelistImport": {
-    "message": "Importera och lägg till",
+    "message": "Importera och lägg till…",
     "description": "Button in the 'Trusted sites' pane"
   },
   "whitelistExport": {
-    "message": "Exportera",
+    "message": "Exportera…",
     "description": "Button in the 'Trusted sites' pane"
   },
   "whitelistExportFilename": {
@@ -1250,6 +1250,10 @@
   "toggleCosmeticFiltering": {
     "message": "Växla kosmetisk filtrering",
     "description": "Label for keyboard shortcut used to toggle cosmetic filtering"
+  },
+  "toggleJavascript": {
+    "message": "Växla JavaScript",
+    "description": "Label for keyboard shortcut used to toggle no-scripting switch"
   },
   "relaxBlockingMode": {
     "message": "Lätta på blockeringsläge",

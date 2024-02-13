@@ -1,6 +1,6 @@
 /*******************************************************************************
 
-    uBlock Origin - a browser extension to block requests.
+    uBlock Origin - a comprehensive, efficient content blocker
     Copyright (C) 2014-2015 The uBlock Origin authors
     Copyright (C) 2014-present Raymond Hill
 
@@ -21,6 +21,8 @@
 */
 
 // For non-background page
+
+/* globals browser */
 
 'use strict';
 
@@ -81,8 +83,6 @@ vAPI.messaging = {
     port: null,
     portTimer: null,
     portTimerDelay: 10000,
-    extended: undefined,
-    extensions: [],
     msgIdGenerator: 1,
     pending: new Map(),
     shuttingDown: false,
@@ -125,23 +125,11 @@ vAPI.messaging = {
                 return;
             }
         }
-
-        // Unhandled messages
-        this.extensions.every(ext => ext.canProcessMessage(details) !== true);
     },
     messageListenerBound: null,
 
     canDestroyPort: function() {
-        return this.pending.size === 0 && (
-            this.extensions.length === 0 ||
-            this.extensions.every(e => e.canDestroyPort())
-        );
-    },
-
-    mustDestroyPort: function() {
-        if ( this.extensions.length === 0 ) { return; }
-        this.extensions.forEach(e => e.mustDestroyPort());
-        this.extensions.length = 0;
+        return this.pending.size === 0;
     },
 
     portPoller: function() {
@@ -166,7 +154,6 @@ vAPI.messaging = {
             port.onDisconnect.removeListener(this.disconnectListenerBound);
             this.port = null;
         }
-        this.mustDestroyPort();
         // service pending callbacks
         if ( this.pending.size !== 0 ) {
             const pending = this.pending;
@@ -229,22 +216,6 @@ vAPI.messaging = {
         });
         port.postMessage({ channel, msgId, msg });
         return promise;
-    },
-
-    // Dynamically extend capabilities.
-    //
-    // https://github.com/uBlockOrigin/uBlock-issues/issues/1571
-    //   Don't use `self` to access `vAPI`.
-    extend: function() {
-        if ( this.extended === undefined ) {
-            this.extended = vAPI.messaging.send('vapi', {
-                what: 'extendClient'
-            }).then(( ) =>
-                typeof vAPI === 'object' && this.extensions.length !== 0
-            ).catch(( ) => {
-            });
-        }
-        return this.extended;
     },
 };
 

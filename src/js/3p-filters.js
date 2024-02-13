@@ -1,6 +1,6 @@
 /*******************************************************************************
 
-    uBlock Origin - a browser extension to block requests.
+    uBlock Origin - a comprehensive, efficient content blocker
     Copyright (C) 2014-present Raymond Hill
 
     This program is free software: you can redistribute it and/or modify
@@ -21,8 +21,9 @@
 
 'use strict';
 
-import { i18n, i18n$ } from './i18n.js';
+import { onBroadcast } from './broadcast.js';
 import { dom, qs$, qsa$ } from './dom.js';
+import { i18n, i18n$ } from './i18n.js';
 
 /******************************************************************************/
 
@@ -35,9 +36,7 @@ let listsetDetails = {};
 
 /******************************************************************************/
 
-const messaging = vAPI.messaging;
-
-vAPI.broadcastListener.add(msg => {
+onBroadcast(msg => {
     switch ( msg.what ) {
     case 'assetUpdated':
         updateAssetStatus(msg);
@@ -130,7 +129,9 @@ const renderFilterLists = ( ) => {
             dom.attr(elem, 'href', listDetails.instructionURL || '#');
         }
         dom.cl.toggle(listEntry, 'isDefault',
-            listDetails.isDefault === true || listkey === 'user-filters'
+            listDetails.isDefault === true ||
+            listDetails.isImportant === true ||
+            listkey === 'user-filters'
         );
         elem = qs$(listEntry, '.leafstats');
         dom.text(elem, renderLeafStats(on ? listDetails.entryUsedCount : 0, listDetails.entryCount));
@@ -275,7 +276,7 @@ const renderFilterLists = ( ) => {
         renderWidgets();
     };
 
-    messaging.send('dashboard', {
+    return vAPI.messaging.send('dashboard', {
         what: 'getLists',
     }).then(response => {
         onListsReceived(response);
@@ -285,17 +286,14 @@ const renderFilterLists = ( ) => {
 /******************************************************************************/
 
 const renderWidgets = ( ) => {
+    const updating = dom.cl.has(dom.body, 'updating');
+    const hasObsolete = qs$('#lists .listEntry.checked.obsolete:not(.toRemove)') !== null;
     dom.cl.toggle('#buttonApply', 'disabled',
         filteringSettingsHash === hashFromCurrentFromSettings()
     );
-    const updating = dom.cl.has(dom.body, 'updating');
     dom.cl.toggle('#buttonUpdate', 'active', updating);
     dom.cl.toggle('#buttonUpdate', 'disabled',
-        updating === false &&
-        qs$('#lists .listEntry.checked.obsolete:not(.toRemove)') === null
-    );
-    dom.cl.toggle('#buttonPurgeAll', 'disabled',
-        updating || qs$('#lists .listEntry.cached:not(.obsolete)') === null
+        updating === false && hasObsolete === false
     );
 };
 
@@ -508,9 +506,10 @@ const onPurgeClicked = ev => {
         dom.cl.remove(listLeaf, 'cached');
     }
 
-    messaging.send('dashboard', {
-        what: 'purgeCaches',
+    vAPI.messaging.send('dashboard', {
+        what: 'listsUpdateNow',
         assetKeys,
+        preferOrigin: ev.shiftKey,
     });
 
     // If the cached version is purged, the installed version must be assumed
@@ -518,8 +517,8 @@ const onPurgeClicked = ev => {
     // https://github.com/gorhill/uBlock/issues/1733
     //   An external filter list must not be marked as obsolete, they will
     //   always be fetched anyways if there is no cached copy.
+    dom.cl.add(dom.body, 'updating');
     dom.cl.add(liEntry, 'obsolete');
-    dom.cl.remove(liEntry, 'cached');
 
     if ( qs$(liEntry, 'input[type="checkbox"]').checked ) {
         renderWidgets();
@@ -533,7 +532,7 @@ dom.on('#lists', 'click', 'span.cache', onPurgeClicked);
 const selectFilterLists = async ( ) => {
     // Cosmetic filtering switch
     let checked = qs$('#parseCosmeticFilters').checked;
-    messaging.send('dashboard', {
+    vAPI.messaging.send('dashboard', {
         what: 'userSettings',
         name: 'parseAllABPHideFilters',
         value: checked,
@@ -541,7 +540,7 @@ const selectFilterLists = async ( ) => {
     listsetDetails.parseCosmeticFilters = checked;
 
     checked = qs$('#ignoreGenericCosmeticFilters').checked;
-    messaging.send('dashboard', {
+    vAPI.messaging.send('dashboard', {
         what: 'userSettings',
         name: 'ignoreGenericCosmeticFilters',
         value: checked,
@@ -580,7 +579,7 @@ const selectFilterLists = async ( ) => {
 
     hashFromListsetDetails();
 
-    await messaging.send('dashboard', {
+    await vAPI.messaging.send('dashboard', {
         what: 'applyFilterListSelection',
         toSelect,
         toImport,
@@ -595,7 +594,7 @@ const buttonApplyHandler = async ( ) => {
     dom.cl.add(dom.body, 'working');
     dom.cl.remove('#lists .listEntry.stickied', 'stickied');
     renderWidgets();
-    await messaging.send('dashboard', { what: 'reloadAllFilters' });
+    await vAPI.messaging.send('dashboard', { what: 'reloadAllFilters' });
     dom.cl.remove(dom.body, 'working');
 };
 
@@ -608,28 +607,16 @@ const buttonUpdateHandler = async ( ) => {
     await selectFilterLists();
     dom.cl.add(dom.body, 'updating');
     renderWidgets();
-    messaging.send('dashboard', { what: 'forceUpdateAssets' });
+    vAPI.messaging.send('dashboard', { what: 'updateNow' });
 };
 
 dom.on('#buttonUpdate', 'click', ( ) => { buttonUpdateHandler(); });
 
 /******************************************************************************/
 
-const buttonPurgeAllHandler = async hard => {
-    await messaging.send('dashboard', {
-        what: 'purgeAllCaches',
-        hard,
-    });
-    renderFilterLists(true);
-};
-
-dom.on('#buttonPurgeAll', 'click', ev => { buttonPurgeAllHandler(ev.shiftKey); });
-
-/******************************************************************************/
-
 const userSettingCheckboxChanged = ( ) => {
     const target = event.target;
-    messaging.send('dashboard', {
+    vAPI.messaging.send('dashboard', {
         what: 'userSettings',
         name: target.id,
         value: target.checked,
@@ -863,6 +850,12 @@ self.hasUnsavedData = function() {
 
 /******************************************************************************/
 
-renderFilterLists();
+renderFilterLists().then(( ) => {
+    const buttonUpdate = qs$('#buttonUpdate');
+    if ( dom.cl.has(buttonUpdate, 'active') ) { return; }
+    if ( dom.cl.has(buttonUpdate, 'disabled') ) { return; }
+    if ( listsetDetails.autoUpdate !== true ) { return; }
+    buttonUpdateHandler();
+});
 
 /******************************************************************************/

@@ -1,6 +1,6 @@
 /*******************************************************************************
 
-    uBlock Origin - a browser extension to block requests.
+    uBlock Origin - a comprehensive, efficient content blocker
     Copyright (C) 2014-present Raymond Hill
 
     This program is free software: you can redistribute it and/or modify
@@ -39,17 +39,18 @@ import './tab.js';
 import './ublock.js';
 import './utils.js';
 
-import cacheStorage from './cachestorage.js';
-import contextMenu from './contextmenu.js';
 import io from './assets.js';
-import lz4Codec from './lz4.js';
-import staticExtFilteringEngine from './static-ext-filtering.js';
-import staticFilteringReverseLookup from './reverselookup.js';
-import staticNetFilteringEngine from './static-net-filtering.js';
 import µb from './background.js';
-import webRequest from './traffic.js';
-import { redirectEngine } from './redirect-engine.js';
+import { filteringBehaviorChanged } from './broadcast.js';
+import cacheStorage from './cachestorage.js';
 import { ubolog } from './console.js';
+import contextMenu from './contextmenu.js';
+import lz4Codec from './lz4.js';
+import { redirectEngine } from './redirect-engine.js';
+import staticFilteringReverseLookup from './reverselookup.js';
+import staticExtFilteringEngine from './static-ext-filtering.js';
+import staticNetFilteringEngine from './static-net-filtering.js';
+import webRequest from './traffic.js';
 
 import {
     permanentFirewall,
@@ -59,13 +60,6 @@ import {
     permanentURLFiltering,
     sessionURLFiltering,
 } from './filtering-engines.js';
-
-/******************************************************************************/
-
-// Load all: executed once.
-
-(async ( ) => {
-// >>>>> start of private scope
 
 /******************************************************************************/
 
@@ -311,10 +305,10 @@ const onHiddenSettingsReady = async ( ) => {
     }
 
     // Maybe override default cache storage
-    const cacheBackend = await cacheStorage.select(
+    µb.supportStats.cacheBackend = await cacheStorage.select(
         µb.hiddenSettings.cacheStorageAPI
     );
-    ubolog(`Backend storage for cache will be ${cacheBackend}`);
+    ubolog(`Backend storage for cache will be ${µb.supportStats.cacheBackend}`);
 };
 
 /******************************************************************************/
@@ -378,6 +372,9 @@ const createDefaultProps = ( ) => {
 
 /******************************************************************************/
 
+(async ( ) => {
+// >>>>> start of async/await scope
+    
 try {
     ubolog(`Start sequence of loading storage-based data ${Date.now()-vAPI.T0} ms after launch`);
 
@@ -453,7 +450,7 @@ if ( selfieIsValid !== true ) {
 
 // Flush memory cache -- unsure whether the browser does this internally
 // when loading a new extension.
-µb.filteringBehaviorChanged();
+filteringBehaviorChanged();
 
 // Final initialization steps after all needed assets are in memory.
 
@@ -477,11 +474,11 @@ lz4Codec.relinquish();
 // https://github.com/chrisaljoudi/uBlock/issues/184
 //   Check for updates not too far in the future.
 io.addObserver(µb.assetObserver.bind(µb));
-µb.scheduleAssetUpdater(
-    µb.userSettings.autoUpdate
+µb.scheduleAssetUpdater({
+    updateDelay: µb.userSettings.autoUpdate
         ? µb.hiddenSettings.autoUpdateDelayAfterLaunch * 1000
         : 0
-);
+});
 
 // Force an update of the context menu according to the currently
 // active tab.
@@ -505,5 +502,7 @@ if ( selfieIsValid ) {
 }
 ubolog(`All ready ${µb.supportStats.allReadyAfter} after launch`);
 
-// <<<<< end of private scope
+µb.isReadyResolve();
+
+// <<<<< end of async/await scope
 })();

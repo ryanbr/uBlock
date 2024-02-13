@@ -276,7 +276,7 @@
     "description": "Example of use: Version 1.26.4"
   },
   "popup3pScriptFilter": {
-    "message": "guió",
+    "message": "script",
     "description": "Appears as an option to filter out firewall rows"
   },
   "popup3pFrameFilter": {
@@ -532,7 +532,7 @@
     "description": "Short information about how to create custom filters"
   },
   "1pTrustWarning": {
-    "message": "No afegiu filtres de fonts no fiables.",
+    "message": "No afegiu filtres de fonts no confiables.",
     "description": "Warning against copy-pasting filters from random sources"
   },
   "1pImport": {
@@ -1250,6 +1250,10 @@
   "toggleCosmeticFiltering": {
     "message": "Commuta els filtres cosmètics",
     "description": "Label for keyboard shortcut used to toggle cosmetic filtering"
+  },
+  "toggleJavascript": {
+    "message": "Canviar l'estat de JavaScript",
+    "description": "Label for keyboard shortcut used to toggle no-scripting switch"
   },
   "relaxBlockingMode": {
     "message": "Mode de bloqueig relaxat",
