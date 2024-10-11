@@ -71,8 +71,7 @@
         "https://filterlists.com/*",
         "https://forums.lanik.us/*",
         "https://github.com/*",
-        "https://*.github.io/*",
-        "https://*.letsblock.it/*"
+        "https://*.github.io/*"
       ],
       "js": [
         "/js/scriptlets/subscriber.js"
@@ -100,7 +99,8 @@
     "32": "img/ublock.svg",
     "48": "img/ublock.svg",
     "64": "img/ublock.svg",
-    "96": "img/ublock.svg"
+    "96": "img/ublock.svg",
+    "128": "img/ublock.svg"
   },
   "manifest_version": 2,
   "name": "uBlock Origin",

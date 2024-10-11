@@ -19,10 +19,6 @@
     Home: https://github.com/gorhill/uBlock
 */
 
-/* globals WebAssembly, vAPI */
-
-'use strict';
-
 /*******************************************************************************
 
   A BidiTrieContainer is mostly a large buffer in which distinct but related
@@ -124,6 +120,15 @@ const BCELL_EXTRA_MAX = 0x00FFFFFF;
 const toSegmentInfo = (aL, l, r) => ((r - l) << 24) | (aL + l);
 const roundToPageSize = v => (v + PAGE_SIZE-1) & ~(PAGE_SIZE-1);
 
+// http://www.cse.yorku.ca/~oz/hash.html#djb2
+const i32Checksum = (buf32) => {
+    const n = buf32.length;
+    let hash = 177573 ^ n;
+    for ( let i = 0; i < n; i++ ) {
+        hash = (hash << 5) + hash ^ buf32[i];
+    }
+    return hash;
+};
 
 class BidiTrieContainer {
 
@@ -576,34 +581,19 @@ class BidiTrieContainer {
         };
     }
 
-    serialize(encoder) {
-        if ( encoder instanceof Object ) {
-            return encoder.encode(
-                this.buf32.buffer,
-                this.buf32[CHAR1_SLOT]
-            );
-        }
-        return Array.from(
-            new Uint32Array(
-                this.buf32.buffer,
-                0,
-                this.buf32[CHAR1_SLOT] + 3 >>> 2
-            )
-        );
+    toSelfie() {
+        const buf32 = this.buf32.subarray(0, this.buf32[CHAR1_SLOT] + 3 >>> 2);
+        return { buf32, checksum: i32Checksum(buf32) };
     }
 
-    unserialize(selfie, decoder) {
-        const shouldDecode = typeof selfie === 'string';
-        let byteLength = shouldDecode
-            ? decoder.decodeSize(selfie)
-            : selfie.length << 2;
+    fromSelfie(selfie) {
+        if ( typeof selfie !== 'object' || selfie === null ) { return false; }
+        if ( selfie.buf32 instanceof Uint32Array === false ) { return false; }
+        if ( selfie.checksum !== i32Checksum(selfie.buf32) ) { return false; }
+        const byteLength = selfie.buf32.length << 2;
         if ( byteLength === 0 ) { return false; }
         this.reallocateBuf(byteLength);
-        if ( shouldDecode ) {
-            decoder.decode(selfie, this.buf8.buffer);
-        } else {
-            this.buf32.set(selfie);
-        }
+        this.buf32.set(selfie.buf32);
         return true;
     }
 

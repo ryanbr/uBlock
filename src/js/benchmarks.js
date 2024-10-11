@@ -19,25 +19,21 @@
     Home: https://github.com/gorhill/uBlock
 */
 
-'use strict';
-
-/******************************************************************************/
-
-import cosmeticFilteringEngine from './cosmetic-filtering.js';
-import io from './assets.js';
-import scriptletFilteringEngine from './scriptlet-filtering.js';
-import staticNetFilteringEngine from './static-net-filtering.js';
-import µb from './background.js';
-import webRequest from './traffic.js';
-import { FilteringContext } from './filtering-context.js';
-import { LineIterator } from './text-utils.js';
-import { sessionFirewall } from './filtering-engines.js';
-
 import {
     domainFromHostname,
     entityFromDomain,
     hostnameFromURI,
 } from './uri-utils.js';
+
+import { FilteringContext } from './filtering-context.js';
+import { LineIterator } from './text-utils.js';
+import cosmeticFilteringEngine from './cosmetic-filtering.js';
+import io from './assets.js';
+import scriptletFilteringEngine from './scriptlet-filtering.js';
+import { sessionFirewall } from './filtering-engines.js';
+import { default as sfne } from './static-net-filtering.js';
+import webRequest from './traffic.js';
+import µb from './background.js';
 
 /******************************************************************************/
 
@@ -74,8 +70,8 @@ const loadBenchmarkDataset = (( ) => {
         datasetPromise = undefined;
     });
 
-    return function() {
-        ttlTimer.offon({ min: 5 });
+    return async function() {
+        ttlTimer.offon({ min: 2 });
 
         if ( datasetPromise !== undefined ) {
             return datasetPromise;
@@ -84,7 +80,7 @@ const loadBenchmarkDataset = (( ) => {
         const datasetURL = µb.hiddenSettings.benchmarkDatasetURL;
         if ( datasetURL === 'unset' ) {
             console.info(`No benchmark dataset available.`);
-            return Promise.resolve();
+            return;
         }
         console.info(`Loading benchmark dataset...`);
         datasetPromise = io.fetchText(datasetURL).then(details => {
@@ -134,9 +130,7 @@ const loadBenchmarkDataset = (( ) => {
 
 /******************************************************************************/
 
-// action: 1=test
-
-µb.benchmarkStaticNetFiltering = async function(options = {}) {
+export async function benchmarkStaticNetFiltering(options = {}) {
     const { target, redirectEngine } = options;
 
     const requests = await loadBenchmarkDataset();
@@ -155,13 +149,13 @@ const loadBenchmarkDataset = (( ) => {
         fctxt.setURL(request.url);
         fctxt.setDocOriginFromURL(request.frameUrl);
         fctxt.setType(request.cpt);
-        const r = staticNetFilteringEngine.matchRequest(fctxt);
+        const r = sfne.matchRequest(fctxt);
         console.info(`Result=${r}:`);
         console.info(`\ttype=${fctxt.type}`);
         console.info(`\turl=${fctxt.url}`);
         console.info(`\tdocOrigin=${fctxt.getDocOrigin()}`);
         if ( r !== 0 ) {
-            console.info(staticNetFilteringEngine.toLogData());
+            console.info(sfne.toLogData());
         }
         return;
     }
@@ -178,38 +172,44 @@ const loadBenchmarkDataset = (( ) => {
     for ( let i = 0; i < requests.length; i++ ) {
         const request = requests[i];
         fctxt.setURL(request.url);
+        if ( fctxt.getIPAddress() === '' ) {
+            fctxt.setIPAddress('93.184.215.14\n2606:2800:21f:cb07:6820:80da:af6b:8b2c');
+        }
         fctxt.setDocOriginFromURL(request.frameUrl);
         fctxt.setType(request.cpt);
-        staticNetFilteringEngine.redirectURL = undefined;
-        const r = staticNetFilteringEngine.matchRequest(fctxt);
+        sfne.redirectURL = undefined;
+        const r = sfne.matchRequest(fctxt);
         matchCount += 1;
         if ( r === 1 ) { blockCount += 1; }
         else if ( r === 2 ) { allowCount += 1; }
         if ( r !== 1 ) {
-            if ( staticNetFilteringEngine.transformRequest(fctxt) ) {
+            if ( sfne.transformRequest(fctxt) ) {
                 redirectCount += 1;
             }
-            if ( fctxt.redirectURL !== undefined && staticNetFilteringEngine.hasQuery(fctxt) ) {
-                if ( staticNetFilteringEngine.filterQuery(fctxt, 'removeparam') ) {
+            if ( fctxt.redirectURL !== undefined && sfne.hasQuery(fctxt) ) {
+                if ( sfne.filterQuery(fctxt, 'removeparam') ) {
                     removeparamCount += 1;
                 }
             }
             if ( fctxt.type === 'main_frame' || fctxt.type === 'sub_frame' ) {
-                if ( staticNetFilteringEngine.matchAndFetchModifiers(fctxt, 'csp') ) {
+                if ( sfne.matchAndFetchModifiers(fctxt, 'csp') ) {
                     cspCount += 1;
                 }
-                if ( staticNetFilteringEngine.matchAndFetchModifiers(fctxt, 'permissions') ) {
+                if ( sfne.matchAndFetchModifiers(fctxt, 'permissions') ) {
                     permissionsCount += 1;
                 }
             }
-            staticNetFilteringEngine.matchHeaders(fctxt, []);
-            if ( staticNetFilteringEngine.matchAndFetchModifiers(fctxt, 'replace') ) {
+            sfne.matchHeaders(fctxt, []);
+            if ( sfne.matchAndFetchModifiers(fctxt, 'replace') ) {
                 replaceCount += 1;
             }
         } else if ( redirectEngine !== undefined ) {
-            if ( staticNetFilteringEngine.redirectRequest(redirectEngine, fctxt) ) {
+            if ( sfne.redirectRequest(redirectEngine, fctxt) ) {
                 redirectCount += 1;
             }
+        }
+        if ( fctxt.type === 'main_frame' ) {
+            sfne.matchAndFetchModifiers(fctxt, 'urlskip');
         }
     }
     const t1 = performance.now();
@@ -217,7 +217,7 @@ const loadBenchmarkDataset = (( ) => {
 
     const output = [
         'Benchmarked static network filtering engine:',
-        `\tEvaluated ${matchCount} match calls in ${dur.toFixed(0)} ms`,
+        `\tEvaluated ${matchCount} requests in ${dur.toFixed(0)} ms`,
         `\tAverage: ${(dur / matchCount).toFixed(3)} ms per request`,
         `\tNot blocked: ${matchCount - blockCount - allowCount}`,
         `\tBlocked: ${blockCount}`,
@@ -231,11 +231,11 @@ const loadBenchmarkDataset = (( ) => {
     const s = output.join('\n');
     console.info(s);
     return s;
-};
+}
 
 /******************************************************************************/
 
-µb.tokenHistograms = async function() {
+export async function tokenHistogramsfunction() {
     const requests = await loadBenchmarkDataset();
     if ( Array.isArray(requests) === false || requests.length === 0 ) {
         console.info('No requests found to benchmark');
@@ -254,7 +254,7 @@ const loadBenchmarkDataset = (( ) => {
         fctxt.setURL(request.url);
         fctxt.setDocOriginFromURL(request.frameUrl);
         fctxt.setType(request.cpt);
-        const r = staticNetFilteringEngine.matchRequest(fctxt);
+        const r = sfne.matchRequest(fctxt);
         for ( let [ keyword ] of request.url.toLowerCase().matchAll(reTokens) ) {
             const token = keyword.slice(0, 7);
             if ( r === 0 ) {
@@ -272,11 +272,11 @@ const loadBenchmarkDataset = (( ) => {
     const tophits = Array.from(hitTokenMap).sort(customSort).slice(0, 100);
     console.info('Misses:', JSON.stringify(topmisses));
     console.info('Hits:', JSON.stringify(tophits));
-};
+}
 
 /******************************************************************************/
 
-µb.benchmarkDynamicNetFiltering = async function() {
+export async function benchmarkDynamicNetFiltering() {
     const requests = await loadBenchmarkDataset();
     if ( Array.isArray(requests) === false || requests.length === 0 ) {
         console.info('No requests found to benchmark');
@@ -299,17 +299,19 @@ const loadBenchmarkDataset = (( ) => {
     const dur = t1 - t0;
     console.info(`Evaluated ${requests.length} requests in ${dur.toFixed(0)} ms`);
     console.info(`\tAverage: ${(dur / requests.length).toFixed(3)} ms per request`);
-};
+}
 
 /******************************************************************************/
 
-µb.benchmarkCosmeticFiltering = async function() {
+export async function benchmarkCosmeticFiltering() {
     const requests = await loadBenchmarkDataset();
     if ( Array.isArray(requests) === false || requests.length === 0 ) {
         console.info('No requests found to benchmark');
         return;
     }
-    console.info('Benchmarking cosmeticFilteringEngine.retrieveSpecificSelectors()...');
+    const output = [
+        'Benchmarking cosmeticFilteringEngine.retrieveSpecificSelectors()...',
+    ];
     const details = {
         tabId: undefined,
         frameId: undefined,
@@ -320,6 +322,7 @@ const loadBenchmarkDataset = (( ) => {
     const options = {
         noSpecificCosmeticFiltering: false,
         noGenericCosmeticFiltering: false,
+        dontInject: true,
     };
     let count = 0;
     const t0 = performance.now();
@@ -334,19 +337,26 @@ const loadBenchmarkDataset = (( ) => {
     }
     const t1 = performance.now();
     const dur = t1 - t0;
-    console.info(`Evaluated ${count} requests in ${dur.toFixed(0)} ms`);
-    console.info(`\tAverage: ${(dur / count).toFixed(3)} ms per request`);
-};
+    output.push(
+        `Evaluated ${count} retrieval in ${dur.toFixed(0)} ms`,
+        `\tAverage: ${(dur / count).toFixed(3)} ms per document`
+    );
+    const s = output.join('\n');
+    console.info(s);
+    return s;
+}
 
 /******************************************************************************/
 
-µb.benchmarkScriptletFiltering = async function() {
+export async function benchmarkScriptletFiltering() {
     const requests = await loadBenchmarkDataset();
     if ( Array.isArray(requests) === false || requests.length === 0 ) {
         console.info('No requests found to benchmark');
         return;
     }
-    console.info('Benchmarking scriptletFilteringEngine.retrieve()...');
+    const output = [
+        'Benchmarking scriptletFilteringEngine.retrieve()...',
+    ];
     const details = {
         domain: '',
         entity: '',
@@ -369,13 +379,18 @@ const loadBenchmarkDataset = (( ) => {
     }
     const t1 = performance.now();
     const dur = t1 - t0;
-    console.info(`Evaluated ${count} requests in ${dur.toFixed(0)} ms`);
-    console.info(`\tAverage: ${(dur / count).toFixed(3)} ms per request`);
-};
+    output.push(
+        `Evaluated ${count} retrieval in ${dur.toFixed(0)} ms`,
+        `\tAverage: ${(dur / count).toFixed(3)} ms per document`
+    );
+    const s = output.join('\n');
+    console.info(s);
+    return s;
+}
 
 /******************************************************************************/
 
-µb.benchmarkOnBeforeRequest = async function() {
+export async function benchmarkOnBeforeRequest() {
     const requests = await loadBenchmarkDataset();
     if ( Array.isArray(requests) === false || requests.length === 0 ) {
         console.info('No requests found to benchmark');
@@ -417,6 +432,6 @@ const loadBenchmarkDataset = (( ) => {
         console.info(`\tBlocked ${blockCount} requests`);
         console.info(`\tAverage: ${(dur / requests.length).toFixed(3)} ms per request`);
     });
-};
+}
 
 /******************************************************************************/

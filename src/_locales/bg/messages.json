@@ -483,6 +483,14 @@
     "message": "Защита от зловреден софтуер, сигурност",
     "description": "Filter lists section name"
   },
+  "3pGroupSocial": {
+    "message": "Социални джаджи",
+    "description": "Filter lists section name"
+  },
+  "3pGroupCookies": {
+    "message": "Известия за бисквитки",
+    "description": "Filter lists section name"
+  },
   "3pGroupAnnoyances": {
     "message": "Досадни неща",
     "description": "Filter lists section name"
@@ -527,13 +535,17 @@
     "message": "Грешка в мрежата възпрепятства обновяването на ресурса.",
     "description": "used as a tooltip for error icon beside a list"
   },
-  "1pFormatHint": {
-    "message": "Един филтър на ред. Това може да бъде обикновен адрес или филтър, съвместим с EasyList. Редовете с представка <code>!</code> ще бъдат игнорирани.",
-    "description": "Short information about how to create custom filters"
-  },
   "1pTrustWarning": {
     "message": "Не добавяйте филтри от ненадеждни източници.",
     "description": "Warning against copy-pasting filters from random sources"
+  },
+  "1pEnableMyFiltersLabel": {
+    "message": "Активиране на моите потребителски филтри",
+    "description": "Label for the checkbox use to enable/disable 'My filters' list"
+  },
+  "1pTrustMyFiltersLabel": {
+    "message": "Разрешаване на потребителски филтри, изискващи доверие",
+    "description": "Label for the checkbox use to trust the content of 'My filters' list"
   },
   "1pImport": {
     "message": "Внасяне и добавяне...",
@@ -997,6 +1009,10 @@
   },
   "supportS6Select1Option6": {
     "message": "Отваря нежелани раздели или прозорци",
+    "description": "An entry in the widget used to select the type of issue"
+  },
+  "supportS6Select1Option7": {
+    "message": "Води до зловреден софтуер, фишинг",
     "description": "An entry in the widget used to select the type of issue"
   },
   "supportS6Checkbox1": {

@@ -40,7 +40,7 @@
     "description": "appears as tab name in dashboard"
   },
   "whitelistPageName": {
-    "message": "Έμπιστες τοποθεσίες",
+    "message": "Αξιόπιστοι ιστότοποι",
     "description": "appears as tab name in dashboard"
   },
   "shortcutsPageName": {
@@ -184,7 +184,7 @@
     "description": "Tooltip for the no-scripting per-site switch"
   },
   "popupTipNoScripting2": {
-    "message": "Κάντε κλικ για να μην απενεργοποιείται πλέον η JavaScript σε αυτή την τοποθεσία",
+    "message": "Κάντε κλικ για να μην απενεργοποιήσετε πλέον τη JavaScript σε αυτόν τον ιστότοπο",
     "description": "Tooltip for the no-scripting per-site switch"
   },
   "popupNoPopups_v2": {
@@ -196,7 +196,7 @@
     "description": "Caption for the no-large-media per-site switch"
   },
   "popupNoCosmeticFiltering_v2": {
-    "message": "Καλλωπιστικά φίλτρα",
+    "message": "Κοσμητικά φίλτρα",
     "description": "Caption for the no-cosmetic-filtering per-site switch"
   },
   "popupNoRemoteFonts_v2": {
@@ -224,7 +224,7 @@
     "description": "Tooltip when hovering the top-most cell of the local-rules column."
   },
   "popupTipSaveRules": {
-    "message": "Πατήστε για να κάνετε τις αλλαγές σας μόνιμες.",
+    "message": "Κάντε κλικ για να μονιμοποιήσετε τις αλλαγές σας.",
     "description": "Tooltip when hovering over the padlock in the dynamic filtering pane."
   },
   "popupTipRevertRules": {
@@ -483,6 +483,14 @@
     "message": "Τομείς κακόβουλου λογισμικού",
     "description": "Filter lists section name"
   },
+  "3pGroupSocial": {
+    "message": "Γραφικά στοιχεία κοινωνικής δικτύωσης",
+    "description": "Filter lists section name"
+  },
+  "3pGroupCookies": {
+    "message": "Ειδοποιήσεις για cookies",
+    "description": "Filter lists section name"
+  },
   "3pGroupAnnoyances": {
     "message": "Ενοχλήσεις",
     "description": "Filter lists section name"
@@ -527,13 +535,17 @@
     "message": "Ένα σφάλμα δικτύου εμπόδισε την ενημέρωση του πόρου.",
     "description": "used as a tooltip for error icon beside a list"
   },
-  "1pFormatHint": {
-    "message": "Ένα φίλτρο ανά γραμμή. Ένα φίλτρο μπορεί να είναι ένα απλό όνομα κεντρικού υπολογιστή ή ένα φίλτρο συμβατό με την EasyList. Οι γραμμές με πρόθεμα <code>!</code> θα παραβλέπονται.",
-    "description": "Short information about how to create custom filters"
-  },
   "1pTrustWarning": {
     "message": "Να μην προστίθενται φίλτρα από μη αξιόπιστες πηγές.",
     "description": "Warning against copy-pasting filters from random sources"
+  },
+  "1pEnableMyFiltersLabel": {
+    "message": "Ενεργοποίηση των προσαρμοσμένων φίλτρων μου",
+    "description": "Label for the checkbox use to enable/disable 'My filters' list"
+  },
+  "1pTrustMyFiltersLabel": {
+    "message": "Επιτρέψτε προσαρμοσμένα φίλτρα που απαιτούν εμπιστοσύνη",
+    "description": "Label for the checkbox use to trust the content of 'My filters' list"
   },
   "1pImport": {
     "message": "Εισαγωγή και προσάρτηση",
@@ -997,6 +1009,10 @@
   },
   "supportS6Select1Option6": {
     "message": "Ανοίγει ανεπιθύμητες καρτέλες ή παράθυρα",
+    "description": "An entry in the widget used to select the type of issue"
+  },
+  "supportS6Select1Option7": {
+    "message": "Οδηγεί σε κακόβουλο λογισμικό, ηλεκτρονικό «ψάρεμα»",
     "description": "An entry in the widget used to select the type of issue"
   },
   "supportS6Checkbox1": {

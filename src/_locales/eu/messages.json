@@ -56,7 +56,7 @@
     "description": "appears as tab name in dashboard"
   },
   "supportPageName": {
-    "message": "Laguntza",
+    "message": "Soportea",
     "description": "appears as tab name in dashboard"
   },
   "assetViewerPageName": {
@@ -483,6 +483,14 @@
     "message": "Malware domeinuak",
     "description": "Filter lists section name"
   },
+  "3pGroupSocial": {
+    "message": "Widgets Sozialak",
+    "description": "Filter lists section name"
+  },
+  "3pGroupCookies": {
+    "message": "Cookie oharrak",
+    "description": "Filter lists section name"
+  },
   "3pGroupAnnoyances": {
     "message": "Eragozpenak",
     "description": "Filter lists section name"
@@ -527,13 +535,17 @@
     "message": "Sare errore batek baliabidea eguneratzea eragotzi du.",
     "description": "used as a tooltip for error icon beside a list"
   },
-  "1pFormatHint": {
-    "message": "Iragazki bat lerroko. Iragazkia hostalari izen soila izan daiteke, edo Adblock Plusekin bateragarria den iragazki bat. Hasieran <code>!</code> duten lerroak ezikusiko dira.",
-    "description": "Short information about how to create custom filters"
-  },
   "1pTrustWarning": {
     "message": "Ez gehitu jatorri ezezaguneko iragazkirik",
     "description": "Warning against copy-pasting filters from random sources"
+  },
+  "1pEnableMyFiltersLabel": {
+    "message": "Aktibatu nire filtro pertsonalitsatuak",
+    "description": "Label for the checkbox use to enable/disable 'My filters' list"
+  },
+  "1pTrustMyFiltersLabel": {
+    "message": "Konfiantza behar duten iragazki pertsonalizatuak baimendu",
+    "description": "Label for the checkbox use to trust the content of 'My filters' list"
   },
   "1pImport": {
     "message": "Inportatu eta gehitu",
@@ -997,6 +1009,10 @@
   },
   "supportS6Select1Option6": {
     "message": "Ireki nahi ez diren erlaitzak edo leihoak",
+    "description": "An entry in the widget used to select the type of issue"
+  },
+  "supportS6Select1Option7": {
+    "message": "Leads to badware, phishing",
     "description": "An entry in the widget used to select the type of issue"
   },
   "supportS6Checkbox1": {

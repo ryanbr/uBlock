@@ -483,6 +483,14 @@
     "message": "Заштита од злонамерног софтвера, безбедност",
     "description": "Filter lists section name"
   },
+  "3pGroupSocial": {
+    "message": "Друштвени виџети",
+    "description": "Filter lists section name"
+  },
+  "3pGroupCookies": {
+    "message": "Обавештења о колачићима",
+    "description": "Filter lists section name"
+  },
   "3pGroupAnnoyances": {
     "message": "Сметње",
     "description": "Filter lists section name"
@@ -527,20 +535,24 @@
     "message": "Грешка на мрежи је спречила ажурирање ресурса.",
     "description": "used as a tooltip for error icon beside a list"
   },
-  "1pFormatHint": {
-    "message": "Један филтер по реду. Филтер може бити назив хоста или филтер компатибилан са EasyList форматом. Редови са префиксом <code>!</code> ће бити игнорисани.",
-    "description": "Short information about how to create custom filters"
-  },
   "1pTrustWarning": {
     "message": "Не додавај филтере из непоузданих извора.",
     "description": "Warning against copy-pasting filters from random sources"
   },
+  "1pEnableMyFiltersLabel": {
+    "message": "Омогући моје прилагођене филтере",
+    "description": "Label for the checkbox use to enable/disable 'My filters' list"
+  },
+  "1pTrustMyFiltersLabel": {
+    "message": "Дозволи прилагођене филтере који захтевају поверење",
+    "description": "Label for the checkbox use to trust the content of 'My filters' list"
+  },
   "1pImport": {
-    "message": "Увези и додај",
+    "message": "Увези и додај…",
     "description": "Button in the 'My filters' pane"
   },
   "1pExport": {
-    "message": "Извези",
+    "message": "Извези…",
     "description": "Button in the 'My filters' pane"
   },
   "1pExportFilename": {
@@ -997,6 +1009,10 @@
   },
   "supportS6Select1Option6": {
     "message": "\nОтвара нежељене картице или прозоре",
+    "description": "An entry in the widget used to select the type of issue"
+  },
+  "supportS6Select1Option7": {
+    "message": "Leads to badware, phishing",
     "description": "An entry in the widget used to select the type of issue"
   },
   "supportS6Checkbox1": {

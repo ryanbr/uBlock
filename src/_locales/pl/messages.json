@@ -252,7 +252,7 @@
     "description": ""
   },
   "popup1pScriptRulePrompt": {
-    "message": "skrypty własne",
+    "message": "skrypty tej samej domeny",
     "description": ""
   },
   "popup3pScriptRulePrompt": {
@@ -483,6 +483,14 @@
     "message": "Ochrona przed złośliwym oprogramowaniem, bezpieczeństwo",
     "description": "Filter lists section name"
   },
+  "3pGroupSocial": {
+    "message": "Widżety społecznościowe",
+    "description": "Filter lists section name"
+  },
+  "3pGroupCookies": {
+    "message": "Powiadomienia o ciasteczkach",
+    "description": "Filter lists section name"
+  },
   "3pGroupAnnoyances": {
     "message": "Elementy irytujące",
     "description": "Filter lists section name"
@@ -527,13 +535,17 @@
     "message": "Błąd sieci uniemożliwił aktualizację zasobów.",
     "description": "used as a tooltip for error icon beside a list"
   },
-  "1pFormatHint": {
-    "message": "W wierszu może być tylko jeden filtr. Filtrem może być nazwa hosta lub filtr kompatybilny z EasyList. Wiersze poprzedzone znakiem <code>!</code> będą pomijane.",
-    "description": "Short information about how to create custom filters"
-  },
   "1pTrustWarning": {
     "message": "Nie dodawaj filtrów z niezaufanych źródeł.",
     "description": "Warning against copy-pasting filters from random sources"
+  },
+  "1pEnableMyFiltersLabel": {
+    "message": "Włącz moje własne filtry",
+    "description": "Label for the checkbox use to enable/disable 'My filters' list"
+  },
+  "1pTrustMyFiltersLabel": {
+    "message": "Zezwól na filtry wymagające zaufania",
+    "description": "Label for the checkbox use to trust the content of 'My filters' list"
   },
   "1pImport": {
     "message": "Importuj i dołącz…",
@@ -997,6 +1009,10 @@
   },
   "supportS6Select1Option6": {
     "message": "Otwiera niepożądane karty lub okna",
+    "description": "An entry in the widget used to select the type of issue"
+  },
+  "supportS6Select1Option7": {
+    "message": "Prowadzi do szkodliwego oprogramowania, phishingu",
     "description": "An entry in the widget used to select the type of issue"
   },
   "supportS6Checkbox1": {

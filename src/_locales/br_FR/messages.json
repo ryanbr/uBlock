@@ -76,7 +76,7 @@
     "description": "Message to be read by screen readers"
   },
   "popupPowerSwitchInfo2": {
-    "message": "Klikit evit enaouiñ uBlock₀ war al lec'hienn-mañ.",
+    "message": "Enaouiñ uBlock₀ war al lec'hienn-mañ.",
     "description": "Message to be read by screen readers"
   },
   "popupBlockedRequestPrompt": {
@@ -136,11 +136,11 @@
     "description": "Tooltip for the no-popups per-site switch"
   },
   "popupTipNoPopups1": {
-    "message": "Klikit evit stankañ an holl brenestroù pop-up war al lec'hienn-mañ",
+    "message": "Stankañ an holl brenestroù pop-up war al lec'hienn-mañ",
     "description": "Tooltip for the no-popups per-site switch"
   },
   "popupTipNoPopups2": {
-    "message": "Klikit evit aotren an holl brenestroù pop-up war al lec'hienn-mañ",
+    "message": "Aotren an holl brenestroù pop-up war al lec'hienn-mañ",
     "description": "Tooltip for the no-popups per-site switch"
   },
   "popupTipNoLargeMedia": {
@@ -148,43 +148,43 @@
     "description": "Tooltip for the no-large-media per-site switch"
   },
   "popupTipNoLargeMedia1": {
-    "message": "Klikit evit stankañ an elfennoù media pounner war al lec'hienn-mañ",
+    "message": "Stankañ an elfennoù media pounner war al lec'hienn-mañ",
     "description": "Tooltip for the no-large-media per-site switch"
   },
   "popupTipNoLargeMedia2": {
-    "message": "Klikit evit aotren an elfennoù media pounner en-dro war al lec'hienn-mañ",
+    "message": "Aotren an elfennoù media pounner en-dro war al lec'hienn-mañ",
     "description": "Tooltip for the no-large-media per-site switch"
   },
   "popupTipNoCosmeticFiltering": {
-    "message": "Lazhañ/enaouiñ ar silañ kenedel war al lec'hienn-mañ",
+    "message": "Lazhañ/enaouiñ ar siloù kenedel war al lec'hienn-mañ",
     "description": "Tooltip for the no-cosmetic-filtering per-site switch"
   },
   "popupTipNoCosmeticFiltering1": {
-    "message": "Klikit evit lazhañ ar silañ kenedel war al lec'hienn-mañ",
+    "message": "Lazhañ ar siloù kenedel war al lec'hienn-mañ",
     "description": "Tooltip for the no-cosmetic-filtering per-site switch"
   },
   "popupTipNoCosmeticFiltering2": {
-    "message": "Klikit evit enaouiñ ar silañ kenedel war al lec'hienn-mañ",
+    "message": "Enaouiñ ar siloù kenedel war al lec'hienn-mañ",
     "description": "Tooltip for the no-cosmetic-filtering per-site switch"
   },
   "popupTipNoRemoteFonts": {
-    "message": "Lazhañ/enaouiñ evit stankañ an nodrezhioù diavaez war al lec'hienn-mañ",
+    "message": "Aotren/stankañ ar polisoù diavaez war al lec'hienn-mañ",
     "description": "Tooltip for the no-remote-fonts per-site switch"
   },
   "popupTipNoRemoteFonts1": {
-    "message": "Klikit evit stankañ an nodrezhioù diavaez war al lec'hienn-mañ",
+    "message": "Stankañ ar polisoù diavaez war al lec'hienn-mañ",
     "description": "Tooltip for the no-remote-fonts per-site switch"
   },
   "popupTipNoRemoteFonts2": {
-    "message": "Klikit evit aotren an nodrezhioù diavaez war al lec'hienn-mañ",
+    "message": "Aotren ar polisoù diavaez war al lec'hienn-mañ",
     "description": "Tooltip for the no-remote-fonts per-site switch"
   },
   "popupTipNoScripting1": {
-    "message": "Klikit evit diweredekaat JavaScript war al lec'hienn-mañ",
+    "message": "Diweredekaat JavaScript war al lec'hienn-mañ",
     "description": "Tooltip for the no-scripting per-site switch"
   },
   "popupTipNoScripting2": {
-    "message": "Klikit evit gweredekaat JavaScript war al lec'hienn-mañ en-dro",
+    "message": "Gweredekaat JavaScript war al lec'hienn-mañ en-dro",
     "description": "Tooltip for the no-scripting per-site switch"
   },
   "popupNoPopups_v2": {
@@ -200,7 +200,7 @@
     "description": "Caption for the no-cosmetic-filtering per-site switch"
   },
   "popupNoRemoteFonts_v2": {
-    "message": "Nodrezhioù diavaez",
+    "message": "Polisoù diavaez",
     "description": "Caption for the no-remote-fonts per-site switch"
   },
   "popupNoScripting_v2": {
@@ -224,11 +224,11 @@
     "description": "Tooltip when hovering the top-most cell of the local-rules column."
   },
   "popupTipSaveRules": {
-    "message": "Klikit evit lakaat ho kemmoù da dalvezout.",
+    "message": "Lakaat ho kemmoù da dalvezout.",
     "description": "Tooltip when hovering over the padlock in the dynamic filtering pane."
   },
   "popupTipRevertRules": {
-    "message": "Klikit evit nullañ ar c'hemmoù ho peus graet.",
+    "message": "Nullañ ar c'hemmoù ho peus graet.",
     "description": "Tooltip when hovering over the eraser in the dynamic filtering pane."
   },
   "popupAnyRulePrompt": {
@@ -376,7 +376,7 @@
     "description": ""
   },
   "settingsNoCosmeticFilteringPrompt": {
-    "message": "Lazhañ ar silañ kenedel",
+    "message": "Lazhañ ar siloù kenedel",
     "description": ""
   },
   "settingsNoLargeMediaPrompt": {
@@ -384,7 +384,7 @@
     "description": ""
   },
   "settingsNoRemoteFontsPrompt": {
-    "message": "Stankañ an nodrezhioù diavaez",
+    "message": "Stankañ ar polisoù diavaez",
     "description": ""
   },
   "settingsNoScriptingPrompt": {
@@ -483,6 +483,14 @@
     "message": "Gwarez a-enep ar malware ha surentez",
     "description": "Filter lists section name"
   },
+  "3pGroupSocial": {
+    "message": "Widgetoù sokial",
+    "description": "Filter lists section name"
+  },
+  "3pGroupCookies": {
+    "message": "Kemennadennoù diwar-benn an toupinoù",
+    "description": "Filter lists section name"
+  },
   "3pGroupAnnoyances": {
     "message": "Saotradurioù",
     "description": "Filter lists section name"
@@ -527,13 +535,17 @@
     "message": "Ur fazi rouedad en deus miret an danvez da vezañ hizivaet.",
     "description": "used as a tooltip for error icon beside a list"
   },
-  "1pFormatHint": {
-    "message": "Ur sil dre linenn. Ur sil a c'hall bezañ un anv ostiz hepken pe ur sil hag a glot gant EasyList.\nAl linennoù a grog gant <code>!</code> a vo dilezet.",
-    "description": "Short information about how to create custom filters"
-  },
   "1pTrustWarning": {
     "message": "Arabat ouzhpennañ siloù a zeu diouzh mammennoù douetus.",
     "description": "Warning against copy-pasting filters from random sources"
+  },
+  "1pEnableMyFiltersLabel": {
+    "message": "Gweredekaat ma siloù personelaet",
+    "description": "Label for the checkbox use to enable/disable 'My filters' list"
+  },
+  "1pTrustMyFiltersLabel": {
+    "message": "Kaout fiziañs er siloù personelaet",
+    "description": "Label for the checkbox use to trust the content of 'My filters' list"
   },
   "1pImport": {
     "message": "Enporzhiañ hag ouzhpennañ",
@@ -952,7 +964,7 @@
     "description": "Header of 'Report a filter issue' section in Support pane"
   },
   "supportS6P1S1": {
-    "message": "Evit nompas sammañ ar genlabourerien a-youl vat gant meur a zanevell heñvel, gwiriit ma n'eo ket bet danevellet ho kudenn c'hoazh mar plij.",
+    "message": "Evit nompas sammañ ar genlabourerien a-youl vat gant meur a zanevell heñvel, gwiriit ma n'eo ket bet danevellet ho kudenn en ar-raok mar plij.",
     "description": "A paragraph in the filter issue reporter section"
   },
   "supportS6P2S1": {
@@ -997,6 +1009,10 @@
   },
   "supportS6Select1Option6": {
     "message": "Digeriñ a ra ivinelloù pe prenestroù noazus",
+    "description": "An entry in the widget used to select the type of issue"
+  },
+  "supportS6Select1Option7": {
+    "message": "Leads to badware, phishing",
     "description": "An entry in the widget used to select the type of issue"
   },
   "supportS6Checkbox1": {
@@ -1248,7 +1264,7 @@
     "description": "Label for buttons used to select all text in editor"
   },
   "toggleCosmeticFiltering": {
-    "message": "Enaouiñ ar silañ kenedel",
+    "message": "Enaouiñ ar siloù kenedel",
     "description": "Label for keyboard shortcut used to toggle cosmetic filtering"
   },
   "toggleJavascript": {

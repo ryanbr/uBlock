@@ -483,6 +483,14 @@
     "message": "Zlonamjerne domene",
     "description": "Filter lists section name"
   },
+  "3pGroupSocial": {
+    "message": "Društveni widgeti",
+    "description": "Filter lists section name"
+  },
+  "3pGroupCookies": {
+    "message": "Obavještenja o kolačićima",
+    "description": "Filter lists section name"
+  },
   "3pGroupAnnoyances": {
     "message": "Smetnje",
     "description": "Filter lists section name"
@@ -527,13 +535,17 @@
     "message": "Mrežna greška je spriječila ažuriranje resursa.",
     "description": "used as a tooltip for error icon beside a list"
   },
-  "1pFormatHint": {
-    "message": "Jedan filter po redu. Filter može biti običan naziv domaćina/hosta ili filter kompatibilan sa EasyList-om. Redovi sa prefiksom <code>!</code> će biti ignorisani.",
-    "description": "Short information about how to create custom filters"
-  },
   "1pTrustWarning": {
     "message": "Nemojte dodavati filtere iz nepouzdanih izvora.",
     "description": "Warning against copy-pasting filters from random sources"
+  },
+  "1pEnableMyFiltersLabel": {
+    "message": "Omogući moje prilagođene filtere",
+    "description": "Label for the checkbox use to enable/disable 'My filters' list"
+  },
+  "1pTrustMyFiltersLabel": {
+    "message": "Dozvolite prilagođene filtere koji zahtijevaju povjerenje",
+    "description": "Label for the checkbox use to trust the content of 'My filters' list"
   },
   "1pImport": {
     "message": "Uvezi i dodaj",
@@ -999,6 +1011,10 @@
     "message": "Otvara neželjene kartice ili prozore",
     "description": "An entry in the widget used to select the type of issue"
   },
+  "supportS6Select1Option7": {
+    "message": "Leads to badware, phishing",
+    "description": "An entry in the widget used to select the type of issue"
+  },
   "supportS6Checkbox1": {
     "message": "Označite web stranicu kao “NSZP” (<a href=\"https://wikipedia.org/wiki/Not_safe_for_work\">“Ne-Sigurna-Za-Posao”</a>)",
     "description": "A checkbox to use for NSFW sites"
@@ -1252,7 +1268,7 @@
     "description": "Label for keyboard shortcut used to toggle cosmetic filtering"
   },
   "toggleJavascript": {
-    "message": "Toggle JavaScript",
+    "message": "Uključi JavaScript",
     "description": "Label for keyboard shortcut used to toggle no-scripting switch"
   },
   "relaxBlockingMode": {

@@ -483,6 +483,14 @@
     "message": "Protección de malware, seguridad",
     "description": "Filter lists section name"
   },
+  "3pGroupSocial": {
+    "message": "Widgets sociales",
+    "description": "Filter lists section name"
+  },
+  "3pGroupCookies": {
+    "message": "Avisos de cookies",
+    "description": "Filter lists section name"
+  },
   "3pGroupAnnoyances": {
     "message": "Elementos molestos",
     "description": "Filter lists section name"
@@ -527,13 +535,17 @@
     "message": "Un error de red impide que se actualicen los recursos.",
     "description": "used as a tooltip for error icon beside a list"
   },
-  "1pFormatHint": {
-    "message": "Un filtro por línea. El filtro puede ser un nombre de dominio, o un filtro compatible con EasyList. Las líneas que comiencen con <code>!</code> serán ignoradas.",
-    "description": "Short information about how to create custom filters"
-  },
   "1pTrustWarning": {
     "message": "No añadir filtros de fuentes no confiables.",
     "description": "Warning against copy-pasting filters from random sources"
+  },
+  "1pEnableMyFiltersLabel": {
+    "message": "Habilitar mis filtros personalizados",
+    "description": "Label for the checkbox use to enable/disable 'My filters' list"
+  },
+  "1pTrustMyFiltersLabel": {
+    "message": "Permitir filtros personalizados que requieran confianza",
+    "description": "Label for the checkbox use to trust the content of 'My filters' list"
   },
   "1pImport": {
     "message": "Importar y anexar…",
@@ -997,6 +1009,10 @@
   },
   "supportS6Select1Option6": {
     "message": "Abre pestañas o ventanas no deseadas",
+    "description": "An entry in the widget used to select the type of issue"
+  },
+  "supportS6Select1Option7": {
+    "message": "Conduce a malware y phishing",
     "description": "An entry in the widget used to select the type of issue"
   },
   "supportS6Checkbox1": {

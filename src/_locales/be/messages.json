@@ -20,7 +20,7 @@
     "description": "Label for button to prevent navigating away from unsaved changes"
   },
   "dashboardUnsavedWarningIgnore": {
-    "message": "Iгнараваць",
+    "message": "Ігнараваць",
     "description": "Label for button to ignore unsaved changes"
   },
   "settingsPageName": {
@@ -483,6 +483,14 @@
     "message": "Дамены шкодных праграм",
     "description": "Filter lists section name"
   },
+  "3pGroupSocial": {
+    "message": "Віджэты сацыяльных сетак",
+    "description": "Filter lists section name"
+  },
+  "3pGroupCookies": {
+    "message": "Абвесткі пра кукі",
+    "description": "Filter lists section name"
+  },
   "3pGroupAnnoyances": {
     "message": "Надакучлівасці",
     "description": "Filter lists section name"
@@ -527,13 +535,17 @@
     "message": "Памылка сеткі не дазволіла абнавіць рэсурс.",
     "description": "used as a tooltip for error icon beside a list"
   },
-  "1pFormatHint": {
-    "message": "Адзін фільтр на радок. Фільтрам можа быць адрас сайта або сумяшчальны з EasyList фільтр. Радкі, што пачынаюцца з <code>!</code>, будуць праігнараваны.",
-    "description": "Short information about how to create custom filters"
-  },
   "1pTrustWarning": {
     "message": "Не дадавайце фільтры з крыніц, якім не давяраеце.",
     "description": "Warning against copy-pasting filters from random sources"
+  },
+  "1pEnableMyFiltersLabel": {
+    "message": "Уключыць мае карыстальніцкія фільтры",
+    "description": "Label for the checkbox use to enable/disable 'My filters' list"
+  },
+  "1pTrustMyFiltersLabel": {
+    "message": "Дазволіць карыстальніцкія фільтры, якія патрабуюць даверу",
+    "description": "Label for the checkbox use to trust the content of 'My filters' list"
   },
   "1pImport": {
     "message": "Імпартаваць і дадаць",
@@ -972,7 +984,7 @@
     "description": "Label for widget to select type of issue"
   },
   "supportS6Select1Option0": {
-    "message": "-- Выберыце катэгорыю --",
+    "message": "-- Выберыце запіс праблемы --",
     "description": "An entry in the widget used to select the type of issue"
   },
   "supportS6Select1Option1": {
@@ -997,6 +1009,10 @@
   },
   "supportS6Select1Option6": {
     "message": "Адкрывае непажаданыя карткі або вокны",
+    "description": "An entry in the widget used to select the type of issue"
+  },
+  "supportS6Select1Option7": {
+    "message": "Вядзе да шкодных праграм, фішынгу",
     "description": "An entry in the widget used to select the type of issue"
   },
   "supportS6Checkbox1": {

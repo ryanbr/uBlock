@@ -4,7 +4,7 @@
     "description": "extension name."
   },
   "extShortDesc": {
-    "message": "En behörighetslös innehållsblockerare.  Blockerar annonser, spårare, miners och mer omedelbart efter installationen.",
+    "message": "En behörighetslös innehållsblockerare. Blockerar annonser, spårare, miners och mer omedelbart efter installationen.",
     "description": "this will be in the Chrome web store: must be 132 characters or less"
   },
   "perRulesetStats": {
@@ -30,6 +30,10 @@
   "popupFilteringModeLabel": {
     "message": "filtreringsläge",
     "description": "Label in the popup panel for the current filtering mode"
+  },
+  "popupTipReport": {
+    "message": "Rapportera ett problem på denna webbplats",
+    "description": "Tooltip used for the 'chat' icon in the panel"
   },
   "popupTipDashboard": {
     "message": "Öppna kontrollpanelen",
@@ -99,6 +103,70 @@
     "message": "Externa beroenden (GPLv3-kompatibla):",
     "description": "Shown in the About pane"
   },
+  "supportS6H": {
+    "message": "Rapportera ett filterproblem",
+    "description": "Header of 'Report a filter issue' section in Support pane"
+  },
+  "supportS3P1": {
+    "message": "Rapportera filterproblem med specifika webbplatser till <span data-url=\"https://github.com/uBlockOrigin/uAssets/issues?q=is%3Aissue\"><code>uBlockOrigin/uAssets</code> problemhanteringssystemet</span>. <u>Kräver ett GitHub-konto.</u>",
+    "description": "First paragraph of 'Filter issues' section in Support pane"
+  },
+  "supportS6P1S1": {
+    "message": "För att undvika att belasta volontärer med dubbletter av rapporter, kontrollera att problemet inte redan har rapporterats.",
+    "description": "A paragraph in the filter issue reporter section"
+  },
+  "supportFindSpecificButton": {
+    "message": "Hitta liknande rapporter",
+    "description": "A clickable link in the filter issue reporter section"
+  },
+  "supportS6URL": {
+    "message": "Hemsidans adress:",
+    "description": "Label for the URL of the page"
+  },
+  "supportS6Select1": {
+    "message": "Hemsidan...",
+    "description": "Label for widget to select type of issue"
+  },
+  "supportS6Select1Option0": {
+    "message": "-- Välj en post --",
+    "description": "An entry in the widget used to select the type of issue"
+  },
+  "supportS6Select1Option1": {
+    "message": "Visar annonser eller rester av annonser",
+    "description": "An entry in the widget used to select the type of issue"
+  },
+  "supportS6Select1Option2": {
+    "message": "Har överlägg eller andra olägenheter",
+    "description": "An entry in the widget used to select the type of issue"
+  },
+  "supportS6Select1Option3": {
+    "message": "Upptäcker uBO Lite",
+    "description": "An entry in the widget used to select the type of issue"
+  },
+  "supportS6Select1Option4": {
+    "message": "Har integritetsrelaterade problem",
+    "description": "An entry in the widget used to select the type of issue"
+  },
+  "supportS6Select1Option5": {
+    "message": "Fungerar inte när uBO Lite är aktiverad",
+    "description": "An entry in the widget used to select the type of issue"
+  },
+  "supportS6Select1Option6": {
+    "message": "Öppnar oönskade flikar eller fönster",
+    "description": "An entry in the widget used to select the type of issue"
+  },
+  "supportS6Select1Option7": {
+    "message": "Leder till skadlig programvara, nätfiske",
+    "description": "An entry in the widget used to select the type of issue"
+  },
+  "supportS6Checkbox1": {
+    "message": "Märk webbsidan som “NSFW” (<a href=\"https://wikipedia.org/wiki/Not_safe_for_work\">“Inte lämplig på jobbet”</a>)",
+    "description": "A checkbox to use for NSFW sites"
+  },
+  "supportReportSpecificButton": {
+    "message": "Skapa ny rapport",
+    "description": "Text for button which open an external webpage in Support pane"
+  },
   "firstRunSectionLabel": {
     "message": "Välkommen",
     "description": "The header text for the welcome message section"
@@ -144,8 +212,12 @@
     "description": "This describes the 'complete' filtering mode"
   },
   "noFilteringModeDescription": {
-    "message": "Lista över värdnamn för vilka ingen filtrering kommer att äga rum",
+    "message": "Lista över värdnamn som inte kommer att filtreras",
     "description": "A short description for the editable field which lists trusted sites"
+  },
+  "noFilteringModePlaceholder": {
+    "message": "[endast värdnamn]\nexempel.se\nspel.exempel\n...",
+    "description": "Default text for in edit field"
   },
   "behaviorSectionLabel": {
     "message": "Beteende",
@@ -153,6 +225,10 @@
   },
   "autoReloadLabel": {
     "message": "Ladda automatiskt om sidan när du byter filtreringsläge",
+    "description": "Label for a checkbox in the options page"
+  },
+  "showBlockedCountLabel": {
+    "message": "Visa antalet blockerade förfrågningar på verktygsfältsikonen",
     "description": "Label for a checkbox in the options page"
   }
 }

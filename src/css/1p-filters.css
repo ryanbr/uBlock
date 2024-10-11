@@ -1,5 +1,6 @@
 html {
     height: 100vh;
+        height: 100svh;
     overflow: hidden;
     width: 100vw;
     }
@@ -9,6 +10,7 @@ body {
     height: 100%;
     justify-content: stretch;
     overflow: hidden;
+    overflow-y: auto;
     width: 100%;
     }
 .body {
@@ -18,13 +20,14 @@ body {
 :root.mobile body {
     min-height: unset;
     }
-[data-i18n="1pTrustWarning"] {
+html:not(.mobile) [data-i18n="1pTrustWarning"] {
     font-weight: bold;
     }
 .codeMirrorContainer {
     flex-grow: 1;
     }
 #userFilters {
+    min-height: 8em;
     text-align: left;
     word-wrap: normal;
     }

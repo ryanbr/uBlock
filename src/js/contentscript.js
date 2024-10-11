@@ -19,8 +19,6 @@
     Home: https://github.com/gorhill/uBlock
 */
 
-'use strict';
-
 /*******************************************************************************
 
               +--> domCollapser
@@ -103,7 +101,7 @@
 //   https://github.com/chrisaljoudi/uBlock/issues/456
 //   https://github.com/gorhill/uBlock/issues/2029
 
- // >>>>>>>> start of HUGE-IF-BLOCK
+// >>>>>>>> start of HUGE-IF-BLOCK
 if ( typeof vAPI === 'object' && !vAPI.contentScript ) {
 
 /******************************************************************************/
@@ -1018,8 +1016,10 @@ vAPI.DOMFilterer = class {
             end = s.indexOf(' ', beg);
             if ( end === beg ) { continue; }
             if ( end === -1 ) { end = len; }
-            const hash = hashFromStr(0x2E /* '.' */, s.slice(beg, end));
+            const token = s.slice(beg, end).trimEnd();
             beg = end;
+            if ( token.length === 0 ) { continue; }
+            const hash = hashFromStr(0x2E /* '.' */, token);
             if ( queriedHashes.has(hash) ) { continue; }
             queriedHashes.add(hash);
             out.push(hash);
@@ -1050,7 +1050,6 @@ vAPI.DOMFilterer = class {
         const hashes = [];
         const nodes = pendingNodes;
         const deadline = t0 + 4;
-        let processed = 0;
         let scanned = 0;
         for (;;) {
             const n = nextPendingNodes();
@@ -1065,10 +1064,8 @@ vAPI.DOMFilterer = class {
                 classesFromNode(node, hashes);
                 scanned += 1;
             }
-            processed += n;
             if ( performance.now() >= deadline ) { break; }
         }
-        //console.info(`[domSurveyor][${hostname}] Surveyed ${scanned}/${processed} nodes in ${(performance.now()-t0).toFixed(2)} ms: ${hashes.length} hashes`);
         scannedCount += scanned;
         if ( scannedCount >= maxSurveyNodes ) {
             stop();

@@ -480,7 +480,15 @@
     "description": "Filter lists section name"
   },
   "3pGroupMalware": {
-    "message": "Zararlı alan adları",
+    "message": "Kötü amaçlı yazılım koruması, güvenlik.",
+    "description": "Filter lists section name"
+  },
+  "3pGroupSocial": {
+    "message": "Sosyal medya tuşları",
+    "description": "Filter lists section name"
+  },
+  "3pGroupCookies": {
+    "message": "Çerez bildirimleri",
     "description": "Filter lists section name"
   },
   "3pGroupAnnoyances": {
@@ -527,20 +535,24 @@
     "message": "Bir ağ hatası kaynağın güncellenmesini engelledi.",
     "description": "used as a tooltip for error icon beside a list"
   },
-  "1pFormatHint": {
-    "message": "Her satırda bir filtre. Bir filtre yalın bir alan adı veya EasyList-uyumlu bir filtre olabilir. <code>!</code> ile başlayan satırlar yok sayılacaktır.",
-    "description": "Short information about how to create custom filters"
-  },
   "1pTrustWarning": {
     "message": "Güvenilmeyen kaynaklardan filtre eklemeyin.",
     "description": "Warning against copy-pasting filters from random sources"
   },
+  "1pEnableMyFiltersLabel": {
+    "message": "Özel filtrelerimi etkinleştir",
+    "description": "Label for the checkbox use to enable/disable 'My filters' list"
+  },
+  "1pTrustMyFiltersLabel": {
+    "message": "Güven gerektiren özel filtrelere izin ver",
+    "description": "Label for the checkbox use to trust the content of 'My filters' list"
+  },
   "1pImport": {
-    "message": "İçe aktar ve ekle",
+    "message": "İçe aktar ve ekle…",
     "description": "Button in the 'My filters' pane"
   },
   "1pExport": {
-    "message": "Dışa aktar",
+    "message": "Dışa aktar…",
     "description": "Button in the 'My filters' pane"
   },
   "1pExportFilename": {
@@ -584,7 +596,7 @@
     "description": ""
   },
   "rulesExport": {
-    "message": "Dosyaya aktar",
+    "message": "Dosyaya aktar…",
     "description": "Button in the 'My rules' pane"
   },
   "rulesDefaultFileName": {
@@ -624,7 +636,7 @@
     "description": "Button in the 'Trusted sites' pane"
   },
   "whitelistExport": {
-    "message": "Dışa aktar",
+    "message": "Dışa aktar…",
     "description": "Button in the 'Trusted sites' pane"
   },
   "whitelistExportFilename": {
@@ -999,6 +1011,10 @@
     "message": "İstenmeyen sekme veya pencereler açıyor",
     "description": "An entry in the widget used to select the type of issue"
   },
+  "supportS6Select1Option7": {
+    "message": "Kötü niyetli yazılıma yönlendiriyor, oltalama",
+    "description": "An entry in the widget used to select the type of issue"
+  },
   "supportS6Checkbox1": {
     "message": "Web sayfasını uygunsuz (“NSFW”) olarak etiketle (<a href=\"https://wikipedia.org/wiki/Not_safe_for_work\">“Not Safe For Work”</a>)",
     "description": "A checkbox to use for NSFW sites"
@@ -1252,7 +1268,7 @@
     "description": "Label for keyboard shortcut used to toggle cosmetic filtering"
   },
   "toggleJavascript": {
-    "message": "Javascript'i Aç/Kapa",
+    "message": "JavaScript'i Aç/Kapa",
     "description": "Label for keyboard shortcut used to toggle no-scripting switch"
   },
   "relaxBlockingMode": {

@@ -483,6 +483,14 @@
     "message": "Ochrana před malwarem, bezpečnost",
     "description": "Filter lists section name"
   },
+  "3pGroupSocial": {
+    "message": "Widgety sociálních sítí",
+    "description": "Filter lists section name"
+  },
+  "3pGroupCookies": {
+    "message": "Oznámení o používání souborů cookie",
+    "description": "Filter lists section name"
+  },
   "3pGroupAnnoyances": {
     "message": "Dotěrnosti",
     "description": "Filter lists section name"
@@ -527,13 +535,17 @@
     "message": "Chyba sítě znemožnila aktualizaci tohoto zdroje.",
     "description": "used as a tooltip for error icon beside a list"
   },
-  "1pFormatHint": {
-    "message": "Jeden filtr na řádek. Filtr může být prostý název hostitele nebo filtr kompatibilní s EasyList. Řádky začínající vykřičníkem <code>!</code> budou ignorovány.",
-    "description": "Short information about how to create custom filters"
-  },
   "1pTrustWarning": {
     "message": "Nepřidávejte filtry z nedůvěryhodných zdrojů.",
     "description": "Warning against copy-pasting filters from random sources"
+  },
+  "1pEnableMyFiltersLabel": {
+    "message": "Povolit mé vlastní filtry",
+    "description": "Label for the checkbox use to enable/disable 'My filters' list"
+  },
+  "1pTrustMyFiltersLabel": {
+    "message": "Povolit vlastní filtry vyžadující důvěryhodnost",
+    "description": "Label for the checkbox use to trust the content of 'My filters' list"
   },
   "1pImport": {
     "message": "Importovat a připojit…",
@@ -916,7 +928,7 @@
     "description": "Header of 'Filter issues' section in Support pane"
   },
   "supportS3P1": {
-    "message": "Hlášení problémů s filtrem u učitých web. stránek do <span data-url=\"https://github.com/uBlockOrigin/uAssets/issues?q=is%3Aissue\"><code>uBlockOrigin/uAssets</code> issue tracker</span>. Vyžaduje účet GitHub.",
+    "message": "Nahlaste problémy s filtrem u učitých webových stránek do <span data-url=\"https://github.com/uBlockOrigin/uAssets/issues?q=is%3Aissue\">sledovače problémů <code>uBlockOrigin/uAssets</code></span>. <u>Vyžaduje účet GitHub.</u>",
     "description": "First paragraph of 'Filter issues' section in Support pane"
   },
   "supportS3P2": {
@@ -999,8 +1011,12 @@
     "message": "Otevírá nechtěné karty nebo okna",
     "description": "An entry in the widget used to select the type of issue"
   },
+  "supportS6Select1Option7": {
+    "message": "Vede k badwaru, phishingu",
+    "description": "An entry in the widget used to select the type of issue"
+  },
   "supportS6Checkbox1": {
-    "message": "Označit webovou stránku jako &ldquo;NSFW&rdquo; (<a href=\"https://cs.wikipedia.org/wiki/Not_safe_for_work\">Není bezpečné pro práci&rdquo;)",
+    "message": "Označit webovou stránku jako “NSFW” (<a href=\"https://cs.wikipedia.org/wiki/Not_safe_for_work\">“Není bezpečné pro práci”</a>)",
     "description": "A checkbox to use for NSFW sites"
   },
   "supportRedact": {

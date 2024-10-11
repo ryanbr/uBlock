@@ -19,29 +19,23 @@
     Home: https://github.com/gorhill/uBlock
 */
 
-/* globals browser */
-
-'use strict';
-
 /******************************************************************************/
 
-import htmlFilteringEngine from './html-filtering.js';
-import httpheaderFilteringEngine from './httpheader-filtering.js';
-import logger from './logger.js';
-import scriptletFilteringEngine from './scriptlet-filtering.js';
-import staticNetFilteringEngine from './static-net-filtering.js';
-import textEncode from './text-encode.js';
-import µb from './background.js';
-import * as sfp from './static-filtering-parser.js';
 import * as fc from  './filtering-context.js';
-import { isNetworkURI } from './uri-utils.js';
-
+import * as sfp from './static-filtering-parser.js';
 import {
     sessionFirewall,
     sessionSwitches,
     sessionURLFiltering,
 } from './filtering-engines.js';
-
+import htmlFilteringEngine from './html-filtering.js';
+import httpheaderFilteringEngine from './httpheader-filtering.js';
+import { isNetworkURI } from './uri-utils.js';
+import logger from './logger.js';
+import scriptletFilteringEngine from './scriptlet-filtering.js';
+import staticNetFilteringEngine from './static-net-filtering.js';
+import textEncode from './text-encode.js';
+import µb from './background.js';
 
 /******************************************************************************/
 
@@ -194,17 +188,20 @@ const onBeforeRootFrameRequest = function(fctxt) {
     }
 
     if ( logger.enabled ) {
-        fctxt.setFilter(logData);
+        fctxt.setRealm('network').setFilter(logData);
     }
 
     // https://github.com/uBlockOrigin/uBlock-issues/issues/760
     //   Redirect non-blocked request?
-    if ( result !== 1 && trusted === false && pageStore !== null ) {
-        pageStore.redirectNonBlockedRequest(fctxt);
+    if ( trusted === false && pageStore !== null ) {
+        if ( result !== 1 ) {
+            pageStore.redirectNonBlockedRequest(fctxt);
+        }
+        pageStore.skipMainDocument(fctxt);
     }
 
     if ( logger.enabled ) {
-        fctxt.setRealm('network').toLogger();
+        fctxt.toLogger();
     }
 
     // Redirected
@@ -491,7 +488,7 @@ const onHeadersReceived = function(details) {
     }
     if ( pageStore.getNetFilteringSwitch(fctxt) === false ) { return; }
 
-    if ( fctxt.itype === fctxt.IMAGE || fctxt.itype === fctxt.MEDIA ) {
+    if ( (fctxt.itype & foilLargeMediaElement.TYPE_BITS) !== 0 ) {
         const result = foilLargeMediaElement(details, fctxt, pageStore);
         if ( result !== undefined ) { return result; }
     }
@@ -559,11 +556,16 @@ const onHeadersReceived = function(details) {
     if ( httpheaderFilteringEngine.apply(fctxt, responseHeaders) === true ) {
         modifiedHeaders = true;
     }
-    if ( injectCSP(fctxt, pageStore, responseHeaders) === true ) {
-        modifiedHeaders = true;
-    }
-    if ( injectPP(fctxt, pageStore, responseHeaders) === true ) {
-        modifiedHeaders = true;
+
+    // https://github.com/uBlockOrigin/uBlock-issues/issues/229#issuecomment-2220354261
+    // Inject CSP/PP in document resource only
+    if ( fctxt.isDocument() ) {
+        if ( injectCSP(fctxt, pageStore, responseHeaders) === true ) {
+            modifiedHeaders = true;
+        }
+        if ( injectPP(fctxt, pageStore, responseHeaders) === true ) {
+            modifiedHeaders = true;
+        }
     }
 
     // https://bugzilla.mozilla.org/show_bug.cgi?id=1376932
@@ -590,7 +592,7 @@ const onHeadersReceived = function(details) {
     }
 };
 
-const reMediaContentTypes = /^(?:audio|image|video)\//;
+const reMediaContentTypes = /^(?:audio|image|video)\/|(?:\/ogg)$/;
 
 /******************************************************************************/
 
@@ -681,6 +683,7 @@ const bodyFilterer = (( ) => {
     const sessions = new Map();
     const reContentTypeCharset = /charset=['"]?([^'" ]+)/i;
     const otherValidMimes = new Set([
+        'application/dash+xml',
         'application/javascript',
         'application/json',
         'application/mpegurl',
@@ -695,7 +698,7 @@ const bodyFilterer = (( ) => {
         'audio/x-mpegurl',
     ]);
     const BINARY_TYPES = fc.FONT | fc.IMAGE | fc.MEDIA | fc.WEBSOCKET;
-    const MAX_BUFFER_LENGTH = 3 * 1024 * 1024;
+    const MAX_RESPONSE_BUFFER_LENGTH = 10 * 1024 * 1024;
 
     let textDecoder, textEncoder;
     let mime = '';
@@ -703,12 +706,12 @@ const bodyFilterer = (( ) => {
 
     const contentTypeFromDetails = details => {
         switch ( details.type ) {
-            case 'script':
-                return 'text/javascript; charset=utf-8';
-            case 'stylesheet':
-                return 'text/css';
-            default:
-                break;
+        case 'script':
+            return 'text/javascript; charset=utf-8';
+        case 'stylesheet':
+            return 'text/css';
+        default:
+            break;
         }
         return '';
     };
@@ -721,13 +724,13 @@ const bodyFilterer = (( ) => {
 
     const charsetFromMime = mime => {
         switch ( mime ) {
-            case 'application/xml':
-            case 'application/xhtml+xml':
-            case 'text/html':
-            case 'text/css':
-                return;
-            default:
-                break;
+        case 'application/xml':
+        case 'application/xhtml+xml':
+        case 'text/html':
+        case 'text/css':
+            return;
+        default:
+            break;
         }
         return 'utf-8';
     };
@@ -749,7 +752,7 @@ const bodyFilterer = (( ) => {
             /* t */ if ( bytes[i+6] !== 0x74 ) { continue; }
             break;
         }
-        if ( (i - 40) >= 65536 ) { return; }
+        if ( (i + 40) >= 65536 ) { return; }
         i += 8;
         // find first alpha character
         let j = -1;
@@ -811,7 +814,7 @@ const bodyFilterer = (( ) => {
         buffer.set(session.buffer);
         buffer.set(new Uint8Array(ev.data), session.buffer.byteLength);
         session.buffer = buffer;
-        if ( session.buffer.length >= MAX_BUFFER_LENGTH ) {
+        if ( session.buffer.length >= MAX_RESPONSE_BUFFER_LENGTH ) {
             sessions.delete(this);
             this.write(session.buffer);
             this.disconnect();
@@ -827,13 +830,17 @@ const bodyFilterer = (( ) => {
         }
         if ( this.status !== 'finishedtransferringdata' ) { return; }
 
-        // If encoding is still unknown, try to extract from stream data
+        // If encoding is still unknown, try to extract from stream data.
+        // Just assume utf-8 if ultimately no encoding can be looked up.
         if ( session.charset === undefined ) {
             const charsetFound = charsetFromStream(session.buffer);
-            if ( charsetFound === undefined ) { return streamClose(session); }
-            const charsetUsed = textEncode.normalizeCharset(charsetFound);
-            if ( charsetUsed === undefined ) { return streamClose(session); }
-            session.charset = charsetUsed;
+            if ( charsetFound !== undefined ) {
+                const charsetUsed = textEncode.normalizeCharset(charsetFound);
+                if ( charsetUsed === undefined ) { return streamClose(session); }
+                session.charset = charsetUsed;
+            } else {
+                session.charset = 'utf-8';
+            }
         }
 
         while ( session.jobs.length !== 0 ) {
@@ -1117,15 +1124,12 @@ const injectPP = function(fctxt, pageStore, responseHeaders) {
 const foilLargeMediaElement = function(details, fctxt, pageStore) {
     if ( details.fromCache === true ) { return; }
 
-    let size = 0;
-    if ( µb.userSettings.largeMediaSize !== 0 ) {
-        const headers = details.responseHeaders;
-        const i = headerIndexFromName('content-length', headers);
-        if ( i === -1 ) { return; }
-        size = parseInt(headers[i].value, 10) || 0;
-    }
+    onDemandHeaders.setHeaders(details.responseHeaders);
 
-    const result = pageStore.filterLargeMediaElement(fctxt, size);
+    const result = pageStore.filterLargeMediaElement(fctxt, onDemandHeaders);
+
+    onDemandHeaders.reset();
+
     if ( result === 0 ) { return; }
 
     if ( logger.enabled ) {
@@ -1135,16 +1139,15 @@ const foilLargeMediaElement = function(details, fctxt, pageStore) {
     return { cancel: true };
 };
 
+foilLargeMediaElement.TYPE_BITS = fc.IMAGE | fc.MEDIA | fc.XMLHTTPREQUEST;
+
 /******************************************************************************/
 
 // Caller must ensure headerName is normalized to lower case.
 
 const headerIndexFromName = function(headerName, headers) {
-    let i = headers.length;
-    while ( i-- ) {
-        if ( headers[i].name.toLowerCase() === headerName ) {
-            return i;
-        }
+    for ( let i = 0, n = headers.length; i < n; i++ ) {
+        if ( headers[i].name.toLowerCase() === headerName ) { return i; }
     }
     return -1;
 };
@@ -1152,6 +1155,24 @@ const headerIndexFromName = function(headerName, headers) {
 const headerValueFromName = function(headerName, headers) {
     const i = headerIndexFromName(headerName, headers);
     return i !== -1 ? headers[i].value : '';
+};
+
+const onDemandHeaders = {
+    headers: [],
+    get contentLength() {
+        const contentLength = headerValueFromName('content-length', this.headers);
+        if ( contentLength === '' ) { return Number.NaN; }
+        return parseInt(contentLength, 10) || 0;
+    },
+    get contentType() {
+        return headerValueFromName('content-type', this.headers);
+    },
+    setHeaders(headers) {
+        this.headers = headers;
+    },
+    reset() {
+        this.headers = [];
+    }
 };
 
 /******************************************************************************/

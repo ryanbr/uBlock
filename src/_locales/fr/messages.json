@@ -483,6 +483,14 @@
     "message": "Protection anti-malware et sécurité",
     "description": "Filter lists section name"
   },
+  "3pGroupSocial": {
+    "message": "Widgets de réseaux sociaux",
+    "description": "Filter lists section name"
+  },
+  "3pGroupCookies": {
+    "message": "Bannières de cookie",
+    "description": "Filter lists section name"
+  },
   "3pGroupAnnoyances": {
     "message": "Nuisances",
     "description": "Filter lists section name"
@@ -527,13 +535,17 @@
     "message": "Une erreur réseau a empêché la mise à jour de la ressource.",
     "description": "used as a tooltip for error icon beside a list"
   },
-  "1pFormatHint": {
-    "message": "Une règle par ligne. Une règle peut être un simple nom d'hôte, ou encore une règle compatible EasyList. Les lignes débutant par <code>!</code> seront ignorées.",
-    "description": "Short information about how to create custom filters"
-  },
   "1pTrustWarning": {
     "message": "Il est recommandé de ne pas ajouter de filtres en provenance de sources non fiables.",
     "description": "Warning against copy-pasting filters from random sources"
+  },
+  "1pEnableMyFiltersLabel": {
+    "message": "Activer mes filtres personnalisés",
+    "description": "Label for the checkbox use to enable/disable 'My filters' list"
+  },
+  "1pTrustMyFiltersLabel": {
+    "message": "Faire confiance aux filtres personnalisés",
+    "description": "Label for the checkbox use to trust the content of 'My filters' list"
   },
   "1pImport": {
     "message": "Importer",
@@ -997,6 +1009,10 @@
   },
   "supportS6Select1Option6": {
     "message": "ouvre des onglets ou fenêtres indésirables",
+    "description": "An entry in the widget used to select the type of issue"
+  },
+  "supportS6Select1Option7": {
+    "message": "conduit à/redirige vers des logiciels malveillants, du hameçonnage",
     "description": "An entry in the widget used to select the type of issue"
   },
   "supportS6Checkbox1": {

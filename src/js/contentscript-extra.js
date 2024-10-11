@@ -19,8 +19,6 @@
     Home: https://github.com/gorhill/uBlock
 */
 
-'use strict';
-
 if (
     typeof vAPI === 'object' &&
     typeof vAPI.DOMProceduralFilterer !== 'object'
@@ -175,6 +173,30 @@ class PSelectorMatchesPathTask extends PSelectorTask {
     }
 }
 
+class PSelectorMatchesPropTask extends PSelectorTask {
+    constructor(task) {
+        super();
+        this.props = task[1].attr.split('.');
+        this.reValue = task[1].value !== ''
+            ? regexFromString(task[1].value, true)
+            : null;
+    }
+    transpose(node, output) {
+        let value = node;
+        for ( const prop of this.props ) {
+            if ( value === undefined ) { return; }
+            if ( value === null ) { return; }
+            value = value[prop];
+        }
+        if ( this.reValue === null ) {
+            if ( value === undefined ) { return; }
+        } else if ( this.reValue.test(value) === false ) {
+            return;
+        }
+        output.push(node);
+    }
+}
+
 class PSelectorMinTextLengthTask extends PSelectorTask {
     constructor(task) {
         super();
@@ -239,6 +261,36 @@ class PSelectorOthersTask extends PSelectorTask {
             }
         }
         this.targets.add(candidate);
+    }
+}
+
+class PSelectorShadowTask extends PSelectorTask {
+    constructor(task) {
+        super();
+        this.selector = task[1];
+    }
+    transpose(node, output) {
+        const root = this.openOrClosedShadowRoot(node);
+        if ( root === null ) { return; }
+        const nodes = root.querySelectorAll(this.selector);
+        output.push(...nodes);
+    }
+    get openOrClosedShadowRoot() {
+        if ( PSelectorShadowTask.openOrClosedShadowRoot !== undefined ) {
+            return PSelectorShadowTask.openOrClosedShadowRoot;
+        }
+        if ( typeof chrome === 'object' && chrome !== null ) {
+            if ( chrome.dom instanceof Object ) {
+                if ( typeof chrome.dom.openOrClosedShadowRoot === 'function' ) {
+                    PSelectorShadowTask.openOrClosedShadowRoot =
+                        chrome.dom.openOrClosedShadowRoot;
+                    return PSelectorShadowTask.openOrClosedShadowRoot;
+                }
+            }
+        }
+        PSelectorShadowTask.openOrClosedShadowRoot = node =>
+            node.openOrClosedShadowRoot || null;
+        return PSelectorShadowTask.openOrClosedShadowRoot;
     }
 }
 
@@ -366,7 +418,6 @@ class PSelectorXpathTask extends PSelectorTask {
 
 class PSelector {
     constructor(o) {
-        this.raw = o.raw;
         this.selector = o.selector;
         this.tasks = [];
         const tasks = [];
@@ -434,9 +485,11 @@ PSelector.prototype.operatorToTaskMap = new Map([
     [ 'matches-css-before', PSelectorMatchesCSSBeforeTask ],
     [ 'matches-media', PSelectorMatchesMediaTask ],
     [ 'matches-path', PSelectorMatchesPathTask ],
+    [ 'matches-prop', PSelectorMatchesPropTask ],
     [ 'min-text-length', PSelectorMinTextLengthTask ],
     [ 'not', PSelectorIfNotTask ],
     [ 'others', PSelectorOthersTask ],
+    [ 'shadow', PSelectorShadowTask ],
     [ 'spath', PSelectorSpathTask ],
     [ 'upward', PSelectorUpwardTask ],
     [ 'watch-attr', PSelectorWatchAttrs ],

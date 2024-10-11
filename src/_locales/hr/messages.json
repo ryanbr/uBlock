@@ -483,6 +483,14 @@
     "message": "Zaštita od zlonamjernog softvera, sigurnost",
     "description": "Filter lists section name"
   },
+  "3pGroupSocial": {
+    "message": "Socijalni widgeti",
+    "description": "Filter lists section name"
+  },
+  "3pGroupCookies": {
+    "message": "Obavijest o kolačićima",
+    "description": "Filter lists section name"
+  },
   "3pGroupAnnoyances": {
     "message": "Nametljivost",
     "description": "Filter lists section name"
@@ -527,13 +535,17 @@
     "message": "Mrežna pogreška je sprječila ažuriranje resursa.",
     "description": "used as a tooltip for error icon beside a list"
   },
-  "1pFormatHint": {
-    "message": "Jedan filter po retku. Filter može biti običan hostname ili filter kompatibilan sa EasyList-om. Linije sa prefiksom <code>!</code> zanemarit će se.",
-    "description": "Short information about how to create custom filters"
-  },
   "1pTrustWarning": {
     "message": "Nemojte dodavati filtere iz nepouzdanih izvora.",
     "description": "Warning against copy-pasting filters from random sources"
+  },
+  "1pEnableMyFiltersLabel": {
+    "message": "Omogući moje prilagođene filtre",
+    "description": "Label for the checkbox use to enable/disable 'My filters' list"
+  },
+  "1pTrustMyFiltersLabel": {
+    "message": "Dopusti prilagođene filtre koji zahtijevaju povjerenje",
+    "description": "Label for the checkbox use to trust the content of 'My filters' list"
   },
   "1pImport": {
     "message": "Uvesti i dodati...",
@@ -997,6 +1009,10 @@
   },
   "supportS6Select1Option6": {
     "message": "Otvara neželjene kartice ili prozore",
+    "description": "An entry in the widget used to select the type of issue"
+  },
+  "supportS6Select1Option7": {
+    "message": "Vodi do zloćudnog softvera, krađe identiteta",
     "description": "An entry in the widget used to select the type of issue"
   },
   "supportS6Checkbox1": {

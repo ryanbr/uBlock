@@ -22,18 +22,13 @@
 
 // For background page or non-background pages
 
-/* global browser */
-
-'use strict';
-
-/******************************************************************************/
 /******************************************************************************/
 
 vAPI.T0 = Date.now();
 
-/******************************************************************************/
-
 vAPI.setTimeout = vAPI.setTimeout || self.setTimeout.bind(self);
+
+/******************************************************************************/
 
 vAPI.defer = {
     create(callback) {
@@ -168,6 +163,7 @@ vAPI.webextFlavor = {
 
     // This is always true.
     soup.add('ublock').add('webext');
+    soup.add('ipaddress');
 
     // Whether this is a dev build.
     if ( /^\d+\.\d+\.\d+\D/.test(browser.runtime.getManifest().version) ) {

@@ -483,6 +483,14 @@
     "message": "Домени шкідливих програм",
     "description": "Filter lists section name"
   },
+  "3pGroupSocial": {
+    "message": "Віджети соціальних мереж",
+    "description": "Filter lists section name"
+  },
+  "3pGroupCookies": {
+    "message": "Повідомлення про файли cookie",
+    "description": "Filter lists section name"
+  },
   "3pGroupAnnoyances": {
     "message": "Надокучливості",
     "description": "Filter lists section name"
@@ -527,13 +535,17 @@
     "message": "Оновлення не вдалося, у зв'язку з помилкою мережі.",
     "description": "used as a tooltip for error icon beside a list"
   },
-  "1pFormatHint": {
-    "message": "Один фільтр на рядок. Фільтром може бути адреса сайту або фільтр у Adblock Plus-сумісному записі. Рядки, що починаються з <code>!</code> будуть проігноровані.",
-    "description": "Short information about how to create custom filters"
-  },
   "1pTrustWarning": {
     "message": "Не додавати фільтри з невідомих джерел.",
     "description": "Warning against copy-pasting filters from random sources"
+  },
+  "1pEnableMyFiltersLabel": {
+    "message": "Увімкнути власні фільтри",
+    "description": "Label for the checkbox use to enable/disable 'My filters' list"
+  },
+  "1pTrustMyFiltersLabel": {
+    "message": "Дозволити власні фільтри, які потребують довіри",
+    "description": "Label for the checkbox use to trust the content of 'My filters' list"
   },
   "1pImport": {
     "message": "Імпортувати та додати",
@@ -997,6 +1009,10 @@
   },
   "supportS6Select1Option6": {
     "message": "Відкриває небажані вкладки або вікна",
+    "description": "An entry in the widget used to select the type of issue"
+  },
+  "supportS6Select1Option7": {
+    "message": "Веде до шкідливого ПЗ, фішингу",
     "description": "An entry in the widget used to select the type of issue"
   },
   "supportS6Checkbox1": {

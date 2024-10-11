@@ -21,13 +21,13 @@
 
 /* global CodeMirror */
 
-'use strict';
-
 import './codemirror/ubo-static-filtering.js';
 
+import * as sfp from './static-filtering-parser.js';
+
+import { dom } from './dom.js';
 import { hostnameFromURI } from './uri-utils.js';
 import punycode from '../lib/punycode.js';
-import * as sfp from './static-filtering-parser.js';
 
 /******************************************************************************/
 /******************************************************************************/
@@ -46,7 +46,7 @@ const pickerRoot = document.documentElement;
 const dialog = $stor('aside');
 let staticFilteringParser;
 
-const svgRoot = $stor('svg');
+const svgRoot = $stor('svg#sea');
 const svgOcean = svgRoot.children[0];
 const svgIslands = svgRoot.children[1];
 const NoPaths = 'M0 0';
@@ -62,13 +62,10 @@ const reCosmeticAnchor = /^#(\$|\?|\$\?)?#/;
 
 const docURL = new URL(vAPI.getURL(''));
 
-let resultsetOpt;
-
-let netFilterCandidates = [];
-let cosmeticFilterCandidates = [];
-let computedCandidateSlot = 0;
-let computedCandidate = '';
 const computedSpecificityCandidates = new Map();
+let resultsetOpt;
+let cosmeticFilterCandidates = [];
+let computedCandidate = '';
 let needBody = false;
 
 /******************************************************************************/
@@ -182,7 +179,6 @@ const candidateFromFilterChoice = function(filterChoice) {
         elem.classList.remove('active');
     }
 
-    computedCandidateSlot = slot;
     computedCandidate = '';
 
     if ( filter === undefined ) { return ''; }
@@ -390,7 +386,7 @@ const onSvgTouch = (( ) => {
         const stopY = ev.changedTouches[0].screenY;
         const angle = Math.abs(Math.atan2(stopY - startY, stopX - startX));
         const distance = Math.sqrt(
-            Math.pow(stopX - startX, 2),
+            Math.pow(stopX - startX, 2) +
             Math.pow(stopY - startY, 2)
         );
         // Interpret touch events as a tap if:
@@ -594,8 +590,9 @@ const onStartMoving = (( ) => {
     let isTouch = false;
     let mx0 = 0, my0 = 0;
     let mx1 = 0, my1 = 0;
-    let r0 = 0, b0 = 0;
-    let rMax = 0, bMax = 0;
+    let pw = 0, ph = 0;
+    let dw = 0, dh = 0;
+    let cx0 = 0, cy0 = 0;
     let timer;
 
     const eatEvent = function(ev) {
@@ -605,10 +602,22 @@ const onStartMoving = (( ) => {
 
     const move = ( ) => {
         timer = undefined;
-        const r1 = Math.min(Math.max(r0 - mx1 + mx0, 2), rMax);
-        const b1 = Math.min(Math.max(b0 - my1 + my0, 2), bMax);
-        dialog.style.setProperty('right', `${r1}px`);
-        dialog.style.setProperty('bottom', `${b1}px`);
+        const cx1 = cx0 + mx1 - mx0;
+        const cy1 = cy0 + my1 - my0;
+        if ( cx1 < pw / 2 ) {
+            dialog.style.setProperty('left', `${Math.max(cx1-dw/2,2)}px`);
+            dialog.style.removeProperty('right');
+        } else {
+            dialog.style.removeProperty('left');
+            dialog.style.setProperty('right', `${Math.max(pw-cx1-dw/2,2)}px`);
+        }
+        if ( cy1 < ph / 2 ) {
+            dialog.style.setProperty('top', `${Math.max(cy1-dh/2,2)}px`);
+            dialog.style.removeProperty('bottom');
+        } else {
+            dialog.style.removeProperty('top');
+            dialog.style.setProperty('bottom', `${Math.max(ph-cy1-dh/2,2)}px`);
+        }
     };
 
     const moveAsync = ev => {
@@ -635,7 +644,7 @@ const onStartMoving = (( ) => {
         eatEvent(ev);
     };
 
-    return function(ev) {
+    return ev => {
         const target = dialog.querySelector('#move');
         if ( ev.target !== target ) { return; }
         if ( dialog.classList.contains('moving') ) { return; }
@@ -648,12 +657,13 @@ const onStartMoving = (( ) => {
             mx0 = ev.pageX;
             my0 = ev.pageY;
         }
-        const style = self.getComputedStyle(dialog);
-        r0 = parseInt(style.right, 10);
-        b0 = parseInt(style.bottom, 10);
         const rect = dialog.getBoundingClientRect();
-        rMax = pickerRoot.clientWidth - 2 - rect.width ;
-        bMax = pickerRoot.clientHeight - 2 - rect.height;
+        dw = rect.width;
+        dh = rect.height;
+        cx0 = rect.x + dw / 2;
+        cy0 = rect.y + dh / 2;
+        pw = pickerRoot.clientWidth;
+        ph = pickerRoot.clientHeight;
         dialog.classList.add('moving');
         if ( isTouch ) {
             self.addEventListener('touchmove', moveAsync, { capture: true });
@@ -711,7 +721,6 @@ const svgListening = (( ) => {
 // current mode is narrow or broad.
 
 const populateCandidates = function(candidates, selector) {
-    
     const root = dialog.querySelector(selector);
     const ul = root.querySelector('ul');
     while ( ul.firstChild !== null ) {
@@ -735,8 +744,6 @@ const showDialog = function(details) {
     pausePicker();
 
     const { netFilters, cosmeticFilters, filter } = details;
-
-    netFilterCandidates = netFilters;
 
     needBody  =
         cosmeticFilters.length !== 0 &&
@@ -787,14 +794,16 @@ const showDialog = function(details) {
 /******************************************************************************/
 
 const pausePicker = function() {
-    pickerRoot.classList.add('paused');
+    dom.cl.add(pickerRoot, 'paused');
+    dom.cl.remove(pickerRoot, 'minimized');
     svgListening(false);
 };
 
 /******************************************************************************/
 
 const unpausePicker = function() {
-    pickerRoot.classList.remove('paused', 'preview');
+    dom.cl.remove(pickerRoot, 'paused', 'preview');
+    dom.cl.add(pickerRoot, 'minimized');
     pickerContentPort.postMessage({
         what: 'togglePreview',
         state: false,
@@ -806,7 +815,7 @@ const unpausePicker = function() {
 
 const startPicker = function() {
     self.addEventListener('keydown', onKeyPressed, true);
-    const svg = $stor('svg');
+    const svg = $stor('svg#sea');
     svg.addEventListener('click', onSvgClicked);
     svg.addEventListener('touchstart', onSvgTouch);
     svg.addEventListener('touchend', onSvgTouch);
@@ -820,6 +829,14 @@ const startPicker = function() {
     $id('preview').addEventListener('click', onPreviewClicked);
     $id('create').addEventListener('click', onCreateClicked);
     $id('pick').addEventListener('click', onPickClicked);
+    $id('minimize').addEventListener('click', ( ) => {
+        if ( dom.cl.has(pickerRoot, 'paused') === false ) {
+            pausePicker();
+            onCandidateChanged();
+        } else {
+            dom.cl.toggle(pickerRoot, 'minimized');
+        }
+    });
     $id('quit').addEventListener('click', onQuitClicked);
     $id('move').addEventListener('mousedown', onStartMoving);
     $id('move').addEventListener('touchstart', onStartMoving);
@@ -844,31 +861,31 @@ const quitPicker = function() {
 
 const onPickerMessage = function(msg) {
     switch ( msg.what ) {
-        case 'candidatesOptimized':
-            onCandidatesOptimized(msg);
-            break;
-        case 'showDialog':
-            showDialog(msg);
-            break;
-        case 'resultsetDetails': {
-            resultsetOpt = msg.opt;
-            $id('resultsetCount').textContent = msg.count;
-            if ( msg.count !== 0 ) {
-                $id('create').removeAttribute('disabled');
-            } else {
-                $id('create').setAttribute('disabled', '');
-            }
-            break;
+    case 'candidatesOptimized':
+        onCandidatesOptimized(msg);
+        break;
+    case 'showDialog':
+        showDialog(msg);
+        break;
+    case 'resultsetDetails': {
+        resultsetOpt = msg.opt;
+        $id('resultsetCount').textContent = msg.count;
+        if ( msg.count !== 0 ) {
+            $id('create').removeAttribute('disabled');
+        } else {
+            $id('create').setAttribute('disabled', '');
         }
-        case 'svgPaths': {
-            let { ocean, islands } = msg;
-            ocean += islands;
-            svgOcean.setAttribute('d', ocean);
-            svgIslands.setAttribute('d', islands || NoPaths);
-            break;
-        }
-        default:
-            break;
+        break;
+    }
+    case 'svgPaths': {
+        let { ocean, islands } = msg;
+        ocean += islands;
+        svgOcean.setAttribute('d', ocean);
+        svgIslands.setAttribute('d', islands || NoPaths);
+        break;
+    }
+    default:
+        break;
     }
 };
 

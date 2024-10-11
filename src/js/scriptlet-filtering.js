@@ -19,25 +19,22 @@
     Home: https://github.com/gorhill/uBlock
 */
 
-/* globals browser */
-
-'use strict';
-
 /******************************************************************************/
-
-import µb from './background.js';
-import logger from './logger.js';
-import { onBroadcast } from './broadcast.js';
-import { redirectEngine as reng } from './redirect-engine.js';
-import { sessionFirewall } from './filtering-engines.js';
-import { MRUCache } from './mrucache.js';
-import { ScriptletFilteringEngine } from './scriptlet-filtering-core.js';
 
 import {
     domainFromHostname,
     entityFromDomain,
     hostnameFromURI,
 } from './uri-utils.js';
+
+import { MRUCache } from './mrucache.js';
+import { ScriptletFilteringEngine } from './scriptlet-filtering-core.js';
+
+import logger from './logger.js';
+import { onBroadcast } from './broadcast.js';
+import { redirectEngine as reng } from './redirect-engine.js';
+import { sessionFirewall } from './filtering-engines.js';
+import µb from './background.js';
 
 /******************************************************************************/
 
@@ -64,6 +61,7 @@ const contentScriptRegisterer = new (class {
             runAt: 'document_start',
         }).then(handle => {
             this.hostnameToDetails.set(hostname, { handle, code });
+            return handle;
         }).catch(( ) => {
             this.hostnameToDetails.delete(hostname);
         });
@@ -97,7 +95,9 @@ const contentScriptRegisterer = new (class {
     }
     unregisterHandle(handle) {
         if ( handle instanceof Promise ) {
-            handle.then(handle => { handle.unregister(); });
+            handle.then(handle => {
+                if ( handle ) { handle.unregister(); }
+            });
         } else {
             handle.unregister();
         }
@@ -176,25 +176,28 @@ const onScriptletMessageInjector = (( ) => {
         '(',
         function(name) {
             if ( self.uBO_bcSecret ) { return; }
-            const bcSecret = new self.BroadcastChannel(name);
-            bcSecret.onmessage = ev => {
-                const msg = ev.data;
-                switch ( typeof msg ) {
-                case 'string':
-                    if ( msg !== 'areyouready?' ) { break; }
-                    bcSecret.postMessage('iamready!');
-                    break;
-                case 'object':
-                    if ( self.vAPI && self.vAPI.messaging ) {
-                        self.vAPI.messaging.send('contentscript', msg);
-                    } else {
-                        console.log(`[uBO][${msg.type}]${msg.text}`);
+            try {
+                const bcSecret = new self.BroadcastChannel(name);
+                bcSecret.onmessage = ev => {
+                    const msg = ev.data;
+                    switch ( typeof msg ) {
+                    case 'string':
+                        if ( msg !== 'areyouready?' ) { break; }
+                        bcSecret.postMessage('iamready!');
+                        break;
+                    case 'object':
+                        if ( self.vAPI && self.vAPI.messaging ) {
+                            self.vAPI.messaging.send('contentscript', msg);
+                        } else {
+                            console.log(`[uBO][${msg.type}]${msg.text}`);
+                        }
+                        break;
                     }
-                    break;
-                }
-            };
-            bcSecret.postMessage('iamready!');
-            self.uBO_bcSecret = bcSecret;
+                };
+                bcSecret.postMessage('iamready!');
+                self.uBO_bcSecret = bcSecret;
+            } catch(_) {
+            }
         }.toString(),
         ')(',
             'bcSecret-slot',
@@ -262,15 +265,13 @@ export class ScriptletFilteringEngineEx extends ScriptletFilteringEngine {
     reset() {
         super.reset();
         this.warSecret = vAPI.warSecret.long(this.warSecret);
-        this.scriptletCache.reset();
-        contentScriptRegisterer.reset();
+        this.clearCache();
     }
 
     freeze() {
         super.freeze();
         this.warSecret = vAPI.warSecret.long(this.warSecret);
-        this.scriptletCache.reset();
-        contentScriptRegisterer.reset();
+        this.clearCache();
     }
 
     clearCache() {
@@ -290,8 +291,7 @@ export class ScriptletFilteringEngineEx extends ScriptletFilteringEngine {
         }
 
         if ( this.scriptletCache.resetTime < reng.modifyTime ) {
-            this.warSecret = vAPI.warSecret.long(this.warSecret);
-            this.scriptletCache.reset();
+            this.clearCache();
         }
 
         let scriptletDetails = this.scriptletCache.lookup(hostname);

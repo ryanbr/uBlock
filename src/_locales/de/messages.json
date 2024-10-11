@@ -320,7 +320,7 @@
     "description": "English: Hide placeholders of blocked elements"
   },
   "settingsIconBadgePrompt": {
-    "message": "Anzahl der blockierten Anfragen auf dem Symbol anzeigen",
+    "message": "Anzahl der blockierten Anfragen auf dem Symbol in der Symbolleiste anzeigen",
     "description": "English: Show the number of blocked requests on the icon"
   },
   "settingsTooltipsPrompt": {
@@ -483,6 +483,14 @@
     "message": "Schutz vor Schadsoftware, Sicherheit",
     "description": "Filter lists section name"
   },
+  "3pGroupSocial": {
+    "message": "Soziale Widgets",
+    "description": "Filter lists section name"
+  },
+  "3pGroupCookies": {
+    "message": "Cookie-Hinweise",
+    "description": "Filter lists section name"
+  },
   "3pGroupAnnoyances": {
     "message": "Belästigungen",
     "description": "Filter lists section name"
@@ -527,13 +535,17 @@
     "message": "Ein Netzwerkfehler verhinderte die Aktualisierung der Ressource.",
     "description": "used as a tooltip for error icon beside a list"
   },
-  "1pFormatHint": {
-    "message": "Ein Filter pro Zeile. Ein Filter kann ein einfacher Hostname oder ein EasyList-kompatibler Filter sein. Zeilen mit vorangestelltem <code>!</code> werden ignoriert.",
-    "description": "Short information about how to create custom filters"
-  },
   "1pTrustWarning": {
     "message": "Verwenden Sie keine Filter aus unseriösen Quellen.",
     "description": "Warning against copy-pasting filters from random sources"
+  },
+  "1pEnableMyFiltersLabel": {
+    "message": "Eigene Filter aktivieren",
+    "description": "Label for the checkbox use to enable/disable 'My filters' list"
+  },
+  "1pTrustMyFiltersLabel": {
+    "message": "Eigene Filter zulassen, die Vertrauen erfordern",
+    "description": "Label for the checkbox use to trust the content of 'My filters' list"
   },
   "1pImport": {
     "message": "Importieren und anfügen …",
@@ -888,11 +900,11 @@
     "description": "Text for button which open an external webpage in Support pane"
   },
   "supportReportSpecificButton": {
-    "message": "Neuen Bericht erstellen",
+    "message": "Neue Meldung erstellen",
     "description": "Text for button which open an external webpage in Support pane"
   },
   "supportFindSpecificButton": {
-    "message": "Ähnliche Berichte suchen",
+    "message": "Ähnliche Meldungen finden",
     "description": "A clickable link in the filter issue reporter section"
   },
   "supportS1H": {
@@ -976,11 +988,11 @@
     "description": "An entry in the widget used to select the type of issue"
   },
   "supportS6Select1Option1": {
-    "message": "Zeigt Werbung oder Anzeigenreste",
+    "message": "Zeigt Werbung oder Werbereste",
     "description": "An entry in the widget used to select the type of issue"
   },
   "supportS6Select1Option2": {
-    "message": "Enthält Überdeckungen oder andere Belästigungen",
+    "message": "Hat Überdeckungen oder andere Belästigungen",
     "description": "An entry in the widget used to select the type of issue"
   },
   "supportS6Select1Option3": {
@@ -997,6 +1009,10 @@
   },
   "supportS6Select1Option6": {
     "message": "Öffnet unerwünschte Tabs oder Fenster",
+    "description": "An entry in the widget used to select the type of issue"
+  },
+  "supportS6Select1Option7": {
+    "message": "Führt zu Schadsoftware, Phishing",
     "description": "An entry in the widget used to select the type of issue"
   },
   "supportS6Checkbox1": {

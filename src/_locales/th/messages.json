@@ -4,7 +4,7 @@
     "description": "extension name."
   },
   "extShortDesc": {
-    "message": "มาแล้ว! โปรแกรมบล็อกโฆษณาเบาเบา ไม่กิน ซีพียู หรือ แรม",
+    "message": "มาแล้ว! โปรแกรมบล็อกโฆษณาได้อย่างมีประสิทธิภาพ โดยที่ไม่กินซีพียูหรือแรม",
     "description": "this will be in the Chrome web store: must be 132 characters or less"
   },
   "dashboardName": {
@@ -92,7 +92,7 @@
     "description": "Example: 15 (13%)"
   },
   "popupBlockedSinceInstallPrompt": {
-    "message": "จากวันที่ติดตตั้ง",
+    "message": "ตั้งแต่ติดตั้ง",
     "description": "English: since install"
   },
   "popupOr": {
@@ -100,11 +100,11 @@
     "description": "English: or"
   },
   "popupBlockedOnThisPage_v2": {
-    "message": "Blocked on this page",
+    "message": "ถูกบล็อกบนหน้านี้",
     "description": "For the new mobile-friendly popup design"
   },
   "popupBlockedSinceInstall_v2": {
-    "message": "Blocked since install",
+    "message": "ถูกบล็อกตั้งแต่ติดตั้ง",
     "description": "For the new mobile-friendly popup design"
   },
   "popupDomainsConnected_v2": {
@@ -483,6 +483,14 @@
     "message": "Malware domains",
     "description": "Filter lists section name"
   },
+  "3pGroupSocial": {
+    "message": "Social widgets",
+    "description": "Filter lists section name"
+  },
+  "3pGroupCookies": {
+    "message": "Cookie notices",
+    "description": "Filter lists section name"
+  },
   "3pGroupAnnoyances": {
     "message": "Annoyances",
     "description": "Filter lists section name"
@@ -527,13 +535,17 @@
     "message": "A network error prevented the resource from being updated.",
     "description": "used as a tooltip for error icon beside a list"
   },
-  "1pFormatHint": {
-    "message": "หนึ่งตัวกรองต่อบรรทัด ตัวกรองอาจเป็น hostname หรือตัวกรองที่เข้ากันได้กับ EasyList, บรรทัดที่ขึ้นต้นด้วย <code>!</code> จะถูกละเว้น\n",
-    "description": "Short information about how to create custom filters"
-  },
   "1pTrustWarning": {
     "message": "Do not add filters from untrusted sources.",
     "description": "Warning against copy-pasting filters from random sources"
+  },
+  "1pEnableMyFiltersLabel": {
+    "message": "Enable my custom filters",
+    "description": "Label for the checkbox use to enable/disable 'My filters' list"
+  },
+  "1pTrustMyFiltersLabel": {
+    "message": "Allow custom filters requiring trust",
+    "description": "Label for the checkbox use to trust the content of 'My filters' list"
   },
   "1pImport": {
     "message": "Import and append…",
@@ -552,11 +564,11 @@
     "description": "English: Apply changes"
   },
   "rulesPermanentHeader": {
-    "message": "Permanent rules",
+    "message": "กฏถาวร",
     "description": "header"
   },
   "rulesTemporaryHeader": {
-    "message": "Temporary rules",
+    "message": "กฏชั่วคราว",
     "description": "header"
   },
   "rulesRevert": {
@@ -580,11 +592,11 @@
     "description": "Will discard manually-edited content and exit manual-edit mode"
   },
   "rulesImport": {
-    "message": "Import from file…",
+    "message": "นำเข้าจากไฟล์",
     "description": ""
   },
   "rulesExport": {
-    "message": "Export to file…",
+    "message": "ส่งออกไปยังไฟล์",
     "description": "Button in the 'My rules' pane"
   },
   "rulesDefaultFileName": {
@@ -604,7 +616,7 @@
     "description": "English: label for sort option."
   },
   "rulesSortByType": {
-    "message": "Rule type",
+    "message": "ประเภทกฎ",
     "description": "English: a sort option for list of rules."
   },
   "rulesSortBySource": {
@@ -612,15 +624,15 @@
     "description": "English: a sort option for list of rules."
   },
   "rulesSortByDestination": {
-    "message": "Destination",
+    "message": "ปลายทาง",
     "description": "English: a sort option for list of rules."
   },
   "whitelistPrompt": {
-    "message": "The trusted site directives dictate on which web pages uBlock Origin should be disabled. One entry per line.",
+    "message": "ระบุไซต์ที่เชื่อถือได้เพื่อกำหนดว่าควรปิดการใช้งาน uBlock Origin ที่หน้าเว็บใด พิมพ์หนึ่งรายการต่อบรรทัด",
     "description": "A concise description of the 'Trusted sites' pane."
   },
   "whitelistImport": {
-    "message": "Import and append…",
+    "message": "นำเข้าและรวม",
     "description": "Button in the 'Trusted sites' pane"
   },
   "whitelistExport": {
@@ -632,7 +644,7 @@
     "description": "The default filename to use for import/export purpose"
   },
   "whitelistApply": {
-    "message": "Apply changes",
+    "message": "ใช้การเปลี่ยนแปลง",
     "description": "English: Apply changes"
   },
   "logRequestsHeaderType": {
@@ -640,7 +652,7 @@
     "description": "English: Type"
   },
   "logRequestsHeaderDomain": {
-    "message": "Domain",
+    "message": "โดเมน",
     "description": "English: Domain"
   },
   "logRequestsHeaderURL": {
@@ -648,7 +660,7 @@
     "description": "English: URL"
   },
   "logRequestsHeaderFilter": {
-    "message": "Filter",
+    "message": "ตัวกรอง",
     "description": "English: Filter"
   },
   "logAll": {
@@ -660,11 +672,11 @@
     "description": "Pretty name for behind-the-scene network requests"
   },
   "loggerCurrentTab": {
-    "message": "Current tab",
+    "message": "แท็บปัจจุบัน",
     "description": "Appears in the logger's tab selector"
   },
   "loggerReloadTip": {
-    "message": "Reload the tab content",
+    "message": "โหลดเนื้อหาแท็บปัจจุบันใหม่",
     "description": "Tooltip for the reload button in the logger page"
   },
   "loggerDomInspectorTip": {
@@ -852,11 +864,11 @@
     "description": "Logger settings: a sentence to describe the purpose of the checkboxes below"
   },
   "loggerSettingHideColumnTime": {
-    "message": "{{input}} Time",
+    "message": "{{input}} เวลา",
     "description": "A label for the time column"
   },
   "loggerSettingHideColumnFilter": {
-    "message": "{{input}} Filter/rule",
+    "message": "{{input}} ตัวกรอง/กฏ",
     "description": "A label for the filter or rule column"
   },
   "loggerSettingHideColumnContext": {
@@ -872,7 +884,7 @@
     "description": "Label for radio-button to pick export format"
   },
   "loggerExportFormatTable": {
-    "message": "Table",
+    "message": "ตาราง",
     "description": "Label for radio-button to pick export format"
   },
   "loggerExportEncodePlain": {
@@ -999,6 +1011,10 @@
     "message": "Opens unwanted tabs or windows",
     "description": "An entry in the widget used to select the type of issue"
   },
+  "supportS6Select1Option7": {
+    "message": "Leads to badware, phishing",
+    "description": "An entry in the widget used to select the type of issue"
+  },
   "supportS6Checkbox1": {
     "message": "Label the web page as “NSFW” (<a href=\"https://wikipedia.org/wiki/Not_safe_for_work\">“Not Safe For Work”</a>)",
     "description": "A checkbox to use for NSFW sites"
@@ -1012,7 +1028,7 @@
     "description": "Text for 'Unredact' button"
   },
   "aboutPrivacyPolicy": {
-    "message": "Privacy policy",
+    "message": "นโยบายความเป็นส่วนตัว",
     "description": "Link to privacy policy on GitHub (English)"
   },
   "aboutChangelog": {
@@ -1088,7 +1104,7 @@
     "description": "No longer used"
   },
   "subscribeButton": {
-    "message": "Subscribe",
+    "message": "สมัครสมาชิก",
     "description": "For the button used to subscribe to a filter list"
   },
   "elapsedOneMinuteAgo": {
@@ -1124,7 +1140,7 @@
     "description": "Firefox/Fennec-specific: Show Logger"
   },
   "fennecMenuItemBlockingOff": {
-    "message": "off",
+    "message": "ปิด",
     "description": "Firefox-specific: appears as 'uBlock₀ (off)'"
   },
   "docblockedTitle": {
@@ -1152,7 +1168,7 @@
     "description": "English: Go back"
   },
   "docblockedClose": {
-    "message": "Close this window",
+    "message": "ปิดหน้าต่างนี้",
     "description": "English: Close this window"
   },
   "docblockedDontWarn": {
@@ -1196,7 +1212,7 @@
     "description": "used as a prompt for the user to provide a custom device name"
   },
   "advancedSettingsWarning": {
-    "message": "Warning! Change these advanced settings at your own risk.",
+    "message": "คำเตือน! ปรับเปลี่ยนการตั้งค่าขั้นสูงเหล่านี้ด้วยความระมัดระวัง",
     "description": "A warning to users at the top of 'Advanced settings' page"
   },
   "genericSubmit": {
@@ -1244,7 +1260,7 @@
     "description": "Label for buttons used to copy something to the clipboard"
   },
   "genericSelectAll": {
-    "message": "Select all",
+    "message": "เลือกทั้งหมด",
     "description": "Label for buttons used to select all text in editor"
   },
   "toggleCosmeticFiltering": {

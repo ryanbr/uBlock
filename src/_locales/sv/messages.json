@@ -104,7 +104,7 @@
     "description": "For the new mobile-friendly popup design"
   },
   "popupBlockedSinceInstall_v2": {
-    "message": "Blockerat sedan installationen",
+    "message": "Blockerat sedan installation",
     "description": "For the new mobile-friendly popup design"
   },
   "popupDomainsConnected_v2": {
@@ -483,6 +483,14 @@
     "message": "Skydd mot skadlig programvara, säkerhet",
     "description": "Filter lists section name"
   },
+  "3pGroupSocial": {
+    "message": "Sociala widgets",
+    "description": "Filter lists section name"
+  },
+  "3pGroupCookies": {
+    "message": "Cookie-meddelanden",
+    "description": "Filter lists section name"
+  },
   "3pGroupAnnoyances": {
     "message": "Störande",
     "description": "Filter lists section name"
@@ -527,13 +535,17 @@
     "message": "Ett nätverksproblem har förhindrat resursen från att uppdateras.",
     "description": "used as a tooltip for error icon beside a list"
   },
-  "1pFormatHint": {
-    "message": "Ett filter per rad. Ett filter kan vara ett vanligt värdnamn eller ett EasyList-kompatibelt filter. Rader med prefixet <code>!</code> ignoreras.",
-    "description": "Short information about how to create custom filters"
-  },
   "1pTrustWarning": {
-    "message": "Lägg inte till filter från opålitliga källor.",
+    "message": "Lägg inte till filter från obetrodda källor.",
     "description": "Warning against copy-pasting filters from random sources"
+  },
+  "1pEnableMyFiltersLabel": {
+    "message": "Aktivera mina anpassade filter",
+    "description": "Label for the checkbox use to enable/disable 'My filters' list"
+  },
+  "1pTrustMyFiltersLabel": {
+    "message": "Att tillåta anpassade filter kräver tillit",
+    "description": "Label for the checkbox use to trust the content of 'My filters' list"
   },
   "1pImport": {
     "message": "Importera och lägg till…",
@@ -644,7 +656,7 @@
     "description": "English: Domain"
   },
   "logRequestsHeaderURL": {
-    "message": "URL",
+    "message": "Webbadress",
     "description": "English: URL"
   },
   "logRequestsHeaderFilter": {
@@ -656,7 +668,7 @@
     "description": "Appears in the logger's tab selector"
   },
   "logBehindTheScene": {
-    "message": "Bakom kulissen",
+    "message": "Tabless",
     "description": "Pretty name for behind-the-scene network requests"
   },
   "loggerCurrentTab": {
@@ -784,7 +796,7 @@
     "description": "Small header to identify the static filtering section"
   },
   "loggerStaticFilteringSentence": {
-    "message": "{{action}} nätverksförfrågningar av {{type}} {{br}}vilkas webbadresser matchar {{url}} {{br}}och som kommer från {{origin}},{{br}}{{importance}} det finns ett matchande undantagsfilter.",
+    "message": "{{action}} nätverksförfrågningar av {{type}} {{br}}vilken webbadress matchar {{url}} {{br}}och som kommer från {{origin}},{{br}}{{importance}} det finns ett matchande undantagsfilter.",
     "description": "Used in the static filtering wizard"
   },
   "loggerStaticFilteringSentencePartBlock": {
@@ -916,7 +928,7 @@
     "description": "Header of 'Filter issues' section in Support pane"
   },
   "supportS3P1": {
-    "message": "Rapportera filterproblem med specifika webbplatser till <span data-url=\"https://github.com/uBlockOrigin/uAssets/issues?q=is%3Aissue\"><code>uBlockOrigin/uAssets</code> problemhanteringssystemet</span>. <u>Kräver ett GitHub-konto.</u>",
+    "message": "Rapportera filterproblem med specifika webbplatser till problemhanteringssystemet <span data-url=\"https://github.com/uBlockOrigin/uAssets/issues?q=is%3Aissue\"><code>uBlockOrigin/uAssets</code></span>. <u>Kräver ett GitHub-konto.</u>",
     "description": "First paragraph of 'Filter issues' section in Support pane"
   },
   "supportS3P2": {
@@ -932,7 +944,7 @@
     "description": "Header of 'Bug report' section in Support pane"
   },
   "supportS4P1": {
-    "message": "Rapportera problem med själva uBlock Origin till <span data-url=\"https://github.com/uBlockOrigin/uBlock-issues/issues?q=is%3Aissue\"><code>uBlockOrigin/uBlock-issue</code> ärendehanteringssystemet</span>. <u>Kräver ett GitHub-konto.</u>",
+    "message": "Rapportera problem med själva uBlock Origin till problemhanteringssystemet <span data-url=\"https://github.com/uBlockOrigin/uBlock-issues/issues?q=is%3Aissue\"><code>uBlockOrigin/uBlock-issue</code></span>. <u>Kräver ett GitHub-konto.</u>",
     "description": "First paragraph of 'Bug report' section in Support pane"
   },
   "supportS5H": {
@@ -997,6 +1009,10 @@
   },
   "supportS6Select1Option6": {
     "message": "Öppnar oönskade flikar eller fönster",
+    "description": "An entry in the widget used to select the type of issue"
+  },
+  "supportS6Select1Option7": {
+    "message": "Leder till skadlig programvara, nätfiske",
     "description": "An entry in the widget used to select the type of issue"
   },
   "supportS6Checkbox1": {

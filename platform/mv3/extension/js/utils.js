@@ -19,14 +19,6 @@
     Home: https://github.com/gorhill/uBlock
 */
 
-/* jshint esversion:11 */
-
-'use strict';
-
-/******************************************************************************/
-
-import { browser } from './ext.js';
-
 /******************************************************************************/
 
 function parsedURLromOrigin(origin) {
@@ -114,7 +106,7 @@ const hostnamesFromMatches = origins => {
             out.push('all-urls');
             continue;
         }
-        const match = /^\*:\/\/(?:\*\.)?([^\/]+)\/\*/.exec(origin);
+        const match = /^\*:\/\/(?:\*\.)?([^/]+)\/\*/.exec(origin);
         if ( match === null ) { continue; }
         out.push(match[1]);
     }
@@ -130,14 +122,6 @@ export const broadcastMessage = message => {
 
 /******************************************************************************/
 
-const ubolLog = (...args) => {
-    // Do not pollute dev console in stable release.
-    if ( browser.runtime.id === 'ddkjiahejlhfcafbddmgiahcphecmpfh' ) { return; }
-    console.info('[uBOL]', ...args);
-};
-
-/******************************************************************************/
-
 export {
     parsedURLromOrigin,
     toBroaderHostname,
@@ -147,5 +131,4 @@ export {
     subtractHostnameIters,
     matchesFromHostnames,
     hostnamesFromMatches,
-    ubolLog,
 };

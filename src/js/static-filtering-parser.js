@@ -19,12 +19,10 @@
     Home: https://github.com/gorhill/uBlock
 */
 
-'use strict';
-
 /******************************************************************************/
 
-import Regex from '../lib/regexanalyzer/regex.js';
 import * as cssTree from '../lib/csstree/css-tree.js';
+import Regex from '../lib/regexanalyzer/regex.js';
 
 /*******************************************************************************
  * 
@@ -174,6 +172,7 @@ export const NODE_TYPE_NET_OPTION_NAME_IMAGE        = iota++;
 export const NODE_TYPE_NET_OPTION_NAME_IMPORTANT    = iota++;
 export const NODE_TYPE_NET_OPTION_NAME_INLINEFONT   = iota++;
 export const NODE_TYPE_NET_OPTION_NAME_INLINESCRIPT = iota++;
+export const NODE_TYPE_NET_OPTION_NAME_IPADDRESS    = iota++;
 export const NODE_TYPE_NET_OPTION_NAME_MATCHCASE    = iota++;
 export const NODE_TYPE_NET_OPTION_NAME_MEDIA        = iota++;
 export const NODE_TYPE_NET_OPTION_NAME_METHOD       = iota++;
@@ -192,11 +191,13 @@ export const NODE_TYPE_NET_OPTION_NAME_REPLACE      = iota++;
 export const NODE_TYPE_NET_OPTION_NAME_SCRIPT       = iota++;
 export const NODE_TYPE_NET_OPTION_NAME_SHIDE        = iota++;
 export const NODE_TYPE_NET_OPTION_NAME_TO           = iota++;
+export const NODE_TYPE_NET_OPTION_NAME_URLSKIP      = iota++;
 export const NODE_TYPE_NET_OPTION_NAME_URLTRANSFORM = iota++;
 export const NODE_TYPE_NET_OPTION_NAME_XHR          = iota++;
 export const NODE_TYPE_NET_OPTION_NAME_WEBRTC       = iota++;
 export const NODE_TYPE_NET_OPTION_NAME_WEBSOCKET    = iota++;
 export const NODE_TYPE_NET_OPTION_ASSIGN            = iota++;
+export const NODE_TYPE_NET_OPTION_QUOTE             = iota++;
 export const NODE_TYPE_NET_OPTION_VALUE             = iota++;
 export const NODE_TYPE_OPTION_VALUE_DOMAIN_LIST     = iota++;
 export const NODE_TYPE_OPTION_VALUE_DOMAIN_RAW      = iota++;
@@ -250,6 +251,7 @@ export const nodeTypeFromOptionName = new Map([
     [ 'important', NODE_TYPE_NET_OPTION_NAME_IMPORTANT ],
     [ 'inline-font', NODE_TYPE_NET_OPTION_NAME_INLINEFONT ],
     [ 'inline-script', NODE_TYPE_NET_OPTION_NAME_INLINESCRIPT ],
+    [ 'ipaddress', NODE_TYPE_NET_OPTION_NAME_IPADDRESS ],
     [ 'match-case', NODE_TYPE_NET_OPTION_NAME_MATCHCASE ],
     [ 'media', NODE_TYPE_NET_OPTION_NAME_MEDIA ],
     [ 'method', NODE_TYPE_NET_OPTION_NAME_METHOD ],
@@ -273,6 +275,7 @@ export const nodeTypeFromOptionName = new Map([
     [ 'shide', NODE_TYPE_NET_OPTION_NAME_SHIDE ],
     /* synonym */ [ 'specifichide', NODE_TYPE_NET_OPTION_NAME_SHIDE ],
     [ 'to', NODE_TYPE_NET_OPTION_NAME_TO ],
+    [ 'urlskip', NODE_TYPE_NET_OPTION_NAME_URLSKIP ],
     [ 'uritransform', NODE_TYPE_NET_OPTION_NAME_URLTRANSFORM ],
     [ 'xhr', NODE_TYPE_NET_OPTION_NAME_XHR ],
     /* synonym */ [ 'xmlhttprequest', NODE_TYPE_NET_OPTION_NAME_XHR ],
@@ -577,6 +580,7 @@ export const preparserIfTokens = new Set([
     'env_mv3',
     'env_safari',
     'cap_html_filtering',
+    'cap_ipaddress',
     'cap_user_stylesheet',
     'false',
     'ext_abp',
@@ -781,21 +785,21 @@ class DomainListIterator {
         let ready = false;
         while ( node !== 0 ) {
             switch ( this.parser.getNodeType(node) ) {
-                case NODE_TYPE_OPTION_VALUE_DOMAIN_RAW:
-                    this.item.hn = '';
-                    this.item.not = false;
-                    this.item.bad = this.parser.getNodeFlags(node, NODE_FLAG_ERROR) !== 0;
-                    break;
-                case NODE_TYPE_OPTION_VALUE_NOT:
-                    this.item.not = true;
-                    break;
-                case NODE_TYPE_OPTION_VALUE_DOMAIN:
-                    this.item.hn = this.parser.getNodeTransform(node);
-                    this.value = this.item;
-                    ready = true;
-                    break;
-                default:
-                    break;
+            case NODE_TYPE_OPTION_VALUE_DOMAIN_RAW:
+                this.item.hn = '';
+                this.item.not = false;
+                this.item.bad = this.parser.getNodeFlags(node, NODE_FLAG_ERROR) !== 0;
+                break;
+            case NODE_TYPE_OPTION_VALUE_NOT:
+                this.item.not = true;
+                break;
+            case NODE_TYPE_OPTION_VALUE_DOMAIN:
+                this.item.hn = this.parser.getNodeTransform(node);
+                this.value = this.item;
+                ready = true;
+                break;
+            default:
+                break;
             }
             node = this.walker.next();
             if ( ready ) { return this; }
@@ -859,17 +863,17 @@ export class AstFilterParser {
         this.reInlineComment = /(?:\s+#).*?$/;
         this.reNetException = /^@@/;
         this.reNetAnchor = /(?:)\$[^,\w~]/;
-        this.reHnAnchoredPlainAscii = /^\|\|[0-9a-z%&,\-.\/:;=?_]+$/;
+        this.reHnAnchoredPlainAscii = /^\|\|[0-9a-z%&,\-./:;=?_]+$/;
         this.reHnAnchoredHostnameAscii = /^\|\|(?:[\da-z][\da-z_-]*\.)*[\da-z_-]*[\da-z]\^$/;
         this.reHnAnchoredHostnameUnicode = /^\|\|(?:[\p{L}\p{N}][\p{L}\p{N}\u{2d}]*\.)*[\p{L}\p{N}\u{2d}]*[\p{L}\p{N}]\^$/u;
         this.reHn3pAnchoredHostnameAscii = /^\|\|(?:[\da-z][\da-z_-]*\.)*[\da-z_-]*[\da-z]\^\$third-party$/;
-        this.rePlainAscii = /^[0-9a-z%&\-.\/:;=?_]{2,}$/;
+        this.rePlainAscii = /^[0-9a-z%&\-./:;=?_]{2,}$/;
         this.reNetHosts1 = /^127\.0\.0\.1 (?:[\da-z][\da-z_-]*\.)+[\da-z-]*[a-z]$/;
         this.reNetHosts2 = /^0\.0\.0\.0 (?:[\da-z][\da-z_-]*\.)+[\da-z-]*[a-z]$/;
         this.rePlainGenericCosmetic = /^##[.#][A-Za-z_][\w-]*$/;
         this.reHostnameAscii = /^(?:[\da-z][\da-z_-]*\.)*[\da-z][\da-z-]*[\da-z]$/;
         this.rePlainEntity = /^(?:[\da-z][\da-z_-]*\.)+\*$/;
-        this.reHostsSink = /^[\w%.:\[\]-]+\s+/;
+        this.reHostsSink = /^[\w%.:[\]-]+\s+/;
         this.reHostsRedirect = /(?:0\.0\.0\.0|broadcasthost|local|localhost(?:\.localdomain)?|ip6-\w+)(?:[^\w.-]|$)/;
         this.reNetOptionComma = /,(?:~?[13a-z-]+(?:=.*?)?|_+)(?:,|$)/;
         this.rePointlessLeftAnchor = /^\|\|?\*+/;
@@ -886,8 +890,8 @@ export class AstFilterParser {
         this.rePreparseDirectiveIf = /^!#if /;
         this.rePreparseDirectiveAny = /^!#(?:else|endif|if |include )/;
         this.reURL = /\bhttps?:\/\/\S+/;
-        this.reHasPatternSpecialChars = /[\*\^]/;
-        this.rePatternAllSpecialChars = /[\*\^]+|[^\x00-\x7f]+/g;
+        this.reHasPatternSpecialChars = /[*^]/;
+        this.rePatternAllSpecialChars = /[*^]+|[^\x00-\x7f]+/g;
         // https://github.com/uBlockOrigin/uBlock-issues/issues/1146
         //   From https://codemirror.net/doc/manual.html#option_specialChars
         this.reHasInvalidChar = /[\x00-\x1F\x7F-\x9F\xAD\u061C\u200B-\u200F\u2028\u2029\uFEFF\uFFF9-\uFFFC]/;
@@ -896,9 +900,11 @@ export class AstFilterParser {
         this.reResponseheaderPattern = /^\^responseheader\(.*\)$/;
         this.rePatternScriptletJsonArgs = /^\{.*\}$/;
         this.reGoodRegexToken = /[^\x01%0-9A-Za-z][%0-9A-Za-z]{7,}|[^\x01%0-9A-Za-z][%0-9A-Za-z]{1,6}[^\x01%0-9A-Za-z]/;
-        this.reBadCSP = /(?:^|;)\s*report-(?:to|uri)\b/i;
-        this.reBadPP = /(?:^|;)\s*report-to\b/i;
+        this.reBadCSP = /(?:^|[;,])\s*report-(?:to|uri)\b/i;
+        this.reBadPP = /(?:^|[;,])\s*report-to\b/i;
+        this.reNetOption = /^(~?)([134a-z_-]+)(=?)/;
         this.reNoopOption = /^_+$/;
+        this.netOptionValueParser = new ArgListParser(',');
         this.scriptletArgListParser = new ArgListParser(',');
     }
 
@@ -1299,6 +1305,7 @@ export class AstFilterParser {
         let modifierType = 0;
         let requestTypeCount = 0;
         let unredirectableTypeCount = 0;
+        let badfilter = false;
         for ( let i = 0, n = this.nodeTypeRegisterPtr; i < n; i++ ) {
             const type = this.nodeTypeRegister[i];
             const targetNode = this.nodeTypeLookupTable[type];
@@ -1314,146 +1321,157 @@ export class AstFilterParser {
             const hasValue = (flags & NODE_FLAG_OPTION_HAS_VALUE) !== 0;
             bad = false; realBad = false;
             switch ( type ) {
-                case NODE_TYPE_NET_OPTION_NAME_ALL:
-                    realBad = isNegated || hasValue || modifierType !== 0;
-                    break;
-                case NODE_TYPE_NET_OPTION_NAME_1P:
-                case NODE_TYPE_NET_OPTION_NAME_3P:
-                    realBad = hasValue;
-                    break;
-                case NODE_TYPE_NET_OPTION_NAME_BADFILTER:
-                case NODE_TYPE_NET_OPTION_NAME_NOOP:
-                    realBad = isNegated || hasValue;
-                    break;
-                case NODE_TYPE_NET_OPTION_NAME_CSS:
-                case NODE_TYPE_NET_OPTION_NAME_FONT:
-                case NODE_TYPE_NET_OPTION_NAME_IMAGE:
-                case NODE_TYPE_NET_OPTION_NAME_MEDIA:
-                case NODE_TYPE_NET_OPTION_NAME_OBJECT:
-                case NODE_TYPE_NET_OPTION_NAME_OTHER:
-                case NODE_TYPE_NET_OPTION_NAME_SCRIPT:
-                case NODE_TYPE_NET_OPTION_NAME_XHR:
-                    realBad = hasValue;
-                    if ( realBad ) { break; }
-                    requestTypeCount += 1;
-                    break;
-                case NODE_TYPE_NET_OPTION_NAME_CNAME:
-                    realBad = isException === false || isNegated || hasValue;
-                    if ( realBad ) { break; }
-                    modifierType = type;
-                    break;
-                case NODE_TYPE_NET_OPTION_NAME_CSP:
-                    realBad = (hasValue || isException) === false ||
-                        modifierType !== 0 ||
-                        this.reBadCSP.test(
-                            this.getNetOptionValue(NODE_TYPE_NET_OPTION_NAME_CSP)
-                        );
-                    if ( realBad ) { break; }
-                    modifierType = type;
-                    break;
-                case NODE_TYPE_NET_OPTION_NAME_DENYALLOW:
-                    realBad = isNegated || hasValue === false ||
-                        this.getBranchFromType(NODE_TYPE_NET_OPTION_NAME_FROM) === 0;
-                    break;
-                case NODE_TYPE_NET_OPTION_NAME_DOC:
-                case NODE_TYPE_NET_OPTION_NAME_FRAME:
-                    realBad = hasValue;
-                    if ( realBad ) { break; }
-                    docTypeCount += 1;
-                    break;
-                case NODE_TYPE_NET_OPTION_NAME_EHIDE:
-                case NODE_TYPE_NET_OPTION_NAME_GHIDE:
-                case NODE_TYPE_NET_OPTION_NAME_SHIDE:
-                    realBad = isNegated || hasValue || modifierType !== 0;
-                    if ( realBad ) { break; }
-                    behaviorTypeCount += 1;
-                    unredirectableTypeCount += 1;
-                    break;
-                case NODE_TYPE_NET_OPTION_NAME_EMPTY:
-                case NODE_TYPE_NET_OPTION_NAME_MP4:
-                    realBad = isNegated || hasValue || modifierType !== 0;
-                    if ( realBad ) { break; }
-                    modifierType = type;
-                    break;
-                case NODE_TYPE_NET_OPTION_NAME_FROM:
-                case NODE_TYPE_NET_OPTION_NAME_METHOD:
-                case NODE_TYPE_NET_OPTION_NAME_TO:
-                    realBad = isNegated || hasValue === false;
-                    break;
-                case NODE_TYPE_NET_OPTION_NAME_GENERICBLOCK:
-                    bad = true;
-                    realBad = isException === false || isNegated || hasValue;
-                    break;
-                case NODE_TYPE_NET_OPTION_NAME_HEADER:
-                    realBad = isNegated || hasValue === false;
-                    break;
-                case NODE_TYPE_NET_OPTION_NAME_IMPORTANT:
-                    realBad = isException || isNegated || hasValue;
-                    break;
-                case NODE_TYPE_NET_OPTION_NAME_INLINEFONT:
-                case NODE_TYPE_NET_OPTION_NAME_INLINESCRIPT:
-                    realBad = hasValue;
-                    if ( realBad ) { break; }
-                    modifierType = type;
-                    unredirectableTypeCount += 1;
-                    break;
-                case NODE_TYPE_NET_OPTION_NAME_MATCHCASE:
-                    realBad = this.isRegexPattern() === false;
-                    break;
-                case NODE_TYPE_NET_OPTION_NAME_PERMISSIONS:
-                    realBad = modifierType !== 0 ||
-                        (hasValue || isException) === false ||
-                        this.reBadPP.test(
-                            this.getNetOptionValue(NODE_TYPE_NET_OPTION_NAME_PERMISSIONS)
-                        );
-                    if ( realBad ) { break; }
-                    modifierType = type;
-                    break;
-                case NODE_TYPE_NET_OPTION_NAME_PING:
-                case NODE_TYPE_NET_OPTION_NAME_WEBSOCKET:
-                    realBad = hasValue;
-                    if ( realBad ) { break; }
-                    requestTypeCount += 1;
-                    unredirectableTypeCount += 1;
-                    break;
-                case NODE_TYPE_NET_OPTION_NAME_POPUNDER:
-                case NODE_TYPE_NET_OPTION_NAME_POPUP:
-                    realBad = hasValue;
-                    if ( realBad ) { break; }
-                    abstractTypeCount += 1;
-                    unredirectableTypeCount += 1;
-                    break;
-                case NODE_TYPE_NET_OPTION_NAME_REDIRECT:
-                case NODE_TYPE_NET_OPTION_NAME_REDIRECTRULE:
-                case NODE_TYPE_NET_OPTION_NAME_REPLACE:
-                case NODE_TYPE_NET_OPTION_NAME_URLTRANSFORM:
-                    realBad = isNegated || (isException || hasValue) === false ||
-                        modifierType !== 0;
-                    if ( realBad ) { break; }
-                    modifierType = type;
-                    break;
-                case NODE_TYPE_NET_OPTION_NAME_REMOVEPARAM:
-                    realBad = isNegated || modifierType !== 0;
-                    if ( realBad ) { break; }
-                    modifierType = type;
-                    break;
-                case NODE_TYPE_NET_OPTION_NAME_STRICT1P:
-                case NODE_TYPE_NET_OPTION_NAME_STRICT3P:
-                    realBad = isNegated || hasValue;
-                    break;
-                case NODE_TYPE_NET_OPTION_NAME_UNKNOWN:
-                    this.astError = AST_ERROR_OPTION_UNKNOWN;
-                    realBad = true;
-                    break;
-                case NODE_TYPE_NET_OPTION_NAME_WEBRTC:
-                    realBad = true;
-                    break;
-                case NODE_TYPE_NET_PATTERN_RAW:
-                    realBad = this.hasOptions() === false &&
-                        this.getNetPattern().length <= 1;
-                    break;
-                default:
-                    break;
+            case NODE_TYPE_NET_OPTION_NAME_ALL:
+                realBad = isNegated || hasValue || modifierType !== 0;
+                break;
+            case NODE_TYPE_NET_OPTION_NAME_1P:
+            case NODE_TYPE_NET_OPTION_NAME_3P:
+                realBad = hasValue;
+                break;
+            case NODE_TYPE_NET_OPTION_NAME_BADFILTER:
+                badfilter = true;
+                /* falls through */
+            case NODE_TYPE_NET_OPTION_NAME_NOOP:
+                realBad = isNegated || hasValue;
+                break;
+            case NODE_TYPE_NET_OPTION_NAME_CSS:
+            case NODE_TYPE_NET_OPTION_NAME_FONT:
+            case NODE_TYPE_NET_OPTION_NAME_IMAGE:
+            case NODE_TYPE_NET_OPTION_NAME_MEDIA:
+            case NODE_TYPE_NET_OPTION_NAME_OBJECT:
+            case NODE_TYPE_NET_OPTION_NAME_OTHER:
+            case NODE_TYPE_NET_OPTION_NAME_SCRIPT:
+            case NODE_TYPE_NET_OPTION_NAME_XHR:
+                realBad = hasValue;
+                if ( realBad ) { break; }
+                requestTypeCount += 1;
+                break;
+            case NODE_TYPE_NET_OPTION_NAME_CNAME:
+                realBad = isException === false || isNegated || hasValue;
+                if ( realBad ) { break; }
+                modifierType = type;
+                break;
+            case NODE_TYPE_NET_OPTION_NAME_CSP:
+                realBad = (hasValue || isException) === false ||
+                    modifierType !== 0 ||
+                    this.reBadCSP.test(
+                        this.getNetOptionValue(NODE_TYPE_NET_OPTION_NAME_CSP)
+                    );
+                if ( realBad ) { break; }
+                modifierType = type;
+                break;
+            case NODE_TYPE_NET_OPTION_NAME_DENYALLOW:
+                realBad = isNegated || hasValue === false ||
+                    this.getBranchFromType(NODE_TYPE_NET_OPTION_NAME_FROM) === 0;
+                break;
+            case NODE_TYPE_NET_OPTION_NAME_DOC:
+            case NODE_TYPE_NET_OPTION_NAME_FRAME:
+                realBad = hasValue;
+                if ( realBad ) { break; }
+                docTypeCount += 1;
+                break;
+            case NODE_TYPE_NET_OPTION_NAME_EHIDE:
+            case NODE_TYPE_NET_OPTION_NAME_GHIDE:
+            case NODE_TYPE_NET_OPTION_NAME_SHIDE:
+                realBad = isNegated || hasValue || modifierType !== 0;
+                if ( realBad ) { break; }
+                behaviorTypeCount += 1;
+                unredirectableTypeCount += 1;
+                break;
+            case NODE_TYPE_NET_OPTION_NAME_EMPTY:
+            case NODE_TYPE_NET_OPTION_NAME_MP4:
+                realBad = isNegated || hasValue || modifierType !== 0;
+                if ( realBad ) { break; }
+                modifierType = type;
+                break;
+            case NODE_TYPE_NET_OPTION_NAME_FROM:
+            case NODE_TYPE_NET_OPTION_NAME_METHOD:
+            case NODE_TYPE_NET_OPTION_NAME_TO:
+                realBad = isNegated || hasValue === false;
+                break;
+            case NODE_TYPE_NET_OPTION_NAME_GENERICBLOCK:
+                bad = true;
+                realBad = isException === false || isNegated || hasValue;
+                break;
+            case NODE_TYPE_NET_OPTION_NAME_HEADER:
+                realBad = isNegated || hasValue === false;
+                break;
+            case NODE_TYPE_NET_OPTION_NAME_IMPORTANT:
+                realBad = isException || isNegated || hasValue;
+                break;
+            case NODE_TYPE_NET_OPTION_NAME_INLINEFONT:
+            case NODE_TYPE_NET_OPTION_NAME_INLINESCRIPT:
+                realBad = hasValue;
+                if ( realBad ) { break; }
+                modifierType = type;
+                unredirectableTypeCount += 1;
+                break;
+            case NODE_TYPE_NET_OPTION_NAME_IPADDRESS: {
+                const value = this.getNetOptionValue(NODE_TYPE_NET_OPTION_NAME_IPADDRESS);
+                if ( /^\/.+\/$/.test(value) ) {
+                    try { void new RegExp(value); }
+                    catch(_) { realBad = true; }
+                }
+                break;
+            }
+            case NODE_TYPE_NET_OPTION_NAME_MATCHCASE:
+                realBad = this.isRegexPattern() === false;
+                break;
+            case NODE_TYPE_NET_OPTION_NAME_PERMISSIONS:
+                realBad = modifierType !== 0 ||
+                    (hasValue || isException) === false ||
+                    this.reBadPP.test(
+                        this.getNetOptionValue(NODE_TYPE_NET_OPTION_NAME_PERMISSIONS)
+                    );
+                if ( realBad ) { break; }
+                modifierType = type;
+                break;
+            case NODE_TYPE_NET_OPTION_NAME_PING:
+            case NODE_TYPE_NET_OPTION_NAME_WEBSOCKET:
+                realBad = hasValue;
+                if ( realBad ) { break; }
+                requestTypeCount += 1;
+                unredirectableTypeCount += 1;
+                break;
+            case NODE_TYPE_NET_OPTION_NAME_POPUNDER:
+            case NODE_TYPE_NET_OPTION_NAME_POPUP:
+                realBad = hasValue;
+                if ( realBad ) { break; }
+                abstractTypeCount += 1;
+                unredirectableTypeCount += 1;
+                break;
+            case NODE_TYPE_NET_OPTION_NAME_REDIRECT:
+            case NODE_TYPE_NET_OPTION_NAME_REDIRECTRULE:
+            case NODE_TYPE_NET_OPTION_NAME_REPLACE:
+            case NODE_TYPE_NET_OPTION_NAME_URLSKIP:
+            case NODE_TYPE_NET_OPTION_NAME_URLTRANSFORM:
+                realBad = isNegated || (isException || hasValue) === false ||
+                    modifierType !== 0;
+                if ( realBad ) { break; }
+                modifierType = type;
+                break;
+            case NODE_TYPE_NET_OPTION_NAME_REMOVEPARAM:
+                realBad = isNegated || modifierType !== 0;
+                if ( realBad ) { break; }
+                modifierType = type;
+                break;
+            case NODE_TYPE_NET_OPTION_NAME_STRICT1P:
+            case NODE_TYPE_NET_OPTION_NAME_STRICT3P:
+                realBad = isNegated || hasValue;
+                break;
+            case NODE_TYPE_NET_OPTION_NAME_UNKNOWN:
+                this.astError = AST_ERROR_OPTION_UNKNOWN;
+                realBad = true;
+                break;
+            case NODE_TYPE_NET_OPTION_NAME_WEBRTC:
+                realBad = true;
+                break;
+            case NODE_TYPE_NET_PATTERN_RAW:
+                realBad = this.hasOptions() === false &&
+                    this.getNetPattern().length <= 1;
+                break;
+            default:
+                break;
             }
             if ( bad || realBad ) {
                 this.addNodeFlags(targetNode, NODE_FLAG_ERROR);
@@ -1462,64 +1480,83 @@ export class AstFilterParser {
                 this.addFlags(AST_FLAG_HAS_ERROR);
             }
         }
+        const requiresTrustedSource = ( ) =>
+            this.options.trustedSource !== true &&
+            isException === false && badfilter === false;
         switch ( modifierType ) {
-            case NODE_TYPE_NET_OPTION_NAME_CNAME:
-                realBad = abstractTypeCount || behaviorTypeCount || requestTypeCount;
-                break;
-            case NODE_TYPE_NET_OPTION_NAME_CSP:
-            case NODE_TYPE_NET_OPTION_NAME_PERMISSIONS:
-                realBad = abstractTypeCount || behaviorTypeCount || requestTypeCount;
-                break;
-            case NODE_TYPE_NET_OPTION_NAME_INLINEFONT:
-            case NODE_TYPE_NET_OPTION_NAME_INLINESCRIPT:
-                realBad = behaviorTypeCount;
-                break;
-            case NODE_TYPE_NET_OPTION_NAME_EMPTY:
-                realBad = abstractTypeCount || behaviorTypeCount;
-                break;
-            case NODE_TYPE_NET_OPTION_NAME_MEDIA:
-            case NODE_TYPE_NET_OPTION_NAME_MP4:
-                realBad = abstractTypeCount || behaviorTypeCount || docTypeCount || requestTypeCount;
-                break;
-            case NODE_TYPE_NET_OPTION_NAME_REDIRECT:
-            case NODE_TYPE_NET_OPTION_NAME_REDIRECTRULE: {
-                realBad = abstractTypeCount || behaviorTypeCount || unredirectableTypeCount;
-                break;
-            }
-            case NODE_TYPE_NET_OPTION_NAME_REPLACE: {
-                realBad = abstractTypeCount || behaviorTypeCount || unredirectableTypeCount;
-                if ( realBad ) { break; }
-                if ( isException !== true && this.options.trustedSource !== true ) {
-                    this.astError = AST_ERROR_UNTRUSTED_SOURCE;
-                    realBad = true;
-                    break;
-                }
-                const value = this.getNetOptionValue(NODE_TYPE_NET_OPTION_NAME_REPLACE);
-                if ( parseReplaceValue(value) === undefined ) {
-                    this.astError = AST_ERROR_OPTION_BADVALUE;
-                    realBad = true;
-                }
+        case NODE_TYPE_NET_OPTION_NAME_CNAME:
+            realBad = abstractTypeCount || behaviorTypeCount || requestTypeCount;
+            break;
+        case NODE_TYPE_NET_OPTION_NAME_CSP:
+        case NODE_TYPE_NET_OPTION_NAME_PERMISSIONS:
+            realBad = abstractTypeCount || behaviorTypeCount || requestTypeCount;
+            break;
+        case NODE_TYPE_NET_OPTION_NAME_INLINEFONT:
+        case NODE_TYPE_NET_OPTION_NAME_INLINESCRIPT:
+            realBad = behaviorTypeCount;
+            break;
+        case NODE_TYPE_NET_OPTION_NAME_EMPTY:
+            realBad = abstractTypeCount || behaviorTypeCount;
+            break;
+        case NODE_TYPE_NET_OPTION_NAME_MEDIA:
+        case NODE_TYPE_NET_OPTION_NAME_MP4:
+            realBad = abstractTypeCount || behaviorTypeCount || docTypeCount || requestTypeCount;
+            break;
+        case NODE_TYPE_NET_OPTION_NAME_REDIRECT:
+        case NODE_TYPE_NET_OPTION_NAME_REDIRECTRULE: {
+            realBad = abstractTypeCount || behaviorTypeCount || unredirectableTypeCount;
+            break;
+        }
+        case NODE_TYPE_NET_OPTION_NAME_REPLACE: {
+            realBad = abstractTypeCount || behaviorTypeCount || unredirectableTypeCount;
+            if ( realBad ) { break; }
+            if ( requiresTrustedSource() ) {
+                this.astError = AST_ERROR_UNTRUSTED_SOURCE;
+                realBad = true;
                 break;
             }
-            case NODE_TYPE_NET_OPTION_NAME_URLTRANSFORM:
-                realBad = abstractTypeCount || behaviorTypeCount || unredirectableTypeCount;
-                if ( realBad ) { break; }
-                if ( isException !== true && this.options.trustedSource !== true ) {
-                    this.astError = AST_ERROR_UNTRUSTED_SOURCE;
-                    realBad = true;
-                    break;
-                }
-                const value = this.getNetOptionValue(NODE_TYPE_NET_OPTION_NAME_URLTRANSFORM);
-                if ( parseReplaceValue(value) === undefined ) {
-                    this.astError = AST_ERROR_OPTION_BADVALUE;
-                    realBad = true;
-                }
+            const value = this.getNetOptionValue(NODE_TYPE_NET_OPTION_NAME_REPLACE);
+            if ( parseReplaceValue(value) === undefined ) {
+                this.astError = AST_ERROR_OPTION_BADVALUE;
+                realBad = true;
+            }
+            break;
+        }
+        case NODE_TYPE_NET_OPTION_NAME_URLSKIP: {
+            realBad = abstractTypeCount || behaviorTypeCount || unredirectableTypeCount;
+            if ( realBad ) { break; }
+            if ( requiresTrustedSource() ) {
+                this.astError = AST_ERROR_UNTRUSTED_SOURCE;
+                realBad = true;
                 break;
-            case NODE_TYPE_NET_OPTION_NAME_REMOVEPARAM:
-                realBad = abstractTypeCount || behaviorTypeCount;
+            }
+            const value = this.getNetOptionValue(NODE_TYPE_NET_OPTION_NAME_URLSKIP);
+            if ( value.length < 2 ) {
+                this.astError = AST_ERROR_OPTION_BADVALUE;
+                realBad = true;
+            }
+            break;
+        }
+        case NODE_TYPE_NET_OPTION_NAME_URLTRANSFORM: {
+            realBad = abstractTypeCount || behaviorTypeCount || unredirectableTypeCount;
+            if ( realBad ) { break; }
+            if ( requiresTrustedSource() ) {
+                this.astError = AST_ERROR_UNTRUSTED_SOURCE;
+                realBad = true;
                 break;
-            default:
-                break;
+            }
+            const value = this.getNetOptionValue(NODE_TYPE_NET_OPTION_NAME_URLTRANSFORM);
+            if ( value !== '' && parseReplaceValue(value) === undefined ) {
+                this.astError = AST_ERROR_OPTION_BADVALUE;
+                realBad = true;
+            }
+            break;
+        }
+        case NODE_TYPE_NET_OPTION_NAME_REMOVEPARAM:
+            realBad = abstractTypeCount || behaviorTypeCount;
+            break;
+        default:
+            break;
         }
         if ( realBad ) {
             const targetNode = this.getBranchFromType(modifierType);
@@ -1951,19 +1988,21 @@ export class AstFilterParser {
         if ( parentEnd === parentBeg ) { return 0; }
         const s = this.getNodeString(parent);
         const optionsEnd = s.length;
+        const parseDetails = { node: 0, len: 0 };
         const head = this.allocHeadNode();
         let prev = head, next = 0;
         let optionBeg = 0, optionEnd = 0;
-        let emptyOption = false, badComma = false;
         while ( optionBeg !== optionsEnd ) {
-            optionEnd = this.endOfNetOption(s, optionBeg);
             next = this.allocTypedNode(
                 NODE_TYPE_NET_OPTION_RAW,
                 parentBeg + optionBeg,
-                parentBeg + optionEnd
+                parentBeg + optionsEnd // open ended
             );
-            emptyOption = optionEnd === optionBeg;
-            this.linkDown(next, this.parseNetOption(next));
+            this.parseNetOption(next, parseDetails);
+            // set next's end to down's end
+            optionEnd += parseDetails.len;
+            this.nodes[next+NODE_END_INDEX] = parentBeg + optionEnd;
+            this.linkDown(next, parseDetails.node);
             prev = this.linkRight(prev, next);
             if ( optionEnd === optionsEnd ) { break; }
             optionBeg = optionEnd + 1;
@@ -1972,12 +2011,12 @@ export class AstFilterParser {
                 parentBeg + optionEnd,
                 parentBeg + optionBeg
             );
-            badComma = optionBeg === optionsEnd;
-            prev = this.linkRight(prev, next);
-            if ( emptyOption || badComma ) {
+            if ( parseDetails.len === 0 || optionBeg === optionsEnd ) {
                 this.addNodeFlags(next, NODE_FLAG_ERROR);
                 this.addFlags(AST_FLAG_HAS_ERROR);
             }
+            prev = this.linkRight(prev, next);
+            optionEnd = optionBeg;
         }
         this.linkRight(prev,
             this.allocSentinelNode(NODE_TYPE_NET_OPTION_SENTINEL, parentEnd)
@@ -1985,19 +2024,23 @@ export class AstFilterParser {
         return this.throwHeadNode(head);
     }
 
-    endOfNetOption(s, beg) {
-        const match = this.reNetOptionComma.exec(s.slice(beg));
-        return match !== null ? beg + match.index : s.length;
-    }
-
-    parseNetOption(parent) {
+    parseNetOption(parent, parseDetails) {
         const parentBeg = this.nodes[parent+NODE_BEG_INDEX];
         const s = this.getNodeString(parent);
-        const optionEnd = s.length;
+        const match = this.reNetOption.exec(s) || [];
+        if ( match.length === 0 ) {
+            this.addNodeFlags(parent, NODE_FLAG_ERROR);
+            this.addFlags(AST_FLAG_HAS_ERROR);
+            this.astError = AST_ERROR_OPTION_UNKNOWN;
+            parseDetails.node = 0;
+            parseDetails.len = s.length;
+            return;
+        }
         const head = this.allocHeadNode();
         let prev = head, next = 0;
-        let nameBeg = 0;
-        if ( s.charCodeAt(0) === 0x7E ) {
+        const matchEnd = match && match[0].length || 0;
+        const negated = match[1] === '~';
+        if ( negated ) {
             this.addNodeFlags(parent, NODE_FLAG_IS_NEGATED);
             next = this.allocTypedNode(
                 NODE_TYPE_NET_OPTION_NAME_NOT,
@@ -2005,11 +2048,11 @@ export class AstFilterParser {
                 parentBeg+1
             );
             prev = this.linkRight(prev, next);
-            nameBeg += 1;
         }
-        const equalPos = s.indexOf('=');
-        const nameEnd = equalPos !== -1 ? equalPos : s.length;
-        const name = s.slice(nameBeg, nameEnd);
+        const nameBeg = negated ? 1 : 0;
+        const assigned = match[3] === '=';
+        const nameEnd = matchEnd - (assigned ? 1 : 0);
+        const name = match[2] || '';
         let nodeOptionType = nodeTypeFromOptionName.get(name);
         if ( nodeOptionType === undefined ) {
             nodeOptionType = this.reNoopOption.test(name)
@@ -2032,40 +2075,72 @@ export class AstFilterParser {
             this.addNodeToRegister(nodeOptionType, parent);
         }
         prev = this.linkRight(prev, next);
-        if ( equalPos === -1 ) {
-            return this.throwHeadNode(head);
+        if ( assigned === false ) {
+            parseDetails.node = this.throwHeadNode(head);
+            parseDetails.len = matchEnd;
+            return;
         }
-        const valueBeg = equalPos + 1;
         next = this.allocTypedNode(
             NODE_TYPE_NET_OPTION_ASSIGN,
-            parentBeg + equalPos,
-            parentBeg + valueBeg
+            parentBeg + matchEnd - 1,
+            parentBeg + matchEnd
         );
         prev = this.linkRight(prev, next);
-        if ( (equalPos+1) === optionEnd ) {
-            this.addNodeFlags(parent, NODE_FLAG_ERROR);
-            this.addFlags(AST_FLAG_HAS_ERROR);
-            return this.throwHeadNode(head);
-        }
         this.addNodeFlags(parent, NODE_FLAG_OPTION_HAS_VALUE);
+        const details = this.netOptionValueParser.nextArg(s, matchEnd);
+        if ( details.quoteBeg !== details.argBeg ) {
+            next = this.allocTypedNode(
+                NODE_TYPE_NET_OPTION_QUOTE,
+                parentBeg + details.quoteBeg,
+                parentBeg + details.argBeg
+            );
+            prev = this.linkRight(prev, next);
+        } else {
+            const argEnd = this.endOfNetOption(s, matchEnd);
+            if ( argEnd !== details.argEnd ) {
+                details.argEnd = details.quoteEnd = argEnd;
+            }
+        }
         next = this.allocTypedNode(
             NODE_TYPE_NET_OPTION_VALUE,
-            parentBeg + valueBeg,
-            parentBeg + optionEnd
+            parentBeg + details.argBeg,
+            parentBeg + details.argEnd
         );
-        switch ( nodeOptionType ) {
-            case NODE_TYPE_NET_OPTION_NAME_DENYALLOW:
-                this.linkDown(next, this.parseDomainList(next, '|'), 0b00000);
-                break;
-            case NODE_TYPE_NET_OPTION_NAME_FROM:
-            case NODE_TYPE_NET_OPTION_NAME_TO:
-                this.linkDown(next, this.parseDomainList(next, '|', 0b11010));
-                break;
-            default:
-                break;
+        if ( details.argBeg === details.argEnd ) {
+            this.addNodeFlags(parent, NODE_FLAG_ERROR);
+            this.addFlags(AST_FLAG_HAS_ERROR);
+            this.astError = AST_ERROR_OPTION_BADVALUE;
+        } else if ( details.transform ) {
+            const arg = s.slice(details.argBeg, details.argEnd);
+            this.setNodeTransform(next, this.netOptionValueParser.normalizeArg(arg));
         }
-        this.linkRight(prev, next);
-        return this.throwHeadNode(head);
+        switch ( nodeOptionType ) {
+        case NODE_TYPE_NET_OPTION_NAME_DENYALLOW:
+            this.linkDown(next, this.parseDomainList(next, '|'), 0b00000);
+            break;
+        case NODE_TYPE_NET_OPTION_NAME_FROM:
+        case NODE_TYPE_NET_OPTION_NAME_TO:
+            this.linkDown(next, this.parseDomainList(next, '|', 0b11010));
+            break;
+        default:
+            break;
+        }
+        prev = this.linkRight(prev, next);
+        if ( details.quoteEnd !== details.argEnd ) {
+            next = this.allocTypedNode(
+                NODE_TYPE_NET_OPTION_QUOTE,
+                parentBeg + details.argEnd,
+                parentBeg + details.quoteEnd
+            );
+            this.linkRight(prev, next);
+        }
+        parseDetails.node = this.throwHeadNode(head);
+        parseDetails.len = details.quoteEnd;
+    }
+
+    endOfNetOption(s, beg) {
+        const match = this.reNetOptionComma.exec(s.slice(beg));
+        return match !== null ? beg + match.index : s.length;
     }
 
     getNetOptionValue(type) {
@@ -2087,32 +2162,26 @@ export class AstFilterParser {
         );
         if ( parentEnd === parentBeg ) { return containerNode; }
         const separatorCode = separator.charCodeAt(0);
+        const parseDetails = { separator, mode, node: 0, len: 0 };
         const listNode = this.allocHeadNode();
         let prev = listNode;
         let domainNode = 0;
         let separatorNode = 0;
         const s = this.getNodeString(parent);
         const listEnd = s.length;
-        let beg = 0, end = 0, c = 0;
+        let beg = 0, end = 0;
         while ( beg < listEnd ) {
-            c = s.charCodeAt(beg);
-            if ( c === 0x7E /* ~ */ ) {
-                c = s.charCodeAt(beg+1) || 0;
-            }
-            if ( c !== 0x2F /* / */ ) {
-                end = s.indexOf(separator, beg);
-            } else {
-                end = s.indexOf('/', beg+1);
-                end = s.indexOf(separator, end !== -1 ? end+1 : beg);
-            }
-            if ( end === -1 ) { end = listEnd; }
+            const next = this.allocTypedNode(
+                NODE_TYPE_OPTION_VALUE_DOMAIN_RAW,
+                parentBeg + beg,
+                parentBeg + listEnd // open ended
+            );
+            this.parseDomain(next, parseDetails);
+            end = beg + parseDetails.len;
+            this.nodes[next+NODE_END_INDEX] = parentBeg + end;
             if ( end !== beg ) {
-                domainNode = this.allocTypedNode(
-                    NODE_TYPE_OPTION_VALUE_DOMAIN_RAW,
-                    parentBeg + beg,
-                    parentBeg + end
-                );
-                this.linkDown(domainNode, this.parseDomain(domainNode, mode));
+                domainNode = next;
+                this.linkDown(domainNode, parseDetails.node);
                 prev = this.linkRight(prev, domainNode);
             } else {
                 domainNode = 0;
@@ -2148,23 +2217,38 @@ export class AstFilterParser {
         return containerNode;
     }
 
-    parseDomain(parent, mode = 0b0000) {
+    parseDomain(parent, parseDetails) {
         const parentBeg = this.nodes[parent+NODE_BEG_INDEX];
         const parentEnd = this.nodes[parent+NODE_END_INDEX];
+        const not = this.charCodeAt(parentBeg) === 0x7E /* ~ */;
         let head = 0, next = 0;
         let beg = parentBeg;
-        const c = this.charCodeAt(beg);
-        if ( c === 0x7E /* ~ */ ) {
+        if ( not ) {
             this.addNodeFlags(parent, NODE_FLAG_IS_NEGATED);
             head = this.allocTypedNode(NODE_TYPE_OPTION_VALUE_NOT, beg, beg + 1);
-            if ( (mode & 0b1000) === 0 ) {
+            if ( (parseDetails.mode & 0b1000) === 0 ) {
                 this.addNodeFlags(parent, NODE_FLAG_ERROR);
             }
             beg += 1;
         }
-        if ( beg !== parentEnd ) {
-            next = this.allocTypedNode(NODE_TYPE_OPTION_VALUE_DOMAIN, beg, parentEnd);
-            const hn = this.normalizeDomainValue(this.getNodeString(next), mode);
+        const c0 = this.charCodeAt(beg);
+        let end = beg;
+        let type = 0;
+        if ( c0 === 0x2F /* / */ ) {
+            end = this.indexOf('/', beg + 1, parentEnd);
+            if ( end !== -1 ) { end += 1; }
+            type = 1;
+        } else if ( c0 === 0x5B /* [ */ && this.startsWith('[$domain=/', beg) ) {
+            end = this.indexOf('/]', beg + 10, parentEnd);
+            if ( end !== -1 ) { end += 2; }
+            type = 2;
+        } else {
+            end = this.indexOf(parseDetails.separator, end, parentEnd);
+        }
+        if ( end === -1 ) { end = parentEnd; }
+        if ( beg !== end ) {
+            next = this.allocTypedNode(NODE_TYPE_OPTION_VALUE_DOMAIN, beg, end);
+            const hn = this.normalizeDomainValue(next, type, parseDetails.mode);
             if ( hn !== undefined ) {
                 if ( hn !== '' ) {
                     this.setNodeTransform(next, hn);
@@ -2183,7 +2267,8 @@ export class AstFilterParser {
             this.addNodeFlags(parent, NODE_FLAG_ERROR);
             this.addFlags(AST_FLAG_HAS_ERROR);
         }
-        return head;
+        parseDetails.node = head;
+        parseDetails.len = end - parentBeg;
     }
 
     // mode bits:
@@ -2192,16 +2277,16 @@ export class AstFilterParser {
     //   0b00100: can use single wildcard
     //   0b01000: can be negated
     //   0b10000: can be a regex
-    normalizeDomainValue(s, modeBits) {
-        if ( (modeBits & 0b10000) === 0 ||
-            s.length <= 2 ||
-            s.charCodeAt(0) !== 0x2F /* / */ ||
-            exCharCodeAt(s, -1) !== 0x2F /* / */
-        ) {
+    normalizeDomainValue(node, type, modeBits) {
+        const s = this.getNodeString(node);
+        if ( type === 0 ) {
             return this.normalizeHostnameValue(s, modeBits);
         }
-        const source = this.normalizeRegexPattern(s);
+        if ( (modeBits & 0b10000) === 0 ) { return ''; }
+        const regex = type === 1 ? s : `/${s.slice(10, -2)}/`;
+        const source = this.normalizeRegexPattern(regex);
         if ( source === '' ) { return ''; }
+        if ( type === 1 && source === regex ) { return; }
         return `/${source}/`;
     }
 
@@ -2277,27 +2362,27 @@ export class AstFilterParser {
             if ( (flags & NODE_FLAG_ERROR) !== 0 ) { continue; }
             realBad = false;
             switch ( type ) {
-                case NODE_TYPE_EXT_PATTERN_RESPONSEHEADER: {
-                    const pattern = this.getNodeString(targetNode);
-                    realBad =
-                        pattern !== '' && removableHTTPHeaders.has(pattern) === false ||
-                        pattern === '' && isException === false;
-                    break;
+            case NODE_TYPE_EXT_PATTERN_RESPONSEHEADER: {
+                const pattern = this.getNodeString(targetNode);
+                realBad =
+                    pattern !== '' && removableHTTPHeaders.has(pattern) === false ||
+                    pattern === '' && isException === false;
+                break;
+            }
+            case NODE_TYPE_EXT_PATTERN_SCRIPTLET_TOKEN: {
+                if ( this.interactive !== true ) { break; }
+                if ( isException ) { break; }
+                const { trustedSource, trustedScriptletTokens } = this.options;
+                if ( trustedScriptletTokens instanceof Set === false ) { break; }
+                const token = this.getNodeString(targetNode);
+                if ( trustedScriptletTokens.has(token) && trustedSource !== true ) {
+                    this.astError = AST_ERROR_UNTRUSTED_SOURCE;
+                    realBad = true;
                 }
-                case NODE_TYPE_EXT_PATTERN_SCRIPTLET_TOKEN: {
-                    if ( this.interactive !== true ) { break; }
-                    if ( isException ) { break; }
-                    const { trustedSource, trustedScriptletTokens } = this.options;
-                    if ( trustedScriptletTokens instanceof Set === false ) { break; }
-                    const token = this.getNodeString(targetNode);
-                    if ( trustedScriptletTokens.has(token) && trustedSource !== true ) {
-                        this.astError = AST_ERROR_UNTRUSTED_SOURCE;
-                        realBad = true;
-                    }
-                    break;
-                }
-                default:
-                    break;
+                break;
+            }
+            default:
+                break;
             }
             if ( realBad ) {
                 this.addNodeFlags(targetNode, NODE_FLAG_ERROR);
@@ -2413,7 +2498,7 @@ export class AstFilterParser {
             parentBeg + argsEnd
         );
         this.linkDown(next, this.parseExtPatternScriptletArglist(next));
-        prev = this.linkRight(prev, next);
+        this.linkRight(prev, next);
         return this.throwHeadNode(head);
     }
 
@@ -2467,12 +2552,12 @@ export class AstFilterParser {
         const walker = this.getWalker(root);
         for ( let node = walker.next(); node !== 0; node = walker.next() ) {
             switch ( this.getNodeType(node) ) {
-                case NODE_TYPE_EXT_PATTERN_SCRIPTLET_TOKEN:
-                case NODE_TYPE_EXT_PATTERN_SCRIPTLET_ARG:
-                    args.push(this.getNodeTransform(node));
-                    break;
-                default:
-                    break;
+            case NODE_TYPE_EXT_PATTERN_SCRIPTLET_TOKEN:
+            case NODE_TYPE_EXT_PATTERN_SCRIPTLET_ARG:
+                args.push(this.getNodeTransform(node));
+                break;
+            default:
+                break;
             }
         }
         walker.dispose();
@@ -2788,6 +2873,15 @@ export class AstFilterParser {
         return pos < this.rawEnd ? this.raw.charCodeAt(pos) : -1;
     }
 
+    indexOf(needle, beg, end = 0) {
+        const haystack = end === 0 ? this.raw : this.raw.slice(0, end);
+        return haystack.indexOf(needle, beg);
+    }
+
+    startsWith(s, pos) {
+        return pos < this.rawEnd && this.raw.startsWith(s, pos);
+    }
+
     isTokenCharCode(c) {
         return c === 0x25 ||
             c >= 0x30 && c <= 0x39 ||
@@ -3064,6 +3158,7 @@ export const netOptionTokenDescriptors = new Map([
     [ 'important', { blockOnly: true } ],
     [ 'inline-font', { canNegate: true } ],
     [ 'inline-script', { canNegate: true } ],
+    [ 'ipaddress', { mustAssign: true } ],
     [ 'match-case', { } ],
     [ 'media', { canNegate: true } ],
     [ 'method', { mustAssign: true } ],
@@ -3081,12 +3176,13 @@ export const netOptionTokenDescriptors = new Map([
     /* synonym */ [ 'rewrite', { mustAssign: true } ],
     [ 'redirect-rule', { mustAssign: true } ],
     [ 'removeparam', { } ],
-    [ 'replace', { mustAssign: true } ],
     /* synonym */ [ 'queryprune', { } ],
+    [ 'replace', { mustAssign: true } ],
     [ 'script', { canNegate: true } ],
     [ 'shide', { } ],
     /* synonym */ [ 'specifichide', { } ],
     [ 'to', { mustAssign: true } ],
+    [ 'urlskip', { mustAssign: true } ],
     [ 'uritransform', { mustAssign: true } ],
     [ 'xhr', { canNegate: true } ],
     /* synonym */ [ 'xmlhttprequest', { canNegate: true } ],
@@ -3117,7 +3213,7 @@ class ExtSelectorCompiler {
         // context.
         const cssIdentifier = '[A-Za-z_][\\w-]*';
         const cssClassOrId = `[.#]${cssIdentifier}`;
-        const cssAttribute = `\\[${cssIdentifier}(?:[*^$]?="[^"\\]\\\\]+")?\\]`;
+        const cssAttribute = `\\[${cssIdentifier}(?:[*^$]?="[^"\\]\\\\\\x09-\\x0D]+")?\\]`;
         const cssSimple =
             '(?:' +
             `${cssIdentifier}(?:${cssClassOrId})*(?:${cssAttribute})*` + '|' +
@@ -3199,8 +3295,10 @@ class ExtSelectorCompiler {
             'matches-css-before',
             'matches-media',
             'matches-path',
+            'matches-prop',
             'min-text-length',
             'others',
+            'shadow',
             'upward',
             'watch-attr',
             'xpath',
@@ -3457,6 +3555,8 @@ class ExtSelectorCompiler {
 
     // https://github.com/uBlockOrigin/uBlock-issues/issues/2300
     //   Unquoted attribute values are parsed as Identifier instead of String.
+    // https://github.com/uBlockOrigin/uBlock-issues/issues/3127
+    //   Escape [\t\n\v\f\r]
     astSerializePart(part) {
         const out = [];
         const { data } = part;
@@ -3472,7 +3572,14 @@ class ExtSelectorCompiler {
             if ( typeof value !== 'string' ) {
                 value = data.value.name;
             }
-            value = value.replace(/["\\]/g, '\\$&');
+            if ( /["\\]/.test(value) ) {
+                value = value.replace(/["\\]/g, '\\$&');
+            }
+            if ( /[\x09-\x0D]/.test(value) ) {
+                value = value.replace(/[\x09-\x0D]/g, s =>
+                    `\\${s.charCodeAt(0).toString(16).toUpperCase()} `
+                );
+            }
             let flags = '';
             if ( typeof data.flags === 'string' ) {
                 if ( /^(is?|si?)$/.test(data.flags) === false ) { return; }
@@ -3825,6 +3932,7 @@ class ExtSelectorCompiler {
         case 'if-not':
             return this.compileSelector(arg);
         case 'matches-attr':
+        case 'matches-prop':
             return this.compileMatchAttrArgument(arg);
         case 'matches-css':
             return this.compileCSSDeclaration(arg);
@@ -3846,6 +3954,8 @@ class ExtSelectorCompiler {
             return this.compileText(arg);
         case 'remove-class':
             return this.compileText(arg);
+        case 'shadow':
+            return this.compileSelector(arg);
         case 'style':
             return this.compileStyleProperties(arg);
         case 'upward':
@@ -3983,6 +4093,10 @@ class ExtSelectorCompiler {
     compileUpwardArgument(s) {
         const i = this.compileInteger(s, 1, 256);
         if ( i !== undefined ) { return i; }
+        return this.compilePlainSelector(s);
+    }
+
+    compilePlainSelector(s) {
         const parts = this.astFromRaw(s, 'selectorList' );
         if ( this.astIsValidSelectorList(parts) !== true ) { return; }
         if ( this.astHasType(parts, 'ProceduralSelector') ) { return; }
@@ -4014,7 +4128,7 @@ class ExtSelectorCompiler {
 
     compileAttrList(s) {
         if ( s === '' ) { return s; }
-        const attrs = s.split('\s*,\s*');
+        const attrs = s.split(/\s*,\s*/);
         const out = [];
         for ( const attr of attrs ) {
             if ( attr !== '' ) {
@@ -4027,9 +4141,11 @@ class ExtSelectorCompiler {
     compileXpathExpression(s) {
         const r = this.unquoteString(s);
         if ( r.i !== s.length ) { return; }
-        if ( globalThis.document instanceof Object === false ) { return r.s; }
+        const doc = globalThis.document;
+        if ( doc instanceof Object === false ) { return r.s; }
         try {
-            globalThis.document.createExpression(r.s, null);
+            const expr = doc.createExpression(r.s, null);
+            expr.evaluate(doc, XPathResult.ANY_UNORDERED_NODE_TYPE);
         } catch (e) {
             return;
         }
@@ -4052,6 +4168,7 @@ export const proceduralOperatorTokens = new Map([
     [ 'matches-css', 0b11 ],
     [ 'matches-media', 0b11 ],
     [ 'matches-path', 0b11 ],
+    [ 'matches-prop', 0b11 ],
     [ 'min-text-length', 0b01 ],
     [ 'not', 0b01 ],
     [ 'nth-ancestor', 0b00 ],
@@ -4265,13 +4382,14 @@ export const utils = (( ) => {
         [ 'env_safari', 'safari' ],
         [ 'cap_html_filtering', 'html_filtering' ],
         [ 'cap_user_stylesheet', 'user_stylesheet' ],
+        [ 'cap_ipaddress', 'ipaddress' ],
         [ 'false', 'false' ],
         // Hoping ABP-only list maintainers can at least make use of it to
         // help non-ABP content blockers better deal with filters benefiting
         // only ABP.
         [ 'ext_abp', 'false' ],
         // Compatibility with other blockers
-        // https://kb.adguard.com/en/general/how-to-create-your-own-ad-filters#adguard-specific
+        // https://adguard.com/kb/general/ad-filtering/create-own-filters/#conditions-directive
         [ 'adguard', 'adguard' ],
         [ 'adguard_app_android', 'false' ],
         [ 'adguard_app_ios', 'false' ],
@@ -4299,8 +4417,11 @@ export const utils = (( ) => {
         static evaluateExprToken(token, env = []) {
             const not = token.charCodeAt(0) === 0x21 /* ! */;
             if ( not ) { token = token.slice(1); }
-            const state = preparserTokens.get(token);
-            if ( state === undefined ) { return; }
+            let state = preparserTokens.get(token);
+            if ( state === undefined ) {
+                if ( token.startsWith('cap_') === false ) { return; }
+                state = 'false';
+            }
             return state === 'false' && not || env.includes(state) !== not;
         }
 
@@ -4336,14 +4457,14 @@ export const utils = (( ) => {
             const parts = [ 0 ];
             let discard = false;
 
-            const shouldDiscard = ( ) => stack.some(v => v);
+            const shouldDiscard = ( ) => stack.some(v => v.known && v.discard);
 
-            const begif = (startDiscard, match) => {
-                if ( discard === false && startDiscard ) {
-                    parts.push(match.index);
+            const begif = details => {
+                if ( discard === false && details.known && details.discard ) {
+                    parts.push(details.pos);
                     discard = true;
                 }
-                stack.push(startDiscard);
+                stack.push(details);
             };
 
             const endif = match => {
@@ -4361,15 +4482,21 @@ export const utils = (( ) => {
 
                 switch ( match[1] ) {
                 case 'if': {
-                    const startDiscard = this.evaluateExpr(match[2].trim(), env) === false;
-                    begif(startDiscard, match);
+                    const result = this.evaluateExpr(match[2].trim(), env);
+                    begif({
+                        known: result !== undefined,
+                        discard: result === false,
+                        pos: match.index,
+                    });
                     break;
                 }
                 case 'else': {
                     if ( stack.length === 0 ) { break; }
-                    const startDiscard = stack[stack.length-1] === false;
+                    const details = stack[stack.length-1];
                     endif(match);
-                    begif(startDiscard, match);
+                    details.discard = details.discard === false;
+                    details.pos = match.index;
+                    begif(details);
                     break;
                 }
                 case 'endif': {

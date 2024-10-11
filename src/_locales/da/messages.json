@@ -483,6 +483,14 @@
     "message": "Malware-beskyttelse, sikkerhed",
     "description": "Filter lists section name"
   },
+  "3pGroupSocial": {
+    "message": "Sociale widgets",
+    "description": "Filter lists section name"
+  },
+  "3pGroupCookies": {
+    "message": "Cookie-meddelelser",
+    "description": "Filter lists section name"
+  },
   "3pGroupAnnoyances": {
     "message": "Gener",
     "description": "Filter lists section name"
@@ -527,20 +535,24 @@
     "message": "En netværksfejl forhindrede opdatering af ressourcen.",
     "description": "used as a tooltip for error icon beside a list"
   },
-  "1pFormatHint": {
-    "message": "Ét filter pr. linje. Et filter kan være et almindeligt værtsnavn eller et EasyList-kompatibelt filter. Linjer startende med <code>!</code> ignoreres.",
-    "description": "Short information about how to create custom filters"
-  },
   "1pTrustWarning": {
     "message": "Tilføj ikke filtre fra ikke-betroede kilder.",
     "description": "Warning against copy-pasting filters from random sources"
   },
+  "1pEnableMyFiltersLabel": {
+    "message": "Aktivér mine tilpassede filtre",
+    "description": "Label for the checkbox use to enable/disable 'My filters' list"
+  },
+  "1pTrustMyFiltersLabel": {
+    "message": "Tillad tilpassede filtre som kræver tillid",
+    "description": "Label for the checkbox use to trust the content of 'My filters' list"
+  },
   "1pImport": {
-    "message": "Importer og tilføj…",
+    "message": "Importér og tilføj…",
     "description": "Button in the 'My filters' pane"
   },
   "1pExport": {
-    "message": "Eksporter…",
+    "message": "Eksportér…",
     "description": "Button in the 'My filters' pane"
   },
   "1pExportFilename": {
@@ -584,7 +596,7 @@
     "description": ""
   },
   "rulesExport": {
-    "message": "Eksporter til fil…",
+    "message": "Eksportér til fil…",
     "description": "Button in the 'My rules' pane"
   },
   "rulesDefaultFileName": {
@@ -620,11 +632,11 @@
     "description": "A concise description of the 'Trusted sites' pane."
   },
   "whitelistImport": {
-    "message": "Importer og tilføj…",
+    "message": "Importér og tilføj…",
     "description": "Button in the 'Trusted sites' pane"
   },
   "whitelistExport": {
-    "message": "Eksporter…",
+    "message": "Eksportér…",
     "description": "Button in the 'Trusted sites' pane"
   },
   "whitelistExportFilename": {
@@ -997,6 +1009,10 @@
   },
   "supportS6Select1Option6": {
     "message": "Åbner uønskede faner eller vinduer",
+    "description": "An entry in the widget used to select the type of issue"
+  },
+  "supportS6Select1Option7": {
+    "message": "Fører til badware, phishing",
     "description": "An entry in the widget used to select the type of issue"
   },
   "supportS6Checkbox1": {

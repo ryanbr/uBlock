@@ -19,10 +19,6 @@
     Home: https://github.com/gorhill/uBlock
 */
 
-/* globals WebAssembly */
-
-'use strict';
-
 /*******************************************************************************
 
   The original prototype was to develop an idea I had about using jump indices
@@ -115,7 +111,7 @@
 */
 
 const PAGE_SIZE   = 65536;
-                                            // i32 /  i8
+//                                             i32 /  i8
 const TRIE0_SLOT  = 256 >>> 2;              //  64 / 256
 const TRIE1_SLOT  = TRIE0_SLOT + 1;         //  65 / 260
 const CHAR0_SLOT  = TRIE0_SLOT + 2;         //  66 / 264
@@ -123,6 +119,16 @@ const CHAR1_SLOT  = TRIE0_SLOT + 3;         //  67 / 268
 const TRIE0_START = TRIE0_SLOT + 4 << 2;    //       272
 
 const roundToPageSize = v => (v + PAGE_SIZE-1) & ~(PAGE_SIZE-1);
+
+// http://www.cse.yorku.ca/~oz/hash.html#djb2
+const i32Checksum = (buf32) => {
+    const n = buf32.length;
+    let hash = 177573 ^ n;
+    for ( let i = 0; i < n; i++ ) {
+        hash = (hash << 5) + hash ^ buf32[i];
+    }
+    return hash;
+};
 
 class HNTrieContainer {
 
@@ -445,28 +451,17 @@ class HNTrieContainer {
         };
     }
 
-    serialize(encoder) {
-        if ( encoder instanceof Object ) {
-            return encoder.encode(
-                this.buf32.buffer,
-                this.buf32[CHAR1_SLOT]
-            );
-        }
-        return Array.from(
-            new Uint32Array(
-                this.buf32.buffer,
-                0,
-                this.buf32[CHAR1_SLOT] + 3 >>> 2
-            )
-        );
+    toSelfie() {
+        const buf32 = this.buf32.subarray(0, this.buf32[CHAR1_SLOT] + 3 >>> 2);
+        return { buf32, checksum: i32Checksum(buf32) };
     }
 
-    unserialize(selfie, decoder) {
+    fromSelfie(selfie) {
+        if ( typeof selfie !== 'object' || selfie === null ) { return false; }
+        if ( selfie.buf32 instanceof Uint32Array === false ) { return false; }
+        if ( selfie.checksum !== i32Checksum(selfie.buf32) ) { return false; }
         this.needle = '';
-        const shouldDecode = typeof selfie === 'string';
-        let byteLength = shouldDecode
-            ? decoder.decodeSize(selfie)
-            : selfie.length << 2;
+        let byteLength = selfie.buf32.length << 2;
         if ( byteLength === 0 ) { return false; }
         byteLength = roundToPageSize(byteLength);
         if ( this.wasmMemory !== null ) {
@@ -477,14 +472,10 @@ class HNTrieContainer {
                 this.buf = new Uint8Array(this.wasmMemory.buffer);
                 this.buf32 = new Uint32Array(this.buf.buffer);
             }
-        } else if ( byteLength > this.buf.length ) {
-            this.buf = new Uint8Array(byteLength);
-            this.buf32 = new Uint32Array(this.buf.buffer);
-        }
-        if ( shouldDecode ) {
-            decoder.decode(selfie, this.buf.buffer);
+            this.buf32.set(selfie.buf32);
         } else {
-            this.buf32.set(selfie);
+            this.buf32 = selfie.buf32;
+            this.buf = new Uint8Array(this.buf32.buffer);
         }
         // https://github.com/uBlockOrigin/uBlock-issues/issues/2925
         this.buf[255] = 0;

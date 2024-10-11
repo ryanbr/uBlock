@@ -483,6 +483,14 @@
     "message": "Haittaohjelmasuojaus, tietoturva",
     "description": "Filter lists section name"
   },
+  "3pGroupSocial": {
+    "message": "Sosiaaliset widgetit",
+    "description": "Filter lists section name"
+  },
+  "3pGroupCookies": {
+    "message": "Evästeilmoitukset",
+    "description": "Filter lists section name"
+  },
   "3pGroupAnnoyances": {
     "message": "Ärsykkeet",
     "description": "Filter lists section name"
@@ -527,13 +535,17 @@
     "message": "Verkkovirhe esti resurssin päivityksen.",
     "description": "used as a tooltip for error icon beside a list"
   },
-  "1pFormatHint": {
-    "message": "Yksi suodatin riviä kohden. Suodatin voi olla pelkkä osoite tai EasyList-yhteensopiva suodatin. Rivit, joiden alussa on <code>!</code>, ohitetaan.",
-    "description": "Short information about how to create custom filters"
-  },
   "1pTrustWarning": {
     "message": "Älä lisää suodattimia lähteistä, joihin et luota.",
     "description": "Warning against copy-pasting filters from random sources"
+  },
+  "1pEnableMyFiltersLabel": {
+    "message": "Käytä omia suodattimia",
+    "description": "Label for the checkbox use to enable/disable 'My filters' list"
+  },
+  "1pTrustMyFiltersLabel": {
+    "message": "Salli luottamusta edellyttävät omat suodattimet",
+    "description": "Label for the checkbox use to trust the content of 'My filters' list"
   },
   "1pImport": {
     "message": "Tuo ja lisää…",
@@ -916,7 +928,7 @@
     "description": "Header of 'Filter issues' section in Support pane"
   },
   "supportS3P1": {
-    "message": "Ilmoita ongelmista suodatuksessa tietyillä sivustoilla <span data-url=\"https://github.com/uBlockOrigin/uAssets/issues?q=is%3Aissue\"><code>uBlockOrigin/uAssets</code>-ongelmaseurannassa</span>. <u>Vaatii GitHub-tilin</u>.",
+    "message": "Ilmoita sivustokohtaisista suodatinongelmista <span data-url=\"https://github.com/uBlockOrigin/uAssets/issues?q=is%3Aissue\"><code>uBlockOrigin/uAssets</code> -ongelmaseurantaan</span>. <u>Vaatii GitHub-tilin</u>.",
     "description": "First paragraph of 'Filter issues' section in Support pane"
   },
   "supportS3P2": {
@@ -992,11 +1004,15 @@
     "description": "An entry in the widget used to select the type of issue"
   },
   "supportS6Select1Option5": {
-    "message": "Hajoaa, kun uBlock Origin on käytössä",
+    "message": "Ei toimi oikein uBlock Originin ollessa käytössä",
     "description": "An entry in the widget used to select the type of issue"
   },
   "supportS6Select1Option6": {
     "message": "Avaa ei-toivottuja välilehtiä tai ikkunoita",
+    "description": "An entry in the widget used to select the type of issue"
+  },
+  "supportS6Select1Option7": {
+    "message": "Johtaa badwareen ja tietojenkalasteluun",
     "description": "An entry in the widget used to select the type of issue"
   },
   "supportS6Checkbox1": {

@@ -483,6 +483,14 @@
     "message": "Zlonamerne domene",
     "description": "Filter lists section name"
   },
+  "3pGroupSocial": {
+    "message": "Social widgets",
+    "description": "Filter lists section name"
+  },
+  "3pGroupCookies": {
+    "message": "Cookie notices",
+    "description": "Filter lists section name"
+  },
   "3pGroupAnnoyances": {
     "message": "\t\nNadlegovanje",
     "description": "Filter lists section name"
@@ -527,13 +535,17 @@
     "message": "Omrežna napaka je preprečila posodobitev virov.",
     "description": "used as a tooltip for error icon beside a list"
   },
-  "1pFormatHint": {
-    "message": "En filter na vrstico. Filter je lahko navadno ime gostitelja, ali pa Adblock Plus kompatibilen filter. Vrstice z znakom &lsquo;!&rsquo; bodo ignorirane.",
-    "description": "Short information about how to create custom filters"
-  },
   "1pTrustWarning": {
     "message": "Do not add filters from untrusted sources.",
     "description": "Warning against copy-pasting filters from random sources"
+  },
+  "1pEnableMyFiltersLabel": {
+    "message": "Enable my custom filters",
+    "description": "Label for the checkbox use to enable/disable 'My filters' list"
+  },
+  "1pTrustMyFiltersLabel": {
+    "message": "Allow custom filters requiring trust",
+    "description": "Label for the checkbox use to trust the content of 'My filters' list"
   },
   "1pImport": {
     "message": "Uvozi in dodaj",
@@ -997,6 +1009,10 @@
   },
   "supportS6Select1Option6": {
     "message": "Opens unwanted tabs or windows",
+    "description": "An entry in the widget used to select the type of issue"
+  },
+  "supportS6Select1Option7": {
+    "message": "Leads to badware, phishing",
     "description": "An entry in the widget used to select the type of issue"
   },
   "supportS6Checkbox1": {

@@ -19,10 +19,6 @@
     Home: https://github.com/gorhill/uBlock
 */
 
-/* jshint esversion:11 */
-
-'use strict';
-
 /******************************************************************************/
 
 const normalizeTarget = target => {
@@ -113,6 +109,14 @@ class dom {
         }
     }
 
+    static empty(target) {
+        for ( const elem of normalizeTarget(target) ) {
+            while ( elem.firstElementChild !== null ) {
+                elem.firstElementChild.remove();
+            }
+        }
+    }
+
     // target, type, callback, [options]
     // target, type, subtarget, callback, [options]
     
@@ -161,9 +165,9 @@ dom.cl = class {
         }
     }
 
-    static remove(target, name) {
+    static remove(target, ...names) {
         for ( const elem of normalizeTarget(target) ) {
-            elem.classList.remove(name);
+            elem.classList.remove(...names);
         }
     }
 

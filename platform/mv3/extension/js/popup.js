@@ -19,17 +19,11 @@
     Home: https://github.com/gorhill/uBlock
 */
 
-/* jshint esversion:11 */
-
-'use strict';
-
-/******************************************************************************/
-
 import {
     browser,
+    localRead, localWrite,
     runtime,
     sendMessage,
-    localRead, localWrite,
 } from './ext.js';
 
 import { dom, qs$ } from './dom.js';
@@ -97,7 +91,9 @@ async function commitFilteringMode() {
         setFilteringMode(actualLevel);
     }
     if ( actualLevel !== beforeLevel && popupPanelData.autoReload ) {
-        browser.tabs.reload(currentTab.id);
+        self.setTimeout(( ) => {
+            browser.tabs.reload(currentTab.id);
+        }, 437);
     }
 }
 
@@ -265,6 +261,36 @@ dom.on('#lessButton', 'click', ( ) => {
 
 /******************************************************************************/
 
+dom.on('#showMatchedRules', 'click', ev => {
+    if ( ev.isTrusted !== true ) { return; }
+    if ( ev.button !== 0 ) { return; }
+    sendMessage({
+        what: 'showMatchedRules',
+        tabId: currentTab.id,
+    });
+});
+
+/******************************************************************************/
+
+dom.on('[data-i18n-title="popupTipReport"]', 'click', ev => {
+    if ( ev.isTrusted !== true ) { return; }
+    let url;
+    try {
+        url = new URL(currentTab.url);
+    } catch(_) {
+    }
+    if ( url === undefined ) { return; }
+    const reportURL = new URL(runtime.getURL('/report.html'));
+    reportURL.searchParams.set('url', url.href);
+    reportURL.searchParams.set('mode', popupPanelData.level);
+    sendMessage({
+        what: 'gotoURL',
+        url: `${reportURL.pathname}${reportURL.search}`,
+    });
+});
+
+/******************************************************************************/
+
 dom.on('[data-i18n-title="popupTipDashboard"]', 'click', ev => {
     if ( ev.isTrusted !== true ) { return; }
     if ( ev.button !== 0 ) { return; }
@@ -302,6 +328,16 @@ async function init() {
     setFilteringMode(popupPanelData.level);
 
     dom.text('#hostname', punycode.toUnicode(tabHostname));
+
+    dom.cl.toggle('#showMatchedRules', 'enabled',
+        popupPanelData.isSideloaded === true &&
+        typeof currentTab.id === 'number' &&
+        isNaN(currentTab.id) === false
+    );
+
+    dom.cl.toggle('#reportFilterIssue', 'enabled',
+        /^https?:\/\//.test(url?.href)
+    );
 
     const parent = qs$('#rulesetStats');
     for ( const details of popupPanelData.rulesetDetails || [] ) {

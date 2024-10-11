@@ -483,6 +483,14 @@
     "message": "恶意软件防护、安全",
     "description": "Filter lists section name"
   },
+  "3pGroupSocial": {
+    "message": "社交网络小部件",
+    "description": "Filter lists section name"
+  },
+  "3pGroupCookies": {
+    "message": "Cookie提醒",
+    "description": "Filter lists section name"
+  },
   "3pGroupAnnoyances": {
     "message": "骚扰",
     "description": "Filter lists section name"
@@ -527,13 +535,17 @@
     "message": "资源更新因网络错误受阻。",
     "description": "used as a tooltip for error icon beside a list"
   },
-  "1pFormatHint": {
-    "message": "一行一条过滤规则。每条规则可以是一个普通的主机名或者是一条与 EasyList 兼容的过滤规则。以 <code>!</code> 开头的行将被忽略。",
-    "description": "Short information about how to create custom filters"
-  },
   "1pTrustWarning": {
     "message": "请勿添加未信任来源的过滤规则。",
     "description": "Warning against copy-pasting filters from random sources"
+  },
+  "1pEnableMyFiltersLabel": {
+    "message": "启用自定义过滤规则",
+    "description": "Label for the checkbox use to enable/disable 'My filters' list"
+  },
+  "1pTrustMyFiltersLabel": {
+    "message": "允许需信任的自定义过滤规则",
+    "description": "Label for the checkbox use to trust the content of 'My filters' list"
   },
   "1pImport": {
     "message": "导入并添加…",
@@ -997,6 +1009,10 @@
   },
   "supportS6Select1Option6": {
     "message": "打开不需要的标签页或窗口",
+    "description": "An entry in the widget used to select the type of issue"
+  },
+  "supportS6Select1Option7": {
+    "message": "指向恶意软件、钓鱼网站",
     "description": "An entry in the widget used to select the type of issue"
   },
   "supportS6Checkbox1": {

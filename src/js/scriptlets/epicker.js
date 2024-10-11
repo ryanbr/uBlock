@@ -19,19 +19,12 @@
     Home: https://github.com/gorhill/uBlock
 */
 
-/* global CSS */
-
-'use strict';
-
-/******************************************************************************/
-/******************************************************************************/
-
 (async ( ) => {
 
 /******************************************************************************/
 
 if ( typeof vAPI !== 'object' ) { return; }
-if ( typeof vAPI === null ) { return; }
+if ( vAPI === null ) { return; }
 
 if ( vAPI.pickerFrame ) { return; }
 vAPI.pickerFrame = true;
@@ -619,6 +612,21 @@ const filterToDOMInterface = (( ) => {
     const reCaret = '(?:[^%.0-9a-z_-]|$)';
     const rePseudoElements = /:(?::?after|:?before|:[a-z-]+)$/;
 
+    const matchElemToRegex = (elem, re) => {
+        const srcProp = netFilter1stSources[elem.localName];
+        let src = elem[srcProp];
+        if ( src instanceof SVGAnimatedString ) {
+            src = src.baseVal;
+        }
+        if ( typeof src === 'string' && /^https?:\/\//.test(src) ) {
+            if ( re.test(src) ) { return srcProp; }
+        }
+        src = elem.currentSrc;
+        if ( typeof src === 'string' && /^https?:\/\//.test(src) ) {
+            if ( re.test(src) ) { return srcProp; }
+        }
+    };
+
     // Net filters: we need to lookup manually -- translating into a foolproof
     // CSS selector is just not possible.
     //
@@ -672,28 +680,21 @@ const filterToDOMInterface = (( ) => {
         // Lookup by tag names.
         // https://github.com/uBlockOrigin/uBlock-issues/issues/2260
         //   Maybe get to the actual URL indirectly.
+        //
+        // https://github.com/uBlockOrigin/uBlock-issues/issues/3142
+        //   Don't try to match against non-network URIs.
         const elems = document.querySelectorAll(
             Object.keys(netFilter1stSources).join()
         );
         for ( const elem of elems ) {
-            const srcProp = netFilter1stSources[elem.localName];
-            let src = elem[srcProp];
-            if ( src instanceof SVGAnimatedString ) {
-                src = src.baseVal;
-            }
-            if (
-                typeof src === 'string' &&
-                    reFilter.test(src) ||
-                typeof elem.currentSrc === 'string' &&
-                    reFilter.test(elem.currentSrc)
-            ) {
-                out.push({
-                    elem,
-                    src: srcProp,
-                    opt: filterTypes[elem.localName],
-                    style: vAPI.hideStyle,
-                });
-            }
+            const srcProp = matchElemToRegex(elem, reFilter);
+            if ( srcProp === undefined ) { continue; }
+            out.push({
+                elem,
+                src: srcProp,
+                opt: filterTypes[elem.localName],
+                style: vAPI.hideStyle,
+            });
         }
 
         // Find matching background image in current set of candidate elements.
@@ -894,6 +895,7 @@ const onOptimizeCandidates = function(details) {
         if ( r !== 0 ) { return r; }
         return a.selector.length - b.selector.length;
     });
+
     pickerFramePort.postMessage({
         what: 'candidatesOptimized',
         candidates: results.map(a => a.selector),
@@ -1155,59 +1157,59 @@ vAPI.shutdown.add(quitPicker);
 
 const onDialogMessage = function(msg) {
     switch ( msg.what ) {
-        case 'start':
-            startPicker();
-            if ( pickerFramePort === null ) { break; }
-            if ( targetElements.length === 0 ) {
-                highlightElements([], true);
-            }
-            break;
-        case 'optimizeCandidates':
-            onOptimizeCandidates(msg);
-            break;
-        case 'dialogCreate':
-            filterToDOMInterface.queryAll(msg);
-            filterToDOMInterface.preview(true, true);
-            quitPicker();
-            break;
-        case 'dialogSetFilter': {
-            const resultset = filterToDOMInterface.queryAll(msg) || [];
-            highlightElements(resultset.map(a => a.elem), true);
-            if ( msg.filter === '!' ) { break; }
-            pickerFramePort.postMessage({
-                what: 'resultsetDetails',
-                count: resultset.length,
-                opt: resultset.length !== 0 ? resultset[0].opt : undefined,
-            });
-            break;
+    case 'start':
+        startPicker();
+        if ( pickerFramePort === null ) { break; }
+        if ( targetElements.length === 0 ) {
+            highlightElements([], true);
         }
-        case 'quitPicker':
-            filterToDOMInterface.preview(false);
+        break;
+    case 'optimizeCandidates':
+        onOptimizeCandidates(msg);
+        break;
+    case 'dialogCreate':
+        filterToDOMInterface.queryAll(msg);
+        filterToDOMInterface.preview(true, true);
+        quitPicker();
+        break;
+    case 'dialogSetFilter': {
+        const resultset = filterToDOMInterface.queryAll(msg) || [];
+        highlightElements(resultset.map(a => a.elem), true);
+        if ( msg.filter === '!' ) { break; }
+        pickerFramePort.postMessage({
+            what: 'resultsetDetails',
+            count: resultset.length,
+            opt: resultset.length !== 0 ? resultset[0].opt : undefined,
+        });
+        break;
+    }
+    case 'quitPicker':
+        filterToDOMInterface.preview(false);
+        quitPicker();
+        break;
+    case 'highlightElementAtPoint':
+        highlightElementAtPoint(msg.mx, msg.my);
+        break;
+    case 'unhighlight':
+        highlightElements([]);
+        break;
+    case 'filterElementAtPoint':
+        filterElementAtPoint(msg.mx, msg.my, msg.broad);
+        break;
+    case 'zapElementAtPoint':
+        zapElementAtPoint(msg.mx, msg.my, msg.options);
+        if ( msg.options.highlight !== true && msg.options.stay !== true ) {
             quitPicker();
-            break;
-        case 'highlightElementAtPoint':
-            highlightElementAtPoint(msg.mx, msg.my);
-            break;
-        case 'unhighlight':
-            highlightElements([]);
-            break;
-        case 'filterElementAtPoint':
-            filterElementAtPoint(msg.mx, msg.my, msg.broad);
-            break;
-        case 'zapElementAtPoint':
-            zapElementAtPoint(msg.mx, msg.my, msg.options);
-            if ( msg.options.highlight !== true && msg.options.stay !== true ) {
-                quitPicker();
-            }
-            break;
-        case 'togglePreview':
-            filterToDOMInterface.preview(msg.state);
-            if ( msg.state === false ) {
-                highlightElements(targetElements, true);
-            }
-            break;
-        default:
-            break;
+        }
+        break;
+    case 'togglePreview':
+        filterToDOMInterface.preview(msg.state);
+        if ( msg.state === false ) {
+            highlightElements(targetElements, true);
+        }
+        break;
+    default:
+        break;
     }
 };
 
@@ -1247,6 +1249,7 @@ const pickerCSSStyle = [
     'display: block',
     'filter: none',
     'height: 100vh',
+    '    height: 100svh',
     'left: 0',
     'margin: 0',
     'max-height: none',

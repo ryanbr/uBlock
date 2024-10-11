@@ -483,6 +483,14 @@
     "message": "Domény malvéru",
     "description": "Filter lists section name"
   },
+  "3pGroupSocial": {
+    "message": "Sociálne widgety",
+    "description": "Filter lists section name"
+  },
+  "3pGroupCookies": {
+    "message": "Oznámenie o cookies",
+    "description": "Filter lists section name"
+  },
   "3pGroupAnnoyances": {
     "message": "Obťažujúce",
     "description": "Filter lists section name"
@@ -527,13 +535,17 @@
     "message": "Chyba siete zabránila aktualizácii zdroja.",
     "description": "used as a tooltip for error icon beside a list"
   },
-  "1pFormatHint": {
-    "message": "Jeden filter na riadok. Filter môže byť jednoduchý názov hostiteľa alebo filter kompatibilný s Adblock Plus. Riadky začínajúce s <code>!</code> budú ignorované.",
-    "description": "Short information about how to create custom filters"
-  },
   "1pTrustWarning": {
     "message": "Nepridávajte filtre z nedôveryhodných zdrojov.",
     "description": "Warning against copy-pasting filters from random sources"
+  },
+  "1pEnableMyFiltersLabel": {
+    "message": "Povoliť moje vlastné filtre",
+    "description": "Label for the checkbox use to enable/disable 'My filters' list"
+  },
+  "1pTrustMyFiltersLabel": {
+    "message": "Povoliť vlastné filtre vyžadujúce dôveru",
+    "description": "Label for the checkbox use to trust the content of 'My filters' list"
   },
   "1pImport": {
     "message": "Importovať a pripojiť",
@@ -997,6 +1009,10 @@
   },
   "supportS6Select1Option6": {
     "message": "Otvára nechcené karty alebo okná",
+    "description": "An entry in the widget used to select the type of issue"
+  },
+  "supportS6Select1Option7": {
+    "message": "Smeruje k badvéru a phishingu",
     "description": "An entry in the widget used to select the type of issue"
   },
   "supportS6Checkbox1": {
