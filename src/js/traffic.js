@@ -196,8 +196,9 @@ const onBeforeRootFrameRequest = function(fctxt) {
     if ( trusted === false && pageStore !== null ) {
         if ( result !== 1 ) {
             pageStore.redirectNonBlockedRequest(fctxt);
+        } else {
+            pageStore.skipMainDocument(fctxt, true);
         }
-        pageStore.skipMainDocument(fctxt);
     }
 
     if ( logger.enabled ) {
@@ -215,16 +216,20 @@ const onBeforeRootFrameRequest = function(fctxt) {
     if ( result !== 1 ) { return; }
 
     // No log data means no strict blocking (because we need to report why
-    // the blocking occurs.
+    // the blocking occurs
     if ( logData === undefined  ) { return; }
 
     // Blocked
 
+    // Find out the URL navigated to should the document not be strict-blocked
+    pageStore.skipMainDocument(fctxt, false);
+
     const query = encodeURIComponent(JSON.stringify({
         url: requestURL,
-        hn: requestHostname,
         dn: fctxt.getDomain() || requestHostname,
-        fs: logData.raw
+        fs: logData.raw,
+        hn: requestHostname,
+        to: fctxt.redirectURL || '',
     }));
 
     vAPI.tabs.replace(
@@ -964,7 +969,7 @@ const injectCSP = function(fctxt, pageStore, responseHeaders) {
     const builtinDirectives = [];
 
     if ( pageStore.filterScripting(fctxt, true) === 1 ) {
-        builtinDirectives.push(µb.cspNoScripting);
+        builtinDirectives.push(µb.hiddenSettings.noScriptingCSP);
         if ( logger.enabled ) {
             fctxt.setRealm('network').setType('scripting').toLogger();
         }

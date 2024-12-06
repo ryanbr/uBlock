@@ -47,6 +47,13 @@ const isDescendantHostname = (hna, hnb) => {
     return hna.charCodeAt(hna.length - hnb.length - 1) === 0x2E /* '.' */;
 };
 
+/**
+ * Returns whether a hostname is part of a collection, or is descendant of an
+ * item in the collection.
+ * @param hna - the hostname representing the needle.
+ * @param iterb - an iterable representing the haystack of hostnames.
+ */
+
 const isDescendantHostnameOfIter = (hna, iterb) => {
     const setb = iterb instanceof Set ? iterb : new Set(iterb);
     if ( setb.has('all-urls') || setb.has('*') ) { return true; }
@@ -59,6 +66,13 @@ const isDescendantHostnameOfIter = (hna, iterb) => {
     }
     return false;
 };
+
+/**
+ * Returns all hostnames in the first collection which are equal or descendant
+ * of hostnames in the second collection.
+ * @param itera - an iterable which hostnames must be filtered out.
+ * @param iterb - an iterable which hostnames must be matched.
+ */
 
 const intersectHostnameIters = (itera, iterb) => {
     const setb = iterb instanceof Set ? iterb : new Set(iterb);
@@ -115,7 +129,7 @@ const hostnamesFromMatches = origins => {
 
 /******************************************************************************/
 
-export const broadcastMessage = message => {
+const broadcastMessage = message => {
     const bc = new self.BroadcastChannel('uBOL');
     bc.postMessage(message);
 };
@@ -123,6 +137,7 @@ export const broadcastMessage = message => {
 /******************************************************************************/
 
 export {
+    broadcastMessage,
     parsedURLromOrigin,
     toBroaderHostname,
     isDescendantHostname,

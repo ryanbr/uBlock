@@ -925,8 +925,11 @@ const PageStore = class {
     }
 
     redirectBlockedRequest(fctxt) {
-        const directives = staticNetFilteringEngine.redirectRequest(redirectEngine, fctxt);
-        if ( directives === undefined ) { return; }
+        const directives = staticNetFilteringEngine.redirectRequest(redirectEngine, fctxt) || [];
+        if ( this.urlSkippableResources.has(fctxt.itype) ) {
+            staticNetFilteringEngine.urlSkip(fctxt, true, directives);
+        }
+        if ( directives.length === 0 ) { return; }
         if ( logger.enabled !== true ) { return; }
         fctxt.pushFilters(directives.map(a => a.logData()));
         if ( fctxt.redirectURL === undefined ) { return; }
@@ -942,6 +945,9 @@ const PageStore = class {
         if ( staticNetFilteringEngine.hasQuery(fctxt) ) {
             staticNetFilteringEngine.filterQuery(fctxt, directives);
         }
+        if ( this.urlSkippableResources.has(fctxt.itype) ) {
+            staticNetFilteringEngine.urlSkip(fctxt, false, directives);
+        }
         if ( directives.length === 0 ) { return; }
         if ( logger.enabled !== true ) { return; }
         fctxt.pushFilters(directives.map(a => a.logData()));
@@ -952,8 +958,8 @@ const PageStore = class {
         });
     }
 
-    skipMainDocument(fctxt) {
-        const directives = staticNetFilteringEngine.urlSkip(fctxt);
+    skipMainDocument(fctxt, blocked) {
+        const directives = staticNetFilteringEngine.urlSkip(fctxt, blocked);
         if ( directives === undefined ) { return; }
         if ( logger.enabled !== true ) { return; }
         fctxt.pushFilters(directives.map(a => a.logData()));
@@ -1132,22 +1138,31 @@ const PageStore = class {
         response.blockedResources =
             this.netFilteringCache.lookupAllBlocked(fctxt.getDocHostname());
     }
+
+    cacheableResults = new Set([
+        µb.FilteringContext.SUB_FRAME
+    ]);
+
+    collapsibleResources = new Set([
+        µb.FilteringContext.IMAGE,
+        µb.FilteringContext.MEDIA,
+        µb.FilteringContext.OBJECT,
+        µb.FilteringContext.SUB_FRAME,
+    ]);
+
+    urlSkippableResources = new Set([
+        µb.FilteringContext.IMAGE,
+        µb.FilteringContext.MAIN_FRAME,
+        µb.FilteringContext.MEDIA,
+        µb.FilteringContext.OBJECT,
+        µb.FilteringContext.OTHER,
+        µb.FilteringContext.SUB_FRAME,
+    ]);
+
+    // To mitigate memory churning
+    static junkyard = [];
+    static junkyardMax = 10;
 };
-
-PageStore.prototype.cacheableResults = new Set([
-    µb.FilteringContext.SUB_FRAME,
-]);
-
-PageStore.prototype.collapsibleResources = new Set([
-    µb.FilteringContext.IMAGE,
-    µb.FilteringContext.MEDIA,
-    µb.FilteringContext.OBJECT,
-    µb.FilteringContext.SUB_FRAME,
-]);
-
-// To mitigate memory churning
-PageStore.junkyard = [];
-PageStore.junkyardMax = 10;
 
 /******************************************************************************/
 

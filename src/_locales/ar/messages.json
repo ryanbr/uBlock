@@ -1191,6 +1191,10 @@
     "message": "تقدّم",
     "description": "Button text to navigate to the blocked page"
   },
+  "docblockedRedirectPrompt": {
+    "message": "الصفحة المحظورة تريد إعادة توجيهك إلى موقع آخر. إذا اخترت المتابعة، فسوف تنتقل مباشرة إلى: {{url}}",
+    "description": "Text warning about an incoming redirect"
+  },
   "cloudPush": {
     "message": "التصدير إلى سحابة التخزين",
     "description": "tooltip"
@@ -1248,7 +1252,7 @@
     "description": "A context menu entry, to view the source code of the target resource"
   },
   "shortcutCapturePlaceholder": {
-    "message": "ادخل اختصار",
+    "message": "أدخِل اختصار",
     "description": "Placeholder string for input field used to capture a keyboard shortcut"
   },
   "genericMergeViewScrollLock": {

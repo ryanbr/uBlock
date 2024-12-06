@@ -12,7 +12,7 @@
     "description": "English: uBlock₀ — Dashboard"
   },
   "dashboardUnsavedWarning": {
-    "message": "Diwallit! Kemmoù zo ha n'ho peus enrollet anezho",
+    "message": "Diwallit! Kemmoù zo ha n'ho peus ket enrollet",
     "description": "A warning in the dashboard when navigating away from unsaved changes"
   },
   "dashboardUnsavedWarningStay": {
@@ -1190,6 +1190,10 @@
   "docblockedDisable": {
     "message": "Kenderc'hel",
     "description": "Button text to navigate to the blocked page"
+  },
+  "docblockedRedirectPrompt": {
+    "message": "Ar bajenn stanket a fell dezhi adkas d'ul lec'hienn all. M'ho peus c'hoant da genderc'hel e vioc'h kaset d'ar chomlec'h-mañ: {{url}}",
+    "description": "Text warning about an incoming redirect"
   },
   "cloudPush": {
     "message": "Ezporzhiañ etrezek stokañ ar goumoulenn (cloud)",

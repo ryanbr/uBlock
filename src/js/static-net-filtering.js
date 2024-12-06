@@ -28,6 +28,7 @@ import BidiTrieContainer from './biditrie.js';
 import { CompiledListReader } from './static-filtering-io.js';
 import { FilteringContext } from './filtering-context.js';
 import HNTrieContainer from './hntrie.js';
+import { urlSkip } from './urlskip.js';
 
 /******************************************************************************/
 
@@ -3048,9 +3049,6 @@ class FilterIPAddress {
             if ( ipaddr.startsWith('::ffff:') === false ) { return false; }
             return this.reIPv6IPv4lan.test(ipaddr);
         }
-        if ( c0 === 0x36 /* 6 */ ) {
-            return ipaddr.startsWith('64:ff9b:');
-        }
         if ( c0 === 0x66 /* f */ ) {
             return this.reIPv6local.test(ipaddr);
         }
@@ -4455,22 +4453,23 @@ StaticNetFilteringEngine.prototype.dnrFromCompiled = function(op, context, ...ar
     }
 
     // Priority:
-    //   Block: 1 (default priority)
-    //   Redirect: 2-9
-    //   Excepted redirect: 12-19
-    //   Allow: 20
-    //   Block important: 30
-    //   Redirect important: 32-39
+    //   Removeparam: 1-4
+    //   Block: 10 (default priority)
+    //   Redirect: 11-19
+    //   Excepted redirect: 21-29
+    //   Allow: 30
+    //   Block important: 40
+    //   Redirect important: 41-49
 
     const realms = new Map([
-        [ BLOCK_REALM, { type: 'block', priority: 0 } ],
-        [ ALLOW_REALM, { type: 'allow', priority: 20 } ],
-        [ REDIRECT_REALM, { type: 'redirect', priority: 2 } ],
+        [ BLOCK_REALM, { type: 'block', priority: 10 } ],
+        [ ALLOW_REALM, { type: 'allow', priority: 30 } ],
+        [ REDIRECT_REALM, { type: 'redirect', priority: 11 } ],
         [ REMOVEPARAM_REALM, { type: 'removeparam', priority: 0 } ],
         [ CSP_REALM, { type: 'csp', priority: 0 } ],
         [ PERMISSIONS_REALM, { type: 'permissions', priority: 0 } ],
         [ URLTRANSFORM_REALM, { type: 'uritransform', priority: 0 } ],
-        [ HEADERS_REALM, { type: 'block', priority: 0 } ],
+        [ HEADERS_REALM, { type: 'block', priority: 10 } ],
         [ URLSKIP_REALM, { type: 'urlskip', priority: 0 } ],
     ]);
     const partyness = new Map([
@@ -4608,7 +4607,7 @@ StaticNetFilteringEngine.prototype.dnrFromCompiled = function(op, context, ...ar
             if ( token !== '' ) {
                 const match = /:(\d+)$/.exec(token);
                 if ( match !== null ) {
-                    rule.priority = Math.min(rule.priority + parseInt(match[1], 10), 9);
+                    rule.priority += Math.min(rule.priority + parseInt(match[1], 10), 9);
                     token = token.slice(0, match.index);
                 }
             }
@@ -4626,7 +4625,7 @@ StaticNetFilteringEngine.prototype.dnrFromCompiled = function(op, context, ...ar
             }
             break;
         }
-        case 'removeparam':
+        case 'removeparam': {
             rule.action.type = 'redirect';
             if ( rule.__modifierValue === '|' ) {
                 rule.__modifierValue = '';
@@ -4654,18 +4653,50 @@ StaticNetFilteringEngine.prototype.dnrFromCompiled = function(op, context, ...ar
                 };
             }
             if ( rule.condition.resourceTypes === undefined ) {
-                rule.condition.resourceTypes = [
-                    'main_frame',
-                    'sub_frame',
-                    'xmlhttprequest',
-                ];
+                if ( rule.condition.excludedResourceTypes === undefined ) {
+                    rule.condition.resourceTypes = [
+                        'main_frame',
+                        'sub_frame',
+                        'xmlhttprequest',
+                    ];
+                }
+            }
+            // https://github.com/uBlockOrigin/uBOL-home/issues/140
+            //   Mitigate until DNR API flaw is addressed by browser vendors
+            let priority = rule.priority || 1;
+            if ( rule.condition.urlFilter !== undefined ) { priority += 1; }
+            if ( rule.condition.regexFilter !== undefined ) { priority += 1; }
+            if ( rule.condition.initiatorDomains !== undefined ) { priority += 1; }
+            if ( rule.condition.requestDomains !== undefined ) { priority += 1; }
+            if ( priority !== 1 ) {
+                rule.priority = priority;
             }
             if ( rule.__modifierAction === ALLOW_REALM ) {
                 dnrAddRuleError(rule, `Unsupported removeparam exception: ${rule.__modifierValue}`);
             }
             break;
+        }
         case 'uritransform': {
             dnrAddRuleError(rule, `Incompatible with DNR: uritransform=${rule.__modifierValue}`);
+            break;
+        }
+        case 'urlskip': {
+            let urlFilter = rule.condition?.urlFilter;
+            if ( urlFilter === undefined ) { break; }
+            let anchor = 0b000;
+            if ( urlFilter.startsWith('||') ) {
+                anchor |= 0b100;
+                urlFilter = urlFilter.slice(2);
+            } else if ( urlFilter.startsWith('|') ) {
+                anchor |= 0b10;
+                urlFilter = urlFilter.slice(1);
+            }
+            if ( urlFilter.endsWith('|') ) {
+                anchor |= 0b001;
+                urlFilter = urlFilter.slice(0, -1);
+            }
+            rule.condition.urlFilter = undefined;
+            rule.condition.regexFilter = restrFromGenericPattern(urlFilter, anchor);
             break;
         }
         default:
@@ -5380,51 +5411,11 @@ StaticNetFilteringEngine.prototype.transformRequest = function(fctxt, out = []) 
     return out;
 };
 
-/**
- * @trustedOption urlskip
- * 
- * @description
- * Extract a URL from another URL according to one or more transformation steps,
- * thereby skipping over intermediate network request(s) to remote servers.
- * Requires a trusted source.
- * 
- * @param steps
- * A serie of space-separated directives representing the transformation steps
- * to perform to extract the final URL to which a network request should be
- * redirected.
- * 
- * Supported directives:
- * 
- * `?name`: extract the value of parameter `name` as the current string.
- * 
- * `&i`: extract the name of the parameter at position `i` as the current
- *   string. The position is 1-based.
- * 
- * `/.../`: extract the first capture group of a regex as the current string.
- * 
- * `+https`: prepend the current string with `https://`.
- * 
- * `-base64`: decode the current string as a base64-encoded string.
- * 
- * At any given step, the currently extracted string may not necessarily be
- * a valid URL, and more transformation steps may be needed to obtain a valid
- * URL once all the steps are applied.
- * 
- * An unsupported step or a failed step will abort the transformation and no
- * redirection will be performed.
- * 
- * The final step is expected to yield a valid URL. If the result is not a
- * valid URL, no redirection will be performed.
- * 
- * @example
- * ||example.com/path/to/tracker$urlskip=?url
- * ||example.com/path/to/tracker$urlskip=?url ?to
- * ||pixiv.net/jump.php?$urlskip=&1
- * ||podtrac.com/pts/redirect.mp3/$urlskip=/\/redirect\.mp3\/(.*?\.mp3\b)/ +https
- * 
- * */
-
-StaticNetFilteringEngine.prototype.urlSkip = function(fctxt, out = []) {
+StaticNetFilteringEngine.prototype.urlSkip = function(
+    fctxt,
+    blocked,
+    out = []
+) {
     if ( fctxt.redirectURL !== undefined ) { return; }
     const directives = this.matchAndFetchModifiers(fctxt, 'urlskip');
     if ( directives === undefined ) { return; }
@@ -5436,7 +5427,7 @@ StaticNetFilteringEngine.prototype.urlSkip = function(fctxt, out = []) {
         const urlin = fctxt.url;
         const value = directive.value;
         const steps = value.includes(' ') && value.split(/ +/) || [ value ];
-        const urlout = urlSkip(directive, urlin, steps);
+        const urlout = urlSkip(urlin, blocked, steps, directive);
         if ( urlout === undefined ) { continue; }
         if ( urlout === urlin ) { continue; }
         fctxt.redirectURL = urlout;
@@ -5446,63 +5437,6 @@ StaticNetFilteringEngine.prototype.urlSkip = function(fctxt, out = []) {
     if ( out.length === 0 ) { return; }
     return out;
 };
-
-function urlSkip(directive, urlin, steps) {
-    try {
-        let urlout = urlin;
-        for ( const step of steps ) {
-            const urlin = urlout;
-            const c0 = step.charCodeAt(0);
-            // Extract from URL parameter name at position i
-            if ( c0 === 0x26 ) { // &
-                const i = (parseInt(step.slice(1)) || 0) - 1;
-                if ( i < 0 ) { return; }
-                const url = new URL(urlin);
-                if ( i >= url.searchParams.size ) { return; }
-                const params = Array.from(url.searchParams.keys());
-                urlout = decodeURIComponent(params[i]);
-                continue;
-            }
-            // Enforce https
-            if ( c0 === 0x2B && step === '+https' ) {
-                const s = urlin.replace(/^https?:\/\//, '');
-                if ( /^[\w-]:\/\//.test(s) ) { return; }
-                urlout = `https://${s}`;
-                continue;
-            }
-            // Decode base64
-            if ( c0 === 0x2D && step === '-base64' ) {
-                urlout = self.atob(urlin);
-                continue;
-            }
-            // Regex extraction from first capture group
-            if ( c0 === 0x2F ) { // /
-                if ( directive.cache === null ) {
-                    directive.cache = new RegExp(step.slice(1, -1));
-                }
-                const match = directive.cache.exec(urlin);
-                if ( match === null ) { return; }
-                if ( match.length <= 1 ) { return; }
-                urlout = match[1];
-                continue;
-            }
-            // Extract from URL parameter
-            if ( c0 === 0x3F ) { // ?
-                urlout = (new URL(urlin)).searchParams.get(step.slice(1));
-                if ( urlout === null ) { return; }
-                if ( urlout.includes(' ') ) {
-                    urlout = urlout.replace(/ /g, '%20');
-                }
-                continue;
-            }
-            // Unknown directive
-            return;
-        }
-        void new URL(urlout);
-        return urlout;
-    } catch(x) {
-    }
-}
 
 /******************************************************************************/
 
