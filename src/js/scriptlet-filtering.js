@@ -23,7 +23,6 @@
 
 import {
     domainFromHostname,
-    entityFromDomain,
     hostnameFromURI,
 } from './uri-utils.js';
 
@@ -38,10 +37,9 @@ import µb from './background.js';
 
 /******************************************************************************/
 
-const contentScriptRegisterer = new (class {
-    constructor() {
-        this.hostnameToDetails = new Map();
-    }
+const contentScriptRegisterer = {
+    id: 1,
+    hostnameToDetails: new Map(),
     register(hostname, code) {
         if ( browser.contentScripts === undefined ) { return false; }
         if ( hostname === '' ) { return false; }
@@ -50,9 +48,10 @@ const contentScriptRegisterer = new (class {
             if ( code === details.code ) {
                 return details.handle instanceof Promise === false;
             }
-            details.handle.unregister();
+            this.unregisterHandle(details.handle);
             this.hostnameToDetails.delete(hostname);
         }
+        const id = this.id++;
         const promise = browser.contentScripts.register({
             js: [ { code } ],
             allFrames: true,
@@ -60,14 +59,16 @@ const contentScriptRegisterer = new (class {
             matchAboutBlank: true,
             runAt: 'document_start',
         }).then(handle => {
-            this.hostnameToDetails.set(hostname, { handle, code });
-            return handle;
+            const details = this.hostnameToDetails.get(hostname);
+            if ( details === undefined ) { return; }
+            if ( details.id !== id ) { return; }
+            details.handle = handle;
         }).catch(( ) => {
             this.hostnameToDetails.delete(hostname);
         });
-        this.hostnameToDetails.set(hostname, { handle: promise, code });
+        this.hostnameToDetails.set(hostname, { id, handle: promise, code });
         return false;
-    }
+    },
     unregister(hostname) {
         if ( hostname === '' ) { return; }
         if ( this.hostnameToDetails.size === 0 ) { return; }
@@ -75,7 +76,7 @@ const contentScriptRegisterer = new (class {
         if ( details === undefined ) { return; }
         this.hostnameToDetails.delete(hostname);
         this.unregisterHandle(details.handle);
-    }
+    },
     flush(hostname) {
         if ( hostname === '' ) { return; }
         if ( hostname === '*' ) { return this.reset(); }
@@ -85,14 +86,14 @@ const contentScriptRegisterer = new (class {
             if ( pos !== 0 && hn.charCodeAt(pos-1) !== 0x2E /* . */ ) { continue; }
             this.unregister(hn);
         }
-    }
+    },
     reset() {
         if ( this.hostnameToDetails.size === 0 ) { return; }
         for ( const details of this.hostnameToDetails.values() ) {
             this.unregisterHandle(details.handle);
         }
         this.hostnameToDetails.clear();
-    }
+    },
     unregisterHandle(handle) {
         if ( handle instanceof Promise ) {
             handle.then(handle => {
@@ -101,8 +102,8 @@ const contentScriptRegisterer = new (class {
         } else {
             handle.unregister();
         }
-    }
-})();
+    },
+};
 
 /******************************************************************************/
 
@@ -166,7 +167,7 @@ const onScriptletMessageInjector = (( ) => {
                 };
                 bcSecret.postMessage('iamready!');
                 self.uBO_bcSecret = bcSecret;
-            } catch(_) {
+            } catch {
             }
         }.toString(),
         ')(',
@@ -316,7 +317,7 @@ export class ScriptletFilteringEngineEx extends ScriptletFilteringEngine {
             filters: scriptletDetails.filters,
         };
 
-        if ( request.nocache !== true ) {
+        if ( hostname !== '' && request.nocache !== true ) {
             this.scriptletCache.add(hostname, cachedScriptletDetails);
         }
 
@@ -335,7 +336,7 @@ export class ScriptletFilteringEngineEx extends ScriptletFilteringEngine {
             url: details.url,
             hostname,
             domain,
-            entity: entityFromDomain(domain),
+            ancestors: details.ancestors,
         });
         if ( scriptletDetails === undefined ) {
             contentScriptRegisterer.unregister(hostname);
@@ -371,17 +372,16 @@ export class ScriptletFilteringEngineEx extends ScriptletFilteringEngine {
     toLogger(request, details) {
         if ( details === undefined ) { return; }
         if ( logger.enabled !== true ) { return; }
-        if ( typeof details.filters !== 'string' ) { return; }
-        const fctxt = µb.filteringContext
+        if ( Array.isArray(details.filters) === false ) { return; }
+        µb.filteringContext
             .duplicate()
             .fromTabId(request.tabId)
             .setRealm('extended')
             .setType('scriptlet')
             .setURL(request.url)
-            .setDocOriginFromURL(request.url);
-        for ( const raw of details.filters.split('\n') ) {
-            fctxt.setFilter({ source: 'extended', raw }).toLogger();
-        }
+            .setDocOriginFromURL(request.url)
+            .setFilter(details.filters.map(a => ({ source: 'extended', raw: a })))
+            .toLogger();
     }
 }
 

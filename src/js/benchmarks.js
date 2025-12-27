@@ -89,7 +89,7 @@ const loadBenchmarkDataset = (( ) => {
             if ( details.content.startsWith('[') ) {
                 try {
                     requests = JSON.parse(details.content);
-                } catch(ex) {
+                } catch {
                 }
             } else {
                 const lineIter = new LineIterator(details.content);
@@ -99,7 +99,7 @@ const loadBenchmarkDataset = (( ) => {
                     if ( line === '' ) { continue; }
                     try {
                         parsed.push(JSON.parse(line));
-                    } catch(ex) {
+                    } catch {
                         parsed.length = 0;
                         break;
                     }
@@ -183,7 +183,7 @@ export async function benchmarkStaticNetFiltering(options = {}) {
         if ( r === 1 ) { blockCount += 1; }
         else if ( r === 2 ) { allowCount += 1; }
         if ( r !== 1 ) {
-            if ( sfne.transformRequest(fctxt) ) {
+            if ( sfne.transformURL(fctxt) ) {
                 redirectCount += 1;
             }
             if ( sfne.hasQuery(fctxt) ) {
@@ -321,7 +321,6 @@ export async function benchmarkCosmeticFiltering() {
         frameId: undefined,
         hostname: '',
         domain: '',
-        entity: '',
     };
     const options = {
         noSpecificCosmeticFiltering: false,

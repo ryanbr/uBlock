@@ -480,7 +480,7 @@
     "description": "Filter lists section name"
   },
   "3pGroupMalware": {
-    "message": "Domenet e rrezikshme, siguria",
+    "message": "Domenet e dëmshme, siguria",
     "description": "Filter lists section name"
   },
   "3pGroupSocial": {
@@ -897,14 +897,14 @@
   },
   "supportOpenButton": {
     "message": "Hap",
-    "description": "Text for button which open an external webpage in Support pane"
+    "description": "Text for button which open an external web page in Support pane"
   },
   "supportReportSpecificButton": {
-    "message": "Krijoj raport të ri",
-    "description": "Text for button which open an external webpage in Support pane"
+    "message": "Krijoj raport të ri në GitHub",
+    "description": "Text for button which open an external web page in Support pane"
   },
   "supportFindSpecificButton": {
-    "message": "Gjej raporte të ngjashme",
+    "message": "Gjej raporte të ngjashme në GitHub",
     "description": "A clickable link in the filter issue reporter section"
   },
   "supportS1H": {
@@ -964,7 +964,7 @@
     "description": "Header of 'Report a filter issue' section in Support pane"
   },
   "supportS6P1S1": {
-    "message": "Verifikoni a është raportuar më parë problemi që të mos i lodhni vullnetarët e tjerë me të njëjtat gjëra.",
+    "message": "Verifikoni a është raportuar edhe më parë që të mos i lodhni vullnetarët e tjerë me të njëjtat probleme. <b>Shënim:</b> kur klikoni butonin, origjina e faqes do të dërgohet në GitHub.",
     "description": "A paragraph in the filter issue reporter section"
   },
   "supportS6P2S1": {
@@ -1018,14 +1018,6 @@
   "supportS6Checkbox1": {
     "message": "Etiketoj faqen si “NSFW” (<a href=\"https://wikipedia.org/wiki/Not_safe_for_work\">“E papërshtatshme për punë”</a>)",
     "description": "A checkbox to use for NSFW sites"
-  },
-  "supportRedact": {
-    "message": "Censuroj",
-    "description": "Text for 'Redact' button"
-  },
-  "supportUnredact": {
-    "message": "Nuk censuroj",
-    "description": "Text for 'Unredact' button"
   },
   "aboutPrivacyPolicy": {
     "message": "Politika e privatësisë",
@@ -1098,10 +1090,6 @@
   "errorCantConnectTo": {
     "message": "Problem me rrjetin kompjuterik: {{msg}}",
     "description": "English: Network error: {{msg}}"
-  },
-  "subscriberConfirm": {
-    "message": "Do e shtoni adresën në listën e personalizuar të filtrave?\n\nTitulli: \"{{title}}\"\nURL: {{url}}",
-    "description": "No longer used"
   },
   "subscribeButton": {
     "message": "Abonohem",
@@ -1194,6 +1182,22 @@
   "docblockedRedirectPrompt": {
     "message": "Faqja e bllokuar do t'ju drejtojë në një uebsajt tjetër. Në rast se vijoni do të shkoni te: {{url}}",
     "description": "Text warning about an incoming redirect"
+  },
+  "docblockedReasonLabel": {
+    "message": "Arsyeja:",
+    "description": "The label which prepend the actual reason why a page was blocked"
+  },
+  "docblockedReasonMalicious": {
+    "message": "Dëmtuese",
+    "description": "An actual reason why a page was blocked"
+  },
+  "docblockedReasonTracker": {
+    "message": "Gjurmues",
+    "description": "An actual reason why a page was blocked"
+  },
+  "docblockedReasonDisreputable": {
+    "message": "Joserioze",
+    "description": "An actual reason why a page was blocked"
   },
   "cloudPush": {
     "message": "Eksportoni në renë informatike",

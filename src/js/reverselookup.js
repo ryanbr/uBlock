@@ -19,20 +19,15 @@
     Home: https://github.com/gorhill/uBlock
 */
 
-'use strict';
-
-/******************************************************************************/
-
-import staticNetFilteringEngine from './static-net-filtering.js';
-import µb from './background.js';
-import { CompiledListWriter } from './static-filtering-io.js';
-import { i18n$ } from './i18n.js';
 import * as sfp from './static-filtering-parser.js';
-
 import {
     domainFromHostname,
     hostnameFromURI,
 } from './uri-utils.js';
+import { CompiledListWriter } from './static-filtering-io.js';
+import { i18n$ } from './i18n.js';
+import staticNetFilteringEngine from './static-net-filtering.js';
+import µb from './background.js';
 
 /******************************************************************************/
 
@@ -98,7 +93,7 @@ const initWorker = function() {
     };
 
     for ( const listKey in µb.availableFilterLists ) {
-        if ( µb.availableFilterLists.hasOwnProperty(listKey) === false ) {
+        if ( Object.hasOwn(µb.availableFilterLists, listKey) === false ) {
             continue;
         }
         const entry = µb.availableFilterLists[listKey];
@@ -172,16 +167,18 @@ const fromExtendedFilter = async function(details) {
         nativeCssHas: vAPI.webextFlavor.env.includes('native_css_has'),
     });
     parser.parse(details.rawFilter);
-    let compiled;
+    let needle;
     if ( parser.isScriptletFilter() ) {
-        compiled = JSON.stringify(parser.getScriptletArgs());
+        needle = JSON.stringify(parser.getScriptletArgs());
+    } else if ( parser.isResponseheaderFilter() ) {
+        needle = parser.getResponseheaderName();
     }
 
     worker.postMessage({
         what: 'fromExtendedFilter',
         id,
+        url: details.url,
         domain: domainFromHostname(hostname),
-        hostname,
         ignoreGeneric:
             staticNetFilteringEngine.matchRequestReverse(
                 'generichide',
@@ -193,7 +190,7 @@ const fromExtendedFilter = async function(details) {
                 details.url
             ) === 2,
         rawFilter: details.rawFilter,
-        compiled,
+        needle,
     });
 
     return new Promise(resolve => {
@@ -211,13 +208,11 @@ const resetLists = function() {
 
 /******************************************************************************/
 
-const staticFilteringReverseLookup = {
+export const staticFilteringReverseLookup = {
     fromNetFilter,
     fromExtendedFilter,
     resetLists,
     shutdown: stopWorker
 };
-
-export default staticFilteringReverseLookup;
 
 /******************************************************************************/

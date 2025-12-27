@@ -19,24 +19,18 @@
     Home: https://github.com/gorhill/uBlock
 */
 
-'use strict';
-
-/******************************************************************************/
-
-import punycode from '../lib/punycode.js';
-
-import { LineIterator } from './text-utils.js';
-
 import {
     decomposeHostname,
     domainFromHostname,
 } from './uri-utils.js';
+import { LineIterator } from './text-utils.js';
+import punycode from '../lib/punycode.js';
 
 /******************************************************************************/
 
 // Object.create(null) is used below to eliminate worries about unexpected
 // property names in prototype chain -- and this way we don't have to use
-// hasOwnProperty() to avoid this.
+// Object.hasOwn() to avoid this.
 
 const supportedDynamicTypes = Object.create(null);
 Object.assign(supportedDynamicTypes, {
@@ -73,7 +67,7 @@ const intToActionMap = new Map([
 ]);
 
 // For performance purpose, as simple tests as possible
-const reBadHostname = /[^0-9a-z_.\[\]:%-]/;
+const reBadHostname = /[^0-9a-z_.[\]:%-]/;
 const reNotASCII = /[^\x20-\x7F]/;
 const decomposedSource = [];
 const decomposedDestination = [];

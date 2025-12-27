@@ -4,7 +4,7 @@
     "description": "extension name."
   },
   "extShortDesc": {
-    "message": "Un bloqueador de contenido con menos permisos. Bloquea anuncios, rastreadores, criptomineros y aún más.",
+    "message": "Un bloqueador de contenido eficiente. Bloquea anuncios, rastreadores, criptomineros y aún más.",
     "description": "this will be in the Chrome web store: must be 132 characters or less"
   },
   "perRulesetStats": {
@@ -19,6 +19,14 @@
     "message": "Configuración",
     "description": "appears as tab name in dashboard"
   },
+  "customFiltersPageName": {
+    "message": "Filtros personalizados",
+    "description": "appears as tab name in dashboard"
+  },
+  "developPageName": {
+    "message": "Desarrollo",
+    "description": "appears as tab name in dashboard. Inspired from 'Develop' menu in Safari, see https://developer.apple.com/documentation/safari-developer-tools/develop-menu"
+  },
   "aboutPageName": {
     "message": "Acerca de",
     "description": "appears as tab name in dashboard"
@@ -31,8 +39,12 @@
     "message": "modo de filtrado",
     "description": "Label in the popup panel for the current filtering mode"
   },
+  "popupLocalToolsLabel": {
+    "message": "En este sitio web",
+    "description": "Label in the popup panel for the local tools section"
+  },
   "popupTipReport": {
-    "message": "Reportar un problema en este sitio web",
+    "message": "Reportar un problema",
     "description": "Tooltip used for the 'chat' icon in the panel"
   },
   "popupTipDashboard": {
@@ -60,7 +72,7 @@
     "description": "Header for a ruleset section in 'Filter lists pane'"
   },
   "3pGroupMalware": {
-    "message": "Dominios de malware",
+    "message": "Protección de malware, seguridad",
     "description": "Header for a ruleset section in 'Filter lists pane'"
   },
   "3pGroupAnnoyances": {
@@ -74,6 +86,14 @@
   "3pGroupRegions": {
     "message": "Regiones, idiomas",
     "description": "Header for a ruleset section in 'Filter lists pane'"
+  },
+  "customFiltersImportExportLabel": {
+    "message": "Importar / Exportar",
+    "description": "Text label heading the import/export area of custom filters"
+  },
+  "customFiltersImportTextareaPlaceholder": {
+    "message": "Pega aquí los filtros cosméticos específicos a añadir",
+    "description": "Placeholder text which describes the purpose of the textarea widget"
   },
   "aboutChangelog": {
     "message": "Registro de cambios",
@@ -111,12 +131,16 @@
     "message": "Reportar problemas de filtros con sitios web específicos en el registro de problemas <span data-url=\"https://github.com/uBlockOrigin/uAssets/issues?q=is%3Aissue\"><code>uBlockOrigin/uAssets</code></span>. <u>Requiere una cuenta en GitHub</u>.",
     "description": "First paragraph of 'Filter issues' section in Support pane"
   },
+  "supportS5H": {
+    "message": "Información para solucionar problemas",
+    "description": "Label of 'Troubleshooting information' section in 'Report a filter issue' page"
+  },
   "supportS6P1S1": {
-    "message": "Para evitar sobrecargar a voluntarios con reportes duplicados, verifica que el problema no haya sido reportado.",
+    "message": "Para evitar sobrecargar a voluntarios con reportes duplicados, verifica que el problema no haya sido reportado. <b>Nota:</b> al hacer clic en el botón, hará que el origen de la página se envíe a GitHub.",
     "description": "A paragraph in the filter issue reporter section"
   },
   "supportFindSpecificButton": {
-    "message": "Encontrar reportes similares",
+    "message": "Encontrar reportes similares en GitHub",
     "description": "A clickable link in the filter issue reporter section"
   },
   "supportS6URL": {
@@ -164,16 +188,8 @@
     "description": "A checkbox to use for NSFW sites"
   },
   "supportReportSpecificButton": {
-    "message": "Crear nuevo reporte",
-    "description": "Text for button which open an external webpage in Support pane"
-  },
-  "firstRunSectionLabel": {
-    "message": "Bienvenida",
-    "description": "The header text for the welcome message section"
-  },
-  "firstRunDescription": {
-    "message": "Acabas de instalar uBO Lite. Aquí puedes elegir el modo de filtrado predeterminado que se utilizará en todos los sitios web.\n\nPor defecto, el modo <em>básico</em> está seleccionado porque no requiere permiso para leer y modificar datos. Si confías en uBO Lite, puedes otorgarle un permiso amplio para leer y modificar datos en todos los sitios web para habilitar capacidades de filtrado más avanzadas para todos los sitios web de forma predeterminada.",
-    "description": "Descriptive text shown at first install time only "
+    "message": "Crear nuevo reporte en GitHub",
+    "description": "Text for button which opens an external web page in Support pane"
   },
   "defaultFilteringModeSectionLabel": {
     "message": "Modo de filtrado predeterminado",
@@ -237,7 +253,27 @@
   },
   "enableStrictBlockLegend": {
     "message": "La navegación a sitios potencialmente no deseados será bloqueada, y se te ofrecerá la opción de continuar.",
+    "description": "Short description for a checkbox in the options page"
+  },
+  "developerModeLabel": {
+    "message": "Modo desarrollador",
     "description": "Label for a checkbox in the options page"
+  },
+  "developerModeLegend": {
+    "message": "Habilita acceso a características aptas para usuarios técnicos.",
+    "description": "Short description for a checkbox in the options page"
+  },
+  "settingsBackupRestoreLabel": {
+    "message": "Respaldar",
+    "description": "The header text for the back up/restore section"
+  },
+  "settingsBackupRestoreSummary": {
+    "message": "Haz un respaldo de tu configuración personalizada en un archivo o restaura tu configuración personalizada desde uno.",
+    "description": "A summary description of the back up/restore section."
+  },
+  "settingsBackupRestoreLegend": {
+    "message": "La restauración sobrescribirá toda tu configuración personalizada actual.",
+    "description": "Important information about the back up/restore section."
   },
   "findListsPlaceholder": {
     "message": "Encontrar listas",
@@ -245,18 +281,18 @@
   },
   "strictblockTitle": {
     "message": "Página bloqueada",
-    "description": "Webpage title for the strict-blocked page"
+    "description": "Web page title for the strict-blocked page"
   },
   "strictblockSentence1": {
     "message": "uBO Lite impidió la carga de la página:",
     "description": "Sentence used in the strict-blocked page"
   },
   "strictblockReasonSentence1": {
-    "message": "La página fue bloqueada debido a un filtro coincidente en {{listname}}.",
+    "message": "La página ha sido bloqueada como resultado de un filtro coincidente en {{listname}}.",
     "description": "Text informing about what is causing the page to be blocked"
   },
   "strictblockRedirectSentence1": {
-    "message": "La página bloqueada quiere redirigir a otro sitio. Si eliges proceder, navegarás directamente a: {{url}}",
+    "message": "La página bloqueada quiere redirigir a otro sitio. Si eliges continuar, navegarás directamente a: {{url}}",
     "description": "Text warning about an incoming redirect"
   },
   "strictblockNoParamsPrompt": {
@@ -265,7 +301,7 @@
   },
   "strictblockBack": {
     "message": "Regresar",
-    "description": "A button to go back to the previous webpage"
+    "description": "A button to go back to the previous web page"
   },
   "strictblockClose": {
     "message": "Cerrar esta ventana",
@@ -278,5 +314,109 @@
   "strictblockProceed": {
     "message": "Continuar",
     "description": "A button to navigate to the blocked page"
+  },
+  "zapperTipEnter": {
+    "message": "Eliminar un elemento",
+    "description": "Tooltip for the button used to enter zapper mode"
+  },
+  "zapperTipQuit": {
+    "message": "Salir del modo eliminación de elementos",
+    "description": "Tooltip for the button used to exit zapper mode"
+  },
+  "pickerTipEnter": {
+    "message": "Crear un filtro personalizado",
+    "description": "Label for the menu entry to create cosmetic filters"
+  },
+  "unpickerTipEnter": {
+    "message": "Eliminar un filtro personalizado",
+    "description": "Label for the menu entry to delete cosmetic filters"
+  },
+  "developDropdownLabel": {
+    "message": "Ver:",
+    "description": "A label of a dropdown list"
+  },
+  "developOptionFilteringModeDetails": {
+    "message": "Detalles del modo de filtrado",
+    "description": "An option in a dropdown list"
+  },
+  "developOptionCustomDnrRules": {
+    "message": "Reglas DNR personalizadas",
+    "description": "An option in a dropdown list"
+  },
+  "developOptionDnrRulesOf": {
+    "message": "Reglas DNR de …",
+    "description": "A section header in a dropdown list"
+  },
+  "developOptionDynamicRuleset": {
+    "message": "Conjunto de reglas dinámicas",
+    "description": "An option in a dropdown list"
+  },
+  "developOptionSessionRuleset": {
+    "message": "Conjunto de reglas de sesión",
+    "description": "An option in a dropdown list"
+  },
+  "saveButton": {
+    "message": "Guardar",
+    "description": "Text for buttons used to save changes"
+  },
+  "revertButton": {
+    "message": "Revertir",
+    "description": "Text for buttons used to revert changes"
+  },
+  "addButton": {
+    "message": "Añadir",
+    "description": "Text for buttons used to add content"
+  },
+  "importAndAppendButton": {
+    "message": "Importar y anexar…",
+    "description": "Text for buttons used to import and append content"
+  },
+  "exportButton": {
+    "message": "Exportar…",
+    "description": "Text for buttons used to export content"
+  },
+  "backupButton": {
+    "message": "Respaldar…",
+    "description": "Text for buttons used to back up content"
+  },
+  "restoreButton": {
+    "message": "Restaurar…",
+    "description": "Text for buttons used to restore content"
+  },
+  "resetToDefaultButton": {
+    "message": "Restablecer a ajustes predeterminados…",
+    "description": "Text for buttons used to reset configurations to default"
+  },
+  "resetToDefaultConfirm": {
+    "message": "Todos tus ajustes personalizados serán removidos. ¿Realmente quieres restablecer a los ajustes predeterminados?",
+    "description": "Message asking user to confirm reset to default settings"
+  },
+  "dnrRulesWarning": {
+    "message": "No añadas contenido de fuentes no confiables",
+    "description": "Short description of the DNR rules editor pane"
+  },
+  "dnrRulesCountInfo": {
+    "message": "Número de reglas registradas: {count}",
+    "description": "Short sentence to report the number of currently registered DNR rules"
+  },
+  "pickerSliderLabel": {
+    "message": "Mueve el control deslizante para seleccionar la mejor coincidencia",
+    "description": "Label to describe the purpose of the slider"
+  },
+  "pickerPick": {
+    "message": "Elegir",
+    "description": "Text for the button to re-enter element-picking mode"
+  },
+  "pickerPreview": {
+    "message": "Vista previa",
+    "description": "Text for the button to activate preview mode"
+  },
+  "pickerCreate": {
+    "message": "Crear",
+    "description": "Text for the button to create the filter"
+  },
+  "unpickerUsage": {
+    "message": "Selecciona un filtro abajo para resaltar los elementos coincidentes en la página web. Haz clic en la papelera para eliminar un filtro.",
+    "description": "Summary description on how to use the tool to remove custom filters"
   }
 }

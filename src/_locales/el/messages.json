@@ -8,7 +8,7 @@
     "description": "this will be in the Chrome web store: must be 132 characters or less"
   },
   "dashboardName": {
-    "message": "uBlock₀ - Πίνακας ελέγχου",
+    "message": "uBlock₀ — Πίνακας ελέγχου",
     "description": "English: uBlock₀ — Dashboard"
   },
   "dashboardUnsavedWarning": {
@@ -40,7 +40,7 @@
     "description": "appears as tab name in dashboard"
   },
   "whitelistPageName": {
-    "message": "Αξιόπιστοι ιστότοποι",
+    "message": "Αξιόπιστες τοποθεσίες",
     "description": "appears as tab name in dashboard"
   },
   "shortcutsPageName": {
@@ -116,7 +116,7 @@
     "description": "English: Click to open the dashboard"
   },
   "popupTipZapper": {
-    "message": "Είσοδος σε λειτουργία εκτέλεσης στοιχείων",
+    "message": "Είσοδος σε λειτουργία αφαίρεσης στοιχείων",
     "description": "Tooltip for the element-zapper icon in the popup panel"
   },
   "popupTipPicker": {
@@ -468,7 +468,7 @@
     "description": "English: Apply changes"
   },
   "3pGroupDefault": {
-    "message": "Τοπικά",
+    "message": "Ενσωματωμένο",
     "description": "Filter lists section name"
   },
   "3pGroupAds": {
@@ -632,11 +632,11 @@
     "description": "A concise description of the 'Trusted sites' pane."
   },
   "whitelistImport": {
-    "message": "Εισαγωγή και προσάρτηση",
+    "message": "Εισαγωγή και προσθήκη…",
     "description": "Button in the 'Trusted sites' pane"
   },
   "whitelistExport": {
-    "message": "Εξαγωγή",
+    "message": "Εξαγωγή…",
     "description": "Button in the 'Trusted sites' pane"
   },
   "whitelistExportFilename": {
@@ -780,7 +780,7 @@
     "description": "Label to identify the URL of an entry"
   },
   "loggerURLFilteringHeader": {
-    "message": "Κανόνας URL",
+    "message": "Κανόνας διεύθυνσης URL",
     "description": "Small header to identify the dynamic URL filtering section"
   },
   "loggerURLFilteringContextLabel": {
@@ -897,14 +897,14 @@
   },
   "supportOpenButton": {
     "message": "Άνοιγμα",
-    "description": "Text for button which open an external webpage in Support pane"
+    "description": "Text for button which open an external web page in Support pane"
   },
   "supportReportSpecificButton": {
-    "message": "Δημιουργία νέας αναφοράς",
-    "description": "Text for button which open an external webpage in Support pane"
+    "message": "Δημιουργία νέας αναφοράς στο Github",
+    "description": "Text for button which open an external web page in Support pane"
   },
   "supportFindSpecificButton": {
-    "message": "Βρείτε παρόμοιες αναφορές",
+    "message": "Εύρεση παρόμοιων αναφορών στο GitHub",
     "description": "A clickable link in the filter issue reporter section"
   },
   "supportS1H": {
@@ -940,7 +940,7 @@
     "description": "Third paragraph of 'Filter issues' section in Support pane"
   },
   "supportS4H": {
-    "message": "Αναφορά σφαλμάτων",
+    "message": "Αναφορά σφάλματος",
     "description": "Header of 'Bug report' section in Support pane"
   },
   "supportS4P1": {
@@ -948,7 +948,7 @@
     "description": "First paragraph of 'Bug report' section in Support pane"
   },
   "supportS5H": {
-    "message": "Πληροφορίες αντιμετώπισης προβλημάτων",
+    "message": "Πληροφορίες για αντιμετώπιση προβλημάτων",
     "description": "Header of 'Troubleshooting Information' section in Support pane"
   },
   "supportS5P1": {
@@ -960,7 +960,7 @@
     "description": "Second paragraph of 'Troubleshooting Information' section in Support pane"
   },
   "supportS6H": {
-    "message": "Αναφέρετε ένα πρόβλημα φίλτρου",
+    "message": "Αναφέρετε πρόβλημα φίλτρου",
     "description": "Header of 'Report a filter issue' section in Support pane"
   },
   "supportS6P1S1": {
@@ -980,7 +980,7 @@
     "description": "Label for the URL of the page"
   },
   "supportS6Select1": {
-    "message": "Η ιστοσελίδα...",
+    "message": "Η ιστοσελίδα…",
     "description": "Label for widget to select type of issue"
   },
   "supportS6Select1Option0": {
@@ -1019,20 +1019,12 @@
     "message": "Επισημάνετε την ιστοσελίδα ως &ldquo;NSFW&rdquo; (<a href=\"https://wikipedia.org/wiki/Not_safe_for_work\">&ldquo;Not Safe For Work&rdquo;</a>)",
     "description": "A checkbox to use for NSFW sites"
   },
-  "supportRedact": {
-    "message": "Redact",
-    "description": "Text for 'Redact' button"
-  },
-  "supportUnredact": {
-    "message": "Unredact",
-    "description": "Text for 'Unredact' button"
-  },
   "aboutPrivacyPolicy": {
     "message": "Πολιτική απορρήτου",
     "description": "Link to privacy policy on GitHub (English)"
   },
   "aboutChangelog": {
-    "message": "Αρχείο καταγραφής αλλαγών",
+    "message": "Αρχείο αλλαγών",
     "description": ""
   },
   "aboutCode": {
@@ -1064,7 +1056,7 @@
     "description": "Shown in the About pane"
   },
   "aboutCDNsInfo": {
-    "message": "Ένα τυχαία επιλεγμένο CDN χρησιμοποιείται όταν πρέπει να ενημερωθεί μια λίστα φίλτρων",
+    "message": "Χρησιμοποιείται τυχαία-επιλεγμένο CDN όταν πρέπει να ενημερωθεί μια λίστα φίλτρων",
     "description": "Shown in the About pane"
   },
   "aboutBackupDataButton": {
@@ -1092,16 +1084,12 @@
     "description": "Message to display when an error occurred during restore"
   },
   "aboutResetDataConfirm": {
-    "message": "Όλες οι ρυθμίσεις σας θα καταργηθούν και θα γίνει επανεκκίνηση του uBlock.\n\nΕπαναφορά του uBlock στις εργοστασιακές ρυθμίσεις;",
+    "message": "Όλες οι ρυθμίσεις σας θα καταργηθούν και θα γίνει επανεκκίνηση του uBlock₀.\n\nΕπαναφορά του uBlock₀ στις αρχικές ρυθμίσεις;",
     "description": "Message asking user to confirm reset"
   },
   "errorCantConnectTo": {
     "message": "Σφάλμα δικτύου: {{msg}}",
     "description": "English: Network error: {{msg}}"
-  },
-  "subscriberConfirm": {
-    "message": "Προσθήκη της ακόλουθης διεύθυνσης URL στις λίστες προσαρμοσμένων φίλτρων σας;\n\nΤίτλος: \"{{title}}\"\nURL: {{url}}",
-    "description": "No longer used"
   },
   "subscribeButton": {
     "message": "Εγγραφή",
@@ -1195,6 +1183,22 @@
     "message": "Η αποκλεισμένη σελίδα θέλει να κάνει ανακατεύθυνση σε άλλο ιστότοπο. Αν επιλέξετε να συνεχίσετε, θα μεταβείτε απευθείας στο: {{url}}",
     "description": "Text warning about an incoming redirect"
   },
+  "docblockedReasonLabel": {
+    "message": "Αιτία:",
+    "description": "The label which prepend the actual reason why a page was blocked"
+  },
+  "docblockedReasonMalicious": {
+    "message": "Κακόβουλος ιστότοπος",
+    "description": "An actual reason why a page was blocked"
+  },
+  "docblockedReasonTracker": {
+    "message": "Ιχνηλάτης",
+    "description": "An actual reason why a page was blocked"
+  },
+  "docblockedReasonDisreputable": {
+    "message": "Κακόφημος ιστότοπος",
+    "description": "An actual reason why a page was blocked"
+  },
   "cloudPush": {
     "message": "Εξαγωγή στο cloud storage",
     "description": "tooltip"
@@ -1236,7 +1240,7 @@
     "description": ""
   },
   "contextMenuBlockElementInFrame": {
-    "message": "Στοιχείο μπλοκ στο πλαίσιο...",
+    "message": "Αποκλεισμός στοιχείου σε frame…",
     "description": "An entry in the browser's contextual menu"
   },
   "contextMenuSubscribeToList": {

@@ -19,12 +19,6 @@
     Home: https://github.com/gorhill/uBlock
 */
 
-/* globals browser */
-
-'use strict';
-
-/******************************************************************************/
-
 import './vapi-common.js';
 import './vapi-background.js';
 import './vapi-background-ext.js';
@@ -39,26 +33,26 @@ import './tab.js';
 import './ublock.js';
 import './utils.js';
 
-import io from './assets.js';
-import µb from './background.js';
-import { filteringBehaviorChanged } from './broadcast.js';
-import cacheStorage from './cachestorage.js';
-import { ubolog } from './console.js';
-import contextMenu from './contextmenu.js';
-import { redirectEngine } from './redirect-engine.js';
-import staticFilteringReverseLookup from './reverselookup.js';
-import staticExtFilteringEngine from './static-ext-filtering.js';
-import staticNetFilteringEngine from './static-net-filtering.js';
-import webRequest from './traffic.js';
-
 import {
     permanentFirewall,
-    sessionFirewall,
     permanentSwitches,
-    sessionSwitches,
     permanentURLFiltering,
+    sessionFirewall,
+    sessionSwitches,
     sessionURLFiltering,
 } from './filtering-engines.js';
+
+import cacheStorage from './cachestorage.js';
+import contextMenu from './contextmenu.js';
+import { filteringBehaviorChanged } from './broadcast.js';
+import io from './assets.js';
+import { redirectEngine } from './redirect-engine.js';
+import staticExtFilteringEngine from './static-ext-filtering.js';
+import { staticFilteringReverseLookup } from './reverselookup.js';
+import staticNetFilteringEngine from './static-net-filtering.js';
+import { ubolog } from './console.js';
+import webRequest from './traffic.js';
+import µb from './background.js';
 
 /******************************************************************************/
 
@@ -161,13 +155,6 @@ const onVersionReady = async lastVersion => {
     if ( lastVersionInt === 0 ) {
         vAPI.net.unsuspend({ all: true, discard: true });
         return;
-    }
-
-    // Remove cache items with obsolete names
-    if ( lastVersionInt < vAPI.app.intFromVersion('1.56.1b5') ) {
-        io.remove(`compiled/${µb.pslAssetKey}`);
-        io.remove('compiled/redirectEngine/resources');
-        io.remove('selfie/main');
     }
 
     // Since built-in resources may have changed since last version, we
@@ -363,15 +350,15 @@ const onFirstFetchReady = (fetched, adminExtra) => {
 
 const toFetch = (from, fetched) => {
     for ( const k in from ) {
-        if ( from.hasOwnProperty(k) === false ) { continue; }
+        if ( Object.hasOwn(from, k) === false ) { continue; }
         fetched[k] = from[k];
     }
 };
 
 const fromFetch = (to, fetched) => {
     for ( const k in to ) {
-        if ( to.hasOwnProperty(k) === false ) { continue; }
-        if ( fetched.hasOwnProperty(k) === false ) { continue; }
+        if ( Object.hasOwn(to, k) === false ) { continue; }
+        if ( Object.hasOwn(fetched, k) === false ) { continue; }
         to[k] = fetched[k];
     }
 };

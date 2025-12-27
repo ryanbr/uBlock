@@ -4,7 +4,7 @@
     "description": "extension name."
   },
   "extShortDesc": {
-    "message": "En tilladelsesløs indholdsblocker. Blokerer som standard annoncer, trackere, minere mv. straks efter installationen.",
+    "message": "En effektiv indholdsblocker. Blokerer annoncer, trackere, minere mm. umiddelbart efter installation.",
     "description": "this will be in the Chrome web store: must be 132 characters or less"
   },
   "perRulesetStats": {
@@ -19,6 +19,14 @@
     "message": "Indstillinger",
     "description": "appears as tab name in dashboard"
   },
+  "customFiltersPageName": {
+    "message": "Tilpassede filtre",
+    "description": "appears as tab name in dashboard"
+  },
+  "developPageName": {
+    "message": "Udvikl",
+    "description": "appears as tab name in dashboard. Inspired from 'Develop' menu in Safari, see https://developer.apple.com/documentation/safari-developer-tools/develop-menu"
+  },
   "aboutPageName": {
     "message": "Om",
     "description": "appears as tab name in dashboard"
@@ -31,8 +39,12 @@
     "message": "filtreringstilstand",
     "description": "Label in the popup panel for the current filtering mode"
   },
+  "popupLocalToolsLabel": {
+    "message": "På dette websted",
+    "description": "Label in the popup panel for the local tools section"
+  },
   "popupTipReport": {
-    "message": "Anmeld et problem på dette websted",
+    "message": "Anmeld et problem",
     "description": "Tooltip used for the 'chat' icon in the panel"
   },
   "popupTipDashboard": {
@@ -60,7 +72,7 @@
     "description": "Header for a ruleset section in 'Filter lists pane'"
   },
   "3pGroupMalware": {
-    "message": "Malware-domæner",
+    "message": "Malware-beskyttelse, sikkerhed",
     "description": "Header for a ruleset section in 'Filter lists pane'"
   },
   "3pGroupAnnoyances": {
@@ -74,6 +86,14 @@
   "3pGroupRegions": {
     "message": "Regioner, sprog",
     "description": "Header for a ruleset section in 'Filter lists pane'"
+  },
+  "customFiltersImportExportLabel": {
+    "message": "Import/ Eksport",
+    "description": "Text label heading the import/export area of custom filters"
+  },
+  "customFiltersImportTextareaPlaceholder": {
+    "message": "Indsæt bestemte kosmetiske filtre hér for at tilføje",
+    "description": "Placeholder text which describes the purpose of the textarea widget"
   },
   "aboutChangelog": {
     "message": "Ændringslog",
@@ -111,12 +131,16 @@
     "message": "Anmeld filterproblemer med bestemte websteder til <span data-url=\"https://github.com/uBlockOrigin/uAssets/issues?q=is%3Aissue\"><code>uBlockOrigin/uAssets</code>-problemsporingen</span>. <u>Kræver en GitHub-konto.</u>",
     "description": "First paragraph of 'Filter issues' section in Support pane"
   },
+  "supportS5H": {
+    "message": "Fejlfindingsinformation",
+    "description": "Label of 'Troubleshooting information' section in 'Report a filter issue' page"
+  },
   "supportS6P1S1": {
-    "message": "For at undgå at belaste frivillige med dubletanmeldelser, så tjek venligst, at problemet ikke allerede er anmeldt.",
+    "message": "For at undgå at bebyrde frivillige med dubletanmeldelser, så tjek venligst, at problematikken ikke allerede er anmeldt. <b>Bemærk:</b> Ved at klikke på knappen, sendes sidens oprindelse til GitHub.",
     "description": "A paragraph in the filter issue reporter section"
   },
   "supportFindSpecificButton": {
-    "message": "Find lign. anmeldelser",
+    "message": "Find lign. anmeldelser på GitHub",
     "description": "A clickable link in the filter issue reporter section"
   },
   "supportS6URL": {
@@ -164,16 +188,8 @@
     "description": "A checkbox to use for NSFW sites"
   },
   "supportReportSpecificButton": {
-    "message": "Opret ny anmeldelse",
-    "description": "Text for button which open an external webpage in Support pane"
-  },
-  "firstRunSectionLabel": {
-    "message": "Velkommen",
-    "description": "The header text for the welcome message section"
-  },
-  "firstRunDescription": {
-    "message": "Du har netop installeret uBO Lite. Her kan den standardfiltreringstilstand vælges, der skal bruges på alle websteder.\n\nStandardvalget er <em>Basis</em>-tilstand, da den ikke kræver tilladelse til at læse og ændre data. Er uBO Lite betroet, kan den udvidede tilladelse til at læse og ændre data på alle websteder tildeles for som standard at aktivere mere avancerede filtreringsfunktioner for alle websteder.",
-    "description": "Descriptive text shown at first install time only "
+    "message": "Opret ny anmeldelse på GitHub",
+    "description": "Text for button which opens an external web page in Support pane"
   },
   "defaultFilteringModeSectionLabel": {
     "message": "Standardfiltreringstilstand",
@@ -237,7 +253,27 @@
   },
   "enableStrictBlockLegend": {
     "message": "Navigering til potentielt uønskede websteder blokeres, men man tilbydes muligheden for at fortsætte.",
+    "description": "Short description for a checkbox in the options page"
+  },
+  "developerModeLabel": {
+    "message": "Udviklertilstand",
     "description": "Label for a checkbox in the options page"
+  },
+  "developerModeLegend": {
+    "message": "Aktiverer adgang til funktioner egnede for tekniske brugere.",
+    "description": "Short description for a checkbox in the options page"
+  },
+  "settingsBackupRestoreLabel": {
+    "message": "Sikkerhedskopiér",
+    "description": "The header text for the back up/restore section"
+  },
+  "settingsBackupRestoreSummary": {
+    "message": "Sikkerhedskopiér tilpassede indstillinger til en fil, eller gendan tilpassede indstillinger fra en fil.",
+    "description": "A summary description of the back up/restore section."
+  },
+  "settingsBackupRestoreLegend": {
+    "message": "Gendannelse overskriver alle nuværende tilpassede indstillinger.",
+    "description": "Important information about the back up/restore section."
   },
   "findListsPlaceholder": {
     "message": "Find lister",
@@ -245,18 +281,18 @@
   },
   "strictblockTitle": {
     "message": "Side blokeret",
-    "description": "Webpage title for the strict-blocked page"
+    "description": "Web page title for the strict-blocked page"
   },
   "strictblockSentence1": {
     "message": "uBO Lite har forhindret flg. side i at blive indlæst:",
     "description": "Sentence used in the strict-blocked page"
   },
   "strictblockReasonSentence1": {
-    "message": "The page was blocked because of a matching filter in {{listname}}.",
+    "message": "Siden blev blokeret grundet et matchende filter i {{listname}}.",
     "description": "Text informing about what is causing the page to be blocked"
   },
   "strictblockRedirectSentence1": {
-    "message": "The blocked page wants to redirect to another site. If you choose to proceed, you will navigate directly to: {{url}}",
+    "message": "Den blokerede side ønsker at omdirigere til et andet websted. Vælger man at fortsætte, navigeres direkte til: {{url}}",
     "description": "Text warning about an incoming redirect"
   },
   "strictblockNoParamsPrompt": {
@@ -265,7 +301,7 @@
   },
   "strictblockBack": {
     "message": "Gå tilbage",
-    "description": "A button to go back to the previous webpage"
+    "description": "A button to go back to the previous web page"
   },
   "strictblockClose": {
     "message": "Luk dette vindue",
@@ -278,5 +314,109 @@
   "strictblockProceed": {
     "message": "Fortsæt",
     "description": "A button to navigate to the blocked page"
+  },
+  "zapperTipEnter": {
+    "message": "Fjern et element",
+    "description": "Tooltip for the button used to enter zapper mode"
+  },
+  "zapperTipQuit": {
+    "message": "Forlad elementdræber­tilstand",
+    "description": "Tooltip for the button used to exit zapper mode"
+  },
+  "pickerTipEnter": {
+    "message": "Opret et tilpasset filter",
+    "description": "Label for the menu entry to create cosmetic filters"
+  },
+  "unpickerTipEnter": {
+    "message": "Fjern et tilpasset filter",
+    "description": "Label for the menu entry to delete cosmetic filters"
+  },
+  "developDropdownLabel": {
+    "message": "Vis:",
+    "description": "A label of a dropdown list"
+  },
+  "developOptionFilteringModeDetails": {
+    "message": "Filtreringstilstandsdetaljer",
+    "description": "An option in a dropdown list"
+  },
+  "developOptionCustomDnrRules": {
+    "message": "Tilpassede DNR-regler",
+    "description": "An option in a dropdown list"
+  },
+  "developOptionDnrRulesOf": {
+    "message": "DNR-regler for…",
+    "description": "A section header in a dropdown list"
+  },
+  "developOptionDynamicRuleset": {
+    "message": "Dynamiske regelsæt",
+    "description": "An option in a dropdown list"
+  },
+  "developOptionSessionRuleset": {
+    "message": "Sessionsregelsæt",
+    "description": "An option in a dropdown list"
+  },
+  "saveButton": {
+    "message": "Gem",
+    "description": "Text for buttons used to save changes"
+  },
+  "revertButton": {
+    "message": "Tilbagefør",
+    "description": "Text for buttons used to revert changes"
+  },
+  "addButton": {
+    "message": "Tilføj",
+    "description": "Text for buttons used to add content"
+  },
+  "importAndAppendButton": {
+    "message": "Importér og tilføj…",
+    "description": "Text for buttons used to import and append content"
+  },
+  "exportButton": {
+    "message": "Eksportér…",
+    "description": "Text for buttons used to export content"
+  },
+  "backupButton": {
+    "message": "Sikkerhedskopiér…",
+    "description": "Text for buttons used to back up content"
+  },
+  "restoreButton": {
+    "message": "Gendan…",
+    "description": "Text for buttons used to restore content"
+  },
+  "resetToDefaultButton": {
+    "message": "Nulstil til standardstillinger…",
+    "description": "Text for buttons used to reset configurations to default"
+  },
+  "resetToDefaultConfirm": {
+    "message": "Alle tilpassede indstillinger fjernes. Fortsæt nulstilling til standardindstillinger?",
+    "description": "Message asking user to confirm reset to default settings"
+  },
+  "dnrRulesWarning": {
+    "message": "Tilføj ikke indhold fra ikke-betroede kilder.",
+    "description": "Short description of the DNR rules editor pane"
+  },
+  "dnrRulesCountInfo": {
+    "message": "Antal registrerede regler : {count}",
+    "description": "Short sentence to report the number of currently registered DNR rules"
+  },
+  "pickerSliderLabel": {
+    "message": "Flyt skyderen for at vælge det bedste match",
+    "description": "Label to describe the purpose of the slider"
+  },
+  "pickerPick": {
+    "message": "Vælg",
+    "description": "Text for the button to re-enter element-picking mode"
+  },
+  "pickerPreview": {
+    "message": "Forhåndsvisning",
+    "description": "Text for the button to activate preview mode"
+  },
+  "pickerCreate": {
+    "message": "Opret",
+    "description": "Text for the button to create the filter"
+  },
+  "unpickerUsage": {
+    "message": "Vælg et filter nedenfor for at fremhæve matchende elementer på websiden. Klik på papirkurven for at fjerne et filter.",
+    "description": "Summary description on how to use the tool to remove custom filters"
   }
 }

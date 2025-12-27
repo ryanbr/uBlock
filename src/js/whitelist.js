@@ -21,10 +21,8 @@
 
 /* global CodeMirror, uBlockDashboard */
 
-'use strict';
-
-import { i18n$ } from './i18n.js';
 import { dom, qs$ } from './dom.js';
+import { i18n$ } from './i18n.js';
 
 /******************************************************************************/
 
@@ -62,7 +60,7 @@ CodeMirror.defineMode("ubo-whitelist-directives", function() {
             if ( reRegex.test(line) ) {
                 try {
                     new RegExp(line.slice(1, -1));
-                } catch(ex) {
+                } catch {
                     return 'error';
                 }
                 return null;
@@ -101,12 +99,12 @@ uBlockDashboard.patchCodeMirrorEditor(cmEditor);
 /******************************************************************************/
 
 function getEditorText() {
-    let text = cmEditor.getValue().replace(/\s+$/, '');
-    return text === '' ? text : text + '\n';
+    const text = cmEditor.getValue().trimEnd();
+    return text === '' ? text : `${text}\n`;
 }
 
 function setEditorText(text) {
-    cmEditor.setValue(text.replace(/\s+$/, '') + '\n');
+    cmEditor.setValue(`${text.trimEnd()}\n`);
 }
 
 /******************************************************************************/

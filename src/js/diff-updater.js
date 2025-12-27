@@ -19,15 +19,13 @@
     Home: https://github.com/gorhill/uBlock
 */
 
-'use strict';
-
 // This module can be dynamically loaded or spun off as a worker.
 
 /******************************************************************************/
 
 const patches = new Map();
 const encoder = new TextEncoder();
-const reFileName = /([^\/]+?)(?:#.+)?$/;
+const reFileName = /([^/]+?)(?:#.+)?$/;
 const EMPTYLINE = '';
 
 /******************************************************************************/
@@ -50,8 +48,7 @@ const basename = url => {
 const resolveURL = (path, url) => {
     try {
         return new URL(path, url);
-    }
-    catch(_) {
+    } catch {
     }
 };
 
@@ -184,10 +181,10 @@ async function applyPatchAndValidate(assetDetails, diffDetails) {
 }
 
 async function fetchPatchDetailsFromCDNs(assetDetails) {
-    const { patchPath, cdnURLs } = assetDetails;
+    const { patchPath, cdnURLs, patchURLs } = assetDetails;
     if ( Array.isArray(cdnURLs) === false ) { return null; }
     if ( cdnURLs.length === 0 ) { return null; }
-    for ( const cdnURL of suffleArray(cdnURLs) ) {
+    for ( const cdnURL of suffleArray(patchURLs || cdnURLs) ) {
         const patchURL = resolveURL(patchPath, cdnURL);
         if ( patchURL === undefined ) { continue; }
         const response = await fetch(patchURL).catch(reason => {
@@ -268,21 +265,21 @@ async function fetchAndApplyAllPatches(assetDetails) {
 
 /******************************************************************************/
 
-const bc = new globalThis.BroadcastChannel('diffUpdater');
+const self = globalThis;
 
-bc.onmessage = ev => {
+self.onmessage = ev => {
     const message = ev.data || {};
     switch ( message.what ) {
     case 'update':
         fetchAndApplyAllPatches(message).then(response => {
-            bc.postMessage(response);
+            self.postMessage(response);
         }).catch(error => {
-            bc.postMessage({ what: 'broken', error });
+            self.postMessage({ what: 'broken', error });
         });
         break;
     }
 };
 
-bc.postMessage({ what: 'ready' });
+self.postMessage({ what: 'ready' });
 
 /******************************************************************************/

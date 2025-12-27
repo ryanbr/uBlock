@@ -53,7 +53,7 @@ const hiddenSettingsDefault = {
     cacheStorageCompression: true,
     cacheStorageCompressionThreshold: 65536,
     cacheStorageMultithread: 2,
-    cacheControlForFirefox1376932: 'no-cache, no-store, must-revalidate',
+    cacheControlForFirefox1376932: 'unset',
     cloudStorageCompression: true,
     cnameIgnoreList: 'unset',
     cnameIgnore1stParty: true,
@@ -180,8 +180,8 @@ const µBlock = {  // jshint ignore:line
 
     // Read-only
     systemSettings: {
-        compiledMagic: 57,  // Increase when compiled format changes
-        selfieMagic: 58,    // Increase when selfie format changes
+        compiledMagic: 60,  // Increase when compiled format changes
+        selfieMagic: 60,    // Increase when selfie format changes
     },
 
     // https://github.com/uBlockOrigin/uBlock-issues/issues/759#issuecomment-546654501

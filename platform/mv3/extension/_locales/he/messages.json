@@ -19,6 +19,14 @@
     "message": "הגדרות",
     "description": "appears as tab name in dashboard"
   },
+  "customFiltersPageName": {
+    "message": "מסננים בהתאמה אישית",
+    "description": "appears as tab name in dashboard"
+  },
+  "developPageName": {
+    "message": "פיתוח",
+    "description": "appears as tab name in dashboard. Inspired from 'Develop' menu in Safari, see https://developer.apple.com/documentation/safari-developer-tools/develop-menu"
+  },
   "aboutPageName": {
     "message": "על אודות",
     "description": "appears as tab name in dashboard"
@@ -30,6 +38,10 @@
   "popupFilteringModeLabel": {
     "message": "מצב מסנן",
     "description": "Label in the popup panel for the current filtering mode"
+  },
+  "popupLocalToolsLabel": {
+    "message": "באתר זה",
+    "description": "Label in the popup panel for the local tools section"
   },
   "popupTipReport": {
     "message": "דווח על בעיה באתר זה",
@@ -75,6 +87,14 @@
     "message": "אזורים, שפות",
     "description": "Header for a ruleset section in 'Filter lists pane'"
   },
+  "customFiltersImportExportLabel": {
+    "message": "יבוא / יצוא",
+    "description": "Text label heading the import/export area of custom filters"
+  },
+  "customFiltersImportTextareaPlaceholder": {
+    "message": "העתיקו לכאן מסננים קוסמטים ספציפים לשם הוספה",
+    "description": "Placeholder text which describes the purpose of the textarea widget"
+  },
   "aboutChangelog": {
     "message": "יומן שינויים",
     "description": ""
@@ -110,6 +130,10 @@
   "supportS3P1": {
     "message": "לדיווח על בעיות באתרים ספציפים יש לפתוח דיווח חדש <span data-url=\"https://github.com/uBlockOrigin/uAssets/issues?q=is%3Aissue\">במעקב הדיווחים של <code>uBlockOrigin/uAssets</code>. <u>נדרש חשבון ב GitHub.</u>",
     "description": "First paragraph of 'Filter issues' section in Support pane"
+  },
+  "supportS5H": {
+    "message": "מידע לפתרון בעיות",
+    "description": "Label of 'Troubleshooting information' section in 'Report a filter issue' page"
   },
   "supportS6P1S1": {
     "message": "כדי להימנע מהכבדה על מתנדבים בדווחים כפולים, נא לודא שבעיה דומה טרם דווחה.",
@@ -165,15 +189,7 @@
   },
   "supportReportSpecificButton": {
     "message": "צור דיווח חדש",
-    "description": "Text for button which open an external webpage in Support pane"
-  },
-  "firstRunSectionLabel": {
-    "message": "ברוך בואך",
-    "description": "The header text for the welcome message section"
-  },
-  "firstRunDescription": {
-    "message": "התקנת uBO Lite הסתיימה זה עתה. ניתן לבחור כאן את אופן סינון ברירת המחדל בכל אתרי הרשת.\n\nכברירת מחדל, ייבחר אופן סינון <em>בסיסי</em> מאחר והוא אינו דורש הרשאות קריאה ושינוי נתונים. 'סומכים על uBO Lite?' אם כן, ניתן להעניק ל־uBO Lite הרשאות נרחבות לכתיבה ושינוי נתונים בכלול אתרי הרשת על מנת לאפשר יכולות סינון מתקדמות יותר כבררת מחדל.",
-    "description": "Descriptive text shown at first install time only "
+    "description": "Text for button which opens an external web page in Support pane"
   },
   "defaultFilteringModeSectionLabel": {
     "message": "מצב סינון ברירת מחדל",
@@ -237,7 +253,27 @@
   },
   "enableStrictBlockLegend": {
     "message": "ניווט אפשרי לאתרים לא רצויים יחסם ותהיה אפשרות להחליט להמשיך.",
+    "description": "Short description for a checkbox in the options page"
+  },
+  "developerModeLabel": {
+    "message": "מצב מפתחים",
     "description": "Label for a checkbox in the options page"
+  },
+  "developerModeLegend": {
+    "message": "מאפשר גישה ליכולות עבור משתמשים טכניים.",
+    "description": "Short description for a checkbox in the options page"
+  },
+  "settingsBackupRestoreLabel": {
+    "message": "גיבוי / שחזור",
+    "description": "The header text for the back up/restore section"
+  },
+  "settingsBackupRestoreSummary": {
+    "message": "גיבוי של ההגדרות האישיות לקובץ, או שחזור של ההגדרות האישיות מקובץ.",
+    "description": "A summary description of the back up/restore section."
+  },
+  "settingsBackupRestoreLegend": {
+    "message": "השחזור יחליף את כל ההגדרות האישיות הנוכחיות.",
+    "description": "Important information about the back up/restore section."
   },
   "findListsPlaceholder": {
     "message": "חיפוש רשימות",
@@ -245,7 +281,7 @@
   },
   "strictblockTitle": {
     "message": "הדף נחסם",
-    "description": "Webpage title for the strict-blocked page"
+    "description": "Web page title for the strict-blocked page"
   },
   "strictblockSentence1": {
     "message": "uBO Lite מנע טעינה של הדפים הבאים:",
@@ -265,7 +301,7 @@
   },
   "strictblockBack": {
     "message": "חזור",
-    "description": "A button to go back to the previous webpage"
+    "description": "A button to go back to the previous web page"
   },
   "strictblockClose": {
     "message": "סגור חלון זה",
@@ -278,5 +314,109 @@
   "strictblockProceed": {
     "message": "המשך",
     "description": "A button to navigate to the blocked page"
+  },
+  "zapperTipEnter": {
+    "message": "הסר אלמנט",
+    "description": "Tooltip for the button used to enter zapper mode"
+  },
+  "zapperTipQuit": {
+    "message": "צא ממצב מחיקת אלמנטים",
+    "description": "Tooltip for the button used to exit zapper mode"
+  },
+  "pickerTipEnter": {
+    "message": "יצירת מסנן מותאם אישית",
+    "description": "Label for the menu entry to create cosmetic filters"
+  },
+  "unpickerTipEnter": {
+    "message": "מחיקת מסנן מותאם אישית",
+    "description": "Label for the menu entry to delete cosmetic filters"
+  },
+  "developDropdownLabel": {
+    "message": "הצג",
+    "description": "A label of a dropdown list"
+  },
+  "developOptionFilteringModeDetails": {
+    "message": "פרטי מצב סינון",
+    "description": "An option in a dropdown list"
+  },
+  "developOptionCustomDnrRules": {
+    "message": "חוקי DNR אישיים",
+    "description": "An option in a dropdown list"
+  },
+  "developOptionDnrRulesOf": {
+    "message": "חוקי DNR של...",
+    "description": "A section header in a dropdown list"
+  },
+  "developOptionDynamicRuleset": {
+    "message": "קבוצת חוקים דינמיים",
+    "description": "An option in a dropdown list"
+  },
+  "developOptionSessionRuleset": {
+    "message": "קבוצת חוקי מפגש (session)",
+    "description": "An option in a dropdown list"
+  },
+  "saveButton": {
+    "message": "שמירה",
+    "description": "Text for buttons used to save changes"
+  },
+  "revertButton": {
+    "message": "ביטול שינויים",
+    "description": "Text for buttons used to revert changes"
+  },
+  "addButton": {
+    "message": "הוספה",
+    "description": "Text for buttons used to add content"
+  },
+  "importAndAppendButton": {
+    "message": "ייבא וצרף…",
+    "description": "Text for buttons used to import and append content"
+  },
+  "exportButton": {
+    "message": "ייצוא…",
+    "description": "Text for buttons used to export content"
+  },
+  "backupButton": {
+    "message": "גיבוי…",
+    "description": "Text for buttons used to back up content"
+  },
+  "restoreButton": {
+    "message": "שחזור…",
+    "description": "Text for buttons used to restore content"
+  },
+  "resetToDefaultButton": {
+    "message": "אפס להגדרות ברירת מחדל…",
+    "description": "Text for buttons used to reset configurations to default"
+  },
+  "resetToDefaultConfirm": {
+    "message": "כל ההגדרות האישיות שלך ימחקו. האם באמת לאפס להגדרות ברירת מחדל?",
+    "description": "Message asking user to confirm reset to default settings"
+  },
+  "dnrRulesWarning": {
+    "message": "אל תוסיפו תוכן ממקורות לא מהיימנים",
+    "description": "Short description of the DNR rules editor pane"
+  },
+  "dnrRulesCountInfo": {
+    "message": "מספר החוקים שנרשמו: {count}",
+    "description": "Short sentence to report the number of currently registered DNR rules"
+  },
+  "pickerSliderLabel": {
+    "message": "הזיזו את המחוג לבחירת ההתאמה הטובה ביותר",
+    "description": "Label to describe the purpose of the slider"
+  },
+  "pickerPick": {
+    "message": "בחירה",
+    "description": "Text for the button to re-enter element-picking mode"
+  },
+  "pickerPreview": {
+    "message": "תצוגה מקדימה",
+    "description": "Text for the button to activate preview mode"
+  },
+  "pickerCreate": {
+    "message": "יצירה",
+    "description": "Text for the button to create the filter"
+  },
+  "unpickerUsage": {
+    "message": "בחרו את המסנן למטה להצגת הרכיבים התואמים בדף האינטרנט. לחצו על פח האשפה למחיקת המסנן.",
+    "description": "Summary description on how to use the tool to remove custom filters"
   }
 }

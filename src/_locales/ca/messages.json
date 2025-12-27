@@ -32,11 +32,11 @@
     "description": "appears as tab name in dashboard"
   },
   "1pPageName": {
-    "message": "Els vostres filtres",
+    "message": "Filtres personalitzats",
     "description": "appears as tab name in dashboard"
   },
   "rulesPageName": {
-    "message": "Les meves regles",
+    "message": "Regles personalitzades",
     "description": "appears as tab name in dashboard"
   },
   "whitelistPageName": {
@@ -540,7 +540,7 @@
     "description": "Warning against copy-pasting filters from random sources"
   },
   "1pEnableMyFiltersLabel": {
-    "message": "Habilita els meus filtres personalitzats",
+    "message": "Habilita els filtres personalitzats",
     "description": "Label for the checkbox use to enable/disable 'My filters' list"
   },
   "1pTrustMyFiltersLabel": {
@@ -897,14 +897,14 @@
   },
   "supportOpenButton": {
     "message": "Obre",
-    "description": "Text for button which open an external webpage in Support pane"
+    "description": "Text for button which open an external web page in Support pane"
   },
   "supportReportSpecificButton": {
-    "message": "Crea un informe nou",
-    "description": "Text for button which open an external webpage in Support pane"
+    "message": "Crea un informe nou al GitHub",
+    "description": "Text for button which open an external web page in Support pane"
   },
   "supportFindSpecificButton": {
-    "message": "Cerca d'informes semblants",
+    "message": "Cerca informes similars al GitHub",
     "description": "A clickable link in the filter issue reporter section"
   },
   "supportS1H": {
@@ -964,7 +964,7 @@
     "description": "Header of 'Report a filter issue' section in Support pane"
   },
   "supportS6P1S1": {
-    "message": "Per evitar carregar els voluntaris amb informes duplicats, verifiqueu que el problema encara no s'hagi notificat.",
+    "message": "Per a evitar la sobrecàrrega del nostre voluntariat amb informes duplicats, verifiqueu abans que el problema encara no s'ha notificat. <b>Nota:</b> en fer clic, enviareu la pàgina causant al nostre GitHub.",
     "description": "A paragraph in the filter issue reporter section"
   },
   "supportS6P2S1": {
@@ -1018,14 +1018,6 @@
   "supportS6Checkbox1": {
     "message": "Marca aquesta pàgina com a &ldquo;NSFW&rdquo; (<a href=\"https://ca.wikipedia.org/wiki/NSFW\">&ldquo;No segur per al treball&rdquo;</a>)",
     "description": "A checkbox to use for NSFW sites"
-  },
-  "supportRedact": {
-    "message": "Redacta",
-    "description": "Text for 'Redact' button"
-  },
-  "supportUnredact": {
-    "message": "No redactis",
-    "description": "Text for 'Unredact' button"
   },
   "aboutPrivacyPolicy": {
     "message": "Política de privadesa",
@@ -1098,10 +1090,6 @@
   "errorCantConnectTo": {
     "message": "Error de xarxa: {{msg}}",
     "description": "English: Network error: {{msg}}"
-  },
-  "subscriberConfirm": {
-    "message": "uBlock₀: Voleu afegir aquest URL a la llista de filtres personalitzats?\n\nTítol: \"{{title}}\"\nURL: {{url}}",
-    "description": "No longer used"
   },
   "subscribeButton": {
     "message": "Subscriu-me",
@@ -1194,6 +1182,22 @@
   "docblockedRedirectPrompt": {
     "message": "La pàgina blocada vol redirigir-vos a un altre web diferent. Si continueu, si us reenviarà a: {{url}}",
     "description": "Text warning about an incoming redirect"
+  },
+  "docblockedReasonLabel": {
+    "message": "Motiu:",
+    "description": "The label which prepend the actual reason why a page was blocked"
+  },
+  "docblockedReasonMalicious": {
+    "message": "Perjudicial",
+    "description": "An actual reason why a page was blocked"
+  },
+  "docblockedReasonTracker": {
+    "message": "Seguidor",
+    "description": "An actual reason why a page was blocked"
+  },
+  "docblockedReasonDisreputable": {
+    "message": "Mala reputació",
+    "description": "An actual reason why a page was blocked"
   },
   "cloudPush": {
     "message": "Exporta a un servei al núvol",

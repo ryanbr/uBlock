@@ -21,8 +21,6 @@
 
 /* global CodeMirror, uBlockDashboard */
 
-'use strict';
-
 import { dom, qs$ } from './dom.js';
 
 /******************************************************************************/
@@ -90,7 +88,7 @@ const hashFromAdvancedSettings = function(raw) {
 const arrayFromObject = function(o) {
     const out = [];
     for ( const k in o ) {
-        if ( o.hasOwnProperty(k) === false ) { continue; }
+        if ( Object.hasOwn(o, k) === false ) { continue; }
         out.push([ k, `${o[k]}` ]);
     }
     return out;

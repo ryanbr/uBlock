@@ -25,7 +25,6 @@ import * as sfp from './static-filtering-parser.js';
 import {
     domainFromHostname,
     domainFromURI,
-    entityFromDomain,
     hostnameFromURI,
     isNetworkURI,
 } from './uri-utils.js';
@@ -52,15 +51,12 @@ import publicSuffixList from '../lib/publicsuffixlist/publicsuffixlist.js';
 import punycode from '../lib/punycode.js';
 import { redirectEngine } from './redirect-engine.js';
 import scriptletFilteringEngine from './scriptlet-filtering.js';
-import staticFilteringReverseLookup from './reverselookup.js';
+import { staticFilteringReverseLookup } from './reverselookup.js';
 import staticNetFilteringEngine from './static-net-filtering.js';
 import webRequest from './traffic.js';
 import µb from './background.js';
 
 /******************************************************************************/
-
-const hasOwnProperty = (o, p) =>
-    Object.prototype.hasOwnProperty.call(o, p);
 
 // https://github.com/uBlockOrigin/uBlock-issues/issues/710
 //   Listeners have a name and a "privileged" status.
@@ -684,7 +680,7 @@ const retrieveContentScriptParameters = async function(sender, request) {
     request.frameId = frameId;
     request.hostname = hostnameFromURI(request.url);
     request.domain = domainFromHostname(request.hostname);
-    request.entity = entityFromDomain(request.domain);
+    request.ancestors = pageStore.getFrameAncestorDetails(frameId);
 
     const scf = response.specificCosmeticFilters =
         cosmeticFilteringEngine.retrieveSpecificSelectors(request, response);
@@ -918,7 +914,7 @@ const fromBase64 = function(encoded) {
     let u8array;
     try {
         u8array = denseBase64.decode(encoded);
-    } catch(ex) {
+    } catch {
     }
     return Promise.resolve(u8array !== undefined ? u8array : encoded);
 };
@@ -1096,7 +1092,7 @@ const restoreUserData = async function(request) {
     // Discard unknown setting or setting with default value.
     for ( const key in hiddenSettings ) {
         if (
-            hasOwnProperty(µb.hiddenSettingsDefault, key) === false ||
+            Object.hasOwn(µb.hiddenSettingsDefault, key) === false ||
             hiddenSettings[key] === µb.hiddenSettingsDefault[key]
         ) {
             delete hiddenSettings[key];
@@ -1148,7 +1144,7 @@ const resetUserData = async function() {
 // Filter lists
 const prepListEntries = function(entries) {
     for ( const k in entries ) {
-        if ( hasOwnProperty(entries, k) === false ) { continue; }
+        if ( Object.hasOwn(entries, k) === false ) { continue; }
         const entry = entries[k];
         if ( typeof entry.supportURL === 'string' && entry.supportURL !== '' ) {
             entry.supportName = hostnameFromURI(entry.supportURL);
@@ -1336,7 +1332,7 @@ const getSupportData = async function() {
     let addedListset = {};
     let removedListset = {};
     for ( const listKey in lists ) {
-        if ( hasOwnProperty(lists, listKey) === false ) { continue; }
+        if ( Object.hasOwn(lists, listKey) === false ) { continue; }
         const list = lists[listKey];
         if ( list.content !== 'filters' ) { continue; }
         const used = µb.selectedFilterLists.includes(listKey);
@@ -1890,7 +1886,9 @@ const onMessage = function(request, sender, callback) {
                     return {
                         name: assetKey,
                         text: details.content,
-                        trustedSource: assetKey.startsWith('ublock-'),
+                        trustedSource: assetKey.startsWith('ublock-') ||
+                            assetKey === µb.userFiltersPath &&
+                                µb.userSettings.userFiltersTrusted,
                     };
                 })
             );

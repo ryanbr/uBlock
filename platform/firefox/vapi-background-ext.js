@@ -287,7 +287,7 @@ vAPI.Net = class extends vAPI.Net {
             if ( domainFromHostname(cn) === domainFromHostname(hn) ) { return; }
         }
         if ( this.cnameIgnoreList !== null ) {
-            if ( this.cnameIgnoreList.test(cn) === false ) { return; }
+            if ( this.cnameIgnoreList.test(cn) ) { return; }
         }
         if ( this.cnameIgnoreRootDocument ) {
             const origin = hostnameFromNetworkURL(details.documentUrl || details.url);
@@ -355,7 +355,7 @@ vAPI.scriptletsInjector = (( ) => {
     const parts = [
         '(',
         function(details) {
-            if ( typeof self.uBO_scriptletsInjected === 'string' ) { return; }
+            if ( self.uBO_scriptletsInjected !== undefined ) { return; }
             const doc = document;
             const { location } = doc;
             if ( location === null ) { return; }
@@ -373,7 +373,7 @@ vAPI.scriptletsInjector = (( ) => {
                 script = doc.createElement('script');
                 script.appendChild(doc.createTextNode(code));
                 (doc.head || doc.documentElement).appendChild(script);
-            } catch (ex) {
+            } catch {
             }
             if ( script ) {
                 script.remove();
@@ -400,7 +400,7 @@ vAPI.scriptletsInjector = (( ) => {
                 script.src = url;
                 (doc.head || doc.documentElement || doc).append(script);
                 self.uBO_scriptletsInjected = details.filters;
-            } catch (ex) {
+            } catch {
             }
             if ( url ) {
                 if ( script ) { script.remove(); }

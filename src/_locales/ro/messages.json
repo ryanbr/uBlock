@@ -488,7 +488,7 @@
     "description": "Filter lists section name"
   },
   "3pGroupCookies": {
-    "message": "Cookie notices",
+    "message": "Notificări privind cookie-urile",
     "description": "Filter lists section name"
   },
   "3pGroupAnnoyances": {
@@ -540,11 +540,11 @@
     "description": "Warning against copy-pasting filters from random sources"
   },
   "1pEnableMyFiltersLabel": {
-    "message": "Enable my custom filters",
+    "message": "Activați filtrele mele personalizate",
     "description": "Label for the checkbox use to enable/disable 'My filters' list"
   },
   "1pTrustMyFiltersLabel": {
-    "message": "Allow custom filters requiring trust",
+    "message": "Permiteți filtre personalizate care necesită încredere",
     "description": "Label for the checkbox use to trust the content of 'My filters' list"
   },
   "1pImport": {
@@ -624,7 +624,7 @@
     "description": "English: a sort option for list of rules."
   },
   "rulesSortByDestination": {
-    "message": "Destinaţia",
+    "message": "Destinație",
     "description": "English: a sort option for list of rules."
   },
   "whitelistPrompt": {
@@ -840,7 +840,7 @@
     "description": "Message to show when a filter cannot be found in any filter lists"
   },
   "loggerSettingDiscardPrompt": {
-    "message": "Intrările din jurnal care nu îndeplinesc cele trei condiții de mai jos vor fi respinse automat:",
+    "message": "Intrările în registrul de logare care nu îndeplinesc toate cele trei condiții de mai jos vor fi automat eliminate.",
     "description": "Logger setting: A sentence to describe the purpose of the settings below"
   },
   "loggerSettingPerEntryMaxAge": {
@@ -897,11 +897,11 @@
   },
   "supportOpenButton": {
     "message": "Deschide",
-    "description": "Text for button which open an external webpage in Support pane"
+    "description": "Text for button which open an external web page in Support pane"
   },
   "supportReportSpecificButton": {
     "message": "Crează o nouă sesizare",
-    "description": "Text for button which open an external webpage in Support pane"
+    "description": "Text for button which open an external web page in Support pane"
   },
   "supportFindSpecificButton": {
     "message": "Găsește sesizări similare",
@@ -1012,20 +1012,12 @@
     "description": "An entry in the widget used to select the type of issue"
   },
   "supportS6Select1Option7": {
-    "message": "Leads to badware, phishing",
+    "message": "Duce la programe dăunătoare, phishing",
     "description": "An entry in the widget used to select the type of issue"
   },
   "supportS6Checkbox1": {
     "message": "Etichetează pagina ca fiind „NSFW” (<a href=\"https://wikipedia.org/wiki/Not_safe_for_work\">“Not Safe For Work”</a>)",
     "description": "A checkbox to use for NSFW sites"
-  },
-  "supportRedact": {
-    "message": "Redactează",
-    "description": "Text for 'Redact' button"
-  },
-  "supportUnredact": {
-    "message": "Anulează redactarea",
-    "description": "Text for 'Unredact' button"
   },
   "aboutPrivacyPolicy": {
     "message": "Politică de confidențialitate",
@@ -1098,10 +1090,6 @@
   "errorCantConnectTo": {
     "message": "Eroare de rețea: {{msg}}",
     "description": "English: Network error: {{msg}}"
-  },
-  "subscriberConfirm": {
-    "message": "uBlock: Adaugă următorul URL în lista ta de filtre personalizate?\n\nTitlu: \"{{title}}\"\nURL: {{url}}",
-    "description": "No longer used"
   },
   "subscribeButton": {
     "message": "Abonează-te",
@@ -1192,8 +1180,24 @@
     "description": "Button text to navigate to the blocked page"
   },
   "docblockedRedirectPrompt": {
-    "message": "The blocked page wants to redirect to another site. If you choose to proceed, you will navigate directly to: {{url}}",
+    "message": "Pagina blocată dorește să redirecționeze către un alt site. Dacă alegeți să continuați, veți naviga direct către: {{url}}",
     "description": "Text warning about an incoming redirect"
+  },
+  "docblockedReasonLabel": {
+    "message": "Motiv:",
+    "description": "The label which prepend the actual reason why a page was blocked"
+  },
+  "docblockedReasonMalicious": {
+    "message": "Malițios",
+    "description": "An actual reason why a page was blocked"
+  },
+  "docblockedReasonTracker": {
+    "message": "Urmăritor",
+    "description": "An actual reason why a page was blocked"
+  },
+  "docblockedReasonDisreputable": {
+    "message": "Reputație slaba",
+    "description": "An actual reason why a page was blocked"
   },
   "cloudPush": {
     "message": "Exportă către stocarea în cloud",

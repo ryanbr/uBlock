@@ -108,7 +108,7 @@
     "description": "For the new mobile-friendly popup design"
   },
   "popupDomainsConnected_v2": {
-    "message": "Dominos conectados",
+    "message": "Dominios conectados",
     "description": "For the new mobile-friendly popup design"
   },
   "popupTipDashboard": {
@@ -184,7 +184,7 @@
     "description": "Tooltip for the no-scripting per-site switch"
   },
   "popupTipNoScripting2": {
-    "message": "Preme para volver a activar JavaScript nesta web",
+    "message": "Preme para volver activar JavaScript nesta web",
     "description": "Tooltip for the no-scripting per-site switch"
   },
   "popupNoPopups_v2": {
@@ -897,11 +897,11 @@
   },
   "supportOpenButton": {
     "message": "Abrir",
-    "description": "Text for button which open an external webpage in Support pane"
+    "description": "Text for button which open an external web page in Support pane"
   },
   "supportReportSpecificButton": {
     "message": "Crear nova denuncia",
-    "description": "Text for button which open an external webpage in Support pane"
+    "description": "Text for button which open an external web page in Support pane"
   },
   "supportFindSpecificButton": {
     "message": "Atopar denuncias parecidas",
@@ -1019,14 +1019,6 @@
     "message": "Etiqueta a páxina como \"NSFW\" (<a href=\"https://wikipedia.org/wiki/Not_safe_for_work\">\"Non é Segura No Traballo\"</a>)",
     "description": "A checkbox to use for NSFW sites"
   },
-  "supportRedact": {
-    "message": "Redact",
-    "description": "Text for 'Redact' button"
-  },
-  "supportUnredact": {
-    "message": "Unredact",
-    "description": "Text for 'Unredact' button"
-  },
   "aboutPrivacyPolicy": {
     "message": "Política de privacidade",
     "description": "Link to privacy policy on GitHub (English)"
@@ -1098,10 +1090,6 @@
   "errorCantConnectTo": {
     "message": "Erro da rede: {{msg}}",
     "description": "English: Network error: {{msg}}"
-  },
-  "subscriberConfirm": {
-    "message": "uBlock₀: Engadir o seguinte enderezo á túa lista de filtros personalizados?\n\nTitle: \"{{title}}\"\nURL: {{url}}",
-    "description": "No longer used"
   },
   "subscribeButton": {
     "message": "Subscribir",
@@ -1194,6 +1182,22 @@
   "docblockedRedirectPrompt": {
     "message": "A páxina bloqueada quere redirixir a outra web. Se elixes continuar vas ir directamente a: {{url}}",
     "description": "Text warning about an incoming redirect"
+  },
+  "docblockedReasonLabel": {
+    "message": "Razón:",
+    "description": "The label which prepend the actual reason why a page was blocked"
+  },
+  "docblockedReasonMalicious": {
+    "message": "Daniña",
+    "description": "An actual reason why a page was blocked"
+  },
+  "docblockedReasonTracker": {
+    "message": "Rastrexo",
+    "description": "An actual reason why a page was blocked"
+  },
+  "docblockedReasonDisreputable": {
+    "message": "Mala reputación",
+    "description": "An actual reason why a page was blocked"
   },
   "cloudPush": {
     "message": "Exportar ó almacenamento na nube",

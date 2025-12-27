@@ -21,10 +21,6 @@
 
 /* globals CodeMirror, uBlockDashboard, beautifier */
 
-'use strict';
-
-/******************************************************************************/
-
 import { dom, qs$ } from './dom.js';
 import { getActualTheme } from './theme.js';
 
@@ -39,6 +35,7 @@ const cmEditor = new CodeMirror(qs$('#content'), {
     gutters: [ 'CodeMirror-linenumbers' ],
     lineNumbers: true,
     lineWrapping: true,
+    maximizable: false,
     matchBrackets: true,
     styleActiveLine: {
         nonEmpty: true,
@@ -117,25 +114,25 @@ async function fetchResource(url) {
         }
     };
     switch ( mime ) {
-        case 'text/css':
-            text = beautifier.css(text, beautifierOptions);
-            break;
-        case 'text/html':
-        case 'application/xhtml+xml':
-        case 'application/xml':
-        case 'image/svg+xml':
-            text = beautifier.html(text, beautifierOptions);
-            break;
-        case 'text/javascript':
-        case 'application/javascript':
-        case 'application/x-javascript':
-            text = beautifier.js(text, beautifierOptions);
-            break;
-        case 'application/json':
-            text = beautifier.js(text, beautifierOptions);
-            break;
-        default:
-            break;
+    case 'text/css':
+        text = beautifier.css(text, beautifierOptions);
+        break;
+    case 'text/html':
+    case 'application/xhtml+xml':
+    case 'application/xml':
+    case 'image/svg+xml':
+        text = beautifier.html(text, beautifierOptions);
+        break;
+    case 'text/javascript':
+    case 'application/javascript':
+    case 'application/x-javascript':
+        text = beautifier.js(text, beautifierOptions);
+        break;
+    case 'application/json':
+        text = beautifier.js(text, beautifierOptions);
+        break;
+    default:
+        break;
     }
     return { mime, text };
 }
@@ -182,7 +179,7 @@ async function setURL(resourceURL) {
             const url = new URL(resourceURL, currentURL || undefined);
             url.hash = '';
             afterURL = url.href;
-        } catch(ex) {
+        } catch {
         }
         if ( afterURL === undefined ) { return; }
     } else {

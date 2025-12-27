@@ -1,3 +1,7 @@
+:root {
+    --quit-button-size: max(4em, min(6em, calc(100vw / 8), calc(100vh / 8)));
+}
+
 html#ublock0-epicker,
 #ublock0-epicker body {
     background: transparent;
@@ -16,7 +20,7 @@ html#ublock0-epicker,
     border: 1px solid var(--border-2);
     box-sizing: border-box;
     cursor: default;
-    display: none;
+    display: flex;
     flex-direction: column;
     max-width: min(32rem, 100vw - 4px);
     min-width: min(24rem, 100vw - 4px);
@@ -25,8 +29,21 @@ html#ublock0-epicker,
     width: min(32rem, 100vw - 4px);
     z-index: 100;
 }
-#ublock0-epicker:not(.zap) aside {
-    display: flex;
+#ublock0-epicker.zap aside {
+    bottom: unset !important;
+    min-width: unset !important;
+    top: 50%;
+    transform: translateY(-50%);
+    width: unset !important;
+}
+#ublock0-epicker.zap aside > section,
+#ublock0-epicker.zap aside > ul,
+#ublock0-epicker.zap aside > #windowbar > div:not(#quit) {
+    display: none;
+}
+#ublock0-epicker.zap aside > #windowbar > #quit {
+    width: var(--quit-button-size);
+    height: var(--quit-button-size);
 }
 #ublock0-epicker:not(.paused) aside,
 #ublock0-epicker.minimized aside {

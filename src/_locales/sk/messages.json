@@ -340,11 +340,11 @@
     "description": "Section for controlling user interface appearance"
   },
   "settingsThemeLabel": {
-    "message": "Téma",
+    "message": "Motív",
     "description": "Label for checkbox to enable a custom dark theme"
   },
   "settingsThemeAccent0Label": {
-    "message": "Vlastná farba témy",
+    "message": "Vlastná farba motívu",
     "description": "Label for checkbox to pick an accent color"
   },
   "settingsCloudStorageEnabledPrompt": {
@@ -372,7 +372,7 @@
     "description": ""
   },
   "settingPerSiteSwitchGroupSynopsis": {
-    "message": "Tieto predvolené správania môžu byť prepísané u jednotlivých stránkach",
+    "message": "Tieto predvolené správania môžu byť prepísané na jednotlivých stránkach",
     "description": ""
   },
   "settingsNoCosmeticFilteringPrompt": {
@@ -897,11 +897,11 @@
   },
   "supportOpenButton": {
     "message": "Otvoriť",
-    "description": "Text for button which open an external webpage in Support pane"
+    "description": "Text for button which open an external web page in Support pane"
   },
   "supportReportSpecificButton": {
     "message": "Vytvoriť nové hlásenie",
-    "description": "Text for button which open an external webpage in Support pane"
+    "description": "Text for button which open an external web page in Support pane"
   },
   "supportFindSpecificButton": {
     "message": "Vyhľadať podobné hlásenia",
@@ -1019,14 +1019,6 @@
     "message": "Označiť webstránku ako &ldquo;NSFW&rdquo; (<a href=\"https://wikipedia.org/wiki/Not_safe_for_work\">Nie je bezpečné pre prácu&rdquo;)",
     "description": "A checkbox to use for NSFW sites"
   },
-  "supportRedact": {
-    "message": "Upraviť",
-    "description": "Text for 'Redact' button"
-  },
-  "supportUnredact": {
-    "message": "Neupravovať",
-    "description": "Text for 'Unredact' button"
-  },
   "aboutPrivacyPolicy": {
     "message": "Zásady ochrany osobných údajov",
     "description": "Link to privacy policy on GitHub (English)"
@@ -1084,7 +1076,7 @@
     "description": "English: Reset to default settings..."
   },
   "aboutRestoreDataConfirm": {
-    "message": "Všetky vaše nastavenia budú prepísané pomocou dáta zálohovaných dňa {{time}} a uBlock sa reštartne.\n\nPrepísať všetky existujúce nastavenia pomocou zálohovaných dát?",
+    "message": "Všetky vaše nastavenia budú prepísané dátami zálohovanými {{time}} a uBlock sa reštartuje.\n\nPrepísať všetky existujúce nastavenia pomocou zálohovaných dát?",
     "description": "Message asking user to confirm restore"
   },
   "aboutRestoreDataError": {
@@ -1098,10 +1090,6 @@
   "errorCantConnectTo": {
     "message": "Chyba siete: {{msg}}",
     "description": "English: Network error: {{msg}}"
-  },
-  "subscriberConfirm": {
-    "message": "uBlock₀: Pridať nasledujúcu URL do zoznamu vlastných filtrov?\n\nNázov: \"{{title}}\"\nURL: {{url}}",
-    "description": "No longer used"
   },
   "subscribeButton": {
     "message": "Pridať",
@@ -1194,6 +1182,22 @@
   "docblockedRedirectPrompt": {
     "message": "Zablokovaná stránka chce presmerovať na inú stránku. Ak sa rozhodnete pokračovať, prejdete priamo na: {{url}}",
     "description": "Text warning about an incoming redirect"
+  },
+  "docblockedReasonLabel": {
+    "message": "Dôvod:",
+    "description": "The label which prepend the actual reason why a page was blocked"
+  },
+  "docblockedReasonMalicious": {
+    "message": "Škodlivé",
+    "description": "An actual reason why a page was blocked"
+  },
+  "docblockedReasonTracker": {
+    "message": "Sledovač",
+    "description": "An actual reason why a page was blocked"
+  },
+  "docblockedReasonDisreputable": {
+    "message": "Pochybné",
+    "description": "An actual reason why a page was blocked"
   },
   "cloudPush": {
     "message": "Exportovať do cloudového úložiska",

@@ -897,14 +897,14 @@
   },
   "supportOpenButton": {
     "message": "Åbn",
-    "description": "Text for button which open an external webpage in Support pane"
+    "description": "Text for button which open an external web page in Support pane"
   },
   "supportReportSpecificButton": {
-    "message": "Opret ny anmeldelse",
-    "description": "Text for button which open an external webpage in Support pane"
+    "message": "Opret ny anmeldelse på GitHub",
+    "description": "Text for button which open an external web page in Support pane"
   },
   "supportFindSpecificButton": {
-    "message": "Find lign. anmeldelser",
+    "message": "Find lign. anmeldelser på GitHub",
     "description": "A clickable link in the filter issue reporter section"
   },
   "supportS1H": {
@@ -964,7 +964,7 @@
     "description": "Header of 'Report a filter issue' section in Support pane"
   },
   "supportS6P1S1": {
-    "message": "For at undgå at belaste frivillige med dubletanmeldelser, så tjek venligst, at problemet ikke allerede er anmeldt.",
+    "message": "For at undgå at bebyrde frivillige med dubletanmeldelser, så tjek venligst, at problematikken ikke allerede er anmeldt. <b>Bemærk:</b> Ved at klikke på knappen, sendes sidens oprindelse til GitHub.",
     "description": "A paragraph in the filter issue reporter section"
   },
   "supportS6P2S1": {
@@ -1018,14 +1018,6 @@
   "supportS6Checkbox1": {
     "message": "Markér websiden som &ldquo;NSFW&rdquo; (<a href=\"https://wikipedia.org/wiki/Not_safe_for_work\">&ldquo;Ikke sikker til arbejdsbrug&rdquo;</a>)",
     "description": "A checkbox to use for NSFW sites"
-  },
-  "supportRedact": {
-    "message": "Bortredigér",
-    "description": "Text for 'Redact' button"
-  },
-  "supportUnredact": {
-    "message": "Bortredigér ikke",
-    "description": "Text for 'Unredact' button"
   },
   "aboutPrivacyPolicy": {
     "message": "Fortrolighedspolitik",
@@ -1098,10 +1090,6 @@
   "errorCantConnectTo": {
     "message": "Netværksfejl: {{msg}}",
     "description": "English: Network error: {{msg}}"
-  },
-  "subscriberConfirm": {
-    "message": "Føj følgende URL til dine tilpassede filterlister?\n\nTitel: \"{{title}}\"\nURL: {{url}}",
-    "description": "No longer used"
   },
   "subscribeButton": {
     "message": "Abonnér",
@@ -1194,6 +1182,22 @@
   "docblockedRedirectPrompt": {
     "message": "Den blokerede side ønsker at omdirigere til et andet websted. Vælger man at fortsætte, navigeres direkte til: {{url}}",
     "description": "Text warning about an incoming redirect"
+  },
+  "docblockedReasonLabel": {
+    "message": "Årsag:",
+    "description": "The label which prepend the actual reason why a page was blocked"
+  },
+  "docblockedReasonMalicious": {
+    "message": "Ondsindet",
+    "description": "An actual reason why a page was blocked"
+  },
+  "docblockedReasonTracker": {
+    "message": "Tracker",
+    "description": "An actual reason why a page was blocked"
+  },
+  "docblockedReasonDisreputable": {
+    "message": "Ikke-velrenommeret",
+    "description": "An actual reason why a page was blocked"
   },
   "cloudPush": {
     "message": "Eksportér til Skylager",

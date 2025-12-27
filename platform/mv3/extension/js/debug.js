@@ -19,18 +19,83 @@
     Home: https://github.com/gorhill/uBlock
 */
 
-import { dnr } from './ext.js';
+import {
+    dnr,
+    normalizeDNRRules,
+    webext,
+} from './ext-compat.js';
+
+import {
+    sessionRead,
+    sessionWrite,
+} from './ext.js';
 
 /******************************************************************************/
 
-export const isSideloaded = dnr.onRuleMatchedDebug instanceof Object;
+const isModern = dnr.onRuleMatchedDebug instanceof Object;
+
+export const isSideloaded = (( ) => {
+    const { permissions } = webext.runtime.getManifest();
+    return permissions?.includes('declarativeNetRequestFeedback') ?? false;
+})();
 
 /******************************************************************************/
+
+const CONSOLE_MAX_LINES = 32;
+const consoleOutput = [];
+
+sessionRead('console').then(before => {
+    if ( Array.isArray(before) === false ) { return; }
+    for ( const s of before.reverse() ) {
+        consoleOutput.unshift(s);
+    }
+    consoleTruncate();
+});
+
+const consoleTruncate = ( ) => {
+    if ( consoleOutput.length <= CONSOLE_MAX_LINES ) { return; }
+    consoleOutput.copyWithin(0, -CONSOLE_MAX_LINES);
+    consoleOutput.length = CONSOLE_MAX_LINES;
+};
+
+const consoleAdd = (...args) => {
+    if ( args.length === 0 ) { return; }
+    const now = new Date();
+    const time = [
+        `${now.getUTCMonth()+1}`.padStart(2, '0'),
+        `${now.getUTCDate()}`.padStart(2, '0'),
+        '.',
+        `${now.getUTCHours()}`.padStart(2, '0'),
+        `${now.getUTCMinutes()}`.padStart(2, '0'),
+    ].join('');
+    for ( let i = 0; i < args.length; i++ ) {
+        const s = `[${time}]${args[i]}`;
+        if ( Boolean(s) === false ) { continue; }
+        if ( s === consoleOutput.at(-1) ) { continue; }
+        consoleOutput.push(s);
+    }
+    consoleTruncate();
+    sessionWrite('console', getConsoleOutput());
+}
 
 export const ubolLog = (...args) => {
     // Do not pollute dev console in stable releases.
     if ( isSideloaded !== true ) { return; }
     console.info('[uBOL]', ...args);
+};
+
+export const ubolErr = (...args) => {
+    if ( Array.isArray(args) === false ) { return; }
+    if ( globalThis.ServiceWorkerGlobalScope ) {
+        consoleAdd(...args);
+    }
+    // Do not pollute dev console in stable releases.
+    if ( isSideloaded !== true ) { return; }
+    console.error('[uBOL]', ...args);
+};
+
+export const getConsoleOutput = ( ) => {
+    return consoleOutput.slice();
 };
 
 /******************************************************************************/
@@ -42,9 +107,8 @@ matchedRules.fill(null);
 let writePtr = 0;
 
 const pruneLongLists = list => {
-    if ( list.length <= 21 ) { return list; }
-    return [ ...list.slice(0, 10), '...', ...list.slice(-10) ];
-    
+    if ( list.length <= 11 ) { return list; }
+    return [ ...list.slice(0, 5), '...', ...list.slice(-5) ];
 };
 
 const getRuleset = async rulesetId => {
@@ -57,7 +121,11 @@ const getRuleset = async rulesetId => {
     } else {
         const response = await fetch(`/rulesets/main/${rulesetId}.json`).catch(( ) => undefined);
         if ( response === undefined ) { return; }
-        rules = await response.json().catch(( ) => undefined);
+        rules = await response.json().catch(( ) =>
+            undefined
+        ).then(rules =>
+            normalizeDNRRules(rules)
+        );
     }
     if ( Array.isArray(rules) === false ) { return; }
     const ruleset = new Map();
@@ -89,21 +157,35 @@ const getRuleDetails = async ruleInfo => {
 /******************************************************************************/
 
 export const getMatchedRules = (( ) => {
-    const noopFn = ( ) => Promise.resolve([]);
-    if ( isSideloaded !== true ) { return noopFn; }
+    if ( isSideloaded !== true ) {
+        return ( ) => Promise.resolve([]);
+    }
+
+    if ( isModern ) {
+        return async tabId => {
+            const promises = [];
+            for ( let i = 0; i < bufferSize; i++ ) {
+                const j = (writePtr + i) % bufferSize;
+                const ruleInfo = matchedRules[j];
+                if ( ruleInfo === null ) { continue; }
+                if ( ruleInfo.request.tabId !== -1 ) {
+                    if ( ruleInfo.request.tabId !== tabId ) { continue; }
+                }
+                const promise = getRuleDetails(ruleInfo);
+                if ( promise === undefined ) { continue; }
+                promises.unshift(promise);
+            }
+            return Promise.all(promises);
+        };
+    }
 
     return async tabId => {
+        if ( typeof dnr.getMatchedRules !== 'function' ) { return []; }
+        const matchedRules = await dnr.getMatchedRules({ tabId });
+        if ( matchedRules instanceof Object === false ) { return []; }
         const promises = [];
-        for ( let i = 0; i < bufferSize; i++ ) {
-            const j = (writePtr + i) % bufferSize;
-            const ruleInfo = matchedRules[j];
-            if ( ruleInfo === null ) { continue; }
-            if ( ruleInfo.request.tabId !== -1 ) {
-                if ( ruleInfo.request.tabId !== tabId ) { continue; }
-            }
-            const promise = getRuleDetails(ruleInfo);
-            if ( promise === undefined ) { continue; }
-            promises.unshift(promise);
+        for ( const { tabId, rule } of matchedRules.rulesMatchedInfo ) {
+            promises.push(getRuleDetails({ request: { tabId }, rule }));
         }
         return Promise.all(promises);
     };
@@ -118,6 +200,7 @@ const matchedRuleListener = ruleInfo => {
 
 export const toggleDeveloperMode = state => {
     if ( isSideloaded !== true ) { return; }
+    if ( isModern === false ) { return; } 
     if ( state ) {
         dnr.onRuleMatchedDebug.addListener(matchedRuleListener);
     } else {

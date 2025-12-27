@@ -11,9 +11,6 @@ PLATFORM="chromium"
 
 for i in "$@"; do
   case $i in
-    quick)
-      QUICK="yes"
-      ;;
     full)
       FULL="yes"
       ;;
@@ -23,7 +20,13 @@ for i in "$@"; do
     chromium)
       PLATFORM="chromium"
       ;;
-    uBOLite_+([0-9]).+([0-9]).+([0-9]).+([0-9]))
+    edge)
+      PLATFORM="edge"
+      ;;
+    safari)
+      PLATFORM="safari"
+      ;;
+    +([0-9]).+([0-9]).+([0-9]))
       TAGNAME="$i"
       FULL="yes"
       ;;
@@ -37,20 +40,24 @@ echo "PLATFORM=$PLATFORM"
 echo "TAGNAME=$TAGNAME"
 echo "BEFORE=$BEFORE"
 
-DES="dist/build/uBOLite.$PLATFORM"
+UBOL_DIR="dist/build/uBOLite.$PLATFORM"
 
-if [ "$QUICK" != "yes" ]; then
-    rm -rf $DES
+if [ "$PLATFORM" = "edge" ]; then
+    MANIFEST_DIR="chromium"
+else
+    MANIFEST_DIR="$PLATFORM"
 fi
 
-mkdir -p $DES
-cd $DES
-DES=$(pwd)
+rm -rf $UBOL_DIR
+
+mkdir -p $UBOL_DIR
+cd $UBOL_DIR
+UBOL_DIR=$(pwd)
 cd - > /dev/null
 
-mkdir -p "$DES"/css/fonts
-mkdir -p "$DES"/js
-mkdir -p "$DES"/img
+mkdir -p "$UBOL_DIR"/css/fonts
+mkdir -p "$UBOL_DIR"/js
+mkdir -p "$UBOL_DIR"/img
 
 if [ -n "$UBO_VERSION" ]; then
     UBO_REPO="https://github.com/gorhill/uBlock.git"
@@ -67,82 +74,110 @@ else
 fi
 
 echo "*** uBOLite.mv3: Copying common files"
-cp -R "$UBO_DIR"/src/css/fonts/* "$DES"/css/fonts/
-cp "$UBO_DIR"/src/css/themes/default.css "$DES"/css/
-cp "$UBO_DIR"/src/css/common.css "$DES"/css/
-cp "$UBO_DIR"/src/css/dashboard-common.css "$DES"/css/
-cp "$UBO_DIR"/src/css/fa-icons.css "$DES"/css/
+cp -R "$UBO_DIR"/src/css/fonts/Inter "$UBOL_DIR"/css/fonts/
+cp "$UBO_DIR"/src/css/themes/default.css "$UBOL_DIR"/css/
+cp "$UBO_DIR"/src/css/common.css "$UBOL_DIR"/css/
+cp "$UBO_DIR"/src/css/dashboard-common.css "$UBOL_DIR"/css/
+cp "$UBO_DIR"/src/css/fa-icons.css "$UBOL_DIR"/css/
 
-cp "$UBO_DIR"/src/js/dom.js "$DES"/js/
-cp "$UBO_DIR"/src/js/fa-icons.js "$DES"/js/
-cp "$UBO_DIR"/src/js/i18n.js "$DES"/js/
-cp "$UBO_DIR"/src/js/urlskip.js "$DES"/js/
-cp "$UBO_DIR"/src/lib/punycode.js "$DES"/js/
+cp "$UBO_DIR"/src/js/arglist-parser.js "$UBOL_DIR"/js/
+cp "$UBO_DIR"/src/js/dom.js "$UBOL_DIR"/js/
+cp "$UBO_DIR"/src/js/fa-icons.js "$UBOL_DIR"/js/
+cp "$UBO_DIR"/src/js/i18n.js "$UBOL_DIR"/js/
+cp "$UBO_DIR"/src/js/jsonpath.js "$UBOL_DIR"/js/
+cp "$UBO_DIR"/src/js/redirect-resources.js "$UBOL_DIR"/js/
+cp "$UBO_DIR"/src/js/static-filtering-parser.js "$UBOL_DIR"/js/
+cp "$UBO_DIR"/src/js/urlskip.js "$UBOL_DIR"/js/
+cp "$UBO_DIR"/src/lib/punycode.js "$UBOL_DIR"/js/
 
-cp -R "$UBO_DIR/src/img/flags-of-the-world" "$DES"/img
+cp -R "$UBO_DIR/src/img/flags-of-the-world" "$UBOL_DIR"/img
 
-cp LICENSE.txt "$DES"/
+cp LICENSE.txt "$UBOL_DIR"/
 
 echo "*** uBOLite.mv3: Copying mv3-specific files"
-if [ "$PLATFORM" = "firefox" ]; then
-    cp platform/mv3/firefox/background.html "$DES"/
-fi
-cp platform/mv3/extension/*.html "$DES"/
-cp platform/mv3/extension/*.json "$DES"/
-cp platform/mv3/extension/css/* "$DES"/css/
-cp -R platform/mv3/extension/js/* "$DES"/js/
-cp platform/mv3/extension/img/* "$DES"/img/
-cp -R platform/mv3/extension/_locales "$DES"/
-cp platform/mv3/README.md "$DES/"
+cp platform/mv3/"$MANIFEST_DIR"/manifest.json "$UBOL_DIR"/
+cp platform/mv3/extension/*.html "$UBOL_DIR"/
+cp platform/mv3/extension/*.json "$UBOL_DIR"/
+cp platform/mv3/extension/css/* "$UBOL_DIR"/css/
+cp -R platform/mv3/extension/js/* "$UBOL_DIR"/js/
+cp platform/mv3/"$PLATFORM"/ext-compat.js "$UBOL_DIR"/js/ 2>/dev/null || :
+cp platform/mv3/"$PLATFORM"/css-api.js "$UBOL_DIR"/js/scripting/ 2>/dev/null || :
+cp platform/mv3/"$PLATFORM"/css-user.js "$UBOL_DIR"/js/scripting/ 2>/dev/null || :
+cp platform/mv3/extension/img/* "$UBOL_DIR"/img/
+cp platform/mv3/"$PLATFORM"/img/* "$UBOL_DIR"/img/ 2>/dev/null || :
+cp -R platform/mv3/extension/_locales "$UBOL_DIR"/
+cp platform/mv3/README.md "$UBOL_DIR/"
 
-if [ "$QUICK" != "yes" ]; then
-    echo "*** uBOLite.mv3: Generating rulesets"
-    TMPDIR=$(mktemp -d)
-    mkdir -p "$TMPDIR"
-    if [ "$PLATFORM" = "chromium" ]; then
-        cp platform/mv3/chromium/manifest.json "$DES"/
-    elif [ "$PLATFORM" = "firefox" ]; then
-        cp platform/mv3/firefox/manifest.json "$DES"/
-    fi
-    ./tools/make-nodejs.sh "$TMPDIR"
-    cp platform/mv3/package.json "$TMPDIR"/
-    cp platform/mv3/*.js "$TMPDIR"/
-    cp platform/mv3/*.mjs "$TMPDIR"/
-    cp platform/mv3/*.html "$TMPDIR"/
-    cp platform/mv3/extension/js/utils.js "$TMPDIR"/js/
-    cp -R "$UBO_DIR"/src/js/resources "$TMPDIR"/js/
-    cp "$UBO_DIR"/assets/assets.dev.json "$TMPDIR"/
-    cp -R platform/mv3/scriptlets "$TMPDIR"/
-    mkdir -p "$TMPDIR"/web_accessible_resources
-    cp "$UBO_DIR"/src/web_accessible_resources/* "$TMPDIR"/web_accessible_resources/
-    cd "$TMPDIR"
-    node --no-warnings make-rulesets.js output="$DES" platform="$PLATFORM"
-    if [ -n "$BEFORE" ]; then
-        echo "*** uBOLite.mv3: salvaging rule ids to minimize diff size"
-        echo "    before=$BEFORE/$PLATFORM"
-        echo "    after=$DES"
-        node salvage-ruleids.mjs before="$BEFORE"/"$PLATFORM" after="$DES"
-    fi
-    cd - > /dev/null
-    rm -rf "$TMPDIR"
-fi
+# Libraries
+mkdir -p "$UBOL_DIR"/lib/codemirror
+cp platform/mv3/extension/lib/codemirror/* \
+    "$UBOL_DIR"/lib/codemirror/ 2>/dev/null || :
+cp platform/mv3/extension/lib/codemirror/codemirror-ubol/dist/cm6.bundle.ubol.min.js \
+    "$UBOL_DIR"/lib/codemirror/
+cp platform/mv3/extension/lib/codemirror/codemirror.LICENSE \
+    "$UBOL_DIR"/lib/codemirror/
+cp platform/mv3/extension/lib/codemirror/codemirror-ubol/LICENSE \
+    "$UBOL_DIR"/lib/codemirror/codemirror-quickstart.LICENSE
+mkdir -p "$UBOL_DIR"/lib/csstree
+cp "$UBO_DIR"/src/lib/csstree/* "$UBOL_DIR"/lib/csstree/
 
-echo "*** uBOLite.mv3: extension ready"
-echo "Extension location: $DES/"
+echo "*** uBOLite.mv3: Generating rulesets"
+UBOL_BUILD_DIR=$(mktemp -d)
+mkdir -p "$UBOL_BUILD_DIR"
+./tools/make-nodejs.sh "$UBOL_BUILD_DIR"
+cp platform/mv3/*.json "$UBOL_BUILD_DIR"/
+cp platform/mv3/*.js "$UBOL_BUILD_DIR"/
+cp platform/mv3/*.mjs "$UBOL_BUILD_DIR"/
+cp platform/mv3/extension/js/utils.js "$UBOL_BUILD_DIR"/js/
+cp -R "$UBO_DIR"/src/js/resources "$UBOL_BUILD_DIR"/js/
+cp -R platform/mv3/scriptlets "$UBOL_BUILD_DIR"/
+mkdir -p "$UBOL_BUILD_DIR"/web_accessible_resources
+cp "$UBO_DIR"/src/web_accessible_resources/* "$UBOL_BUILD_DIR"/web_accessible_resources/
+cp -R platform/mv3/"$PLATFORM" "$UBOL_BUILD_DIR"/
+
+cd "$UBOL_BUILD_DIR"
+node --no-warnings make-rulesets.js output="$UBOL_DIR" platform="$PLATFORM"
+if [ -n "$BEFORE" ]; then
+    echo "*** uBOLite.mv3: salvaging rule ids to minimize diff size"
+    echo "    before=$BEFORE/$PLATFORM"
+    echo "    after=$UBOL_DIR"
+    node salvage-ruleids.mjs before="$BEFORE"/"$PLATFORM" after="$UBOL_DIR"
+fi
+cd - > /dev/null
+rm -rf "$UBOL_BUILD_DIR"
+
+echo "*** uBOLite.$PLATFORM: extension ready"
+echo "Extension location: $UBOL_DIR/"
 
 # Local build
+tmp_manifest=$(mktemp)
+chmod '=rw' "$tmp_manifest"
 if [ -z "$TAGNAME" ]; then
+    TAGNAME="$(jq -r .version "$UBOL_DIR"/manifest.json)"
     # Enable DNR rule debugging
-    tmp=$(mktemp)
     jq '.permissions += ["declarativeNetRequestFeedback"]' \
-        "$DES/manifest.json" > "$tmp" \
-        && mv "$tmp" "$DES/manifest.json"
+        "$UBOL_DIR/manifest.json" > "$tmp_manifest" \
+        && mv "$tmp_manifest" "$UBOL_DIR/manifest.json"
     # Use a different extension id than the official one
     if [ "$PLATFORM" = "firefox" ]; then
-        tmp=$(mktemp)
-        jq '.browser_specific_settings.gecko.id = "uBOLite.dev@raymondhill.net"' "$DES/manifest.json"  > "$tmp" \
-            && mv "$tmp" "$DES/manifest.json"
+        jq '.browser_specific_settings.gecko.id = "uBOLite.dev@raymondhill.net"' "$UBOL_DIR/manifest.json"  > "$tmp_manifest" \
+            && mv "$tmp_manifest" "$UBOL_DIR/manifest.json"
     fi
+else
+    jq --arg version "${TAGNAME}" '.version = $version' "$UBOL_DIR/manifest.json"  > "$tmp_manifest" \
+        && mv "$tmp_manifest" "$UBOL_DIR/manifest.json"
+fi
+
+# Platform-specific steps
+if [ "$PLATFORM" = "edge" ]; then
+    # For Edge, declared rulesets must be at package root
+    echo "*** uBOLite.edge: Modify reference implementation for Edge compatibility"
+    mv "$UBOL_DIR"/rulesets/main/* "$UBOL_DIR/"
+    rmdir "$UBOL_DIR/rulesets/main"
+    node platform/mv3/edge/patch-extension.js packageDir="$UBOL_DIR"
+elif [ "$PLATFORM" = "safari" ]; then
+    # For Safari, we must fix the package for compliance
+    node platform/mv3/safari/patch-extension.js packageDir="$UBOL_DIR"
 fi
 
 if [ "$FULL" = "yes" ]; then
@@ -151,22 +186,15 @@ if [ "$FULL" = "yes" ]; then
         EXTENSION="xpi"
     fi
     echo "*** uBOLite.mv3: Creating publishable package..."
-    if [ -z "$TAGNAME" ]; then
-        TAGNAME="uBOLite_$(jq -r .version "$DES"/manifest.json)"
-    else
-        tmp=$(mktemp)
-        jq --arg version "${TAGNAME:8}" '.version = $version' "$DES/manifest.json"  > "$tmp" \
-            && mv "$tmp" "$DES/manifest.json"
-    fi
-    PACKAGENAME="$TAGNAME.$PLATFORM.mv3.$EXTENSION"
-    TMPDIR=$(mktemp -d)
-    mkdir -p "$TMPDIR"
-    cp -R "$DES"/* "$TMPDIR"/
-    cd "$TMPDIR" > /dev/null
+    UBOL_PACKAGE_NAME="uBOLite_$TAGNAME.$PLATFORM.$EXTENSION"
+    UBOL_PACKAGE_DIR=$(mktemp -d)
+    mkdir -p "$UBOL_PACKAGE_DIR"
+    cp -R "$UBOL_DIR"/* "$UBOL_PACKAGE_DIR"/
+    cd "$UBOL_PACKAGE_DIR" > /dev/null
     rm -f ./log.txt
-    zip "$PACKAGENAME" -qr ./*
+    zip "$UBOL_PACKAGE_NAME" -qr ./*
     cd - > /dev/null
-    cp "$TMPDIR"/"$PACKAGENAME" dist/build/
-    rm -rf "$TMPDIR"
-    echo "Package location: $(pwd)/dist/build/$PACKAGENAME"
+    cp "$UBOL_PACKAGE_DIR"/"$UBOL_PACKAGE_NAME" dist/build/
+    rm -rf "$UBOL_PACKAGE_DIR"
+    echo "Package location: $(pwd)/dist/build/$UBOL_PACKAGE_NAME"
 fi

@@ -19,10 +19,6 @@
     Home: https://github.com/gorhill/uBlock
 */
 
-'use strict';
-
-/******************************************************************************/
-
 import publicSuffixList from '../lib/publicsuffixlist/publicsuffixlist.js';
 import punycode from '../lib/punycode.js';
 
@@ -34,7 +30,7 @@ import punycode from '../lib/punycode.js';
 const reHostnameFromCommonURL =
     /^https:\/\/[0-9a-z._-]+[0-9a-z]\//;
 const reAuthorityFromURI =
-    /^(?:[^:\/?#]+:)?(\/\/[^\/?#]+)/;
+    /^(?:[^:/?#]+:)?(\/\/[^/?#]+)/;
 const reHostFromNakedAuthority =
     /^[0-9a-z._-]+[0-9a-z]$/i;
 const reHostFromAuthority =
@@ -44,7 +40,7 @@ const reIPv6FromAuthority =
 const reMustNormalizeHostname =
     /[^0-9a-z._-]/;
 const reOriginFromURI =
-    /^[^:\/?#]+:\/\/[^\/?#]+/;
+    /^[^:/?#]+:\/\/[^/?#]+/;
 const reHostnameFromNetworkURL =
     /^(?:http|ws|ftp)s?:\/\/([0-9a-z_][0-9a-z._-]*[0-9a-z])(?::\d+)?\//;
 const reIPAddressNaive =
@@ -54,7 +50,7 @@ const reNetworkURI =
 
 // For performance purpose, as simple tests as possible
 const reIPv4VeryCoarse = /\.\d+$/;
-const reHostnameVeryCoarse = /[g-z_\-]/;
+const reHostnameVeryCoarse = /[g-z_-]/;
 
 /******************************************************************************/
 
@@ -72,6 +68,15 @@ function domainFromURI(uri) {
 function entityFromDomain(domain) {
     const pos = domain.indexOf('.');
     return pos !== -1 ? domain.slice(0, pos) + '.*' : '';
+}
+
+function entityFromHostname(hostname, domain) {
+    if ( domain === undefined ) {
+        domain = domainFromHostname(hostname);
+    }
+    const entity = entityFromDomain(domain);
+    if ( entity === '' ) { return ''; }
+    return `${hostname.slice(0, -domain.length)}${entity}`
 }
 
 function hostnameFromURI(uri) {
@@ -168,6 +173,7 @@ export {
     domainFromHostname,
     domainFromURI,
     entityFromDomain,
+    entityFromHostname,
     hostnameFromNetworkURL,
     hostnameFromURI,
     isNetworkURI,

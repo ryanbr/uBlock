@@ -140,11 +140,11 @@
     "description": "Tooltip for the no-popups per-site switch"
   },
   "popupTipNoPopups2": {
-    "message": "Kliknite za ukloniti blokiranje svih pop-up prozora na ovom sajtu",
+    "message": "Kliknite za ukloniti blokiranje svih pop-up prozora na ovoj stranici",
     "description": "Tooltip for the no-popups per-site switch"
   },
   "popupTipNoLargeMedia": {
-    "message": "Namjestite blokiranje velikih medijskih elemenata za ovo mjesto",
+    "message": "Namjestite blokiranje velikih medijskih elemenata za ovu stranicu",
     "description": "Tooltip for the no-large-media per-site switch"
   },
   "popupTipNoLargeMedia1": {
@@ -897,14 +897,14 @@
   },
   "supportOpenButton": {
     "message": "Otvori",
-    "description": "Text for button which open an external webpage in Support pane"
+    "description": "Text for button which open an external web page in Support pane"
   },
   "supportReportSpecificButton": {
-    "message": "Napravi novu prijavu",
-    "description": "Text for button which open an external webpage in Support pane"
+    "message": "Napravi novu prijavu na GitHub-u",
+    "description": "Text for button which open an external web page in Support pane"
   },
   "supportFindSpecificButton": {
-    "message": "Nađi slične prijave",
+    "message": "Nađi slične prijave na GitHub-u",
     "description": "A clickable link in the filter issue reporter section"
   },
   "supportS1H": {
@@ -964,7 +964,7 @@
     "description": "Header of 'Report a filter issue' section in Support pane"
   },
   "supportS6P1S1": {
-    "message": "Kako biste izbjegli opterećivanje volontera duplim prijavama, provjerite nije li problem već prijavljen.",
+    "message": "Kako biste izbjegli opterećivanje volontera duplim prijavama, provjerite nije li problem već prijavljen. <b>Napomena:</b> klik na gumb uzrokovat će slanje izvorne stranice na GitHub.",
     "description": "A paragraph in the filter issue reporter section"
   },
   "supportS6P2S1": {
@@ -1018,14 +1018,6 @@
   "supportS6Checkbox1": {
     "message": "Označite web stranicu kao “NSFW” (<a href=\"https://wikipedia.org/wiki/Not_safe_for_work\">“nije sigurno za pregledavanje na poslu“</a>)",
     "description": "A checkbox to use for NSFW sites"
-  },
-  "supportRedact": {
-    "message": "Redigiraj",
-    "description": "Text for 'Redact' button"
-  },
-  "supportUnredact": {
-    "message": "Vratiti na prijašnje",
-    "description": "Text for 'Unredact' button"
   },
   "aboutPrivacyPolicy": {
     "message": "Pravila privatnosti",
@@ -1098,10 +1090,6 @@
   "errorCantConnectTo": {
     "message": "Mrežna greška {{msg}}",
     "description": "English: Network error: {{msg}}"
-  },
-  "subscriberConfirm": {
-    "message": "Dodajte slijedeći izvor u vaš izbor filter lista?\n\nNaslov: \"{{title}}\"\nURL: {{url}}",
-    "description": "No longer used"
   },
   "subscribeButton": {
     "message": "Prijava",
@@ -1194,6 +1182,22 @@
   "docblockedRedirectPrompt": {
     "message": "Blokirana stranica želi preusmjeriti na drugu stranicu. Ako odlučite nastaviti, otići ćete izravno na: {{url}}",
     "description": "Text warning about an incoming redirect"
+  },
+  "docblockedReasonLabel": {
+    "message": "Razlog:",
+    "description": "The label which prepend the actual reason why a page was blocked"
+  },
+  "docblockedReasonMalicious": {
+    "message": "Zlonamjerno",
+    "description": "An actual reason why a page was blocked"
+  },
+  "docblockedReasonTracker": {
+    "message": "Pratioc",
+    "description": "An actual reason why a page was blocked"
+  },
+  "docblockedReasonDisreputable": {
+    "message": "Zloglasno",
+    "description": "An actual reason why a page was blocked"
   },
   "cloudPush": {
     "message": "Izvezi u pohranu u oblaku",

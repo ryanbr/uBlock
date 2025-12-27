@@ -19,11 +19,9 @@
     Home: https://github.com/gorhill/uBlock
 */
 
-'use strict';
-
-import punycode from '../lib/punycode.js';
-import { i18n$ } from './i18n.js';
 import { dom, qs$, qsa$ } from './dom.js';
+import { i18n$ } from './i18n.js';
+import punycode from '../lib/punycode.js';
 
 /******************************************************************************/
 
@@ -58,6 +56,7 @@ let dfPaneBuilt = false;
 let dfHotspots = null;
 const allHostnameRows = [];
 let cachedPopupHash = '';
+let forceReloadFlag = 0;
 
 // https://github.com/gorhill/uBlock/issues/2550
 // Solution inspired from
@@ -69,9 +68,6 @@ let cachedPopupHash = '';
 // - https://www.chromium.org/developers/design-documents/idn-in-google-chrome
 const reCyrillicNonAmbiguous = /[\u0400-\u042b\u042d-\u042f\u0431\u0432\u0434\u0436-\u043d\u0442\u0444\u0446-\u0449\u044b-\u0454\u0457\u0459-\u0460\u0462-\u0474\u0476-\u04ba\u04bc\u04be-\u04ce\u04d0-\u0500\u0502-\u051a\u051c\u051e-\u052f]/;
 const reCyrillicAmbiguous = /[\u042c\u0430\u0433\u0435\u043e\u043f\u0440\u0441\u0443\u0445\u044a\u0455\u0456\u0458\u0461\u0475\u04bb\u04bd\u04cf\u0501\u051b\u051d]/;
-
-const hasOwnProperty = (o, p) =>
-    Object.prototype.hasOwnProperty.call(o, p);
 
 /******************************************************************************/
 
@@ -91,7 +87,7 @@ const cachePopupData = function(data) {
         return popupData;
     }
     for ( const hostname in hostnameDict ) {
-        if ( hasOwnProperty(hostnameDict, hostname) === false ) { continue; }
+        if ( Object.hasOwn(hostnameDict, hostname) === false ) { continue; }
         let domain = hostnameDict[hostname].domain;
         let prefix = hostname.slice(0, 0 - domain.length - 1);
         // Prefix with space char for 1st-party hostnames: this ensure these
@@ -135,6 +131,7 @@ const hashFromPopupData = function(reset = false) {
     const hash = hasher.join('');
     if ( reset ) {
         cachedPopupHash = hash;
+        forceReloadFlag = 0;
     }
     dom.cl.toggle(dom.body, 'needReload',
         hash !== cachedPopupHash || popupData.hasUnprocessedRequest === true
@@ -163,7 +160,7 @@ const formatNumber = function(count) {
         });
         if (
             intl.resolvedOptions instanceof Function &&
-            hasOwnProperty(intl.resolvedOptions(), 'notation')
+            Object.hasOwn(intl.resolvedOptions(), 'notation')
         ) {
             intlNumberFormat = intl;
         }
@@ -178,11 +175,11 @@ const formatNumber = function(count) {
     //   a poor's man compact form, which unfortunately is not i18n-friendly.
     count /= 1000000;
     if ( count >= 100 ) {
-      count = Math.floor(count * 10) / 10;
+        count = Math.floor(count * 10) / 10;
     } else if ( count > 10 ) {
-      count = Math.floor(count * 100) / 100;
+        count = Math.floor(count * 100) / 100;
     } else {
-      count = Math.floor(count * 1000) / 1000;
+        count = Math.floor(count * 1000) / 1000;
     }
     return (count).toLocaleString(undefined) + '\u2009M';
 };
@@ -469,27 +466,27 @@ function filterFirewallRows() {
     for ( const elem of elems ) {
         const on = dom.cl.has(elem, 'on');
         switch ( elem.dataset.expr ) {
-            case 'not':
-                not = on;
-                break;
-            case 'blocked':
-                dom.cl.toggle(firewallElem, 'showBlocked', !not && on);
-                dom.cl.toggle(firewallElem, 'hideBlocked', not && on);
-                break;
-            case 'allowed':
-                dom.cl.toggle(firewallElem, 'showAllowed', !not && on);
-                dom.cl.toggle(firewallElem, 'hideAllowed', not && on);
-                break;
-            case 'script':
-                dom.cl.toggle(firewallElem, 'show3pScript', !not && on);
-                dom.cl.toggle(firewallElem, 'hide3pScript', not && on);
-                break;
-            case 'frame':
-                dom.cl.toggle(firewallElem, 'show3pFrame', !not && on);
-                dom.cl.toggle(firewallElem, 'hide3pFrame', not && on);
-                break;
-            default:
-                break;
+        case 'not':
+            not = on;
+            break;
+        case 'blocked':
+            dom.cl.toggle(firewallElem, 'showBlocked', !not && on);
+            dom.cl.toggle(firewallElem, 'hideBlocked', not && on);
+            break;
+        case 'allowed':
+            dom.cl.toggle(firewallElem, 'showAllowed', !not && on);
+            dom.cl.toggle(firewallElem, 'hideAllowed', not && on);
+            break;
+        case 'script':
+            dom.cl.toggle(firewallElem, 'show3pScript', !not && on);
+            dom.cl.toggle(firewallElem, 'hide3pScript', not && on);
+            break;
+        case 'frame':
+            dom.cl.toggle(firewallElem, 'show3pFrame', !not && on);
+            dom.cl.toggle(firewallElem, 'hide3pFrame', not && on);
+            break;
+        default:
+            break;
         }
     }
 }
@@ -498,14 +495,14 @@ dom.on('#firewall .filterExpressions', 'click', 'span[data-expr]', ev => {
     const target = ev.target;
     dom.cl.toggle(target, 'on');
     switch ( target.dataset.expr ) {
-        case 'blocked':
-            if ( dom.cl.has(target, 'on') === false ) { break; }
-            dom.cl.remove('#firewall .filterExpressions span[data-expr="allowed"]', 'on');
-            break;
-        case 'allowed':
-            if ( dom.cl.has(target, 'on') === false ) { break; }
-            dom.cl.remove('#firewall .filterExpressions span[data-expr="blocked"]', 'on');
-            break;
+    case 'blocked':
+        if ( dom.cl.has(target, 'on') === false ) { break; }
+        dom.cl.remove('#firewall .filterExpressions span[data-expr="allowed"]', 'on');
+        break;
+    case 'allowed':
+        if ( dom.cl.has(target, 'on') === false ) { break; }
+        dom.cl.remove('#firewall .filterExpressions span[data-expr="blocked"]', 'on');
+        break;
     }
     filterFirewallRows();
     const elems = qsa$('#firewall .filterExpressions span[data-expr]');
@@ -548,7 +545,7 @@ const renderPrivacyExposure = function() {
         if ( des === '*' || desHostnameDone.has(des) ) { continue; }
         const hnDetails = hostnameDict[des];
         const { domain, counts } = hnDetails;
-        if ( hasOwnProperty(allDomains, domain) === false ) {
+        if ( Object.hasOwn(allDomains, domain) === false ) {
             allDomains[domain] = false;
             allDomainCount += 1;
         }
@@ -1172,7 +1169,7 @@ const reloadTab = function(bypassCache = false) {
         tabId: popupData.tabId,
         url: popupData.rawURL,
         select: vAPI.webextFlavor.soup.has('mobile'),
-        bypassCache,
+        bypassCache: bypassCache || forceReloadFlag !== 0,
     });
 
     // Polling will take care of refreshing the popup content
@@ -1194,18 +1191,18 @@ dom.on(document, 'keydown', ev => {
     if ( ev.isComposing ) { return; }
     let bypassCache = false;
     switch ( ev.key ) {
-        case 'F5':
-            bypassCache = ev.ctrlKey || ev.metaKey || ev.shiftKey;
-            break;
-        case 'r':
-            if ( (ev.ctrlKey || ev.metaKey) !== true ) { return; }
-            break;
-        case 'R':
-            if ( (ev.ctrlKey || ev.metaKey) !== true ) { return; }
-            bypassCache = true;
-            break;
-        default:
-            return;
+    case 'F5':
+        bypassCache = ev.ctrlKey || ev.metaKey || ev.shiftKey;
+        break;
+    case 'r':
+        if ( (ev.ctrlKey || ev.metaKey) !== true ) { return; }
+        break;
+    case 'R':
+        if ( (ev.ctrlKey || ev.metaKey) !== true ) { return; }
+        bypassCache = true;
+        break;
+    default:
+        return;
     }
     reloadTab(bypassCache);
     ev.preventDefault();
@@ -1223,7 +1220,7 @@ vAPI.localStorage.getItemAsync('popupExpandExceptions').then(exceptions => {
             expandExceptions.add(exception);
         }
     }
-    catch(ex) {
+    catch {
     }
 });
 
@@ -1348,6 +1345,10 @@ const toggleHostnameSwitch = async function(ev) {
         tabId: popupData.tabId,
         persist: ev.ctrlKey || ev.metaKey,
     });
+
+    if ( switchName === 'no-scripting' ) {
+        forceReloadFlag ^= 1;
+    }
 
     cachePopupData(response);
     hashFromPopupData();

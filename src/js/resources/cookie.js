@@ -44,6 +44,11 @@ export function getSafeCookieValuesFn() {
         'on', 'off',
         'true', 't', 'false', 'f',
         'yes', 'y', 'no', 'n',
+        'all', 'none', 'functional',
+        'granted', 'done',
+        'decline', 'declined',
+        'closed', 'next', 'mandatory',
+        'disagree', 'agree',
     ];
 }
 registerScriptlet(getSafeCookieValuesFn, {
@@ -53,7 +58,8 @@ registerScriptlet(getSafeCookieValuesFn, {
 /******************************************************************************/
 
 export function getAllCookiesFn() {
-    return document.cookie.split(/\s*;\s*/).map(s => {
+    const safe = safeSelf();
+    return safe.String_split.call(document.cookie, /\s*;\s*/).map(s => {
         const pos = s.indexOf('=');
         if ( pos === 0 ) { return; }
         if ( pos === -1 ) { return `${s.trim()}=`; }
@@ -64,6 +70,9 @@ export function getAllCookiesFn() {
 }
 registerScriptlet(getAllCookiesFn, {
     name: 'get-all-cookies.fn',
+    dependencies: [
+        safeSelf,
+    ],
 });
 
 /******************************************************************************/
@@ -71,7 +80,8 @@ registerScriptlet(getAllCookiesFn, {
 export function getCookieFn(
     name = ''
 ) {
-    for ( const s of document.cookie.split(/\s*;\s*/) ) {
+    const safe = safeSelf();
+    for ( const s of safe.String_split.call(document.cookie, /\s*;\s*/) ) {
         const pos = s.indexOf('=');
         if ( pos === -1 ) { continue; }
         if ( s.slice(0, pos) !== name ) { continue; }
@@ -80,6 +90,9 @@ export function getCookieFn(
 }
 registerScriptlet(getCookieFn, {
     name: 'get-cookie.fn',
+    dependencies: [
+        safeSelf,
+    ],
 });
 
 /******************************************************************************/
@@ -122,7 +135,16 @@ export function setCookieFn(
 
     if ( trusted ) {
         if ( options.domain ) {
-            cookieParts.push(`; domain=${options.domain}`);
+            let domain = options.domain;
+            if ( /^\/.+\//.test(domain) ) {
+                const baseURL = new URL(document.baseURI);
+                const reDomain = new RegExp(domain.slice(1, -1));
+                const match = reDomain.exec(baseURL.hostname);
+                domain = match ? match[0] : undefined;
+            }
+            if ( domain ) {
+                cookieParts.push(`; domain=${domain}`);
+            }
         }
         cookieParts.push('; Secure');
     } else if ( /^__(Host|Secure)-/.test(name) ) {
@@ -131,7 +153,7 @@ export function setCookieFn(
 
     try {
         document.cookie = cookieParts.join('');
-    } catch(_) {
+    } catch {
     }
 
     const done = getCookieFn(name) === value;
@@ -348,23 +370,33 @@ export function removeCookie(
             fn();
         }, ms);
     };
+    const baseURL = new URL(document.baseURI);
+    let targetDomain = extraArgs.domain;
+    if ( targetDomain && /^\/.+\//.test(targetDomain) ) {
+        const reDomain = new RegExp(targetDomain.slice(1, -1));
+        const match = reDomain.exec(baseURL.hostname);
+        targetDomain = match ? match[0] : undefined;
+    }
     const remove = ( ) => {
-        document.cookie.split(';').forEach(cookieStr => {
+        safe.String_split.call(document.cookie, ';').forEach(cookieStr => {
             const pos = cookieStr.indexOf('=');
             if ( pos === -1 ) { return; }
             const cookieName = cookieStr.slice(0, pos).trim();
             if ( reName.test(cookieName) === false ) { return; }
             const part1 = cookieName + '=';
-            const part2a = '; domain=' + document.location.hostname;
-            const part2b = '; domain=.' + document.location.hostname;
+            const part2a = `; domain=${baseURL.hostname}`;
+            const part2b = `; domain=.${baseURL.hostname}`;
             let part2c, part2d;
-            const domain = document.domain;
-            if ( domain ) {
-                if ( domain !== document.location.hostname ) {
-                    part2c = '; domain=.' + domain;
+            if ( targetDomain ) {
+                part2c = `; domain=${targetDomain}`;
+                part2d = `; domain=.${targetDomain}`;
+            } else if ( document.domain ) {
+                const domain = document.domain;
+                if ( domain !== baseURL.hostname ) {
+                    part2c = `; domain=.${domain}`;
                 }
                 if ( domain.startsWith('www.') ) {
-                    part2d = '; domain=' + domain.replace('www', '');
+                    part2d = `; domain=${domain.replace('www', '')}`;
                 }
             }
             const part3 = '; path=/';
@@ -387,7 +419,7 @@ export function removeCookie(
     window.addEventListener('beforeunload', remove);
     if ( typeof extraArgs.when !== 'string' ) { return; }
     const supportedEventTypes = [ 'scroll', 'keydown' ];
-    const eventTypes = extraArgs.when.split(/\s/);
+    const eventTypes = safe.String_split.call(extraArgs.when, /\s/);
     for ( const type of eventTypes ) {
         if ( supportedEventTypes.includes(type) === false ) { continue; }
         document.addEventListener(type, ( ) => {

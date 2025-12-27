@@ -19,16 +19,21 @@
     Home: https://github.com/gorhill/uBlock
 */
 
-export const browser =
-    self.browser instanceof Object &&
-    self.browser instanceof Element === false
-        ? self.browser
-        : self.chrome;
+import { webext } from './ext-compat.js';
 
-export const dnr = browser.declarativeNetRequest;
+/******************************************************************************/
+
+export const browser = webext;
 export const i18n = browser.i18n;
 export const runtime = browser.runtime;
-export const windows = browser.windows;
+
+export const webextFlavor = (( ) => {
+    const extURL = runtime.getURL('');
+    if ( extURL.startsWith('safari-web-extension:') ) { return 'safari'; }
+    return extURL.startsWith('moz-extension:') ? 'firefox' : 'chromium';
+})();
+
+const notAnObject = a => typeof a !== 'object' || a === null;
 
 /******************************************************************************/
 
@@ -36,84 +41,92 @@ export const windows = browser.windows;
 // send a message, we try a few more times when the message fails to be sent.
 
 export function sendMessage(msg) {
-    return new Promise((resolve, reject) => {
-        let i = 5;
-        const send = ( ) => {
-            runtime.sendMessage(msg).then(response => {
-                resolve(response);
-            }).catch(reason => {
-                i -= 1;
-                if ( i <= 0 ) {
-                    reject(reason);
-                } else {
-                    setTimeout(send, 200);
-                }
-            });
-        };
-        send();
+    return runtime.sendMessage(msg).catch(reason => {
+        console.log(reason);
     });
 }
 
 /******************************************************************************/
 
 export async function localRead(key) {
-    if ( browser.storage instanceof Object === false ) { return; }
-    if ( browser.storage.local instanceof Object === false ) { return; }
+    if ( notAnObject(browser?.storage?.local) ) { return; }
     try {
         const bin = await browser.storage.local.get(key);
-        if ( bin instanceof Object === false ) { return; }
+        if ( notAnObject(bin) ) { return; }
         return bin[key] ?? undefined;
-    } catch(ex) {
+    } catch {
     }
 }
 
 export async function localWrite(key, value) {
-    if ( browser.storage instanceof Object === false ) { return; }
-    if ( browser.storage.local instanceof Object === false ) { return; }
+    if ( notAnObject(browser?.storage?.local) ) { return; }
     return browser.storage.local.set({ [key]: value });
 }
 
 export async function localRemove(key) {
-    if ( browser.storage instanceof Object === false ) { return; }
-    if ( browser.storage.local instanceof Object === false ) { return; }
+    if ( notAnObject(browser?.storage?.local) ) { return; }
     return browser.storage.local.remove(key);
+}
+
+export async function localKeys() {
+    if ( notAnObject(browser?.storage?.local) ) { return; }
+    if ( browser.storage.local.getKeys ) {
+        return browser.storage.local.getKeys();
+    }
+    const bin = await browser.storage.local.get(null);
+    if ( notAnObject(bin) ) { return; }
+    return Object.keys(bin);
 }
 
 /******************************************************************************/
 
 export async function sessionRead(key) {
-    if ( browser.storage instanceof Object === false ) { return; }
-    if ( browser.storage.session instanceof Object === false ) { return; }
+    if ( notAnObject(browser?.storage?.session) ) { return; }
     try {
         const bin = await browser.storage.session.get(key);
-        if ( bin instanceof Object === false ) { return; }
+        if ( notAnObject(bin) ) { return; }
         return bin[key] ?? undefined;
-    } catch(ex) {
+    } catch {
     }
 }
 
 export async function sessionWrite(key, value) {
-    if ( browser.storage instanceof Object === false ) { return; }
-    if ( browser.storage.session instanceof Object === false ) { return; }
+    if ( notAnObject(browser?.storage?.session) ) { return; }
     return browser.storage.session.set({ [key]: value });
 }
 
 export async function sessionRemove(key) {
-    if ( browser.storage instanceof Object === false ) { return; }
-    if ( browser.storage.session instanceof Object === false ) { return; }
+    if ( notAnObject(browser?.storage?.session) ) { return; }
     return browser.storage.session.remove(key);
+}
+
+export async function sessionKeys() {
+    if ( notAnObject(browser?.storage?.session) ) { return; }
+    if ( browser.storage.session.getKeys ) {
+        return browser.storage.session.getKeys();
+    }
+    const bin = await browser.storage.session.get(null);
+    if ( notAnObject(bin) ) { return; }
+    return Object.keys(bin);
+}
+
+export async function sessionAccessLevel(level) {
+    try {
+        browser.storage.session.setAccessLevel(level);
+    } catch {
+    }
+    
 }
 
 /******************************************************************************/
 
 export async function adminRead(key) {
-    if ( browser.storage instanceof Object === false ) { return; }
-    if ( browser.storage.managed instanceof Object === false ) { return; }
+    if ( browser?.storage?.managed instanceof Object === false ) { return; }
     try {
         const bin = await browser.storage.managed.get(key);
-        if ( bin instanceof Object === false ) { return; }
+        if ( notAnObject(bin) ) { return; }
         return bin[key] ?? undefined;
-    } catch(ex) {
+    } catch {
     }
 }
 

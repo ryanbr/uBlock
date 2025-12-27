@@ -4,7 +4,7 @@
     "description": "extension name."
   },
   "extShortDesc": {
-    "message": "Eindelijk, een efficiënte adblocker. Gebruikt weinig processorkracht en geheugen.",
+    "message": "Eindelijk, een efficiënte blokker. Gebruikt weinig processorkracht en geheugen.",
     "description": "this will be in the Chrome web store: must be 132 characters or less"
   },
   "dashboardName": {
@@ -720,7 +720,7 @@
     "description": "A keyword in the built-in row filtering expression"
   },
   "loggerRowFiltererBuiltinEventful": {
-    "message": "afwisselend",
+    "message": "belangrijk",
     "description": "A keyword in the built-in row filtering expression: all items corresponding to uBO doing something (blocked, allowed, redirected, etc.)"
   },
   "loggerRowFiltererBuiltinBlocked": {
@@ -897,14 +897,14 @@
   },
   "supportOpenButton": {
     "message": "Openen",
-    "description": "Text for button which open an external webpage in Support pane"
+    "description": "Text for button which open an external web page in Support pane"
   },
   "supportReportSpecificButton": {
-    "message": "Nieuwe melding maken",
-    "description": "Text for button which open an external webpage in Support pane"
+    "message": "Nieuwe melding op GitHub maken",
+    "description": "Text for button which open an external web page in Support pane"
   },
   "supportFindSpecificButton": {
-    "message": "Soortgelijke meldingen zoeken",
+    "message": "Soortgelijke meldingen op GitHub zoeken",
     "description": "A clickable link in the filter issue reporter section"
   },
   "supportS1H": {
@@ -932,7 +932,7 @@
     "description": "First paragraph of 'Filter issues' section in Support pane"
   },
   "supportS3P2": {
-    "message": "<b>Belangrijk:</b> vermijd het gebruik van andere adblockers voor dezelfde doeleinden in combinatie met uBlock Origin, omdat dit op bepaalde websites problemen kan geven.",
+    "message": "<b>Belangrijk:</b> vermijd het gebruik van andere blokkers voor dezelfde doeleinden in combinatie met uBlock Origin, omdat dit op bepaalde websites problemen kan geven.",
     "description": "Second paragraph of 'Filter issues' section in Support pane"
   },
   "supportS3P3": {
@@ -964,7 +964,7 @@
     "description": "Header of 'Report a filter issue' section in Support pane"
   },
   "supportS6P1S1": {
-    "message": "Controleer of het probleem niet eerder is gemeld om te voorkomen dat vrijwilligers met dubbele meldingen worden belast.",
+    "message": "Controleer of het probleem niet eerder is gemeld om te voorkomen dat vrijwilligers met dubbele meldingen worden belast. <b>Noot:</b> op de knop klikken zorgt ervoor dat de oorsprong van de pagina naar GitHub wordt verzonden.",
     "description": "A paragraph in the filter issue reporter section"
   },
   "supportS6P2S1": {
@@ -1018,14 +1018,6 @@
   "supportS6Checkbox1": {
     "message": "De webpagina labelen als ‘NSFW’ (<a href=\"https://nl.wikipedia.org/wiki/NSFW\">‘Not Safe For Work’</a>)",
     "description": "A checkbox to use for NSFW sites"
-  },
-  "supportRedact": {
-    "message": "Redigeren",
-    "description": "Text for 'Redact' button"
-  },
-  "supportUnredact": {
-    "message": "Redigeren ongedaan maken",
-    "description": "Text for 'Unredact' button"
   },
   "aboutPrivacyPolicy": {
     "message": "Privacybeleid",
@@ -1098,10 +1090,6 @@
   "errorCantConnectTo": {
     "message": "Netwerkfout: {{msg}}",
     "description": "English: Network error: {{msg}}"
-  },
-  "subscriberConfirm": {
-    "message": "De volgende URL aan uw lijsten met aangepaste filters toevoegen?\n\nTitel: ‘{{title}}’\nURL: {{url}}",
-    "description": "No longer used"
   },
   "subscribeButton": {
     "message": "Abonneren",
@@ -1195,6 +1183,22 @@
     "message": "De geblokkeerde pagina wil u omleiden naar een andere website. Als u doorgaat, navigeert u rechtstreeks naar: {{url}}",
     "description": "Text warning about an incoming redirect"
   },
+  "docblockedReasonLabel": {
+    "message": "Reden:",
+    "description": "The label which prepend the actual reason why a page was blocked"
+  },
+  "docblockedReasonMalicious": {
+    "message": "kwaadwillend",
+    "description": "An actual reason why a page was blocked"
+  },
+  "docblockedReasonTracker": {
+    "message": "tracker",
+    "description": "An actual reason why a page was blocked"
+  },
+  "docblockedReasonDisreputable": {
+    "message": "berucht",
+    "description": "An actual reason why a page was blocked"
+  },
   "cloudPush": {
     "message": "Exporteren naar cloudopslag",
     "description": "tooltip"
@@ -1236,7 +1240,7 @@
     "description": ""
   },
   "contextMenuBlockElementInFrame": {
-    "message": "Element in frame blokkeren…",
+    "message": "Element in deelvenster blokkeren…",
     "description": "An entry in the browser's contextual menu"
   },
   "contextMenuSubscribeToList": {

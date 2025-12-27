@@ -897,11 +897,11 @@
   },
   "supportOpenButton": {
     "message": "Otevřít",
-    "description": "Text for button which open an external webpage in Support pane"
+    "description": "Text for button which open an external web page in Support pane"
   },
   "supportReportSpecificButton": {
     "message": "Vytvořit nové hlášení",
-    "description": "Text for button which open an external webpage in Support pane"
+    "description": "Text for button which open an external web page in Support pane"
   },
   "supportFindSpecificButton": {
     "message": "Vyhledat podobná hlášení",
@@ -1019,14 +1019,6 @@
     "message": "Označit webovou stránku jako “NSFW” (<a href=\"https://cs.wikipedia.org/wiki/Not_safe_for_work\">“Není bezpečné pro práci”</a>)",
     "description": "A checkbox to use for NSFW sites"
   },
-  "supportRedact": {
-    "message": "Upravit",
-    "description": "Text for 'Redact' button"
-  },
-  "supportUnredact": {
-    "message": "Odstranit",
-    "description": "Text for 'Unredact' button"
-  },
   "aboutPrivacyPolicy": {
     "message": "Ochrana soukromí",
     "description": "Link to privacy policy on GitHub (English)"
@@ -1099,10 +1091,6 @@
     "message": "Chyba sítě: {{msg}}",
     "description": "English: Network error: {{msg}}"
   },
-  "subscriberConfirm": {
-    "message": "uBlock₀: Přidat následující URL adresu do seznamů vlastních filtrů?\n\nNázev: „{{title}}“\nURL: {{url}}",
-    "description": "No longer used"
-  },
   "subscribeButton": {
     "message": "Odebírat",
     "description": "For the button used to subscribe to a filter list"
@@ -1172,7 +1160,7 @@
     "description": "English: Close this window"
   },
   "docblockedDontWarn": {
-    "message": "Znova mě nevarujte ohladně této stránky",
+    "message": "Nevarujte mě znovu o této stránce",
     "description": "Label for checkbox in document-blocked page"
   },
   "docblockedProceed": {
@@ -1194,6 +1182,22 @@
   "docblockedRedirectPrompt": {
     "message": "Zablokovaná stránka vás chce přesměrovat na jiný web. Pokud se rozhodnete pokračovat, přejdete přímo na: {{url}}",
     "description": "Text warning about an incoming redirect"
+  },
+  "docblockedReasonLabel": {
+    "message": "Důvod:",
+    "description": "The label which prepend the actual reason why a page was blocked"
+  },
+  "docblockedReasonMalicious": {
+    "message": "Zlomyslný",
+    "description": "An actual reason why a page was blocked"
+  },
+  "docblockedReasonTracker": {
+    "message": "Sledovač",
+    "description": "An actual reason why a page was blocked"
+  },
+  "docblockedReasonDisreputable": {
+    "message": "Nereputabilní",
+    "description": "An actual reason why a page was blocked"
   },
   "cloudPush": {
     "message": "Exportovat do cloudového úložiště",

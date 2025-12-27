@@ -20,14 +20,14 @@
 
 */
 
-import { createArglistParser } from './shared.js';
+import { ArglistParser } from './shared.js';
 import { registerScriptlet } from './base.js';
 
 /******************************************************************************/
 
 export function parseReplaceFn(s) {
     if ( s.charCodeAt(0) !== 0x2F /* / */ ) { return; }
-    const parser = createArglistParser('/');
+    const parser = new ArglistParser('/');
     parser.nextArg(s, 1);
     let pattern = s.slice(parser.argBeg, parser.argEnd);
     if ( parser.transform ) {
@@ -43,12 +43,12 @@ export function parseReplaceFn(s) {
     const flags = s.slice(parser.separatorEnd);
     try {
         return { re: new RegExp(pattern, flags), replacement };
-    } catch(_) {
+    } catch {
     }
 }
 registerScriptlet(parseReplaceFn, {
     name: 'parse-replace.fn',
     dependencies: [
-        createArglistParser,
+        ArglistParser,
     ],
 });

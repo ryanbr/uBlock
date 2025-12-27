@@ -173,7 +173,7 @@ if ( isBackgroundProcess !== true ) {
             }
             textout += textin.slice(0, match.index);
             let prop = match[0].slice(2, -2);
-            if ( Object.prototype.hasOwnProperty.call(dict, prop) ) {
+            if ( Object.hasOwn(dict, prop) ) {
                 textout += dict[prop].replace(/</g, '&lt;')
                                      .replace(/>/g, '&gt;');
             } else {
@@ -262,6 +262,11 @@ if ( isBackgroundProcess !== true ) {
             if ( elem.getAttribute('aria-label') === 'data-tip' ) {
                 elem.setAttribute('aria-label', text);
             }
+        }
+
+        for ( const elem of root.querySelectorAll('[data-i18n-label]') ) {
+            const text = i18n$(elem.getAttribute('data-i18n-label'));
+            elem.setAttribute('label', text);
         }
     };
 

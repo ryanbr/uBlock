@@ -535,6 +535,21 @@ const PageStore = class {
         return sender.frameURL;
     }
 
+    getFrameAncestorDetails(frameId) {
+        if ( frameId === 0 ) { return []; }
+        const out = [];
+        for (;;) {
+            const frameStore = this.getFrameStore(frameId);
+            if ( frameStore === null ) { break; }
+            const { domain, hostname } = frameStore;
+            if ( hostname !== undefined ) {
+                out.push({ domain, hostname });
+            }
+            frameId = frameStore.parentId;
+        }
+        return out.slice(1);
+    }
+
     // There is no event to tell us a specific subframe has been removed from
     // the main document. The code below will remove subframes which are no
     // longer present in the root document. Removing obsolete subframes is
@@ -549,7 +564,7 @@ const PageStore = class {
             entries = await webext.webNavigation.getAllFrames({
                 tabId: this.tabId
             });
-        } catch(ex) {
+        } catch {
         }
         if ( Array.isArray(entries) === false ) { return; }
         const toKeep = new Set();
@@ -941,7 +956,7 @@ const PageStore = class {
 
     redirectNonBlockedRequest(fctxt) {
         const directives = [];
-        staticNetFilteringEngine.transformRequest(fctxt, directives);
+        staticNetFilteringEngine.transformURL(fctxt, directives);
         if ( staticNetFilteringEngine.hasQuery(fctxt) ) {
             staticNetFilteringEngine.filterQuery(fctxt, directives);
         }
@@ -961,14 +976,12 @@ const PageStore = class {
     skipMainDocument(fctxt, blocked) {
         const directives = staticNetFilteringEngine.urlSkip(fctxt, blocked);
         if ( directives === undefined ) { return; }
-        if ( logger.enabled !== true ) { return; }
         fctxt.pushFilters(directives.map(a => a.logData()));
-        if ( fctxt.redirectURL !== undefined ) {
-            fctxt.pushFilter({
-                source: 'redirect',
-                raw: fctxt.redirectURL
-            });
-        }
+        if ( fctxt.redirectURL === undefined ) { return; }
+        fctxt.pushFilter({
+            source: 'redirect',
+            raw: fctxt.redirectURL
+        });
     }
 
     filterCSPReport(fctxt) {
@@ -1063,7 +1076,9 @@ const PageStore = class {
             this.largeMediaTimer.on(500);
         }
         const size = headers.contentLength;
-        if ( isNaN(size) ) { return 0; }
+        if ( isNaN(size) ) {
+            return µb.userSettings.largeMediaSize === 0 ? 1 : 0;
+        }
         if ( (size >>> 10) < µb.userSettings.largeMediaSize ) { return 0; }
         this.largeMediaCount += 1;
         this.largeMediaTimer.on(500);

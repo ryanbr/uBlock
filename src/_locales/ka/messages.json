@@ -68,7 +68,7 @@
     "description": "Title for the advanced settings page"
   },
   "popupPowerSwitchInfo": {
-    "message": "დაწკაპუნება: ამ საიტისთვის uBlock-ის ჩართვა/გამორთვა.\n\nCtrl+დაწკაპუნება: uBlock-ის მხოლოდ ამ გვერდზე გამორთვა.",
+    "message": "დაწკაპებით: ჩაირთვება/გამოირთვება uBlock ამ საიტზე.\n\nCtrl+დაწკაპებით: გამოირთვება uBlock მხოლოდ ამ გვერდზე.",
     "description": "English: Click: disable/enable uBlock₀ for this site.\n\nCtrl+click: disable uBlock₀ only on this page."
   },
   "popupPowerSwitchInfo1": {
@@ -364,7 +364,7 @@
     "description": "English: "
   },
   "settingsWebRTCIPAddressHiddenPrompt": {
-    "message": "WebRTC-სთვის ხელის შეშლა შიდა IP მისამართის გაჟონვაში",
+    "message": "WebRTC-ით შიდა IP-მისამართის გამჟღავნების აღკვეთა",
     "description": "English: "
   },
   "settingPerSiteSwitchGroup": {
@@ -388,7 +388,7 @@
     "description": ""
   },
   "settingsNoScriptingPrompt": {
-    "message": "JavaScript-ის გათიშვა",
+    "message": "გაითიშოს JavaScript",
     "description": "The default state for the per-site no-scripting switch"
   },
   "settingsNoCSPReportsPrompt": {
@@ -536,7 +536,7 @@
     "description": "used as a tooltip for error icon beside a list"
   },
   "1pTrustWarning": {
-    "message": "ფილტრების არიდება არასანდო წყაროებიდან.",
+    "message": "ნუ დაამატებთ ფილტრებს არასანდო წყაროებიდან.",
     "description": "Warning against copy-pasting filters from random sources"
   },
   "1pEnableMyFiltersLabel": {
@@ -897,11 +897,11 @@
   },
   "supportOpenButton": {
     "message": "გახსნა",
-    "description": "Text for button which open an external webpage in Support pane"
+    "description": "Text for button which open an external web page in Support pane"
   },
   "supportReportSpecificButton": {
     "message": "შექმენით ახალი მოსხენება",
-    "description": "Text for button which open an external webpage in Support pane"
+    "description": "Text for button which open an external web page in Support pane"
   },
   "supportFindSpecificButton": {
     "message": "იპოვეთ მსგავსი მოხსენებები",
@@ -944,7 +944,7 @@
     "description": "Header of 'Bug report' section in Support pane"
   },
   "supportS4P1": {
-    "message": "თავად uBlock Origin-ის ხარვეზების მოსახსენებლად, გამოიყენეთ <span data-url=\"https://github.com/uBlockOrigin/uBlock-issues/issues?q=is%3Aissue\"><code>uBlockOrigin/uBlock-issue</code> ხარვეზების აღსარიცხავი</span>. დაგჭირდებათ GitHub-ანგარიში.",
+    "message": "ხარვეზების მოხსენებისთვის, რომლის წყაროცაა თავად uBlock Origin, გამოიყენეთ <span data-url=\"https://github.com/uBlockOrigin/uBlock-issues/issues?q=is%3Aissue\"><code>uBlockOrigin/uBlock-issue</code> ხარვეზების აღსარიცხავი</span>. დაგჭირდებათ GitHub-ანგარიში.",
     "description": "First paragraph of 'Bug report' section in Support pane"
   },
   "supportS5H": {
@@ -1019,14 +1019,6 @@
     "message": "გვერდი მოინიშნოს, როგორც „NSFW“ (<a href=\"https://wikipedia.org/wiki/Not_safe_for_work\">„შეუსაბამო“</a>)",
     "description": "A checkbox to use for NSFW sites"
   },
-  "supportRedact": {
-    "message": "შეკვეცილი",
-    "description": "Text for 'Redact' button"
-  },
-  "supportUnredact": {
-    "message": "შეუკვეცელი",
-    "description": "Text for 'Unredact' button"
-  },
   "aboutPrivacyPolicy": {
     "message": "პირადულობის დებულება",
     "description": "Link to privacy policy on GitHub (English)"
@@ -1060,7 +1052,7 @@
     "description": "Shown in the About pane"
   },
   "aboutCDNs": {
-    "message": "uBO-ს კუთვნილი ფილტრები ღიადაა განთავსებული შემდეგ <a href=\"https://wikipedia.org/wiki/Content_delivery_network\">CDN-ებზე</a>:",
+    "message": "uBO საკუთარ ფილტრებს ღიად ათავსებს მოცემულ <a href=\"https://wikipedia.org/wiki/Content_delivery_network\">CDN-ებზე</a>:",
     "description": "Shown in the About pane"
   },
   "aboutCDNsInfo": {
@@ -1092,16 +1084,12 @@
     "description": "Message to display when an error occurred during restore"
   },
   "aboutResetDataConfirm": {
-    "message": "თქვენ მიერ მითითებული ყველა პარამეტრი წაიშლება და uBlock₀ გაეშვება ხელახლა.\n\nნამდვილად გსურთ uBlock₀-ის ნაგულისხმევ პარამეტრებზე დაბრუნება?",
+    "message": "თქვენ მიერ მითითებული ყველა პარამეტრი წაიშლება და uBlock₀ გაეშვება ხელახლა.\n\nნამდვილად გსურთ დაბრუნდეს uBlock₀ ნაგულისხმევ პარამეტრებზე?",
     "description": "Message asking user to confirm reset"
   },
   "errorCantConnectTo": {
     "message": "ქსელის შეცდომა: {{msg}}",
     "description": "English: Network error: {{msg}}"
-  },
-  "subscriberConfirm": {
-    "message": "uBlock₀: გსურთ შემდეგი URL ბმულის საკუთარ ფილტრის წესებში ჩამატება?\n\nდასახელება: „{{title}}“\nURL: {{url}}",
-    "description": "No longer used"
   },
   "subscribeButton": {
     "message": "გამოწერა",
@@ -1195,6 +1183,22 @@
     "message": "ეს შეზღუდული გვერდი ცდილობს სხვა საიტზე გადაყვანას. თუ განაგრძობთ, პირდაპირ გაიხსნება: {{url}}",
     "description": "Text warning about an incoming redirect"
   },
+  "docblockedReasonLabel": {
+    "message": "მიზეზი:",
+    "description": "The label which prepend the actual reason why a page was blocked"
+  },
+  "docblockedReasonMalicious": {
+    "message": "მავნებელი",
+    "description": "An actual reason why a page was blocked"
+  },
+  "docblockedReasonTracker": {
+    "message": "მეთვალყურე",
+    "description": "An actual reason why a page was blocked"
+  },
+  "docblockedReasonDisreputable": {
+    "message": "სახელგატეხილი",
+    "description": "An actual reason why a page was blocked"
+  },
   "cloudPush": {
     "message": "ღრუბლოვან საცავში შენახვა",
     "description": "tooltip"
@@ -1272,7 +1276,7 @@
     "description": "Label for keyboard shortcut used to toggle cosmetic filtering"
   },
   "toggleJavascript": {
-    "message": "JavaScript-ის ჩამრთველი",
+    "message": "JavaScript – გადამრთველი",
     "description": "Label for keyboard shortcut used to toggle no-scripting switch"
   },
   "relaxBlockingMode": {

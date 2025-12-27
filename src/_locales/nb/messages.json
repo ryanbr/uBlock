@@ -484,7 +484,7 @@
     "description": "Filter lists section name"
   },
   "3pGroupSocial": {
-    "message": "Sosiale mediers moduler",
+    "message": "Sosiale moduler",
     "description": "Filter lists section name"
   },
   "3pGroupCookies": {
@@ -897,14 +897,14 @@
   },
   "supportOpenButton": {
     "message": "Åpne",
-    "description": "Text for button which open an external webpage in Support pane"
+    "description": "Text for button which open an external web page in Support pane"
   },
   "supportReportSpecificButton": {
-    "message": "Opprett ny rapport",
-    "description": "Text for button which open an external webpage in Support pane"
+    "message": "Opprett ny rapport på GitHub",
+    "description": "Text for button which open an external web page in Support pane"
   },
   "supportFindSpecificButton": {
-    "message": "Finn lignende rapporter",
+    "message": "Finn lignende rapporter på GitHub",
     "description": "A clickable link in the filter issue reporter section"
   },
   "supportS1H": {
@@ -964,7 +964,7 @@
     "description": "Header of 'Report a filter issue' section in Support pane"
   },
   "supportS6P1S1": {
-    "message": "For å unngå å belaste frivillige med duplikate rapporter, kontroller at problemet ikke allerede er rapportert.",
+    "message": "For å unngå å belaste de frivillige med dobbeltrapporter, må du kontrollere at problemet ikke allerede har blitt rapportert. <b>Noter:</b> ved å klikke på knappen vil sidens opprinnelse bli sendt til GitHub.",
     "description": "A paragraph in the filter issue reporter section"
   },
   "supportS6P2S1": {
@@ -1012,20 +1012,12 @@
     "description": "An entry in the widget used to select the type of issue"
   },
   "supportS6Select1Option7": {
-    "message": "Leads to badware, phishing",
+    "message": "Fører til skadelig programvare og/eller phishing",
     "description": "An entry in the widget used to select the type of issue"
   },
   "supportS6Checkbox1": {
     "message": "Merk nettsiden som “NSFW” (<a href=\"https://wikipedia.org/wiki/Not_safe_for_work\">“Not Safe For Work”</a>) (advarsel mot sider med upassende innhold)",
     "description": "A checkbox to use for NSFW sites"
-  },
-  "supportRedact": {
-    "message": "Rediger",
-    "description": "Text for 'Redact' button"
-  },
-  "supportUnredact": {
-    "message": "Ikke rediger",
-    "description": "Text for 'Unredact' button"
   },
   "aboutPrivacyPolicy": {
     "message": "Personvernpraksis",
@@ -1098,10 +1090,6 @@
   "errorCantConnectTo": {
     "message": "Nettverksfeil: {{msg}}",
     "description": "English: Network error: {{msg}}"
-  },
-  "subscriberConfirm": {
-    "message": "Legge til følgende nettadresse i din egendefinerte filterliste?\n\nTittel: \"{{title}}\"\nNettadresse: {{url}}",
-    "description": "No longer used"
   },
   "subscribeButton": {
     "message": "Abonner",
@@ -1192,8 +1180,24 @@
     "description": "Button text to navigate to the blocked page"
   },
   "docblockedRedirectPrompt": {
-    "message": "The blocked page wants to redirect to another site. If you choose to proceed, you will navigate directly to: {{url}}",
+    "message": "Den blokkerte siden ønsker å omdirigere til et annet nettsted. Hvis du velger å fortsette, vil du navigere direkte til: {{url}}",
     "description": "Text warning about an incoming redirect"
+  },
+  "docblockedReasonLabel": {
+    "message": "Grunn:",
+    "description": "The label which prepend the actual reason why a page was blocked"
+  },
+  "docblockedReasonMalicious": {
+    "message": "Ondsinnet",
+    "description": "An actual reason why a page was blocked"
+  },
+  "docblockedReasonTracker": {
+    "message": "Sporer",
+    "description": "An actual reason why a page was blocked"
+  },
+  "docblockedReasonDisreputable": {
+    "message": "Tvilsom",
+    "description": "An actual reason why a page was blocked"
   },
   "cloudPush": {
     "message": "Eksporter til nettlagring",

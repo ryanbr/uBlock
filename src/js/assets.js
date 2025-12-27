@@ -47,9 +47,6 @@ let remoteServerFriendly = false;
 
 /******************************************************************************/
 
-const hasOwnProperty = (o, p) =>
-    Object.prototype.hasOwnProperty.call(o, p);
-
 const stringIsNotEmpty = s => typeof s === 'string' && s !== '';
 
 const parseExpires = s => {
@@ -319,7 +316,7 @@ assets.fetch = function(url, options = {}) {
         xhr.responseType = options.responseType || 'text';
         xhr.send();
         timeoutTimer.on({ sec: timeoutAfter });
-    } catch (e) {
+    } catch {
         onErrorEvent.call(xhr);
     }
 
@@ -396,7 +393,7 @@ assets.fetchFilterList = async function(mainlistURL) {
     const toParsedURL = url => {
         try {
             return new URL(url.trim());
-        } catch (ex) {
+        } catch {
         }
     };
 
@@ -622,7 +619,7 @@ function updateAssetSourceRegistry(json, silent = false) {
             Array.from(Object.entries(newDict))
                 .filter(a => a[1].content === 'filters' && a[1].off === undefined)
                 .map(a => a[0]);
-    } catch (ex) {
+    } catch {
     }
     if ( newDict instanceof Object === false ) { return; }
 
@@ -735,7 +732,7 @@ async function assetCacheRead(assetKey, updateReadTime = false) {
     }
 
     if ( bin instanceof Object === false ) { return reportBack(''); }
-    if ( hasOwnProperty(bin, internalKey) === false ) { return reportBack(''); }
+    if ( Object.hasOwn(bin, internalKey) === false ) { return reportBack(''); }
 
     const entry = assetCacheRegistry[assetKey];
     if ( entry === undefined ) { return reportBack(''); }
@@ -912,6 +909,13 @@ assets.get = async function(assetKey, options = {}) {
         return readUserAsset(assetKey);
     }
 
+    // https://github.com/uBlockOrigin/uBlock-issues/issues/3761
+    if ( µb.readyToFilter !== true ) {
+        if ( options.favorLocal === undefined ) {
+            options.favorLocal = true;
+        }
+    }
+
     let assetDetails = {};
 
     const reportBack = (content, url = '', err = undefined) => {
@@ -958,6 +962,7 @@ assets.get = async function(assetKey, options = {}) {
 
     let error = 'ENOTFOUND';
     for ( const contentURL of contentURLs ) {
+        ubolog(`Fetching ${contentURL} from remote server `);
         const details = assetDetails.content === 'filters'
             ? await assets.fetchFilterList(contentURL)
             : await assets.fetchText(contentURL);
@@ -1216,6 +1221,9 @@ const getAssetDiffDetails = assetKey => {
     }
     if ( Array.isArray(out.cdnURLs) === false ) { return; }
     if ( out.cdnURLs.length === 0 ) { return; }
+    if ( Array.isArray(assetEntry.patchURLs) ) {
+        out.patchURLs = assetEntry.patchURLs.slice();
+    }
     return out;
 };
 
@@ -1244,10 +1252,8 @@ async function diffUpdater() {
     ubolog('Diff updater: cycle start');
     return new Promise(resolve => {
         let pendingOps = 0;
-        const bc = new globalThis.BroadcastChannel('diffUpdater');
         const terminate = error => {
             worker.terminate();
-            bc.close();
             resolve();
             if ( typeof error !== 'string' ) { return; }
             ubolog(`Diff updater: terminate because ${error}`);
@@ -1260,14 +1266,15 @@ async function diffUpdater() {
             if ( metadata.diffPath === data.patchPath ) { return; }
             assetCacheSetDetails(data.assetKey, metadata);
         };
-        bc.onmessage = ev => {
+        const worker = new Worker('js/diff-updater.js');
+        worker.onmessage = ev => {
             const data = ev.data || {};
             if ( data.what === 'ready' ) {
                 ubolog('Diff updater: hard updating', toHardUpdate.map(v => v.assetKey).join());
                 while ( toHardUpdate.length !== 0 ) {
                     const assetDetails = toHardUpdate.shift();
                     assetDetails.fetch = true;
-                    bc.postMessage(assetDetails);
+                    worker.postMessage(assetDetails);
                     pendingOps += 1;
                 }
                 return;
@@ -1284,7 +1291,7 @@ async function diffUpdater() {
                     data.text = result.content || '';
                     data.status = undefined;
                     checkAndCorrectDiffPath(data);
-                    bc.postMessage(data);
+                    worker.postMessage(data);
                 });
                 return;
             }
@@ -1320,7 +1327,7 @@ async function diffUpdater() {
             if ( pendingOps === 0 && toSoftUpdate.length !== 0 ) {
                 ubolog('Diff updater: soft updating', toSoftUpdate.map(v => v.assetKey).join());
                 while ( toSoftUpdate.length !== 0 ) {
-                    bc.postMessage(toSoftUpdate.shift());
+                    worker.postMessage(toSoftUpdate.shift());
                     pendingOps += 1;
                 }
             }
@@ -1328,7 +1335,6 @@ async function diffUpdater() {
             ubolog('Diff updater: cycle complete');
             terminate();
         };
-        const worker = new Worker('js/diff-updater.js');
     }).catch(reason => {
         ubolog(`Diff updater: ${reason}`);
     });

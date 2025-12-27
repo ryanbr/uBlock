@@ -19,30 +19,16 @@
     Home: https://github.com/gorhill/uBlock
 */
 
-/* jshint esversion:11 */
-
-'use strict';
-
-// ruleset: $rulesetId$
-
-/******************************************************************************/
-
 // Important!
 // Isolate from global scope
 (function uBOL_cssSpecificImports() {
 
 /******************************************************************************/
 
-const argsList = self.$argsList$;
-
-const hostnamesMap = new Map(self.$hostnamesMap$);
-
-const entitiesMap = new Map(self.$entitiesMap$);
-
-const exceptionsMap = new Map(self.$exceptionsMap$);
+const rulesetId = self.$rulesetId$;
 
 self.specificImports = self.specificImports || [];
-self.specificImports.push({ argsList, hostnamesMap, entitiesMap, exceptionsMap });
+self.specificImports.push(rulesetId);
 
 /******************************************************************************/
 

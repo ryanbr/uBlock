@@ -26,9 +26,14 @@
 (function uBOL_cssGeneric() {
 
 const genericSelectorMap = self.genericSelectorMap || new Map();
-delete self.genericSelectorMap;
-
+self.genericSelectorMap = undefined;
 if ( genericSelectorMap.size === 0 ) { return; }
+
+const genericExceptionSieve = self.genericExceptionSieve || new Set();
+self.genericExceptionSieve = undefined;
+
+const genericExceptionMap = self.genericExceptionMap || new Map();
+self.genericExceptionMap = undefined;
 
 /******************************************************************************/
 
@@ -56,7 +61,7 @@ const hashFromStr = (type, s) => {
     for ( let i = 0; i < len; i += step ) {
         hash = (hash << 5) + hash ^ s.charCodeAt(i);
     }
-    return hash & 0xFFFFFF;
+    return hash & 0xFFF;
 };
 
 /******************************************************************************/
@@ -69,19 +74,23 @@ const hashFromStr = (type, s) => {
 // http://www.w3.org/TR/2014/REC-html5-20141028/infrastructure.html#space-separated-tokens
 // http://jsperf.com/enumerate-classes/6
 
-const uBOL_idFromNode = (node, out) => {
+const uBOL_idFromNode = node => {
     const raw = node.id;
     if ( typeof raw !== 'string' || raw.length === 0 ) { return; }
     const hash = hashFromStr(0x23 /* '#' */, raw.trim());
     const selectorList = genericSelectorMap.get(hash);
     if ( selectorList === undefined ) { return; }
     genericSelectorMap.delete(hash);
-    out.push(selectorList);
+    if ( genericExceptionSieve.has(hash) ) {
+        applyExceptions(selectorList);
+    } else {
+        styleSheetSelectors.push(selectorList);
+    }
 };
 
 // https://github.com/uBlockOrigin/uBlock-issues/discussions/2076
 //   Performance: avoid using Element.classList
-const uBOL_classesFromNode = (node, out) => {
+const uBOL_classesFromNode = node => {
     const s = node.getAttribute('class');
     if ( typeof s !== 'string' ) { return; }
     const len = s.length;
@@ -96,9 +105,27 @@ const uBOL_classesFromNode = (node, out) => {
         const selectorList = genericSelectorMap.get(hash);
         if ( selectorList === undefined ) { continue; }
         genericSelectorMap.delete(hash);
-        out.push(selectorList);
+        if ( genericExceptionSieve.has(hash) ) {
+            applyExceptions(selectorList);
+        } else {
+            styleSheetSelectors.push(selectorList);
+        }
     }
 };
+
+const applyExceptions = selectorList => {
+    const selectors = new Set(selectorList.split(',\n'));
+    self.isolatedAPI.forEachHostname(hostname => {
+        const exceptions = genericExceptionMap.get(hostname);
+        if ( exceptions === undefined ) { return; }
+        for ( const exception of exceptions.split('\n') ) {
+            selectors.delete(exception);
+        }
+        if ( selectors.size === 0 ) { return true; }
+    }, { hasEntities: true });
+    if ( selectors.size === 0 ) { return; }
+    styleSheetSelectors.push(Array.from(selectors).join(',\n'));
+}
 
 /******************************************************************************/
 
@@ -111,9 +138,7 @@ const pendingNodes = {
     next(out) {
         for ( const added of this.addedNodes ) {
             if ( this.nodeSet.has(added) ) { continue; }
-            if ( added.nodeType === 1 ) {
-                this.nodeSet.add(added);
-            }
+            this.nodeSet.add(added);
             if ( added.firstElementChild === null ) { continue; }
             for ( const descendant of added.querySelectorAll('[id],[class]') ) {
                 this.nodeSet.add(descendant);
@@ -141,8 +166,8 @@ const uBOL_processNodes = ( ) => {
         pendingNodes.next(nodes);
         if ( nodes.length === 0 ) { break; }
         for ( const node of nodes ) {
-            uBOL_idFromNode(node, styleSheetSelectors);
-            uBOL_classesFromNode(node, styleSheetSelectors);
+            uBOL_idFromNode(node);
+            uBOL_classesFromNode(node);
         }
         nodes.length = 0;
         if ( performance.now() >= deadline ) { break; }
@@ -161,7 +186,7 @@ const uBOL_processNodes = ( ) => {
     if ( styleSheetTimer !== undefined ) { return; }
     styleSheetTimer = self.requestAnimationFrame(( ) => {
         styleSheetTimer = undefined;
-        uBOL_injectCSS(`${styleSheetSelectors.join(',')}{display:none!important;}`);
+        self.cssAPI.insert(`${styleSheetSelectors.join(',')}{display:none!important;}`);
         styleSheetSelectors.length = 0;
     });
 };
@@ -169,14 +194,22 @@ const uBOL_processNodes = ( ) => {
 /******************************************************************************/
 
 const uBOL_processChanges = mutations => {
-    for ( let i = 0; i < mutations.length; i++ ) {
-        const mutation = mutations[i];
-        for ( const added of mutation.addedNodes ) {
-            if ( added.nodeType !== 1 ) { continue; }
-            pendingNodes.add(added);
+    for ( const mutation of mutations ) {
+        if ( mutation.type === 'childList' ) {
+            for ( const added of mutation.addedNodes ) {
+                if ( added.nodeType !== 1 ) { continue; }
+                if ( added.parentElement === null ) { continue; }
+                pendingNodes.add(added);
+            }
+        } else if ( mutation.attributeName === 'class' ) {
+            uBOL_classesFromNode(mutation.target);
+        } else {
+            uBOL_idFromNode(mutation.target);
         }
     }
-    if ( pendingNodes.hasNodes() === false ) { return; }
+    if ( pendingNodes.hasNodes() === false ) {
+        if ( styleSheetSelectors.length === 0 ) { return; }
+    }
     lastDomChange = Date.now();
     if ( processTimer !== undefined ) { return; }
     processTimer = self.setTimeout(( ) => {
@@ -187,21 +220,27 @@ const uBOL_processChanges = mutations => {
 
 /******************************************************************************/
 
-const uBOL_injectCSS = (css, count = 10) => {
-    chrome.runtime.sendMessage({ what: 'insertCSS', css }).catch(( ) => {
-        count -= 1;
-        if ( count === 0 ) { return; }
-        uBOL_injectCSS(css, count - 1);
-    });
+const stopAll = ( ) => {
+    if ( domChangeTimer !== undefined ) {
+        self.clearTimeout(domChangeTimer);
+        domChangeTimer = undefined;
+    }
+    domMutationObserver.disconnect();
+    domMutationObserver.takeRecords();
+    domMutationObserver = undefined;
+    genericSelectorMap.clear();
 };
 
 /******************************************************************************/
 
-pendingNodes.add(document);
+if ( document.documentElement === null ) { return; }
+pendingNodes.add(document.documentElement);
 uBOL_processNodes();
 
 let domMutationObserver = new MutationObserver(uBOL_processChanges);
 domMutationObserver.observe(document, {
+    attributeFilter: [ 'class', 'id' ],
+    attributes: true,
     childList: true,
     subtree: true,
 });
@@ -216,20 +255,6 @@ const needDomChangeObserver = ( ) => {
 };
 
 needDomChangeObserver();
-
-/******************************************************************************/
-
-const stopAll = reason => {
-    if ( domChangeTimer !== undefined ) {
-        self.clearTimeout(domChangeTimer);
-        domChangeTimer = undefined;
-    }
-    domMutationObserver.disconnect();
-    domMutationObserver.takeRecords();
-    domMutationObserver = undefined;
-    genericSelectorMap.clear();
-    console.info(`uBOL: Generic cosmetic filtering stopped because ${reason}`);
-};
 
 /******************************************************************************/
 

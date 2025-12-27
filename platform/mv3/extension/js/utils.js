@@ -19,12 +19,17 @@
     Home: https://github.com/gorhill/uBlock
 */
 
+import {
+    browser,
+    runtime,
+} from './ext.js';
+
 /******************************************************************************/
 
 function parsedURLromOrigin(origin) {
     try {
         return new URL(origin);
-    } catch(ex) {
+    } catch {
     }
 }
 
@@ -100,29 +105,30 @@ const subtractHostnameIters = (itera, iterb) => {
 
 /******************************************************************************/
 
-const matchesFromHostnames = hostnames => {
+export const matchFromHostname = hn =>
+    hn === '*' || hn === 'all-urls' ? '<all_urls>' : `*://*.${hn}/*`;
+
+export const matchesFromHostnames = hostnames => {
     const out = [];
     for ( const hn of hostnames ) {
-        if ( hn === '*' || hn === 'all-urls' ) {
-            out.length = 0;
-            out.push('<all_urls>');
-            break;
-        }
-        out.push(`*://*.${hn}/*`);
+        out.push(matchFromHostname(hn));
     }
     return out;
 };
 
-const hostnamesFromMatches = origins => {
+export const hostnameFromMatch = origin => {
+    if ( origin === '<all_urls>' || origin === '*://*/*' ) { return 'all-urls'; }
+    const match = /^[^:]+:\/\/(?:\*\.)?([^/]+)\/\*/.exec(origin);
+    if ( match === null ) { return ''; }
+    return match[1];
+};
+
+export const hostnamesFromMatches = origins => {
     const out = [];
     for ( const origin of origins ) {
-        if ( origin === '<all_urls>' ) {
-            out.push('all-urls');
-            continue;
-        }
-        const match = /^\*:\/\/(?:\*\.)?([^/]+)\/\*/.exec(origin);
-        if ( match === null ) { continue; }
-        out.push(match[1]);
+        const hn = hostnameFromMatch(origin);
+        if ( hn === '' ) { continue; }
+        out.push(hn);
     }
     return out;
 };
@@ -136,6 +142,76 @@ const broadcastMessage = message => {
 
 /******************************************************************************/
 
+// https://developer.mozilla.org/docs/Mozilla/Add-ons/WebExtensions/manifest.json/host_permissions#requested_permissions_and_user_prompts
+// "Users can grant or revoke host permissions on an ad hoc basis. Therefore,
+// most browsers treat host_permissions as optional."
+
+async function hasBroadHostPermissions() {
+    return browser.permissions.getAll().then(permissions =>
+        permissions.origins.includes('<all_urls>') ||
+        permissions.origins.includes('*://*/*')
+    ).catch(( ) => false);
+}
+
+/******************************************************************************/
+
+async function gotoURL(url, type) {
+    const pageURL = new URL(url, runtime.getURL('/'));
+    const tabs = await browser.tabs.query({
+        url: pageURL.href,
+        windowType: type !== 'popup' ? 'normal' : 'popup'
+    });
+
+    if ( Array.isArray(tabs) && tabs.length !== 0 ) {
+        const { windowId, id } = tabs[0];
+        return Promise.all([
+            browser.windows.update(windowId, { focused: true }),
+            browser.tabs.update(id, { active: true }),
+        ]);
+    }
+
+    if ( type === 'popup' ) {
+        return browser.windows.create({
+            type: 'popup',
+            url: pageURL.href,
+        });
+    }
+
+    return browser.tabs.create({
+        active: true,
+        url: pageURL.href,
+    });
+}
+
+/******************************************************************************/
+
+// Important: We need to sort the arrays for fast comparison
+const strArrayEq = (a = [], b = [], sort = true) => {
+    const alen = a.length;
+    if ( alen !== b.length ) { return false; }
+    if ( sort ) { a.sort(); b.sort(); }
+    for ( let i = 0; i < alen; i++ ) {
+        if ( a[i] !== b[i] ) { return false; }
+    }
+    return true;
+};
+
+/******************************************************************************/
+
+// The goal is just to be able to find out whether a specific version is older
+// than another one.
+
+export function intFromVersion(version) {
+    const match = /^(\d+)\.(\d+)\.(\d+)$/.exec(version);
+    if ( match === null ) { return 0; }
+    const year = parseInt(match[1], 10);
+    const monthday = parseInt(match[2], 10);
+    const min = parseInt(match[3], 10);
+    return (year - 2022) * (1232 * 2400) + monthday * 2400 + min;
+}
+
+/******************************************************************************/
+
 export {
     broadcastMessage,
     parsedURLromOrigin,
@@ -144,6 +220,7 @@ export {
     isDescendantHostnameOfIter,
     intersectHostnameIters,
     subtractHostnameIters,
-    matchesFromHostnames,
-    hostnamesFromMatches,
+    hasBroadHostPermissions,
+    gotoURL,
+    strArrayEq,
 };

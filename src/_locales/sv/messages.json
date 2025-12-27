@@ -4,7 +4,7 @@
     "description": "extension name."
   },
   "extShortDesc": {
-    "message": "Äntligen en effektiv blockerare. Skonsam mot både processor och minne.",
+    "message": "Äntligen en effektiv blockerare. Lätt för både processor och minne.",
     "description": "this will be in the Chrome web store: must be 132 characters or less"
   },
   "dashboardName": {
@@ -116,7 +116,7 @@
     "description": "English: Click to open the dashboard"
   },
   "popupTipZapper": {
-    "message": "Gå till elementzapperläge",
+    "message": "Gå in i elementzapperläge",
     "description": "Tooltip for the element-zapper icon in the popup panel"
   },
   "popupTipPicker": {
@@ -897,14 +897,14 @@
   },
   "supportOpenButton": {
     "message": "Öppna",
-    "description": "Text for button which open an external webpage in Support pane"
+    "description": "Text for button which open an external web page in Support pane"
   },
   "supportReportSpecificButton": {
-    "message": "Skapa ny rapport",
-    "description": "Text for button which open an external webpage in Support pane"
+    "message": "Skapa ny rapport på GitHub",
+    "description": "Text for button which open an external web page in Support pane"
   },
   "supportFindSpecificButton": {
-    "message": "Hitta liknande rapporter",
+    "message": "Hitta liknande rapporter på GitHub",
     "description": "A clickable link in the filter issue reporter section"
   },
   "supportS1H": {
@@ -964,7 +964,7 @@
     "description": "Header of 'Report a filter issue' section in Support pane"
   },
   "supportS6P1S1": {
-    "message": "För att undvika att belasta volontärer med dubbletter av rapporter, kontrollera att problemet inte redan har rapporterats.",
+    "message": "För att undvika att belasta volontärer med dubbletter av rapporter, kontrollera att problemet inte redan har rapporterats. <b>Observera:</b> om du klickar på knappen kommer sidans ursprung att skickas till GitHub.",
     "description": "A paragraph in the filter issue reporter section"
   },
   "supportS6P2S1": {
@@ -1018,14 +1018,6 @@
   "supportS6Checkbox1": {
     "message": "Märk webbsidan som \"NSFW\" (<a href=\"https://wikipedia.org/wiki/Not_safe_for_work\">“Inte lämplig på jobbet”</a>)",
     "description": "A checkbox to use for NSFW sites"
-  },
-  "supportRedact": {
-    "message": "Bortredigerad",
-    "description": "Text for 'Redact' button"
-  },
-  "supportUnredact": {
-    "message": "Oredigerad",
-    "description": "Text for 'Unredact' button"
   },
   "aboutPrivacyPolicy": {
     "message": "Integritetspolicy",
@@ -1098,10 +1090,6 @@
   "errorCantConnectTo": {
     "message": "Nätverksfel: {{msg}}",
     "description": "English: Network error: {{msg}}"
-  },
-  "subscriberConfirm": {
-    "message": "Lägg till följande webbadress till dina anpassade filterlistor?\n\nTitel: \"{{title}}\"\nWebbadress: {{url}}",
-    "description": "No longer used"
   },
   "subscribeButton": {
     "message": "Prenumerera",
@@ -1194,6 +1182,22 @@
   "docblockedRedirectPrompt": {
     "message": "Den blockerade sidan vill omdirigera dig till en annan webbplats. Om du väljer att fortsätta skickas du direkt till: {{url}}",
     "description": "Text warning about an incoming redirect"
+  },
+  "docblockedReasonLabel": {
+    "message": "Anledning:",
+    "description": "The label which prepend the actual reason why a page was blocked"
+  },
+  "docblockedReasonMalicious": {
+    "message": "Illvillig",
+    "description": "An actual reason why a page was blocked"
+  },
+  "docblockedReasonTracker": {
+    "message": "Spårare",
+    "description": "An actual reason why a page was blocked"
+  },
+  "docblockedReasonDisreputable": {
+    "message": "Vanhedrande",
+    "description": "An actual reason why a page was blocked"
   },
   "cloudPush": {
     "message": "Exportera till molnlagring",

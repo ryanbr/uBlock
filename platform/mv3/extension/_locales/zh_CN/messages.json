@@ -4,7 +4,7 @@
     "description": "extension name."
   },
   "extShortDesc": {
-    "message": "一个不需要权限的内容屏蔽工具。安装即可屏蔽广告、跟踪器、挖矿脚本等网页内容。",
+    "message": "一款高效的内容屏蔽工具。安装即可屏蔽广告、跟踪器、挖矿脚本等网页内容。",
     "description": "this will be in the Chrome web store: must be 132 characters or less"
   },
   "perRulesetStats": {
@@ -19,6 +19,14 @@
     "message": "设置",
     "description": "appears as tab name in dashboard"
   },
+  "customFiltersPageName": {
+    "message": "自定义过滤规则",
+    "description": "appears as tab name in dashboard"
+  },
+  "developPageName": {
+    "message": "开发",
+    "description": "appears as tab name in dashboard. Inspired from 'Develop' menu in Safari, see https://developer.apple.com/documentation/safari-developer-tools/develop-menu"
+  },
   "aboutPageName": {
     "message": "关于",
     "description": "appears as tab name in dashboard"
@@ -31,12 +39,16 @@
     "message": "过滤模式",
     "description": "Label in the popup panel for the current filtering mode"
   },
+  "popupLocalToolsLabel": {
+    "message": "在本网站上",
+    "description": "Label in the popup panel for the local tools section"
+  },
   "popupTipReport": {
-    "message": "反馈该网站上的问题",
+    "message": "报告此网站上的问题",
     "description": "Tooltip used for the 'chat' icon in the panel"
   },
   "popupTipDashboard": {
-    "message": "在仪表板中",
+    "message": "打开控制面板",
     "description": "English: Click to open the dashboard"
   },
   "popupMoreButton": {
@@ -48,7 +60,7 @@
     "description": "Label to be used to hide popup panel sections"
   },
   "3pGroupDefault": {
-    "message": "预设",
+    "message": "默认",
     "description": "Header for a ruleset section in 'Filter lists pane'"
   },
   "3pGroupAds": {
@@ -74,6 +86,14 @@
   "3pGroupRegions": {
     "message": "区域、语言",
     "description": "Header for a ruleset section in 'Filter lists pane'"
+  },
+  "customFiltersImportExportLabel": {
+    "message": "导入/导出",
+    "description": "Text label heading the import/export area of custom filters"
+  },
+  "customFiltersImportTextareaPlaceholder": {
+    "message": "在此粘贴要添加的特定元素过滤规则",
+    "description": "Placeholder text which describes the purpose of the textarea widget"
   },
   "aboutChangelog": {
     "message": "更新日志",
@@ -111,12 +131,16 @@
     "message": "将特定网站的过滤问题报告给<span data-url=\"https://github.com/uBlockOrigin/uAssets/issues?q=is%3Aissue\"><code>uBlockOrigin/uAssets</code> issue tracker</span>。<u>需要有 GitHub 账户。</u>",
     "description": "First paragraph of 'Filter issues' section in Support pane"
   },
+  "supportS5H": {
+    "message": "故障排查相关信息",
+    "description": "Label of 'Troubleshooting information' section in 'Report a filter issue' page"
+  },
   "supportS6P1S1": {
     "message": "请确认该问题未曾上报，以避免加重志愿者负担。",
     "description": "A paragraph in the filter issue reporter section"
   },
   "supportFindSpecificButton": {
-    "message": "找到相似报告",
+    "message": "在 GitHub 上寻找相似报告",
     "description": "A clickable link in the filter issue reporter section"
   },
   "supportS6URL": {
@@ -140,7 +164,7 @@
     "description": "An entry in the widget used to select the type of issue"
   },
   "supportS6Select1Option3": {
-    "message": "检测到 uBO Lite",
+    "message": "检测 uBO Lite",
     "description": "An entry in the widget used to select the type of issue"
   },
   "supportS6Select1Option4": {
@@ -165,15 +189,7 @@
   },
   "supportReportSpecificButton": {
     "message": "创建新报告",
-    "description": "Text for button which open an external webpage in Support pane"
-  },
-  "firstRunSectionLabel": {
-    "message": "欢迎使用",
-    "description": "The header text for the welcome message section"
-  },
-  "firstRunDescription": {
-    "message": "uBO Lite 现已安装完毕。接下来您可以为网页内容选择默认过滤模式。\n\n预设过滤模式为“基础”，该模式不需要读取或修改网页内容的权限。如果您信任 uBO Lite，您可以授予其用以读取或修改所有网页数据的额外权限，进而默认为所有网站开启高级过滤模式。",
-    "description": "Descriptive text shown at first install time only "
+    "description": "Text for button which opens an external web page in Support pane"
   },
   "defaultFilteringModeSectionLabel": {
     "message": "默认过滤模式",
@@ -212,15 +228,15 @@
     "description": "This describes the 'complete' filtering mode"
   },
   "noFilteringModeDescription": {
-    "message": "不进行过滤的主机名列表",
+    "message": "不进行过滤的网站列表。",
     "description": "A short description for the editable field which lists trusted sites"
   },
   "noFilteringModePlaceholder": {
-    "message": "[域名]\nexample.com\ngames.example\n...",
+    "message": "[仅限主机名]\nexample.com\ngames.example\n...",
     "description": "Default text for in edit field"
   },
   "behaviorSectionLabel": {
-    "message": "操作设置",
+    "message": "行为",
     "description": "The header text for the 'Behavior' section"
   },
   "autoReloadLabel": {
@@ -237,26 +253,46 @@
   },
   "enableStrictBlockLegend": {
     "message": "导航至潜在不良网站的操作将被拦截，并且您将可以选择继续前往。",
+    "description": "Short description for a checkbox in the options page"
+  },
+  "developerModeLabel": {
+    "message": "开发者模式",
     "description": "Label for a checkbox in the options page"
+  },
+  "developerModeLegend": {
+    "message": "启用访问适合技术用户的功能。",
+    "description": "Short description for a checkbox in the options page"
+  },
+  "settingsBackupRestoreLabel": {
+    "message": "备份",
+    "description": "The header text for the back up/restore section"
+  },
+  "settingsBackupRestoreSummary": {
+    "message": "将自定义设置备份到文件，或从文件还原自定义设置。",
+    "description": "A summary description of the back up/restore section."
+  },
+  "settingsBackupRestoreLegend": {
+    "message": "还原将覆盖当前所有自定义设置。",
+    "description": "Important information about the back up/restore section."
   },
   "findListsPlaceholder": {
     "message": "查找列表",
     "description": "Placeholder for the input field used to find lists"
   },
   "strictblockTitle": {
-    "message": "被拦截的页面",
-    "description": "Webpage title for the strict-blocked page"
+    "message": "页面已被拦截",
+    "description": "Web page title for the strict-blocked page"
   },
   "strictblockSentence1": {
-    "message": "uBO Lite 已阻止了以下页面的加载：",
+    "message": "uBO Lite 已阻止加载以下页面：",
     "description": "Sentence used in the strict-blocked page"
   },
   "strictblockReasonSentence1": {
-    "message": "The page was blocked because of a matching filter in {{listname}}.",
+    "message": "该页面由于 {{listName}} 中的匹配过滤器而被阻止。",
     "description": "Text informing about what is causing the page to be blocked"
   },
   "strictblockRedirectSentence1": {
-    "message": "The blocked page wants to redirect to another site. If you choose to proceed, you will navigate directly to: {{url}}",
+    "message": "被拦截的页面将重定向至其他网站。如果您选择继续，将直接导航至：{{url}}",
     "description": "Text warning about an incoming redirect"
   },
   "strictblockNoParamsPrompt": {
@@ -265,18 +301,122 @@
   },
   "strictblockBack": {
     "message": "返回",
-    "description": "A button to go back to the previous webpage"
+    "description": "A button to go back to the previous web page"
   },
   "strictblockClose": {
     "message": "关闭此窗口",
     "description": "A button to close the current tab"
   },
   "strictblockDontWarn": {
-    "message": "不要再警告我关于这个网站了",
+    "message": "不再针对此网站作出警告",
     "description": "Label for checkbox in document-blocked page"
   },
   "strictblockProceed": {
     "message": "继续",
     "description": "A button to navigate to the blocked page"
+  },
+  "zapperTipEnter": {
+    "message": "进入临时移除元素模式",
+    "description": "Tooltip for the button used to enter zapper mode"
+  },
+  "zapperTipQuit": {
+    "message": "退出临时移除元素模式",
+    "description": "Tooltip for the button used to exit zapper mode"
+  },
+  "pickerTipEnter": {
+    "message": "创建自定义过滤规则",
+    "description": "Label for the menu entry to create cosmetic filters"
+  },
+  "unpickerTipEnter": {
+    "message": "移除自定义过滤规则",
+    "description": "Label for the menu entry to delete cosmetic filters"
+  },
+  "developDropdownLabel": {
+    "message": "查看：",
+    "description": "A label of a dropdown list"
+  },
+  "developOptionFilteringModeDetails": {
+    "message": "过滤模式详情",
+    "description": "An option in a dropdown list"
+  },
+  "developOptionCustomDnrRules": {
+    "message": "自定义DNR规则",
+    "description": "An option in a dropdown list"
+  },
+  "developOptionDnrRulesOf": {
+    "message": "DNR规则来源：",
+    "description": "A section header in a dropdown list"
+  },
+  "developOptionDynamicRuleset": {
+    "message": "动态规则集",
+    "description": "An option in a dropdown list"
+  },
+  "developOptionSessionRuleset": {
+    "message": "会话规则集",
+    "description": "An option in a dropdown list"
+  },
+  "saveButton": {
+    "message": "保存",
+    "description": "Text for buttons used to save changes"
+  },
+  "revertButton": {
+    "message": "还原",
+    "description": "Text for buttons used to revert changes"
+  },
+  "addButton": {
+    "message": "添加",
+    "description": "Text for buttons used to add content"
+  },
+  "importAndAppendButton": {
+    "message": "导入并添加…",
+    "description": "Text for buttons used to import and append content"
+  },
+  "exportButton": {
+    "message": "导出…",
+    "description": "Text for buttons used to export content"
+  },
+  "backupButton": {
+    "message": "备份…",
+    "description": "Text for buttons used to back up content"
+  },
+  "restoreButton": {
+    "message": "还原…",
+    "description": "Text for buttons used to restore content"
+  },
+  "resetToDefaultButton": {
+    "message": "重置为默认设置…",
+    "description": "Text for buttons used to reset configurations to default"
+  },
+  "resetToDefaultConfirm": {
+    "message": "您的自定义设置将被清除。是否确定要重置为默认设置？",
+    "description": "Message asking user to confirm reset to default settings"
+  },
+  "dnrRulesWarning": {
+    "message": "请勿添加来自不可信来源的内容",
+    "description": "Short description of the DNR rules editor pane"
+  },
+  "dnrRulesCountInfo": {
+    "message": "已注册规则的数量：",
+    "description": "Short sentence to report the number of currently registered DNR rules"
+  },
+  "pickerSliderLabel": {
+    "message": "移动滑块以选择最佳搭配",
+    "description": "Label to describe the purpose of the slider"
+  },
+  "pickerPick": {
+    "message": "选择",
+    "description": "Text for the button to re-enter element-picking mode"
+  },
+  "pickerPreview": {
+    "message": "预览",
+    "description": "Text for the button to activate preview mode"
+  },
+  "pickerCreate": {
+    "message": "创建",
+    "description": "Text for the button to create the filter"
+  },
+  "unpickerUsage": {
+    "message": "选择下面的过滤器以突出显示网页中匹配的元素。点击垃圾桶可移除过滤器。",
+    "description": "Summary description on how to use the tool to remove custom filters"
   }
 }

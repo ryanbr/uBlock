@@ -19,6 +19,14 @@
     "message": "Налаштування",
     "description": "appears as tab name in dashboard"
   },
+  "customFiltersPageName": {
+    "message": "Користувацькі фільтри",
+    "description": "appears as tab name in dashboard"
+  },
+  "developPageName": {
+    "message": "Розробка",
+    "description": "appears as tab name in dashboard. Inspired from 'Develop' menu in Safari, see https://developer.apple.com/documentation/safari-developer-tools/develop-menu"
+  },
   "aboutPageName": {
     "message": "Про застосунок",
     "description": "appears as tab name in dashboard"
@@ -30,6 +38,10 @@
   "popupFilteringModeLabel": {
     "message": "режим фільтрації",
     "description": "Label in the popup panel for the current filtering mode"
+  },
+  "popupLocalToolsLabel": {
+    "message": "На цьому вебсайті",
+    "description": "Label in the popup panel for the local tools section"
   },
   "popupTipReport": {
     "message": "Повідомити про помилку на цьому вебсайті",
@@ -75,6 +87,14 @@
     "message": "Регіони, мови",
     "description": "Header for a ruleset section in 'Filter lists pane'"
   },
+  "customFiltersImportExportLabel": {
+    "message": "Імпорт / Експорт",
+    "description": "Text label heading the import/export area of custom filters"
+  },
+  "customFiltersImportTextareaPlaceholder": {
+    "message": "Вставте сюди конкретні косметичні фільтри, які потрібно додати",
+    "description": "Placeholder text which describes the purpose of the textarea widget"
+  },
   "aboutChangelog": {
     "message": "Журнал змін",
     "description": ""
@@ -111,8 +131,12 @@
     "message": "Повідомляйте про вади з фільтрами на конкретних вебсайтах у <span data-url=\"https://github.com/uBlockOrigin/uAssets/issues?q=is%3Aissue\">відстежувач помилок <code>uBlockOrigin/uAssets</code></span>. <u>Потрібен обліковий запис GitHub.</u>",
     "description": "First paragraph of 'Filter issues' section in Support pane"
   },
+  "supportS5H": {
+    "message": "Усунення проблем",
+    "description": "Label of 'Troubleshooting information' section in 'Report a filter issue' page"
+  },
   "supportS6P1S1": {
-    "message": "Щоб не обтяжувати волонтерів повторюваними звітами, переконайтеся, що про проблему ще не повідомлялося.",
+    "message": "Щоб не обтяжувати волонтерів повторюваними звітами, переконайтеся, що про проблему ще не повідомлялося.<b>Зауваження:</b> натискання на кнопку призведе до надсилання походження сторінки на GitHub.",
     "description": "A paragraph in the filter issue reporter section"
   },
   "supportFindSpecificButton": {
@@ -165,15 +189,7 @@
   },
   "supportReportSpecificButton": {
     "message": "Створити новий звіт",
-    "description": "Text for button which open an external webpage in Support pane"
-  },
-  "firstRunSectionLabel": {
-    "message": "Ласкаво просимо",
-    "description": "The header text for the welcome message section"
-  },
-  "firstRunDescription": {
-    "message": "Ви щойно встановили uBO Lite. Тут ви можете вибрати режим фільтрації за замовчуванням, який буде використовуватися на всіх вебсайтах.\n\nЗа замовчуванням вибрано <em>Базовий</em> режим, оскільки він не вимагає дозволу на читання та зміну даних. Якщо ви довіряєте uBO Lite, ви можете надати йому широкий дозвіл на читання та зміну даних на всіх вебсайтах, щоб увімкнути більш розширені можливості фільтрації для всіх вебсайтів за замовчуванням.\n",
-    "description": "Descriptive text shown at first install time only "
+    "description": "Text for button which opens an external web page in Support pane"
   },
   "defaultFilteringModeSectionLabel": {
     "message": "Типовий режим фільтрування",
@@ -237,7 +253,27 @@
   },
   "enableStrictBlockLegend": {
     "message": "Перехід до потенційно небажаних сайтів буде заблоковано, та вам буде запропоновано можливість продовжити",
+    "description": "Short description for a checkbox in the options page"
+  },
+  "developerModeLabel": {
+    "message": "Режим розробника",
     "description": "Label for a checkbox in the options page"
+  },
+  "developerModeLegend": {
+    "message": "Відкрити доступ до можливостей, які актуальні для технічних користувачів",
+    "description": "Short description for a checkbox in the options page"
+  },
+  "settingsBackupRestoreLabel": {
+    "message": "Резервне копіювання",
+    "description": "The header text for the back up/restore section"
+  },
+  "settingsBackupRestoreSummary": {
+    "message": "Створіть резервну копію власних налаштувань у файлі або відновіть власні налаштування з файлу.",
+    "description": "A summary description of the back up/restore section."
+  },
+  "settingsBackupRestoreLegend": {
+    "message": "Відновлення призведе до перезапису всіх ваших поточних налаштувань.",
+    "description": "Important information about the back up/restore section."
   },
   "findListsPlaceholder": {
     "message": "Знайти списки",
@@ -245,10 +281,10 @@
   },
   "strictblockTitle": {
     "message": "Сторінку заблоковано",
-    "description": "Webpage title for the strict-blocked page"
+    "description": "Web page title for the strict-blocked page"
   },
   "strictblockSentence1": {
-    "message": "uBO Lite заблокував завантаження наступних сторінок:",
+    "message": "uBO Lite заблокував завантаження таких сторінок:",
     "description": "Sentence used in the strict-blocked page"
   },
   "strictblockReasonSentence1": {
@@ -265,7 +301,7 @@
   },
   "strictblockBack": {
     "message": "Повернутися",
-    "description": "A button to go back to the previous webpage"
+    "description": "A button to go back to the previous web page"
   },
   "strictblockClose": {
     "message": "Закрити це вікно",
@@ -278,5 +314,109 @@
   "strictblockProceed": {
     "message": "Продовжити",
     "description": "A button to navigate to the blocked page"
+  },
+  "zapperTipEnter": {
+    "message": "Перейти в режим тимчасового приховування елементів",
+    "description": "Tooltip for the button used to enter zapper mode"
+  },
+  "zapperTipQuit": {
+    "message": "Вийти з режиму тимчасового приховування елементів",
+    "description": "Tooltip for the button used to exit zapper mode"
+  },
+  "pickerTipEnter": {
+    "message": "Створити власний фільтр",
+    "description": "Label for the menu entry to create cosmetic filters"
+  },
+  "unpickerTipEnter": {
+    "message": "Вилучити власний фільтр",
+    "description": "Label for the menu entry to delete cosmetic filters"
+  },
+  "developDropdownLabel": {
+    "message": "Перегляд:",
+    "description": "A label of a dropdown list"
+  },
+  "developOptionFilteringModeDetails": {
+    "message": "Подробиці режиму фільтрації",
+    "description": "An option in a dropdown list"
+  },
+  "developOptionCustomDnrRules": {
+    "message": "Користувацькі правила DNR",
+    "description": "An option in a dropdown list"
+  },
+  "developOptionDnrRulesOf": {
+    "message": "Правила DNR для…",
+    "description": "A section header in a dropdown list"
+  },
+  "developOptionDynamicRuleset": {
+    "message": "Динамічний набір правил",
+    "description": "An option in a dropdown list"
+  },
+  "developOptionSessionRuleset": {
+    "message": "Набір правил для сесії",
+    "description": "An option in a dropdown list"
+  },
+  "saveButton": {
+    "message": "Зберегти",
+    "description": "Text for buttons used to save changes"
+  },
+  "revertButton": {
+    "message": "Повернути",
+    "description": "Text for buttons used to revert changes"
+  },
+  "addButton": {
+    "message": "Додати",
+    "description": "Text for buttons used to add content"
+  },
+  "importAndAppendButton": {
+    "message": "Імпортувати та додати…",
+    "description": "Text for buttons used to import and append content"
+  },
+  "exportButton": {
+    "message": "Експортувати…",
+    "description": "Text for buttons used to export content"
+  },
+  "backupButton": {
+    "message": "Створити…",
+    "description": "Text for buttons used to back up content"
+  },
+  "restoreButton": {
+    "message": "Відновити…",
+    "description": "Text for buttons used to restore content"
+  },
+  "resetToDefaultButton": {
+    "message": "Reset to default settings…",
+    "description": "Text for buttons used to reset configurations to default"
+  },
+  "resetToDefaultConfirm": {
+    "message": "All your custom settings will be removed. Do you really want to reset to default settings?",
+    "description": "Message asking user to confirm reset to default settings"
+  },
+  "dnrRulesWarning": {
+    "message": "Не додавати вміст з невідомих джерел",
+    "description": "Short description of the DNR rules editor pane"
+  },
+  "dnrRulesCountInfo": {
+    "message": "Кількість зареєстрованих правил: {count}",
+    "description": "Short sentence to report the number of currently registered DNR rules"
+  },
+  "pickerSliderLabel": {
+    "message": "Переміщайте повзунок для вибору кращого варіанту",
+    "description": "Label to describe the purpose of the slider"
+  },
+  "pickerPick": {
+    "message": "Вибрати",
+    "description": "Text for the button to re-enter element-picking mode"
+  },
+  "pickerPreview": {
+    "message": "Попередній перегляд",
+    "description": "Text for the button to activate preview mode"
+  },
+  "pickerCreate": {
+    "message": "Створити",
+    "description": "Text for the button to create the filter"
+  },
+  "unpickerUsage": {
+    "message": "Виберіть фільтр нижче, щоб підсвітити відповідні елементи на сторінці. Натисніть на кошик для видалення фільтра.",
+    "description": "Summary description on how to use the tool to remove custom filters"
   }
 }

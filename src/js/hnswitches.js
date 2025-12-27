@@ -19,16 +19,9 @@
     Home: https://github.com/gorhill/uBlock
 */
 
-/* jshint bitwise: false */
-
-'use strict';
-
-/******************************************************************************/
-
-import punycode from '../lib/punycode.js';
-
-import { decomposeHostname } from './uri-utils.js';
 import { LineIterator } from './text-utils.js';
+import { decomposeHostname } from './uri-utils.js';
+import punycode from '../lib/punycode.js';
 
 /******************************************************************************/
 
@@ -36,7 +29,7 @@ const decomposedSource = [];
 
 // Object.create(null) is used below to eliminate worries about unexpected
 // property names in prototype chain -- and this way we don't have to use
-// hasOwnProperty() to avoid this.
+// Object.hasOwn() to avoid this.
 
 const switchBitOffsets = Object.create(null);
 Object.assign(switchBitOffsets, {

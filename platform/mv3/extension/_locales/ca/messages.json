@@ -19,6 +19,14 @@
     "message": "Configuració",
     "description": "appears as tab name in dashboard"
   },
+  "customFiltersPageName": {
+    "message": "Filtres personalitzats",
+    "description": "appears as tab name in dashboard"
+  },
+  "developPageName": {
+    "message": "Desenvolupament",
+    "description": "appears as tab name in dashboard. Inspired from 'Develop' menu in Safari, see https://developer.apple.com/documentation/safari-developer-tools/develop-menu"
+  },
   "aboutPageName": {
     "message": "Quant a",
     "description": "appears as tab name in dashboard"
@@ -30,6 +38,10 @@
   "popupFilteringModeLabel": {
     "message": "mode de filtre",
     "description": "Label in the popup panel for the current filtering mode"
+  },
+  "popupLocalToolsLabel": {
+    "message": "En aquest lloc web",
+    "description": "Label in the popup panel for the local tools section"
   },
   "popupTipReport": {
     "message": "Informa d'un problema en aquest lloc web",
@@ -75,6 +87,14 @@
     "message": "Regions, llengües",
     "description": "Header for a ruleset section in 'Filter lists pane'"
   },
+  "customFiltersImportExportLabel": {
+    "message": "Importa/Exporta",
+    "description": "Text label heading the import/export area of custom filters"
+  },
+  "customFiltersImportTextareaPlaceholder": {
+    "message": "Enganxeu aquí els filtres cosmètics que voleu afegir",
+    "description": "Placeholder text which describes the purpose of the textarea widget"
+  },
   "aboutChangelog": {
     "message": "Registre de canvis",
     "description": ""
@@ -111,8 +131,12 @@
     "message": "Informeu d'un problema en llocs web específics mitjançant el <span data-url=\"https://github.com/uBlockOrigin/uAssets/issues?q=is%3Aissue\"><code>uBlockOrigin/uAssets</code> seguiment d'errors</span>. <u>Cal un compte al GitHub.</u>",
     "description": "First paragraph of 'Filter issues' section in Support pane"
   },
+  "supportS5H": {
+    "message": "Informació de resolució de problemes",
+    "description": "Label of 'Troubleshooting information' section in 'Report a filter issue' page"
+  },
   "supportS6P1S1": {
-    "message": "Per evitar carregar els voluntaris amb informes duplicats, verifiqueu que el problema encara no s'hagi notificat.",
+    "message": "Per a evitar la sobrecàrrega del nostre voluntariat amb informes duplicats, verifiqueu abans que el problema encara no s'ha notificat. <b>Nota:</b> En fer clic, enviareu la pàgina causant al nostre GitHub.",
     "description": "A paragraph in the filter issue reporter section"
   },
   "supportFindSpecificButton": {
@@ -165,15 +189,7 @@
   },
   "supportReportSpecificButton": {
     "message": "Crea un informe nou",
-    "description": "Text for button which open an external webpage in Support pane"
-  },
-  "firstRunSectionLabel": {
-    "message": "Us donem la benvinguda",
-    "description": "The header text for the welcome message section"
-  },
-  "firstRunDescription": {
-    "message": "Acabeu d'instal·lar l'uBO Lite. Aquí podeu triar el mode de filtrat per defecte per utilitzar-lo a tots els llocs web.\n\nPer defecte, el mode <em>Bàsic</em> està seleccionat perquè no requereix permís per llegir i canviar dades. Si confieu en l'uBO Lite, podeu donar-li un ampli permís per llegir i canviar dades a tots els llocs web per tal d'activar capacitats de filtratge més avançades per a tots els llocs web per defecete.",
-    "description": "Descriptive text shown at first install time only "
+    "description": "Text for button which opens an external web page in Support pane"
   },
   "defaultFilteringModeSectionLabel": {
     "message": "Mode de filtratge per defecte",
@@ -237,7 +253,27 @@
   },
   "enableStrictBlockLegend": {
     "message": "Es blocarà la navegació en webs potencialment no desitjables, oferint-vos la possibilitat de continuar.",
+    "description": "Short description for a checkbox in the options page"
+  },
+  "developerModeLabel": {
+    "message": "Mode de desenvolupador",
     "description": "Label for a checkbox in the options page"
+  },
+  "developerModeLegend": {
+    "message": "Habilita l'accés a funcions adequades per a usuaris tècnics.",
+    "description": "Short description for a checkbox in the options page"
+  },
+  "settingsBackupRestoreLabel": {
+    "message": "Còpia de seguretat / Restaura",
+    "description": "The header text for the back up/restore section"
+  },
+  "settingsBackupRestoreSummary": {
+    "message": "Feu una còpia de seguretat de la vostra configuració personalitzada a un fitxer o restaureu la vostra configuració personalitzada des d'un fitxer.",
+    "description": "A summary description of the back up/restore section."
+  },
+  "settingsBackupRestoreLegend": {
+    "message": "La restauració sobreescriurà tots els paràmetres personalitzats actuals.",
+    "description": "Important information about the back up/restore section."
   },
   "findListsPlaceholder": {
     "message": "Cerca llistes",
@@ -245,18 +281,18 @@
   },
   "strictblockTitle": {
     "message": "Pàgina blocada",
-    "description": "Webpage title for the strict-blocked page"
+    "description": "Web page title for the strict-blocked page"
   },
   "strictblockSentence1": {
     "message": "L'uBO Lite ha evitat la càrrega d'aquesta pàgina:",
     "description": "Sentence used in the strict-blocked page"
   },
   "strictblockReasonSentence1": {
-    "message": "The page was blocked because of a matching filter in {{listname}}.",
+    "message": "La pàgina s'ha blocat a causa d'un filtre coincident a {{listname}}.",
     "description": "Text informing about what is causing the page to be blocked"
   },
   "strictblockRedirectSentence1": {
-    "message": "The blocked page wants to redirect to another site. If you choose to proceed, you will navigate directly to: {{url}}",
+    "message": "La pàgina blocada vol redirigir-vos a un altre web diferent. Si continueu, si us reenviarà a: {{url}}",
     "description": "Text warning about an incoming redirect"
   },
   "strictblockNoParamsPrompt": {
@@ -265,7 +301,7 @@
   },
   "strictblockBack": {
     "message": "Enrere",
-    "description": "A button to go back to the previous webpage"
+    "description": "A button to go back to the previous web page"
   },
   "strictblockClose": {
     "message": "Tanca aquesta finestra",
@@ -278,5 +314,109 @@
   "strictblockProceed": {
     "message": "Continua",
     "description": "A button to navigate to the blocked page"
+  },
+  "zapperTipEnter": {
+    "message": "Accedeix al mode d'eliminació d'elements",
+    "description": "Tooltip for the button used to enter zapper mode"
+  },
+  "zapperTipQuit": {
+    "message": "Surt del mode d'eliminació d'elements",
+    "description": "Tooltip for the button used to exit zapper mode"
+  },
+  "pickerTipEnter": {
+    "message": "Crea un filtre personalitzat",
+    "description": "Label for the menu entry to create cosmetic filters"
+  },
+  "unpickerTipEnter": {
+    "message": "Elimina un filtre personalitzat",
+    "description": "Label for the menu entry to delete cosmetic filters"
+  },
+  "developDropdownLabel": {
+    "message": "Vista:",
+    "description": "A label of a dropdown list"
+  },
+  "developOptionFilteringModeDetails": {
+    "message": "Detalls del mode de filtratge",
+    "description": "An option in a dropdown list"
+  },
+  "developOptionCustomDnrRules": {
+    "message": "Regles DNR personalitzades",
+    "description": "An option in a dropdown list"
+  },
+  "developOptionDnrRulesOf": {
+    "message": "Regles DNR de…",
+    "description": "A section header in a dropdown list"
+  },
+  "developOptionDynamicRuleset": {
+    "message": "Conjunt de regles dinàmiques",
+    "description": "An option in a dropdown list"
+  },
+  "developOptionSessionRuleset": {
+    "message": "Conjunt de regles de sessió",
+    "description": "An option in a dropdown list"
+  },
+  "saveButton": {
+    "message": "Desa",
+    "description": "Text for buttons used to save changes"
+  },
+  "revertButton": {
+    "message": "Restaura",
+    "description": "Text for buttons used to revert changes"
+  },
+  "addButton": {
+    "message": "Afegeix",
+    "description": "Text for buttons used to add content"
+  },
+  "importAndAppendButton": {
+    "message": "Importa i annexa…",
+    "description": "Text for buttons used to import and append content"
+  },
+  "exportButton": {
+    "message": "Exporta…",
+    "description": "Text for buttons used to export content"
+  },
+  "backupButton": {
+    "message": "Còpia de seguretat…",
+    "description": "Text for buttons used to back up content"
+  },
+  "restoreButton": {
+    "message": "Restaura…",
+    "description": "Text for buttons used to restore content"
+  },
+  "resetToDefaultButton": {
+    "message": "Restaura a la configuració per defecte…",
+    "description": "Text for buttons used to reset configurations to default"
+  },
+  "resetToDefaultConfirm": {
+    "message": "S'eliminaran tots els paràmetres personalitzats. Voleu restablir els paràmetres per defecte?",
+    "description": "Message asking user to confirm reset to default settings"
+  },
+  "dnrRulesWarning": {
+    "message": "No afegiu contingut de fonts no fiables",
+    "description": "Short description of the DNR rules editor pane"
+  },
+  "dnrRulesCountInfo": {
+    "message": "Nombre de regles registrades: {count}",
+    "description": "Short sentence to report the number of currently registered DNR rules"
+  },
+  "pickerSliderLabel": {
+    "message": "Moveu el control lliscant per a seleccionar la millor coincidència",
+    "description": "Label to describe the purpose of the slider"
+  },
+  "pickerPick": {
+    "message": "Selecciona",
+    "description": "Text for the button to re-enter element-picking mode"
+  },
+  "pickerPreview": {
+    "message": "Previsualitza",
+    "description": "Text for the button to activate preview mode"
+  },
+  "pickerCreate": {
+    "message": "Crea",
+    "description": "Text for the button to create the filter"
+  },
+  "unpickerUsage": {
+    "message": "Seleccioneu un filtre a continuació per a ressaltar els elements coincidents de la pàgina web. Feu clic a la paperera per a eliminar un filtre.",
+    "description": "Summary description on how to use the tool to remove custom filters"
   }
 }

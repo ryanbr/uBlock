@@ -19,8 +19,8 @@
     Home: https://github.com/gorhill/uBlock
 */
 
-import { dnr, runtime } from './ext.js';
 import { dom, qs$ } from './dom.js';
+import { getTroubleshootingInfo } from './troubleshooting.js';
 import { sendMessage } from './ext.js';
 
 /******************************************************************************/
@@ -52,7 +52,7 @@ const reportedPage = (( ) => {
             hostname: parsedURL.hostname.replace(/^(m|mobile|www)\./, ''),
             mode: url.searchParams.get('mode'),
         };
-    } catch(ex) {
+    } catch {
     }
     return null;
 })();
@@ -61,32 +61,6 @@ const reportedPage = (( ) => {
 
 function reportSpecificFilterType() {
     return qs$('select[name="type"]').value;
-}
-
-/******************************************************************************/
-
-function renderData(data, depth = 0) {
-    const indent = ' '.repeat(depth);
-    if ( Array.isArray(data) ) {
-        const out = [];
-        for ( const value of data ) {
-            out.push(renderData(value, depth));
-        }
-        return out.join('\n');
-    }
-    if ( typeof data !== 'object' || data === null ) {
-        return `${indent}${data}`;
-    }
-    const out = [];
-    for ( const [ name, value ] of Object.entries(data) ) {
-        if ( typeof value === 'object' && value !== null ) {
-            out.push(`${indent}${name}:`);
-            out.push(renderData(value, depth + 1));
-            continue;
-        }
-        out.push(`${indent}${name}: ${value}`);
-    }
-    return out.join('\n');
 }
 
 /******************************************************************************/
@@ -107,18 +81,9 @@ async function reportSpecificFilterIssue() {
     );
     githubURL.searchParams.set('category', issueType);
 
-    const manifest = runtime.getManifest();
-    const rulesets = await dnr.getEnabledRulesets();
-    const defaultMode = await sendMessage({ what: 'getDefaultFilteringMode' });
-    const modes = [ 'no filtering', 'basic', 'optimal', 'complete' ];
-    const config = {
-        version: `uBOL ${manifest.version}`,
-        mode: `${modes[reportedPage.mode]} / ${modes[defaultMode]}`,
-        rulesets,
-    };
     const configBody = [
         '```yaml',
-        renderData(config),
+        qs$('[data-i18n="supportS5H"] + pre').textContent,
         '```',
         '',
     ].join('\n');
@@ -128,7 +93,9 @@ async function reportSpecificFilterIssue() {
 
 /******************************************************************************/
 
-(async ( ) => {
+getTroubleshootingInfo(reportedPage.mode).then(config => {
+    qs$('[data-i18n="supportS5H"] + pre').textContent = config;
+
     dom.on('[data-url]', 'click', ev => {
         const elem = ev.target.closest('[data-url]');
         const url = dom.attr(elem, 'data-url');
@@ -150,5 +117,4 @@ async function reportSpecificFilterIssue() {
             ev.preventDefault();
         });
     }
-
-})();
+});
