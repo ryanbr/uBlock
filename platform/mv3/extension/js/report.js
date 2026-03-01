@@ -50,7 +50,8 @@ const reportedPage = (( ) => {
         }
         return {
             hostname: parsedURL.hostname.replace(/^(m|mobile|www)\./, ''),
-            mode: url.searchParams.get('mode'),
+            siteMode: parseInt(url.searchParams.get('mode'), 10),
+            tabId: parseInt(url.searchParams.get('tabid'), 10) || 0,
         };
     } catch {
     }
@@ -93,7 +94,7 @@ async function reportSpecificFilterIssue() {
 
 /******************************************************************************/
 
-getTroubleshootingInfo(reportedPage.mode).then(config => {
+getTroubleshootingInfo(reportedPage).then(config => {
     qs$('[data-i18n="supportS5H"] + pre').textContent = config;
 
     dom.on('[data-url]', 'click', ev => {

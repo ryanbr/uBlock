@@ -21,6 +21,7 @@
 
 import { builtinScriptlets } from './js/resources/scriptlets.js';
 import fs from 'fs/promises';
+import { literalStrFromRegex } from './js/regex-analyzer.js';
 import { safeReplace } from './safe-replace.js';
 
 /******************************************************************************/
@@ -58,26 +59,6 @@ function createScriptletCoreCode(worldDetails, resourceEntry) {
         allFunctions.set(details.name, details.code);
         if ( Array.isArray(details.dependencies) === false ) { continue; }
         dependencies.push(...details.dependencies);
-    }
-}
-
-/******************************************************************************/
-
-export function init() {
-    for ( const scriptlet of builtinScriptlets ) {
-        const { name, aliases, fn } = scriptlet;
-        const entry = {
-            name: fn.name,
-            code: fn.toString(),
-            world: scriptlet.world || 'MAIN',
-            dependencies: scriptlet.dependencies,
-            requiresTrust: scriptlet.requiresTrust === true,
-        };
-        resourceDetails.set(name, entry);
-        if ( Array.isArray(aliases) === false ) { continue; }
-        for ( const alias of aliases ) {
-            resourceAliases.set(alias, name);
-        }
     }
 }
 
@@ -191,8 +172,14 @@ export async function commit(rulesetId, path, writeFn) {
         }).map(a => ([ a[0], JSON.stringify(Array.from(a[1]).map(a => JSON.parse(a))).slice(1,-1)]));
         const scriptletFromRegexes = Array.from(worldDetails.regexesOrPaths)
             .filter(a => a[0].startsWith('/') && a[0].endsWith('/'))
-            .map(a => [ a[0].slice(1, -1), JSON.stringify(Array.from(a[1])).slice(1,-1) ])
-            .flat();
+            .map(a => {
+                const restr = a[0].slice(1,-1);
+                return [
+                    literalStrFromRegex(restr).slice(0,8),
+                    restr,
+                    JSON.stringify(Array.from(a[1])).slice(1,-1),
+                ];
+            }).flat();
         let content = safeReplace(scriptletTemplate, 'self.$hasEntities$', JSON.stringify(worldDetails.hasEntities));
         content = safeReplace(content, 'self.$hasAncestors$', JSON.stringify(worldDetails.hasAncestors));
         content = safeReplace(content, 'self.$hasRegexes$', JSON.stringify(scriptletFromRegexes.length !== 0));
@@ -230,5 +217,27 @@ export async function commit(rulesetId, path, writeFn) {
     }
     return stats;
 }
+
+/******************************************************************************/
+
+function init() {
+    for ( const scriptlet of builtinScriptlets ) {
+        const { name, aliases, fn } = scriptlet;
+        const entry = {
+            name: fn.name,
+            code: fn.toString(),
+            world: scriptlet.world || 'MAIN',
+            dependencies: scriptlet.dependencies,
+            requiresTrust: scriptlet.requiresTrust === true,
+        };
+        resourceDetails.set(name, entry);
+        if ( Array.isArray(aliases) === false ) { continue; }
+        for ( const alias of aliases ) {
+            resourceAliases.set(alias, name);
+        }
+    }
+}
+
+init();
 
 /******************************************************************************/

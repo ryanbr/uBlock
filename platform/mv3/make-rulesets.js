@@ -33,6 +33,7 @@ import {
 
 import { execSync } from 'node:child_process';
 import fs from 'fs/promises';
+import { literalStrFromRegex } from './js/regex-analyzer.js';
 import path from 'path';
 import process from 'process';
 import redirectResourcesMap from './js/redirect-resources.js';
@@ -213,7 +214,7 @@ const rePatternFromUrlFilter = s => {
     let reStr = s.replace(rePatternFromUrlFilter.rePlainChars, '\\$&')
                  .replace(rePatternFromUrlFilter.reSeparators, restrSeparator)
                  .replace(rePatternFromUrlFilter.reDanglingAsterisks, '')
-                 .replace(rePatternFromUrlFilter.reAsterisks, '\\S*?');
+                 .replace(rePatternFromUrlFilter.reAsterisks, '.*?');
     if ( anchor & 0b100 ) {
         reStr = (
             reStr.startsWith('\\.') ?
@@ -888,7 +889,7 @@ async function processCosmeticFilters(assetDetails, realm, mapin) {
         return a < b ? -1 : 1;
     });
 
-    const data = JSON.stringify({
+    const data = {
         selectors: Array.from(allSelectors.keys()),
         selectorLists: Array.from(allSelectorLists.keys()),
         selectorListRefs: sortedHostnames.map(a => allHostnames.get(a)),
@@ -896,10 +897,12 @@ async function processCosmeticFilters(assetDetails, realm, mapin) {
         hasEntities,
         fromRegexes: Array.from(allRegexesOrPaths)
             .filter(a => a[0].startsWith('/') && a[0].endsWith('/'))
-            .map(a => [ a[0].slice(1, -1), a[1] ])
-            .flat(),
-    });
-    writeFile(`${scriptletDir}/${realm}/${assetDetails.id}.json`, data);
+            .map(a => {
+                const restr = a[0].slice(1,-1);
+                return [ literalStrFromRegex(restr).slice(0,8), restr, a[1] ]
+            }).flat(),
+    };
+    writeFile(`${scriptletDir}/${realm}/${assetDetails.id}.json`, JSON.stringify(data));
 
     // The cosmetic filters will be injected programmatically as content
     // script and the decisions to activate the cosmetic filters will be
@@ -921,8 +924,6 @@ async function processCosmeticFilters(assetDetails, realm, mapin) {
 async function processScriptletFilters(assetDetails, mapin) {
     if ( mapin === undefined ) { return 0; }
     if ( mapin.size === 0 ) { return 0; }
-
-    makeScriptlet.init();
 
     for ( const details of mapin.values() ) {
         makeScriptlet.compile(assetDetails, details);

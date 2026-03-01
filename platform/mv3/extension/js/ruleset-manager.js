@@ -36,7 +36,7 @@ import { ubolErr, ubolLog } from './debug.js';
 import { dnr } from './ext-compat.js';
 import { fetchJSON } from './fetch.js';
 import { getAdminRulesets } from './admin.js';
-import { hasBroadHostPermissions } from './utils.js';
+import { hasBroadHostPermissions } from './ext-utils.js';
 import { rulesFromText } from './dnr-parser.js';
 
 /******************************************************************************/
@@ -47,9 +47,6 @@ const USER_RULES_PRIORITY = 1000000;
 const TRUSTED_DIRECTIVE_BASE_RULE_ID = 8000000;
 const TRUSTED_DIRECTIVE_PRIORITY = USER_RULES_PRIORITY + 1000000;
 const STRICTBLOCK_PRIORITY = 29;
-
-let dynamicRegexCount = 0;
-let sessionRegexCount = 0;
 
 /******************************************************************************/
 
@@ -128,6 +125,14 @@ pruneInvalidRegexRules.validated = new Map();
 
 /******************************************************************************/
 
+async function getDynamicRegexRuleCount() {
+    const rules = await dnr.getDynamicRules();
+    const regexRules = rules.filter(a => Boolean(a.condition?.regexFilter));
+    return regexRules.length;
+}
+
+/******************************************************************************/
+
 async function updateRegexRules(currentRules, addRules, removeRuleIds) {
     // Remove existing regex-related block rules
     for ( const rule of currentRules ) {
@@ -181,19 +186,19 @@ async function updateDynamicRules() {
     await updateRegexRules(currentRules, addRules, removeRuleIds);
     if ( addRules.length === 0 && removeRuleIds.length === 0 ) { return; }
 
-    const dynamicRegexCountBefore = dynamicRegexCount;
-    dynamicRegexCount = 0;
+    const dynamicRegexCountBefore = await getDynamicRegexRuleCount();
+    let dynamicRegexCountAfter = 0;
     let ruleId = 1;
     for ( const rule of addRules ) {
-        if ( rule?.condition.regexFilter ) { dynamicRegexCount += 1; }
+        if ( rule?.condition.regexFilter ) { dynamicRegexCountAfter += 1; }
         rule.id = ruleId++;
     }
-    if ( dynamicRegexCount !== 0 ) {
-        ubolLog(`Using ${dynamicRegexCount}/${dnr.MAX_NUMBER_OF_REGEX_RULES} dynamic regex-based DNR rules`);
+    if ( dynamicRegexCountAfter !== 0 ) {
+        ubolLog(`Using ${dynamicRegexCountAfter}/${dnr.MAX_NUMBER_OF_REGEX_RULES} dynamic regex-based DNR rules`);
     }
     // If we increase the number of dynamic regex rules, reset session rules to
     // reduce risk of hitting maximum regex count
-    if ( dynamicRegexCount > dynamicRegexCountBefore ) {
+    if ( dynamicRegexCountAfter > dynamicRegexCountBefore ) {
         await clearSessionRules();
     }
 
@@ -341,17 +346,18 @@ async function updateSessionRules() {
     const currentRules = await dnr.getSessionRules();
     await updateStrictBlockRules(currentRules, addRulesUnfiltered, removeRuleIds);
     if ( addRulesUnfiltered.length === 0 && removeRuleIds.length === 0 ) { return; }
-    const maxRegexCount = dnr.MAX_NUMBER_OF_REGEX_RULES * 0.80;
+    const maxRegexCount = dnr.MAX_NUMBER_OF_REGEX_RULES * 0.95;
+    const dynamicRegexCount = await getDynamicRegexRuleCount();
     let regexCount = dynamicRegexCount;
     let ruleId = 1;
     for ( const rule of addRulesUnfiltered ) {
         rule.id = ruleId++;
-        if ( Boolean(rule?.condition.regexFilter) === false ) { continue; }
+        if ( Boolean(rule.condition.regexFilter) === false ) { continue; }
         regexCount += 1;
         if ( regexCount < maxRegexCount ) { continue; }
         rule.id = 0;
     }
-    sessionRegexCount = regexCount - dynamicRegexCount;
+    const sessionRegexCount = regexCount - dynamicRegexCount;
     const addRules = addRulesUnfiltered.filter(a => a.id !== 0);
     const rejectedRuleCount = addRulesUnfiltered.length - addRules.length;
     if ( rejectedRuleCount !== 0 ) {
