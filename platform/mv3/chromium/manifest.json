@@ -42,9 +42,13 @@
   "options_page": "dashboard.html",
   "permissions": [
     "activeTab",
+    "alarms",
     "declarativeNetRequest",
+    "offscreen",
     "scripting",
-    "storage"
+    "storage",
+    "unlimitedStorage",
+    "userScripts"
   ],
   "short_name": "uBO Lite",
   "storage": {

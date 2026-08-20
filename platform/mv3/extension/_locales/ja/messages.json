@@ -35,6 +35,10 @@
     "message": "プライバシーポリシー",
     "description": "Link to privacy policy on GitHub (English)"
   },
+  "aboutDocumentation": {
+    "message": "ドキュメント",
+    "description": "Link to documentation in About pane"
+  },
   "popupFilteringModeLabel": {
     "message": "フィルタリングモード",
     "description": "Label in the popup panel for the current filtering mode"
@@ -87,13 +91,33 @@
     "message": "地域・言語",
     "description": "Header for a ruleset section in 'Filter lists pane'"
   },
+  "3pGroupImported": {
+    "message": "インポートしたリスト",
+    "description": "Header for a ruleset section in 'Filter lists pane'"
+  },
+  "customListImportLabel": {
+    "message": "フィルターリストを追加…",
+    "description": "Text label heading the import area of custom filter lists"
+  },
+  "customListImportPlaceholder": {
+    "message": "追加したいフィルターリストの URL を貼り付けてください",
+    "description": "Placeholder text which describes the purpose of the textarea widget"
+  },
+  "customListImportUserScriptsInfo": {
+    "message": "インポートしたリストの整形・スクリプトレットフィルターを適用するには、uBO Lite にユーザースクリプトの実行を許可する必要があります。",
+    "description": "A notice to inform user that the enforcement of some filters requires permission to execute 'user scripts'"
+  },
   "customFiltersImportExportLabel": {
     "message": "インポート又はエクスポート",
     "description": "Text label heading the import/export area of custom filters"
   },
   "customFiltersImportTextareaPlaceholder": {
-    "message": "ここに追加したいコスメティックフィルターをペースト",
+    "message": "ここに追加したい整形・スクリプトレットフィルターを貼り付け",
     "description": "Placeholder text which describes the purpose of the textarea widget"
+  },
+  "userScriptsInfo": {
+    "message": "ブラウザの拡張機能ページ（Chrome の場合は <code>chrome://extensions</code>、Firefox の場合は <code>about:addons</code>）を開き、<b>uBO Lite</b> の詳細を開いて、<b>ユーザー スクリプトを許可する</b>（「未検証のサードパーティ スクリプト」とも呼ばれます）をオンに切り替えてください。",
+    "description": "A notice to inform user on how to enable 'user scripts' permission"
   },
   "aboutChangelog": {
     "message": "更新履歴",
@@ -255,6 +279,22 @@
     "message": "望ましくない可能性のあるサイトへのナビゲーションはブロックされ、次に進むためのオプションが表示されます。",
     "description": "Short description for a checkbox in the options page"
   },
+  "enablePopupBlockLabel": {
+    "message": "ポップアップブロックを有効化",
+    "description": "Label for a checkbox in the options page"
+  },
+  "enablePopupBlockLegend": {
+    "message": "有効にすると、一致するフィルターはウェブサイトによって作成された不要なブラウザータブを自動的に閉じます。",
+    "description": "Short description for a checkbox in the options page"
+  },
+  "sandboxEditorLabel": {
+    "message": "フィルター作成サンドボックス",
+    "description": "Header for filter-creation section in the dashboard"
+  },
+  "sandboxEditorUserScriptsInfo": {
+    "message": "サンドボックスから整形・スクリプトレットフィルターを適用するには、uBO Lite にユーザースクリプトの実行を許可する必要があります。",
+    "description": "A notice to inform user that the enforcement of some filters requires permission to execute 'user scripts'"
+  },
   "developerModeLabel": {
     "message": "開発者モード",
     "description": "Label for a checkbox in the options page"
@@ -316,7 +356,7 @@
     "description": "A button to navigate to the blocked page"
   },
   "zapperTipEnter": {
-    "message": "要素抹消モードを開始",
+    "message": "要素を削除する",
     "description": "Tooltip for the button used to enter zapper mode"
   },
   "zapperTipQuit": {

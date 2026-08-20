@@ -220,7 +220,7 @@
     "description": "Tooltip when hovering the top-most cell of the global-rules column."
   },
   "popupTipLocalRules": {
-    "message": "ローカルルール: この列のルールは現在のサイトだけに適用されます。\nローカルルールはグローバルルールを上書きします。",
+    "message": "ローカルルール: この列にあるルールは、現在のサイトのみに適用されます。",
     "description": "Tooltip when hovering the top-most cell of the local-rules column."
   },
   "popupTipSaveRules": {
@@ -960,7 +960,7 @@
     "description": "Header of 'Report a filter issue' section in Support pane"
   },
   "supportS6P1S1": {
-    "message": "重複した報告によってボランティアに負担をかけないように、問題がすでに報告されていないか確認してください。",
+    "message": "重複した報告によってボランティアに負担をかけないように、問題がすでに報告されていないか確認してください。 <b>注意:</b> ボタンをクリックすると、ページのオリジンが GitHub に送信されます。",
     "description": "A paragraph in the filter issue reporter section"
   },
   "supportS6P2S1": {

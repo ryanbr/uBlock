@@ -39,6 +39,7 @@
     "name": "Peter Lowe – Ads, trackers, and more",
     "group": "default",
     "enabled": true,
+    "excludedPlatforms": [ "safari" ],
     "urls": [
       "https://pgl.yoyo.org/adservers/serverlist.php?hostformat=hosts&showintro=1&mimetype=plaintext"
     ],
@@ -50,6 +51,7 @@
     "group": "malware",
     "enabled": true,
     "trusted": true,
+    "excludedPlatforms": [ "safari" ],
     "urls": [
       "https://ublockorigin.github.io/uAssets/filters/badware.min.txt"
     ],
@@ -87,16 +89,6 @@
       "https://ublockorigin.github.io/uAssets/filters/lan-block.txt"
     ],
     "homeURL": "https://github.com/uBlockOrigin/uAssets"
-  },
-  {
-    "id": "dpollock-0",
-    "name": "Dan Pollock’s hosts file",
-    "enabled": false,
-    "excludedPlatforms": [ "safari" ],
-    "urls": [
-      "https://someonewhocares.org/hosts/hosts"
-    ],
-    "homeURL": "https://someonewhocares.org/hosts/"
   },
   {
     "id": "adguard-spyware-url",
@@ -300,7 +292,7 @@
     "id": "fra-0",
     "group": "regions",
     "lang": "ar br ff fr lb oc son",
-    "name": "🇫🇷fr 🇨🇦ca: AdGuard Français",
+    "name": "🇫🇷fr 🇧🇪be 🇨🇦ca: AdGuard Français",
     "tags": "ads french",
     "enabled": false,
     "urls": [
@@ -432,11 +424,11 @@
     "id": "kor-1",
     "group": "regions",
     "lang": "ko",
-    "name": "🇰🇷kr: List-KR",
+    "name": "🇰🇷kr: List-KR Classic",
     "tags": "ads korean 한국어",
     "enabled": false,
     "urls": [
-      "https://cdn.jsdelivr.net/gh/List-KR/List-KR@latest/filter-uBlockOrigin.txt"
+      "https://cdn.jsdelivr.net/npm/@list-kr/filterslists@latest/dist/filterslist-uBlockOrigin-classic.txt"
     ],
     "homeURL": "https://github.com/List-KR/List-KR#readme"
   },
@@ -503,7 +495,8 @@
   {
     "id": "pol-0",
     "group": "regions",
-    "lang": "szl pl _",
+    "parent": "🇵🇱pl: Polskie listy filtrów",
+    "lang": "szl pl",
     "name": "🇵🇱pl: Oficjalne Polskie Filtry do uBlocka Origin",
     "tags": "ads polish polski",
     "enabled": false,
@@ -511,6 +504,20 @@
       "https://raw.githubusercontent.com/MajkiIT/polish-ads-filter/master/polish-adblock-filters/adblock.txt"
     ],
     "homeURL": "https://github.com/MajkiIT/polish-ads-filter"
+  },
+  {
+    "id": "pol-3",
+    "group": "regions",
+    "parent": "🇵🇱pl: Polskie listy filtrów",
+    "lang": "szl pl",
+    "name": "🇵🇱pl: CERT.PL's Warning List",
+    "tags": "malware polish polski",
+    "enabled": false,
+    "excludedPlatforms": [ "safari" ],
+    "urls": [
+      "https://hole.cert.pl/domains/v2/domains_ublock.txt"
+    ],
+    "homeURL": "https://cert.pl/lista-ostrzezen/"
   },
   {
     "id": "rou-1",
@@ -533,9 +540,10 @@
     "tags": "ads belarusian беларуская kazakh tatar russian русский ukrainian українська uzbek uk",
     "enabled": false,
     "urls": [
-      "https://raw.githubusercontent.com/easylist/ruadlist/master/RuAdList-uBO.txt"
+      "https://raw.githubusercontent.com/easylist/ruadlist/{commit}/RuAdList-uBO.txt"
     ],
-    "homeURL": "https://forums.lanik.us/viewforum.php?f=102"
+    "homeURL": "https://forums.lanik.us/viewforum.php?f=102",
+    "commit": "master"
   },
   {
     "id": "rus-1",

@@ -29,6 +29,7 @@ import {
 
 import {
     intersectHostnameIters,
+    isScriptlet,
     matchesFromHostnames,
     subtractHostnameIters,
 } from './utils.js';
@@ -37,33 +38,32 @@ import { ubolErr } from './debug.js';
 
 /******************************************************************************/
 
-async function flushWrites() {
-    while ( pendingWrites.length !== 0 ) {
-        const promises = pendingWrites;
-        pendingWrites.length = 0;
-        await Promise.all(promises);
-    }
-}
+const isProcedural = a => a.startsWith('{');
+const isCSS = a => isProcedural(a) === false && isScriptlet(a) === false;
+
+/******************************************************************************/
 
 async function keysFromStorage() {
-    await flushWrites();
-    return localKeys();
+    pendingStorageOp = pendingStorageOp.then(( ) => localKeys());
+    return pendingStorageOp;
 }
 
 async function readFromStorage(key) {
-    await flushWrites();
-    return localRead(key);
+    pendingStorageOp = pendingStorageOp.then(( ) => localRead(key));
+    return pendingStorageOp;
 }
 
 async function writeToStorage(key, value) {
-    pendingWrites.push(localWrite(key, value));
+    pendingStorageOp = pendingStorageOp.then(( ) => localWrite(key, value));
+    return pendingStorageOp;
 }
 
 async function removeFromStorage(key) {
-    pendingWrites.push(localRemove(key));
+    pendingStorageOp = pendingStorageOp.then(( ) => localRemove(key));
+    return pendingStorageOp;
 }
 
-const pendingWrites = [];
+let pendingStorageOp = Promise.resolve();
 
 /******************************************************************************/
 
@@ -82,7 +82,7 @@ export async function customFiltersFromHostname(hostname) {
         const selectors = results[i];
         if ( selectors === undefined ) { continue; }
         selectors.forEach(selector => {
-            out.push(selector.startsWith('0') ? selector.slice(1) : selector);
+            out.push(selector);
         });
     }
     return out.sort();
@@ -107,7 +107,7 @@ async function getAllCustomFilterKeys() {
 export async function getAllCustomFilters() {
     const collect = async key => {
         const selectors = await readFromStorage(key);
-        return [ key.slice(5), selectors.map(a => a.startsWith('0') ? a.slice(1) : a) ];
+        return [ key.slice(5), selectors ?? [] ];
     };
     const keys = await getAllCustomFilterKeys();
     const promises = keys.map(k => collect(k));
@@ -142,7 +142,7 @@ export async function injectCustomFilters(tabId, frameId, hostname) {
     const selectors = await customFiltersFromHostname(hostname);
     if ( selectors.length === 0 ) { return; }
     const promises = [];
-    const plainSelectors = selectors.filter(a => a.startsWith('{') === false);
+    const plainSelectors = selectors.filter(a => isCSS(a));
     if ( plainSelectors.length !== 0 ) {
         promises.push(
             browser.scripting.insertCSS({
@@ -154,11 +154,14 @@ export async function injectCustomFilters(tabId, frameId, hostname) {
             })
         );
     }
-    const proceduralSelectors = selectors.filter(a => a.startsWith('{'));
+    const proceduralSelectors = selectors.filter(a => isProcedural(a));
     if ( proceduralSelectors.length !== 0 ) {
         promises.push(
             browser.scripting.executeScript({
-                files: [ '/js/scripting/css-procedural-api.js' ],
+                files: [
+                    '/js/scripting/css-api.js',
+                    '/js/scripting/css-procedural-api.js',
+                ],
                 target: { tabId, frameIds: [ frameId ] },
                 injectImmediately: true,
             }).catch(reason => {
@@ -173,11 +176,12 @@ export async function injectCustomFilters(tabId, frameId, hostname) {
 /******************************************************************************/
 
 export async function registerCustomFilters(context) {
-    const siteKeys = await getAllCustomFilterKeys();
-    if ( siteKeys.length === 0 ) { return; }
+    const customFilters = new Map(await getAllCustomFilters());
+    if ( customFilters.size === 0 ) { return; }
 
     const { none } = context.filteringModeDetails;
-    let hostnames = siteKeys.map(a => a.slice(5));
+    let hostnames = Array.from(customFilters.keys());
+    let excludeHostnames = [];
     if ( none.has('all-urls') ) {
         const { basic, optimal, complete } = context.filteringModeDetails;
         hostnames = intersectHostnameIters(hostnames, [
@@ -185,15 +189,24 @@ export async function registerCustomFilters(context) {
         ]);
     } else if ( none.size !== 0 ) {
         hostnames = [ ...subtractHostnameIters(hostnames, none) ];
+        excludeHostnames = Array.from(none);
     }
+    hostnames = hostnames.filter(a =>
+        customFilters.get(a).some(a => isCSS(a) || isProcedural(a))
+    );
     if ( hostnames.length === 0 ) { return; }
 
     const directive = {
         id: 'css-user',
         js: [ '/js/scripting/css-user.js' ],
         matches: matchesFromHostnames(hostnames),
+        allFrames: true,
+        matchOriginAsFallback: true,
         runAt: 'document_start',
     };
+    if ( excludeHostnames.length !== 0 ) {
+        directive.excludeMatches = matchesFromHostnames(excludeHostnames);
+    }
 
     context.toAdd.push(directive);
 }
@@ -250,11 +263,8 @@ async function removeCustomFiltersByKey(key, toRemove) {
     if ( selectors === undefined ) { return false; }
     const beforeCount = selectors.length;
     for ( const selector of toRemove ) {
-        let i = selectors.indexOf(selector);
-        if ( i === -1 ) {
-            i = selectors.indexOf(`0${selector}`);
-            if ( i === -1 ) { continue; }
-        }
+        const i = selectors.indexOf(selector);
+        if ( i === -1 ) { continue; }
         selectors.splice(i, 1);
     }
     const afterCount = selectors.length;
@@ -265,4 +275,17 @@ async function removeCustomFiltersByKey(key, toRemove) {
         removeFromStorage(key);
     }
     return true;
+}
+
+/******************************************************************************/
+
+export function getSandboxFilters() {
+    return localRead('sandboxFilters');
+}
+
+export function setSandboxFilters(text = '') {
+    text = text.trim();
+    return text !== ''
+        ? localWrite('sandboxFilters', text)
+        : localRemove('sandboxFilters')
 }

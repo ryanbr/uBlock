@@ -20,6 +20,7 @@
 
 */
 
+import './abort-current-script.js';
 import './attribute.js';
 import './create-html.js';
 import './href-sanitizer.js';
@@ -28,9 +29,12 @@ import './json-prune.js';
 import './noeval.js';
 import './object-prune.js';
 import './prevent-addeventlistener.js';
+import './prevent-bab.js';
+import './prevent-clipboard-write.js';
 import './prevent-dialog.js';
 import './prevent-fetch.js';
 import './prevent-innerHTML.js';
+import './prevent-navigation.js';
 import './prevent-settimeout.js';
 import './prevent-xhr.js';
 import './replace-argument.js';
@@ -40,7 +44,9 @@ import {
     collateFetchArgumentsFn,
     getExceptionTokenFn,
     getRandomTokenFn,
+    lookupElementsFn,
     matchObjectPropertiesFn,
+    onIdleFn,
     parsePropertiesToMatchFn,
 } from './utils.js';
 import { runAt, runAtHtmlElementFn } from './run-at.js';
@@ -53,9 +59,6 @@ import { registeredScriptlets } from './base.js';
 import { safeSelf } from './safe-self.js';
 import { validateConstantFn } from './set-constant.js';
 
-// Externally added to the private namespace in which scriptlets execute.
-/* global scriptletGlobals */
-
 /* eslint no-prototype-builtins: 0 */
 
 export const builtinScriptlets = registeredScriptlets;
@@ -65,137 +68,6 @@ export const builtinScriptlets = registeredScriptlets;
     Helper functions
     
     These are meant to be used as dependencies to injectable scriptlets.
-
-*******************************************************************************/
-
-builtinScriptlets.push({
-    name: 'should-debug.fn',
-    fn: shouldDebug,
-});
-function shouldDebug(details) {
-    if ( details instanceof Object === false ) { return false; }
-    return scriptletGlobals.canDebug && details.debug;
-}
-
-/******************************************************************************/
-
-builtinScriptlets.push({
-    name: 'abort-current-script.fn',
-    fn: abortCurrentScriptFn,
-    dependencies: [
-        'get-exception-token.fn',
-        'safe-self.fn',
-        'should-debug.fn',
-    ],
-});
-// Issues to mind before changing anything:
-//  https://github.com/uBlockOrigin/uBlock-issues/issues/2154
-function abortCurrentScriptFn(
-    target = '',
-    needle = '',
-    context = ''
-) {
-    if ( typeof target !== 'string' ) { return; }
-    if ( target === '' ) { return; }
-    const safe = safeSelf();
-    const logPrefix = safe.makeLogPrefix('abort-current-script', target, needle, context);
-    const reNeedle = safe.patternToRegex(needle);
-    const reContext = safe.patternToRegex(context);
-    const extraArgs = safe.getExtraArgs(Array.from(arguments), 3);
-    const thisScript = document.currentScript;
-    const chain = safe.String_split.call(target, '.');
-    let owner = window;
-    let prop;
-    for (;;) {
-        prop = chain.shift();
-        if ( chain.length === 0 ) { break; }
-        if ( prop in owner === false ) { break; }
-        owner = owner[prop];
-        if ( owner instanceof Object === false ) { return; }
-    }
-    let value;
-    let desc = Object.getOwnPropertyDescriptor(owner, prop);
-    if (
-        desc instanceof Object === false ||
-        desc.get instanceof Function === false
-    ) {
-        value = owner[prop];
-        desc = undefined;
-    }
-    const debug = shouldDebug(extraArgs);
-    const exceptionToken = getExceptionTokenFn();
-    const scriptTexts = new WeakMap();
-    const textContentGetter = Object.getOwnPropertyDescriptor(Node.prototype, 'textContent').get;
-    const getScriptText = elem => {
-        let text = textContentGetter.call(elem);
-        if ( text.trim() !== '' ) { return text; }
-        if ( scriptTexts.has(elem) ) { return scriptTexts.get(elem); }
-        const [ , mime, content ] =
-            /^data:([^,]*),(.+)$/.exec(elem.src.trim()) ||
-            [ '', '', '' ];
-        try {
-            switch ( true ) {
-            case mime.endsWith(';base64'):
-                text = self.atob(content);
-                break;
-            default:
-                text = self.decodeURIComponent(content);
-                break;
-            }
-        } catch {
-        }
-        scriptTexts.set(elem, text);
-        return text;
-    };
-    const validate = ( ) => {
-        const e = document.currentScript;
-        if ( e instanceof HTMLScriptElement === false ) { return; }
-        if ( e === thisScript ) { return; }
-        if ( context !== '' && reContext.test(e.src) === false ) {
-            // eslint-disable-next-line no-debugger
-            if ( debug === 'nomatch' || debug === 'all' ) { debugger; }
-            return;
-        }
-        if ( safe.logLevel > 1 && context !== '' ) {
-            safe.uboLog(logPrefix, `Matched src\n${e.src}`);
-        }
-        const scriptText = getScriptText(e);
-        if ( reNeedle.test(scriptText) === false ) {
-            // eslint-disable-next-line no-debugger
-            if ( debug === 'nomatch' || debug === 'all' ) { debugger; }
-            return;
-        }
-        if ( safe.logLevel > 1 ) {
-            safe.uboLog(logPrefix, `Matched text\n${scriptText}`);
-        }
-        // eslint-disable-next-line no-debugger
-        if ( debug === 'match' || debug === 'all' ) { debugger; }
-        safe.uboLog(logPrefix, 'Aborted');
-        throw new ReferenceError(exceptionToken);
-    };
-    // eslint-disable-next-line no-debugger
-    if ( debug === 'install' ) { debugger; }
-    try {
-        Object.defineProperty(owner, prop, {
-            get: function() {
-                validate();
-                return desc instanceof Object
-                    ? desc.get.call(owner)
-                    : value;
-            },
-            set: function(a) {
-                validate();
-                if ( desc instanceof Object ) {
-                    desc.set.call(owner, a);
-                } else {
-                    value = a;
-                }
-            }
-        });
-    } catch(ex) {
-        safe.uboErr(logPrefix, `Error: ${ex}`);
-    }
-}
 
 /******************************************************************************/
 
@@ -211,13 +83,14 @@ builtinScriptlets.push({
 function replaceNodeTextFn(
     nodeName = '',
     pattern = '',
-    replacement = ''
+    replacement = '',
+    ...varargs
 ) {
     const safe = safeSelf();
     const logPrefix = safe.makeLogPrefix('replace-node-text.fn', ...Array.from(arguments));
     const reNodeName = safe.patternToRegex(nodeName, 'i', true);
     const rePattern = safe.patternToRegex(pattern, 'gms');
-    const extraArgs = safe.getExtraArgs(Array.from(arguments), 3);
+    const extraArgs = safe.parseVarargs(varargs);
     const reIncludes = extraArgs.includes || extraArgs.condition
         ? safe.patternToRegex(extraArgs.includes || extraArgs.condition, 'ms')
         : null;
@@ -326,7 +199,8 @@ function replaceFetchResponseFn(
     trusted = false,
     pattern = '',
     replacement = '',
-    propsToMatch = ''
+    propsToMatch = '',
+    ...varargs
 ) {
     if ( trusted !== true ) { return; }
     const safe = safeSelf();
@@ -334,7 +208,7 @@ function replaceFetchResponseFn(
     if ( pattern === '*' ) { pattern = '.*'; }
     const rePattern = safe.patternToRegex(pattern);
     const propNeedles = parsePropertiesToMatchFn(propsToMatch, 'url');
-    const extraArgs = safe.getExtraArgs(Array.from(arguments), 4);
+    const extraArgs = safe.parseVarargs(varargs);
     const reIncludes = extraArgs.includes ? safe.patternToRegex(extraArgs.includes) : null;
     self.fetch = new Proxy(self.fetch, {
         apply: function(target, thisArg, args) {
@@ -388,29 +262,6 @@ function replaceFetchResponseFn(
     Injectable scriptlets
 
     These are meant to be used in the MAIN (webpage) execution world.
-
-*******************************************************************************/
-
-builtinScriptlets.push({
-    name: 'abort-current-script.js',
-    aliases: [
-        'acs.js',
-        'abort-current-inline-script.js',
-        'acis.js',
-    ],
-    fn: abortCurrentScript,
-    dependencies: [
-        'abort-current-script.fn',
-        'run-at-html-element.fn',
-    ],
-});
-// Issues to mind before changing anything:
-//  https://github.com/uBlockOrigin/uBlock-issues/issues/2154
-function abortCurrentScript(...args) {
-    runAtHtmlElementFn(( ) => {
-        abortCurrentScriptFn(...args);
-    });
-}
 
 /******************************************************************************/
 
@@ -667,6 +518,7 @@ builtinScriptlets.push({
     fn: removeClass,
     world: 'ISOLATED',
     dependencies: [
+        'on-idle.fn',
         'run-at.fn',
         'safe-self.fn',
     ],
@@ -717,7 +569,7 @@ function removeClass(
             }
         }
         if ( skip ) { return; }
-        timer = safe.onIdle(rmclass, { timeout: 67 });
+        timer = onIdleFn(rmclass, { timeout: 67 });
     };
     const observer = new MutationObserver(mutationHandler);
     const start = ( ) => {
@@ -1138,14 +990,15 @@ builtinScriptlets.push({
 function xmlPrune(
     selector = '',
     selectorCheck = '',
-    urlPattern = ''
+    urlPattern = '',
+    ...varargs
 ) {
     if ( typeof selector !== 'string' ) { return; }
     if ( selector === '' ) { return; }
     const safe = safeSelf();
     const logPrefix = safe.makeLogPrefix('xml-prune', selector, selectorCheck, urlPattern);
     const reUrl = safe.patternToRegex(urlPattern);
-    const extraArgs = safe.getExtraArgs(Array.from(arguments), 3);
+    const extraArgs = safe.parseVarargs(varargs);
     const queryAll = (xmlDoc, selector) => {
         const isXpath = /^xpath\(.+\)$/.test(selector);
         if ( isXpath === false ) {
@@ -1612,6 +1465,24 @@ function multiup() {
     document.addEventListener('click', handler, { capture: true });
 }
 
+/******************************************************************************/
+
+builtinScriptlets.push({
+    name: 'break-on-call.js',
+    fn: breakOnCall,
+    dependencies: [
+        'proxy-apply.fn',
+    ],
+});
+function breakOnCall(target) {
+    proxyApplyFn(target, function(context) {
+        debugger;  // eslint-disable-line no-debugger
+        return context.reflect();
+    });
+}
+
+
+
 
 
 /*******************************************************************************
@@ -1715,7 +1586,8 @@ builtinScriptlets.push({
 function trustedReplaceXhrResponse(
     pattern = '',
     replacement = '',
-    propsToMatch = ''
+    propsToMatch = '',
+    ...varargs
 ) {
     const safe = safeSelf();
     const logPrefix = safe.makeLogPrefix('trusted-replace-xhr-response', pattern, replacement, propsToMatch);
@@ -1723,7 +1595,7 @@ function trustedReplaceXhrResponse(
     if ( pattern === '*' ) { pattern = '.*'; }
     const rePattern = safe.patternToRegex(pattern);
     const propNeedles = parsePropertiesToMatchFn(propsToMatch, 'url');
-    const extraArgs = safe.getExtraArgs(Array.from(arguments), 3);
+    const extraArgs = safe.parseVarargs(varargs);
     const reIncludes = extraArgs.includes ? safe.patternToRegex(extraArgs.includes) : null;
     self.XMLHttpRequest = class extends self.XMLHttpRequest {
         open(method, url, ...args) {
@@ -1784,10 +1656,27 @@ function trustedReplaceXhrResponse(
 
 /*******************************************************************************
  * 
- * trusted-click-element.js
+ * @scriptlet trusted-click-element
  * 
- * Reference API:
- * https://github.com/AdguardTeam/Scriptlets/blob/master/src/scriptlets/trusted-click-element.ts
+ * @description
+ * Programmatically click on one or more elements.
+ * 
+ * @param steps
+ * A comma-separated list of steps to fulfilled:
+ * - A valid CSS selector matching an element to programmatically click
+ * - A integer: A delay in milliseconds to wait before the next step is
+ *   processed. If the last step is an integer, it is used as a timeout value
+ *   before the scriptlet bails out (default to 11s)
+ * If the list of steps starts with `;` or `|`, it will be used as the
+ * separator character instead of comma. This is convenient when a selector
+ * contains a comma character.
+ * A selector must be one of:
+ * - A valid plain CSS selector
+ * - An xpath expression: xpath:[expression]
+ * Addtionally:
+ * - Use `>>>` between selectors to target an element inside a shadow root
+ * - Prepend with `when-visible:[selector]` to progrmatically click the element
+ *   only when it is visible
  * 
  **/
 
@@ -1799,6 +1688,7 @@ builtinScriptlets.push({
     dependencies: [
         'get-all-cookies.fn',
         'get-all-local-storage.fn',
+        'lookup-elements.fn',
         'run-at-html-element.fn',
         'safe-self.fn',
     ],
@@ -1855,35 +1745,16 @@ function trustedClickElement(
         }
     }
 
-    const getShadowRoot = elem => {
-        // Firefox
-        if ( elem.openOrClosedShadowRoot ) {
-            return elem.openOrClosedShadowRoot;
-        }
-        // Chromium
-        if ( typeof chrome === 'object' ) {
-            if ( chrome.dom && chrome.dom.openOrClosedShadowRoot ) {
-                return chrome.dom.openOrClosedShadowRoot(elem);
-            }
-        }
-        return elem.shadowRoot;
-    };
-
-    const querySelectorEx = (selector, context = document) => {
-        const pos = selector.indexOf(' >>> ');
-        if ( pos === -1 ) { return context.querySelector(selector); }
-        const outside = selector.slice(0, pos).trim();
-        const inside = selector.slice(pos + 5).trim();
-        const elem = context.querySelector(outside);
-        if ( elem === null ) { return null; }
-        const shadowRoot = getShadowRoot(elem);
-        return shadowRoot && querySelectorEx(inside, shadowRoot);
-    };
-
-    const steps = safe.String_split.call(selectors, /\s*,\s*/).map(a => {
-        if ( /^\d+$/.test(a) ) { return parseInt(a, 10); }
-        return a;
-    });
+    const steps = (( ) => {
+        const steps = /^[;|]/.test(selectors)
+            ? safe.String_split.call(selectors.slice(1), selectors.charAt(0))
+            : safe.String_split.call(selectors, ',');
+        return steps.map(a => {
+            a = a.trim();
+            if ( /^\d+$/.test(a) ) { return parseInt(a, 10); }
+            return a;
+        });
+    })();
     if ( steps.length === 0 ) { return; }
     const clickDelay = parseInt(delay, 10) || 1;
     for ( let i = steps.length-1; i > 0; i-- ) {
@@ -1895,8 +1766,10 @@ function trustedClickElement(
         steps.unshift(clickDelay);
     }
     if ( typeof steps.at(-1) !== 'number' ) {
-        steps.push(10000);
+        steps.push(11000);
     }
+
+    const timeout = steps.pop();
 
     const waitForTime = ms => {
         return new Promise(resolve => {
@@ -1907,66 +1780,18 @@ function trustedClickElement(
             }, ms);
         });
     };
-    waitForTime.cancel = ( ) => {
-        const { timer } = waitForTime;
-        if ( timer === undefined ) { return; }
-        clearTimeout(timer);
-        waitForTime.timer = undefined;
-    };
 
-    const waitForElement = selector => {
-        return new Promise(resolve => {
-            const elem = querySelectorEx(selector);
-            if ( elem !== null ) {
-                elem.click();
-                resolve();
-                return;
-            }
-            safe.uboLog(logPrefix, `Waiting for ${selector}`);
-            const observer = new MutationObserver(( ) => {
-                const elem = querySelectorEx(selector);
-                if ( elem === null ) { return; }
-                waitForElement.cancel();
-                elem.click();
-                resolve();
-            });
-            observer.observe(document, {
-                attributes: true,
-                childList: true,
-                subtree: true,
-            });
-            waitForElement.observer = observer;
+    const waitForElement = directive => {
+        safe.uboLog(logPrefix, `Waiting for ${directive}`);
+        return lookupElementsFn(directive, Date.now() + timeout).then(elems => {
+            if ( elems.length === 0 ) { return false; }
+            elems[0].click();
+            safe.uboLog(logPrefix, `Clicked ${directive}`);
+            return true;
         });
-    };
-    waitForElement.cancel = ( ) => {
-        const { observer } = waitForElement;
-        if ( observer === undefined ) { return; }
-        waitForElement.observer = undefined;
-        observer.disconnect();
-    };
-
-    const waitForTimeout = ms => {
-        waitForTimeout.cancel();
-        waitForTimeout.timer = setTimeout(( ) => {
-            waitForTimeout.timer = undefined;
-            terminate();
-            safe.uboLog(logPrefix, `Timed out after ${ms} ms`);
-        }, ms);
-    };
-    waitForTimeout.cancel = ( ) => {
-        if ( waitForTimeout.timer === undefined ) { return; }
-        clearTimeout(waitForTimeout.timer);
-        waitForTimeout.timer = undefined;
-    };
-
-    const terminate = ( ) => {
-        waitForTime.cancel();
-        waitForElement.cancel();
-        waitForTimeout.cancel();
     };
 
     const process = async ( ) => {
-        waitForTimeout(steps.pop());
         while ( steps.length !== 0 ) {
             const step = steps.shift();
             if ( step === undefined ) { break; }
@@ -1976,10 +1801,11 @@ function trustedClickElement(
                 continue;
             }
             if ( step.startsWith('!') ) { continue; }
-            await waitForElement(step);
-            safe.uboLog(logPrefix, `Clicked ${step}`);
+            const clicked = await waitForElement(step);
+            if ( clicked ) { continue; }
+            safe.uboLog(logPrefix, `Timed out waiting on ${step}`);
+            break;
         }
-        terminate();
     };
 
     runAtHtmlElementFn(process);
@@ -2000,16 +1826,16 @@ function trustedReplaceOutboundText(
     propChain = '',
     rawPattern = '',
     rawReplacement = '',
-    ...args
+    ...varargs
 ) {
     if ( propChain === '' ) { return; }
     const safe = safeSelf();
-    const logPrefix = safe.makeLogPrefix('trusted-replace-outbound-text', propChain, rawPattern, rawReplacement, ...args);
+    const logPrefix = safe.makeLogPrefix('trusted-replace-outbound-text', propChain, rawPattern, rawReplacement, ...varargs);
     const rePattern = safe.patternToRegex(rawPattern);
     const replacement = rawReplacement.startsWith('json:')
         ? safe.JSON_parse(rawReplacement.slice(5))
         : rawReplacement;
-    const extraArgs = safe.getExtraArgs(args);
+    const extraArgs = safe.parseVarargs(varargs);
     const reCondition = safe.patternToRegex(extraArgs.condition || '');
     proxyApplyFn(propChain, function(context) {
         const encodedTextBefore = context.reflect();
@@ -2251,12 +2077,13 @@ builtinScriptlets.push({
 function trustedOverrideElementMethod(
     methodPath = '',
     selector = '',
-    disposition = ''
+    disposition = '',
+    ...varargs
 ) {
     if ( methodPath === '' ) { return; }
     const safe = safeSelf();
     const logPrefix = safe.makeLogPrefix('trusted-override-element-method', methodPath, selector, disposition);
-    const extraArgs = safe.getExtraArgs(Array.from(arguments), 3);
+    const extraArgs = safe.parseVarargs(varargs);
     proxyApplyFn(methodPath, function(context) {
         let override = selector === '';
         if ( override === false ) {

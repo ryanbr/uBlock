@@ -20,6 +20,7 @@
 
 */
 
+import { offIdleFn, onIdleFn } from './utils.js';
 import { registerScriptlet } from './base.js';
 import { runAt } from './run-at.js';
 import { safeSelf } from './safe-self.js';
@@ -89,10 +90,9 @@ export function setAttrFn(
     const start = ( ) => {
         if ( applySetAttr() === false ) { return; }
         observer = new MutationObserver(onDomChanged);
-        observer.observe(document.body, {
-            subtree: true,
-            childList: true,
-        });
+        const root = document.documentElement;
+        if ( root instanceof self.Node === false ) { return; }
+        observer.observe(root, { subtree: true, childList: true });
     };
     runAt(( ) => { start(); }, options.runAt || 'idle');
 }
@@ -132,7 +132,8 @@ registerScriptlet(setAttrFn, {
 export function setAttr(
     selector = '',
     attr = '',
-    value = ''
+    value = '',
+    ...varargs
 ) {
     const safe = safeSelf();
     const logPrefix = safe.makeLogPrefix('set-attr', selector, attr, value);
@@ -146,7 +147,7 @@ export function setAttr(
             return;
         }
     }
-    const options = safe.getExtraArgs(Array.from(arguments), 3);
+    const options = safe.parseVarargs(varargs);
     setAttrFn(false, logPrefix, selector, attr, value, options);
 }
 registerScriptlet(setAttr, {
@@ -182,11 +183,12 @@ registerScriptlet(setAttr, {
 export function trustedSetAttr(
     selector = '',
     attr = '',
-    value = ''
+    value = '',
+    ...varargs
 ) {
     const safe = safeSelf();
     const logPrefix = safe.makeLogPrefix('trusted-set-attr', selector, attr, value);
-    const options = safe.getExtraArgs(Array.from(arguments), 3);
+    const options = safe.parseVarargs(varargs);
     setAttrFn(true, logPrefix, selector, attr, value, options);
 }
 registerScriptlet(trustedSetAttr, {
@@ -241,14 +243,14 @@ export function removeAttr(
     let timerId;
     const rmattrAsync = ( ) => {
         if ( timerId !== undefined ) { return; }
-        timerId = safe.onIdle(( ) => {
+        timerId = onIdleFn(( ) => {
             timerId = undefined;
             rmattr();
         }, { timeout: 17 });
     };
     const rmattr = ( ) => {
         if ( timerId !== undefined ) {
-            safe.offIdle(timerId);
+            offIdleFn(timerId);
             timerId = undefined;
         }
         try {
@@ -298,6 +300,8 @@ registerScriptlet(removeAttr, {
         'ra.js',
     ],
     dependencies: [
+        offIdleFn,
+        onIdleFn,
         runAt,
         safeSelf,
     ],

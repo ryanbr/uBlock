@@ -54,21 +54,23 @@ export async function getTroubleshootingInfo(details) {
     const [
         platformInfo,
         defaultConfig,
+        currentConfig,
         enabledRulesets,
+        rulesetDetails,
         defaultMode,
         userRules,
         consoleOutput,
-        showBlockedCount,
         registeredScripts,
         hasOmnipotence,
     ] = await Promise.all([
         runtime.getPlatformInfo(),
         sendMessage({ what: 'getDefaultConfig' }),
+        sendMessage({ what: 'getCurrentConfig' }),
         sendMessage({ what: 'getEnabledRulesets' }),
+        sendMessage({ what: 'getRulesetDetails' }).then(a => new Map(a.map(a => [ a.id, a ]))),
         sendMessage({ what: 'getDefaultFilteringMode' }),
         sendMessage({ what: 'getEffectiveUserRules' }),
         sendMessage({ what: 'getConsoleOutput' }),
-        sendMessage({ what: 'getShowBlockedCount' }),
         sendMessage({ what: 'getRegisteredContentScripts' }),
         sendMessage({ what: 'hasBroadHostPermissions' }),
     ]);
@@ -111,9 +113,15 @@ export async function getTroubleshootingInfo(details) {
         filtering,
         permission: hasOmnipotence ? 'all' : 'ask',
     };
+    if ( currentConfig.strictBlockMode !== defaultConfig.strictBlockMode ) {
+        config.strictblock = currentConfig.strictBlockMode;
+    }
+    if ( currentConfig.popupBlockMode !== defaultConfig.popupBlockMode ) {
+        config.popupblock = currentConfig.popupBlockMode;
+    }
     if ( details?.tabId ) {
         let badge = '?';
-        if ( showBlockedCount ) {
+        if ( currentConfig.showBlockedCount ) {
             badge = await browser.action.getBadgeText({ tabId: details.tabId });
         }
         if ( badge ) {
@@ -123,6 +131,9 @@ export async function getTroubleshootingInfo(details) {
     if ( userRules.length !== 0 ) {
         config['user rules'] = userRules.length;
     }
+    config.rules = enabledRulesets.reduce((a, b) => {
+        return a + rulesetDetails.get(b).rules.total;
+    }, 0);
     const defaultRulesets = defaultConfig.rulesets;
     for ( let i = 0; i < enabledRulesets.length; i++ ) {
         const id = enabledRulesets[i];

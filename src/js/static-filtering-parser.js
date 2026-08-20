@@ -56,167 +56,169 @@ import { JSONPath } from './jsonpath.js';
 let iota = 0;
 
 iota = 0;
-export const AST_TYPE_NONE                          = iota++;
-export const AST_TYPE_UNKNOWN                       = iota++;
-export const AST_TYPE_COMMENT                       = iota++;
-export const AST_TYPE_NETWORK                       = iota++;
-export const AST_TYPE_EXTENDED                      = iota++;
+export const AST_TYPE_NONE                            = iota++;
+export const AST_TYPE_UNKNOWN                         = iota++;
+export const AST_TYPE_COMMENT                         = iota++;
+export const AST_TYPE_NETWORK                         = iota++;
+export const AST_TYPE_EXTENDED                        = iota++;
 
 iota = 0;
-export const AST_TYPE_NETWORK_PATTERN_ANY           = iota++;
-export const AST_TYPE_NETWORK_PATTERN_HOSTNAME      = iota++;
-export const AST_TYPE_NETWORK_PATTERN_PLAIN         = iota++;
-export const AST_TYPE_NETWORK_PATTERN_REGEX         = iota++;
-export const AST_TYPE_NETWORK_PATTERN_GENERIC       = iota++;
-export const AST_TYPE_NETWORK_PATTERN_BAD           = iota++;
-export const AST_TYPE_EXTENDED_COSMETIC             = iota++;
-export const AST_TYPE_EXTENDED_SCRIPTLET            = iota++;
-export const AST_TYPE_EXTENDED_HTML                 = iota++;
-export const AST_TYPE_EXTENDED_RESPONSEHEADER       = iota++;
-export const AST_TYPE_COMMENT_PREPARSER             = iota++;
+export const AST_TYPE_NETWORK_PATTERN_ANY             = iota++;
+export const AST_TYPE_NETWORK_PATTERN_HOSTNAME        = iota++;
+export const AST_TYPE_NETWORK_PATTERN_PLAIN           = iota++;
+export const AST_TYPE_NETWORK_PATTERN_REGEX           = iota++;
+export const AST_TYPE_NETWORK_PATTERN_GENERIC         = iota++;
+export const AST_TYPE_NETWORK_PATTERN_BAD             = iota++;
+export const AST_TYPE_EXTENDED_COSMETIC               = iota++;
+export const AST_TYPE_EXTENDED_SCRIPTLET              = iota++;
+export const AST_TYPE_EXTENDED_HTML                   = iota++;
+export const AST_TYPE_EXTENDED_RESPONSEHEADER         = iota++;
+export const AST_TYPE_COMMENT_PREPARSER               = iota++;
 
 iota = 0;
-export const AST_FLAG_UNSUPPORTED                   = 1 << iota++;
-export const AST_FLAG_IGNORE                        = 1 << iota++;
-export const AST_FLAG_HAS_ERROR                     = 1 << iota++;
-export const AST_FLAG_IS_EXCEPTION                  = 1 << iota++;
-export const AST_FLAG_EXT_STRONG                    = 1 << iota++;
-export const AST_FLAG_EXT_STYLE                     = 1 << iota++;
-export const AST_FLAG_EXT_SCRIPTLET_ADG             = 1 << iota++;
-export const AST_FLAG_NET_PATTERN_LEFT_HNANCHOR     = 1 << iota++;
-export const AST_FLAG_NET_PATTERN_RIGHT_PATHANCHOR  = 1 << iota++;
-export const AST_FLAG_NET_PATTERN_LEFT_ANCHOR       = 1 << iota++;
-export const AST_FLAG_NET_PATTERN_RIGHT_ANCHOR      = 1 << iota++;
-export const AST_FLAG_HAS_OPTIONS                   = 1 << iota++;
+export const AST_FLAG_UNSUPPORTED                     = 1 << iota++;
+export const AST_FLAG_IGNORE                          = 1 << iota++;
+export const AST_FLAG_HAS_ERROR                       = 1 << iota++;
+export const AST_FLAG_IS_EXCEPTION                    = 1 << iota++;
+export const AST_FLAG_EXT_STRONG                      = 1 << iota++;
+export const AST_FLAG_EXT_STYLE                       = 1 << iota++;
+export const AST_FLAG_EXT_SCRIPTLET_ADG               = 1 << iota++;
+export const AST_FLAG_NET_PATTERN_LEFT_HNANCHOR       = 1 << iota++;
+export const AST_FLAG_NET_PATTERN_RIGHT_PATHANCHOR    = 1 << iota++;
+export const AST_FLAG_NET_PATTERN_LEFT_ANCHOR         = 1 << iota++;
+export const AST_FLAG_NET_PATTERN_RIGHT_ANCHOR        = 1 << iota++;
+export const AST_FLAG_HAS_OPTIONS                     = 1 << iota++;
 
 iota = 0;
-export const AST_ERROR_NONE                         = 1 << iota++;
-export const AST_ERROR_REGEX                        = 1 << iota++;
-export const AST_ERROR_PATTERN                      = 1 << iota++;
-export const AST_ERROR_DOMAIN_NAME                  = 1 << iota++;
-export const AST_ERROR_OPTION_DUPLICATE             = 1 << iota++;
-export const AST_ERROR_OPTION_UNKNOWN               = 1 << iota++;
-export const AST_ERROR_OPTION_BADVALUE              = 1 << iota++;
-export const AST_ERROR_OPTION_EXCLUDED              = 1 << iota++;
-export const AST_ERROR_IF_TOKEN_UNKNOWN             = 1 << iota++;
-export const AST_ERROR_UNTRUSTED_SOURCE             = 1 << iota++;
+export const AST_ERROR_NONE                           = 1 << iota++;
+export const AST_ERROR_REGEX                          = 1 << iota++;
+export const AST_ERROR_PATTERN                        = 1 << iota++;
+export const AST_ERROR_DOMAIN_NAME                    = 1 << iota++;
+export const AST_ERROR_OPTION_DUPLICATE               = 1 << iota++;
+export const AST_ERROR_OPTION_UNKNOWN                 = 1 << iota++;
+export const AST_ERROR_OPTION_BADVALUE                = 1 << iota++;
+export const AST_ERROR_OPTION_EXCLUDED                = 1 << iota++;
+export const AST_ERROR_IF_TOKEN_UNKNOWN               = 1 << iota++;
+export const AST_ERROR_UNTRUSTED_SOURCE               = 1 << iota++;
 
 iota = 0;
-const NODE_RIGHT_INDEX                              = iota++;
-const NOOP_NODE_SIZE                                = iota;
-const NODE_TYPE_INDEX                               = iota++;
-const NODE_DOWN_INDEX                               = iota++;
-const NODE_BEG_INDEX                                = iota++;
-const NODE_END_INDEX                                = iota++;
-const NODE_FLAGS_INDEX                              = iota++;
-const NODE_TRANSFORM_INDEX                          = iota++;
-const FULL_NODE_SIZE                                = iota;
+const NODE_RIGHT_INDEX                                = iota++;
+const NOOP_NODE_SIZE                                  = iota;
+const NODE_TYPE_INDEX                                 = iota++;
+const NODE_DOWN_INDEX                                 = iota++;
+const NODE_BEG_INDEX                                  = iota++;
+const NODE_END_INDEX                                  = iota++;
+const NODE_FLAGS_INDEX                                = iota++;
+const NODE_TRANSFORM_INDEX                            = iota++;
+const FULL_NODE_SIZE                                  = iota;
 
 iota = 0;
-export const NODE_TYPE_NOOP                         = iota++;
-export const NODE_TYPE_LINE_RAW                     = iota++;
-export const NODE_TYPE_LINE_BODY                    = iota++;
-export const NODE_TYPE_WHITESPACE                   = iota++;
-export const NODE_TYPE_COMMENT                      = iota++;
-export const NODE_TYPE_IGNORE                       = iota++;
-export const NODE_TYPE_EXT_RAW                      = iota++;
-export const NODE_TYPE_EXT_OPTIONS_ANCHOR           = iota++;
-export const NODE_TYPE_EXT_OPTIONS                  = iota++;
-export const NODE_TYPE_EXT_DECORATION               = iota++;
-export const NODE_TYPE_EXT_PATTERN_RAW              = iota++;
-export const NODE_TYPE_EXT_PATTERN_COSMETIC         = iota++;
-export const NODE_TYPE_EXT_PATTERN_HTML             = iota++;
-export const NODE_TYPE_EXT_PATTERN_RESPONSEHEADER   = iota++;
-export const NODE_TYPE_EXT_PATTERN_SCRIPTLET        = iota++;
-export const NODE_TYPE_EXT_PATTERN_SCRIPTLET_TOKEN  = iota++;
-export const NODE_TYPE_EXT_PATTERN_SCRIPTLET_ARGS   = iota++;
-export const NODE_TYPE_EXT_PATTERN_SCRIPTLET_ARG    = iota++;
-export const NODE_TYPE_NET_RAW                      = iota++;
-export const NODE_TYPE_NET_EXCEPTION                = iota++;
-export const NODE_TYPE_NET_PATTERN_RAW              = iota++;
-export const NODE_TYPE_NET_PATTERN                  = iota++;
-export const NODE_TYPE_NET_PATTERN_PART             = iota++;
-export const NODE_TYPE_NET_PATTERN_PART_SPECIAL     = iota++;
-export const NODE_TYPE_NET_PATTERN_PART_UNICODE     = iota++;
-export const NODE_TYPE_NET_PATTERN_LEFT_HNANCHOR    = iota++;
-export const NODE_TYPE_NET_PATTERN_LEFT_ANCHOR      = iota++;
-export const NODE_TYPE_NET_PATTERN_RIGHT_ANCHOR     = iota++;
-export const NODE_TYPE_NET_OPTIONS_ANCHOR           = iota++;
-export const NODE_TYPE_NET_OPTIONS                  = iota++;
-export const NODE_TYPE_NET_OPTION_SEPARATOR         = iota++;
-export const NODE_TYPE_NET_OPTION_SENTINEL          = iota++;
-export const NODE_TYPE_NET_OPTION_RAW               = iota++;
-export const NODE_TYPE_NET_OPTION_NAME_NOT          = iota++;
-export const NODE_TYPE_NET_OPTION_NAME_UNKNOWN      = iota++;
-export const NODE_TYPE_NET_OPTION_NAME_1P           = iota++;
-export const NODE_TYPE_NET_OPTION_NAME_STRICT1P     = iota++;
-export const NODE_TYPE_NET_OPTION_NAME_3P           = iota++;
-export const NODE_TYPE_NET_OPTION_NAME_STRICT3P     = iota++;
-export const NODE_TYPE_NET_OPTION_NAME_ALL          = iota++;
-export const NODE_TYPE_NET_OPTION_NAME_BADFILTER    = iota++;
-export const NODE_TYPE_NET_OPTION_NAME_CNAME        = iota++;
-export const NODE_TYPE_NET_OPTION_NAME_CSP          = iota++;
-export const NODE_TYPE_NET_OPTION_NAME_CSS          = iota++;
-export const NODE_TYPE_NET_OPTION_NAME_DENYALLOW    = iota++;
-export const NODE_TYPE_NET_OPTION_NAME_DOC          = iota++;
-export const NODE_TYPE_NET_OPTION_NAME_EHIDE        = iota++;
-export const NODE_TYPE_NET_OPTION_NAME_EMPTY        = iota++;
-export const NODE_TYPE_NET_OPTION_NAME_FONT         = iota++;
-export const NODE_TYPE_NET_OPTION_NAME_FRAME        = iota++;
-export const NODE_TYPE_NET_OPTION_NAME_FROM         = iota++;
-export const NODE_TYPE_NET_OPTION_NAME_GENERICBLOCK = iota++;
-export const NODE_TYPE_NET_OPTION_NAME_GHIDE        = iota++;
-export const NODE_TYPE_NET_OPTION_NAME_HEADER       = iota++;
-export const NODE_TYPE_NET_OPTION_NAME_IMAGE        = iota++;
-export const NODE_TYPE_NET_OPTION_NAME_IMPORTANT    = iota++;
-export const NODE_TYPE_NET_OPTION_NAME_INLINEFONT   = iota++;
-export const NODE_TYPE_NET_OPTION_NAME_INLINESCRIPT = iota++;
-export const NODE_TYPE_NET_OPTION_NAME_IPADDRESS    = iota++;
-export const NODE_TYPE_NET_OPTION_NAME_MATCHCASE    = iota++;
-export const NODE_TYPE_NET_OPTION_NAME_MEDIA        = iota++;
-export const NODE_TYPE_NET_OPTION_NAME_METHOD       = iota++;
-export const NODE_TYPE_NET_OPTION_NAME_MP4          = iota++;
-export const NODE_TYPE_NET_OPTION_NAME_NOOP         = iota++;
-export const NODE_TYPE_NET_OPTION_NAME_OBJECT       = iota++;
-export const NODE_TYPE_NET_OPTION_NAME_OTHER        = iota++;
-export const NODE_TYPE_NET_OPTION_NAME_PERMISSIONS  = iota++;
-export const NODE_TYPE_NET_OPTION_NAME_PING         = iota++;
-export const NODE_TYPE_NET_OPTION_NAME_POPUNDER     = iota++;
-export const NODE_TYPE_NET_OPTION_NAME_POPUP        = iota++;
-export const NODE_TYPE_NET_OPTION_NAME_REASON       = iota++;
-export const NODE_TYPE_NET_OPTION_NAME_REDIRECT     = iota++;
-export const NODE_TYPE_NET_OPTION_NAME_REDIRECTRULE = iota++;
-export const NODE_TYPE_NET_OPTION_NAME_REMOVEPARAM  = iota++;
-export const NODE_TYPE_NET_OPTION_NAME_REPLACE      = iota++;
-export const NODE_TYPE_NET_OPTION_NAME_SCRIPT       = iota++;
-export const NODE_TYPE_NET_OPTION_NAME_SHIDE        = iota++;
-export const NODE_TYPE_NET_OPTION_NAME_TO           = iota++;
-export const NODE_TYPE_NET_OPTION_NAME_URLSKIP      = iota++;
-export const NODE_TYPE_NET_OPTION_NAME_URLTRANSFORM = iota++;
-export const NODE_TYPE_NET_OPTION_NAME_XHR          = iota++;
-export const NODE_TYPE_NET_OPTION_NAME_WEBRTC       = iota++;
-export const NODE_TYPE_NET_OPTION_NAME_WEBSOCKET    = iota++;
-export const NODE_TYPE_NET_OPTION_ASSIGN            = iota++;
-export const NODE_TYPE_NET_OPTION_QUOTE             = iota++;
-export const NODE_TYPE_NET_OPTION_VALUE             = iota++;
-export const NODE_TYPE_OPTION_VALUE_DOMAIN_LIST     = iota++;
-export const NODE_TYPE_OPTION_VALUE_DOMAIN_RAW      = iota++;
-export const NODE_TYPE_OPTION_VALUE_NOT             = iota++;
-export const NODE_TYPE_OPTION_VALUE_DOMAIN          = iota++;
-export const NODE_TYPE_OPTION_VALUE_SEPARATOR       = iota++;
-export const NODE_TYPE_PREPARSE_DIRECTIVE           = iota++;
-export const NODE_TYPE_PREPARSE_DIRECTIVE_VALUE     = iota++;
-export const NODE_TYPE_PREPARSE_DIRECTIVE_IF        = iota++;
-export const NODE_TYPE_PREPARSE_DIRECTIVE_IF_VALUE  = iota++;
-export const NODE_TYPE_COMMENT_URL                  = iota++;
-export const NODE_TYPE_COUNT                        = iota;
+export const NODE_TYPE_NOOP                           = iota++;
+export const NODE_TYPE_LINE_RAW                       = iota++;
+export const NODE_TYPE_LINE_BODY                      = iota++;
+export const NODE_TYPE_WHITESPACE                     = iota++;
+export const NODE_TYPE_COMMENT                        = iota++;
+export const NODE_TYPE_IGNORE                         = iota++;
+export const NODE_TYPE_EXT_RAW                        = iota++;
+export const NODE_TYPE_EXT_OPTIONS_ANCHOR             = iota++;
+export const NODE_TYPE_EXT_OPTIONS                    = iota++;
+export const NODE_TYPE_EXT_DECORATION                 = iota++;
+export const NODE_TYPE_EXT_PATTERN_RAW                = iota++;
+export const NODE_TYPE_EXT_PATTERN_COSMETIC           = iota++;
+export const NODE_TYPE_EXT_PATTERN_HTML               = iota++;
+export const NODE_TYPE_EXT_PATTERN_RESPONSEHEADER     = iota++;
+export const NODE_TYPE_EXT_PATTERN_SCRIPTLET          = iota++;
+export const NODE_TYPE_EXT_PATTERN_SCRIPTLET_TOKEN    = iota++;
+export const NODE_TYPE_EXT_PATTERN_SCRIPTLET_ARGS     = iota++;
+export const NODE_TYPE_EXT_PATTERN_SCRIPTLET_ARG      = iota++;
+export const NODE_TYPE_NET_RAW                        = iota++;
+export const NODE_TYPE_NET_EXCEPTION                  = iota++;
+export const NODE_TYPE_NET_PATTERN_RAW                = iota++;
+export const NODE_TYPE_NET_PATTERN                    = iota++;
+export const NODE_TYPE_NET_PATTERN_PART               = iota++;
+export const NODE_TYPE_NET_PATTERN_PART_SPECIAL       = iota++;
+export const NODE_TYPE_NET_PATTERN_PART_UNICODE       = iota++;
+export const NODE_TYPE_NET_PATTERN_LEFT_HNANCHOR      = iota++;
+export const NODE_TYPE_NET_PATTERN_LEFT_ANCHOR        = iota++;
+export const NODE_TYPE_NET_PATTERN_RIGHT_ANCHOR       = iota++;
+export const NODE_TYPE_NET_OPTIONS_ANCHOR             = iota++;
+export const NODE_TYPE_NET_OPTIONS                    = iota++;
+export const NODE_TYPE_NET_OPTION_SEPARATOR           = iota++;
+export const NODE_TYPE_NET_OPTION_SENTINEL            = iota++;
+export const NODE_TYPE_NET_OPTION_RAW                 = iota++;
+export const NODE_TYPE_NET_OPTION_NAME_NOT            = iota++;
+export const NODE_TYPE_NET_OPTION_NAME_UNKNOWN        = iota++;
+export const NODE_TYPE_NET_OPTION_NAME_1P             = iota++;
+export const NODE_TYPE_NET_OPTION_NAME_STRICT1P       = iota++;
+export const NODE_TYPE_NET_OPTION_NAME_3P             = iota++;
+export const NODE_TYPE_NET_OPTION_NAME_STRICT3P       = iota++;
+export const NODE_TYPE_NET_OPTION_NAME_ALL            = iota++;
+export const NODE_TYPE_NET_OPTION_NAME_BADFILTER      = iota++;
+export const NODE_TYPE_NET_OPTION_NAME_CNAME          = iota++;
+export const NODE_TYPE_NET_OPTION_NAME_CSP            = iota++;
+export const NODE_TYPE_NET_OPTION_NAME_CSS            = iota++;
+export const NODE_TYPE_NET_OPTION_NAME_DENYALLOW      = iota++;
+export const NODE_TYPE_NET_OPTION_NAME_DOC            = iota++;
+export const NODE_TYPE_NET_OPTION_NAME_EHIDE          = iota++;
+export const NODE_TYPE_NET_OPTION_NAME_EMPTY          = iota++;
+export const NODE_TYPE_NET_OPTION_NAME_FONT           = iota++;
+export const NODE_TYPE_NET_OPTION_NAME_FRAME          = iota++;
+export const NODE_TYPE_NET_OPTION_NAME_FROM           = iota++;
+export const NODE_TYPE_NET_OPTION_NAME_GENERICBLOCK   = iota++;
+export const NODE_TYPE_NET_OPTION_NAME_GHIDE          = iota++;
+export const NODE_TYPE_NET_OPTION_NAME_RESPONSEHEADER = iota++;
+export const NODE_TYPE_NET_OPTION_NAME_IMAGE          = iota++;
+export const NODE_TYPE_NET_OPTION_NAME_IMPORTANT      = iota++;
+export const NODE_TYPE_NET_OPTION_NAME_INLINEFONT     = iota++;
+export const NODE_TYPE_NET_OPTION_NAME_INLINESCRIPT   = iota++;
+export const NODE_TYPE_NET_OPTION_NAME_IPADDRESS      = iota++;
+export const NODE_TYPE_NET_OPTION_NAME_MATCHCASE      = iota++;
+export const NODE_TYPE_NET_OPTION_NAME_MEDIA          = iota++;
+export const NODE_TYPE_NET_OPTION_NAME_METHOD         = iota++;
+export const NODE_TYPE_NET_OPTION_NAME_MP4            = iota++;
+export const NODE_TYPE_NET_OPTION_NAME_NOOP           = iota++;
+export const NODE_TYPE_NET_OPTION_NAME_OBJECT         = iota++;
+export const NODE_TYPE_NET_OPTION_NAME_OTHER          = iota++;
+export const NODE_TYPE_NET_OPTION_NAME_PERMISSIONS    = iota++;
+export const NODE_TYPE_NET_OPTION_NAME_PING           = iota++;
+export const NODE_TYPE_NET_OPTION_NAME_POPUNDER       = iota++;
+export const NODE_TYPE_NET_OPTION_NAME_POPUP          = iota++;
+export const NODE_TYPE_NET_OPTION_NAME_REASON         = iota++;
+export const NODE_TYPE_NET_OPTION_NAME_REDIRECT       = iota++;
+export const NODE_TYPE_NET_OPTION_NAME_REDIRECTRULE   = iota++;
+export const NODE_TYPE_NET_OPTION_NAME_REMOVEPARAM    = iota++;
+export const NODE_TYPE_NET_OPTION_NAME_REPLACE        = iota++;
+export const NODE_TYPE_NET_OPTION_NAME_REQUESTHEADER  = iota++;
+export const NODE_TYPE_NET_OPTION_NAME_SCRIPT         = iota++;
+export const NODE_TYPE_NET_OPTION_NAME_SHIDE          = iota++;
+export const NODE_TYPE_NET_OPTION_NAME_TO             = iota++;
+export const NODE_TYPE_NET_OPTION_NAME_TOP            = iota++;
+export const NODE_TYPE_NET_OPTION_NAME_URLSKIP        = iota++;
+export const NODE_TYPE_NET_OPTION_NAME_URLTRANSFORM   = iota++;
+export const NODE_TYPE_NET_OPTION_NAME_XHR            = iota++;
+export const NODE_TYPE_NET_OPTION_NAME_WEBRTC         = iota++;
+export const NODE_TYPE_NET_OPTION_NAME_WEBSOCKET      = iota++;
+export const NODE_TYPE_NET_OPTION_ASSIGN              = iota++;
+export const NODE_TYPE_NET_OPTION_QUOTE               = iota++;
+export const NODE_TYPE_NET_OPTION_VALUE               = iota++;
+export const NODE_TYPE_OPTION_VALUE_DOMAIN_LIST       = iota++;
+export const NODE_TYPE_OPTION_VALUE_DOMAIN_RAW        = iota++;
+export const NODE_TYPE_OPTION_VALUE_NOT               = iota++;
+export const NODE_TYPE_OPTION_VALUE_DOMAIN            = iota++;
+export const NODE_TYPE_OPTION_VALUE_SEPARATOR         = iota++;
+export const NODE_TYPE_PREPARSE_DIRECTIVE             = iota++;
+export const NODE_TYPE_PREPARSE_DIRECTIVE_VALUE       = iota++;
+export const NODE_TYPE_PREPARSE_DIRECTIVE_IF          = iota++;
+export const NODE_TYPE_PREPARSE_DIRECTIVE_IF_VALUE    = iota++;
+export const NODE_TYPE_COMMENT_URL                    = iota++;
+export const NODE_TYPE_COUNT                          = iota;
 
 iota = 0;
-export const NODE_FLAG_IGNORE                       = 1 << iota++;
-export const NODE_FLAG_ERROR                        = 1 << iota++;
-export const NODE_FLAG_IS_NEGATED                   = 1 << iota++;
-export const NODE_FLAG_OPTION_HAS_VALUE             = 1 << iota++;
-export const NODE_FLAG_PATTERN_UNTOKENIZABLE        = 1 << iota++;
+export const NODE_FLAG_IGNORE                         = 1 << iota++;
+export const NODE_FLAG_ERROR                          = 1 << iota++;
+export const NODE_FLAG_IS_NEGATED                     = 1 << iota++;
+export const NODE_FLAG_OPTION_HAS_VALUE               = 1 << iota++;
+export const NODE_FLAG_PATTERN_UNTOKENIZABLE          = 1 << iota++;
 
 export const nodeTypeFromOptionName = new Map([
     [ '', NODE_TYPE_NET_OPTION_NAME_UNKNOWN ],
@@ -248,7 +250,6 @@ export const nodeTypeFromOptionName = new Map([
     [ 'genericblock', NODE_TYPE_NET_OPTION_NAME_GENERICBLOCK ],
     [ 'ghide', NODE_TYPE_NET_OPTION_NAME_GHIDE ],
     /* synonym */ [ 'generichide', NODE_TYPE_NET_OPTION_NAME_GHIDE ],
-    [ 'header', NODE_TYPE_NET_OPTION_NAME_HEADER ],
     [ 'image', NODE_TYPE_NET_OPTION_NAME_IMAGE ],
     [ 'important', NODE_TYPE_NET_OPTION_NAME_IMPORTANT ],
     [ 'inline-font', NODE_TYPE_NET_OPTION_NAME_INLINEFONT ],
@@ -274,10 +275,14 @@ export const nodeTypeFromOptionName = new Map([
     [ 'removeparam', NODE_TYPE_NET_OPTION_NAME_REMOVEPARAM ],
     [ 'replace', NODE_TYPE_NET_OPTION_NAME_REPLACE ],
     /* synonym */ [ 'queryprune', NODE_TYPE_NET_OPTION_NAME_REMOVEPARAM ],
+    [ 'requestheader', NODE_TYPE_NET_OPTION_NAME_REQUESTHEADER ],
+    [ 'responseheader', NODE_TYPE_NET_OPTION_NAME_RESPONSEHEADER ],
+    /* synonym */ [ 'header', NODE_TYPE_NET_OPTION_NAME_RESPONSEHEADER ],
     [ 'script', NODE_TYPE_NET_OPTION_NAME_SCRIPT ],
     [ 'shide', NODE_TYPE_NET_OPTION_NAME_SHIDE ],
     /* synonym */ [ 'specifichide', NODE_TYPE_NET_OPTION_NAME_SHIDE ],
     [ 'to', NODE_TYPE_NET_OPTION_NAME_TO ],
+    [ 'top', NODE_TYPE_NET_OPTION_NAME_TOP ],
     [ 'urlskip', NODE_TYPE_NET_OPTION_NAME_URLSKIP ],
     [ 'uritransform', NODE_TYPE_NET_OPTION_NAME_URLTRANSFORM ],
     [ 'xhr', NODE_TYPE_NET_OPTION_NAME_XHR ],
@@ -579,6 +584,7 @@ const astTemplates = {
                     type: NODE_TYPE_EXT_PATTERN_COSMETIC,
                     beg: 0,
                     end: 0,
+                    register: true,
                 }],
             }],
         }],
@@ -1327,14 +1333,12 @@ export class AstFilterParser {
             case NODE_TYPE_NET_OPTION_NAME_FROM:
             case NODE_TYPE_NET_OPTION_NAME_METHOD:
             case NODE_TYPE_NET_OPTION_NAME_TO:
+            case NODE_TYPE_NET_OPTION_NAME_TOP:
                 realBad = isNegated || hasValue === false;
                 break;
             case NODE_TYPE_NET_OPTION_NAME_GENERICBLOCK:
                 bad = true;
                 realBad = isException === false || isNegated || hasValue;
-                break;
-            case NODE_TYPE_NET_OPTION_NAME_HEADER:
-                realBad = isNegated || hasValue === false;
                 break;
             case NODE_TYPE_NET_OPTION_NAME_IMPORTANT:
                 realBad = isException || isNegated || hasValue;
@@ -1399,6 +1403,10 @@ export class AstFilterParser {
                 realBad = isNegated || modifierType !== 0;
                 if ( realBad ) { break; }
                 modifierType = type;
+                break;
+            case NODE_TYPE_NET_OPTION_NAME_REQUESTHEADER:
+            case NODE_TYPE_NET_OPTION_NAME_RESPONSEHEADER:
+                realBad = isNegated || hasValue === false;
                 break;
             case NODE_TYPE_NET_OPTION_NAME_STRICT1P:
             case NODE_TYPE_NET_OPTION_NAME_STRICT3P:
@@ -1512,18 +1520,20 @@ export class AstFilterParser {
 
     indexOfNetAnchor(s) {
         const end = s.length;
-        if ( end === 0 ) { return end; }
+        if ( end === 0 ) { return 0; }
         let j = s.lastIndexOf('$');
         if ( j === -1 ) { return end; }
-        if ( (j+1) === end ) { return end; }
+        let htmlFilteringRule = false;
         for (;;) {
-            const before = s.charAt(j-1);
-            if ( before === '$' ) { return -1; }
+            if ( s.charCodeAt(j-1) === 0x24 /* $ */ ) {
+                htmlFilteringRule = true;
+            }
             if ( this.reNetOptionTokens.test(s.slice(j+1)) ) { return j; }
             if ( j === 0 ) { break; }
             j = s.lastIndexOf('$', j-1);
             if ( j === -1 ) { break; }
         }
+        if ( htmlFilteringRule ) { return -1; } 
         return end;
     }
 
@@ -2051,6 +2061,7 @@ export class AstFilterParser {
             break;
         case NODE_TYPE_NET_OPTION_NAME_FROM:
         case NODE_TYPE_NET_OPTION_NAME_TO:
+        case NODE_TYPE_NET_OPTION_NAME_TOP:
             this.linkDown(next, this.parseDomainList(next, '|', DOMAIN_FROM_FROMTO_LIST));
             break;
         default:
@@ -2596,6 +2607,7 @@ export class AstFilterParser {
             parentBeg,
             parentEnd
         );
+        this.addNodeToRegister(NODE_TYPE_EXT_PATTERN_COSMETIC, head);
         this.result.exception = this.isException();
         this.result.raw = this.getNodeString(head);
         this.result.compiled = undefined;
@@ -2927,6 +2939,12 @@ export class AstFilterParser {
         );
     }
 
+    getNetFilterTopOptionIterator() {
+        return this.getDomainListIterator(
+            this.getBranchFromType(NODE_TYPE_NET_OPTION_NAME_TOP)
+        );
+    }
+
     getNetFilterToOptionIterator() {
         return this.getDomainListIterator(
             this.getBranchFromType(NODE_TYPE_NET_OPTION_NAME_TO)
@@ -3158,7 +3176,6 @@ export const netOptionTokenDescriptors = new Map([
     [ 'genericblock', { } ],
     [ 'ghide', { } ],
     /* synonym */ [ 'generichide', { } ],
-    [ 'header', { mustAssign: true } ],
     [ 'image', { canNegate: true } ],
     [ 'important', { blockOnly: true } ],
     [ 'inline-font', { canNegate: true } ],
@@ -3184,10 +3201,14 @@ export const netOptionTokenDescriptors = new Map([
     [ 'removeparam', { } ],
     /* synonym */ [ 'queryprune', { } ],
     [ 'replace', { mustAssign: true } ],
+    [ 'requestheader', { mustAssign: true } ],
+    [ 'responseheader', { mustAssign: true } ],
+    /* synonym */ [ 'header', { mustAssign: true } ],
     [ 'script', { canNegate: true } ],
     [ 'shide', { } ],
     /* synonym */ [ 'specifichide', { } ],
     [ 'to', { mustAssign: true } ],
+    [ 'top', { mustAssign: true } ],
     [ 'urlskip', { mustAssign: true } ],
     [ 'uritransform', { mustAssign: true } ],
     [ 'xhr', { canNegate: true } ],
@@ -3291,6 +3312,7 @@ export class ExtSelectorCompiler {
             ':style',
         ]);
         this.proceduralOperatorNames = new Set([
+            'content',
             'has-text',
             'if',
             'if-not',
@@ -3938,6 +3960,8 @@ export class ExtSelectorCompiler {
         const arg = this.astSerialize(parts, false);
         if ( arg === undefined ) { return; }
         switch ( operator ) {
+        case 'content':
+            return this.compileSelector(arg);
         case 'has-text':
             return this.compileText(arg);
         case 'if':
@@ -4173,6 +4197,7 @@ export const proceduralOperatorTokens = new Map([
     [ '-abp-contains', 0b00 ],
     [ '-abp-has', 0b00, ],
     [ 'contains', 0b00, ],
+    [ 'content', 0b01, ],
     [ 'has', 0b01 ],
     [ 'has-text', 0b01 ],
     [ 'if', 0b00 ],
@@ -4186,9 +4211,10 @@ export const proceduralOperatorTokens = new Map([
     [ 'not', 0b01 ],
     [ 'nth-ancestor', 0b00 ],
     [ 'others', 0b11 ],
-    [ 'remove', 0b11 ],
+    [ 'remove', 0b01 ],
     [ 'remove-attr', 0b11 ],
     [ 'remove-class', 0b11 ],
+    [ 'shadow', 0b11, ],
     [ 'style', 0b11 ],
     [ 'upward', 0b01 ],
     [ 'watch-attr', 0b11 ],
@@ -4355,13 +4381,10 @@ export const utils = (( ) => {
                 }
                 if ( part instanceof Object === false ) { continue; }
                 const content = part.content;
+                if ( typeof content !== 'string' ) { continue; }
                 const slices = this.splitter(content, env);
-                for ( let i = 0, n = slices.length - 1; i < n; i++ ) {
+                for ( let i = 0, n = slices.length; i < n; i += 2 ) {
                     const slice = content.slice(slices[i+0], slices[i+1]);
-                    if ( (i & 1) !== 0 ) {
-                        out.push(slice);
-                        continue;
-                    }
                     let lastIndex = 0;
                     for (;;) {
                         const match = reInclude.exec(slice);
@@ -4389,7 +4412,7 @@ export const utils = (( ) => {
         static prune(content, env) {
             const parts = this.splitter(content, env);
             const out = [];
-            for ( let i = 0, n = parts.length - 1; i < n; i += 2 ) {
+            for ( let i = 0, n = parts.length; i < n; i += 2 ) {
                 const beg = parts[i+0];
                 const end = parts[i+1];
                 out.push(content.slice(beg, end));

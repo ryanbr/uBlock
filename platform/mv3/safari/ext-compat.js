@@ -19,7 +19,7 @@
     Home: https://github.com/gorhill/uBlock
 */
 
-import { deepEquals } from './utils.js';
+import { deepEquals } from './deep-compare.js';
 
 export const webext = self.browser;
 
@@ -71,6 +71,7 @@ const nativeDNR = webext.declarativeNetRequest;
 
 const isSupportedRule = r => {
     if ( r.action.responseHeaders ) { return false; }
+    if ( r.action.requestHeaders ) { return false; }
     const { condition } = r;
     if ( condition.tabIds !== undefined ) { return false; }
     if ( condition.resourceTypes?.includes('object') ) {

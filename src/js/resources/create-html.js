@@ -50,17 +50,18 @@ import { safeSelf } from './safe-self.js';
 function trustedCreateHTML(
     parentSelector,
     htmlStr = '',
-    durationStr = ''
+    durationStr = '',
+    ...varargs
 ) {
     if ( parentSelector === '' ) { return; }
     if ( htmlStr === '' ) { return; }
     const safe = safeSelf();
     const logPrefix = safe.makeLogPrefix('trusted-create-html', parentSelector, htmlStr, durationStr);
-    const extraArgs = safe.getExtraArgs(Array.from(arguments), 3);
+    const extraArgs = safe.parseVarargs(varargs);
     // We do not want to recursively create elements
     self.trustedCreateHTML = true;
     let ancestor = self.frameElement;
-    while ( ancestor !== null ) {
+    while ( ancestor ) {
         const doc = ancestor.ownerDocument;
         if ( doc === null ) { break; }
         const win = doc.defaultView;

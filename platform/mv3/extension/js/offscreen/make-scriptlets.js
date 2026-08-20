@@ -19,9 +19,9 @@
     Home: https://github.com/gorhill/uBlock
 */
 
-import { builtinScriptlets } from './js/resources/scriptlets.js';
-import fs from 'fs/promises';
-import { literalStrFromRegex } from './js/regex-analyzer.js';
+import { hostnameCompare, isHnRegexOrPath } from './make-utils.js';
+import { builtinScriptlets } from '../resources/scriptlets.js';
+import { literalStrFromRegex } from './regex-analyzer.js';
 import { safeReplace } from './safe-replace.js';
 
 /******************************************************************************/
@@ -32,7 +32,7 @@ const worldTemplate = {
     scriptletFunctions: new Map(),
     allFunctions: new Map(),
     args: new Map(),
-    arglists: new Map(),
+    arglists: new Map([['',0]]),
     hostnames: new Map(),
     regexesOrPaths: new Map(),
     matches: new Set(),
@@ -64,6 +64,29 @@ function createScriptletCoreCode(worldDetails, resourceEntry) {
 
 /******************************************************************************/
 
+function compileBroadExclusion(details) {
+    if ( Boolean(details.excludeMatches?.length) === false ) { return; }
+    for ( const worldDetails of Object.values(worlds) ) {
+        for ( const hn of details.excludeMatches ) {
+            if ( isHnRegexOrPath(hn) ) {
+                const refs = worldDetails.regexesOrPaths.get(hn) ?? new Set();
+                if ( refs.size === 0 ) {
+                    worldDetails.regexesOrPaths.set(hn, refs);
+                }
+                refs.add(0);
+                continue;
+            }
+            const refs = worldDetails.hostnames.get(hn) ?? new Set();
+            if ( refs.size === 0 ) {
+                worldDetails.hostnames.set(hn, refs);
+            }
+            refs.add(0);
+        }
+    }
+}
+
+/******************************************************************************/
+
 export function reset() {
     worlds.ISOLATED = structuredClone(worldTemplate);
     worlds.MAIN = structuredClone(worldTemplate);
@@ -71,7 +94,10 @@ export function reset() {
 
 /******************************************************************************/
 
-export function compile(assetDetails, details) {
+export function compile(rulesetId, details) {
+    if ( details.args.length === 0 ) {
+        return compileBroadExclusion(details);
+    }
     if ( details.args[0].endsWith('.js') === false ) {
         details.args[0] += '.js';
     }
@@ -82,7 +108,7 @@ export function compile(assetDetails, details) {
     const resourceEntry = resourceDetails.get(scriptletToken);
     if ( resourceEntry === undefined ) { return; }
     if ( resourceEntry.requiresTrust && details.trustedSource !== true ) {
-        console.log(`Rejecting +js(${details.args.join()}): ${assetDetails.id} is not trusted`);
+        console.log(`Rejecting +js(${details.args.join()}): ${rulesetId} is not trusted`);
         return;
     }
     const worldDetails = worlds[resourceEntry.world];
@@ -108,7 +134,7 @@ export function compile(assetDetails, details) {
     const arglistIndex = worldDetails.arglists.get(arglistKey);
     if ( details.matches ) {
         for ( const hn of details.matches ) {
-            if ( hn.includes('/') ) {
+            if ( isHnRegexOrPath(hn) ) {
                 worldDetails.matches.clear();
                 worldDetails.matches.add('*');
                 if ( worldDetails.regexesOrPaths.has(hn) === false ) {
@@ -138,7 +164,7 @@ export function compile(assetDetails, details) {
     }
     if ( details.excludeMatches ) {
         for ( const hn of details.excludeMatches ) {
-            if ( hn.includes('/') ) {
+            if ( isHnRegexOrPath(hn) ) {
                 if ( worldDetails.regexesOrPaths.has(hn) === false ) {
                     worldDetails.regexesOrPaths.set(hn, new Set());
                 }
@@ -155,21 +181,15 @@ export function compile(assetDetails, details) {
 
 /******************************************************************************/
 
-export async function commit(rulesetId, path, writeFn) {
-    const scriptletTemplate = await fs.readFile(
-        './scriptlets/scriptlet.template.js',
-        { encoding: 'utf8' }
-    );
+export function commit(rulesetId, template) {
     const stats = {};
     for ( const world of Object.keys(worlds) ) {
         const worldDetails = worlds[world];
         const { scriptletFunctions, allFunctions, args, arglists } = worldDetails;
         if ( scriptletFunctions.size === 0 ) { continue; }
-        const hostnames = Array.from(worldDetails.hostnames).toSorted((a, b) => {
-            const d = a[0].length - b[0].length;
-            if ( d !== 0 ) { return d; }
-            return a[0] < b[0] ? -1 : 1;
-        }).map(a => ([ a[0], JSON.stringify(Array.from(a[1]).map(a => JSON.parse(a))).slice(1,-1)]));
+        const hostnames = Array.from(worldDetails.hostnames).toSorted((a, b) =>
+            hostnameCompare(a[0], b[0])
+        ).map(a => ([ a[0], JSON.stringify(Array.from(a[1]).map(a => JSON.parse(a))).slice(1,-1)]));
         const scriptletFromRegexes = Array.from(worldDetails.regexesOrPaths)
             .filter(a => a[0].startsWith('/') && a[0].endsWith('/'))
             .map(a => {
@@ -180,7 +200,8 @@ export async function commit(rulesetId, path, writeFn) {
                     JSON.stringify(Array.from(a[1])).slice(1,-1),
                 ];
             }).flat();
-        let content = safeReplace(scriptletTemplate, 'self.$hasEntities$', JSON.stringify(worldDetails.hasEntities));
+        let content = safeReplace(template, 'self.$hasHostnames$', JSON.stringify(hostnames.length !== 0));
+        content = safeReplace(content, 'self.$hasEntities$', JSON.stringify(worldDetails.hasEntities));
         content = safeReplace(content, 'self.$hasAncestors$', JSON.stringify(worldDetails.hasAncestors));
         content = safeReplace(content, 'self.$hasRegexes$', JSON.stringify(scriptletFromRegexes.length !== 0));
         content = safeReplace(content,
@@ -212,8 +233,13 @@ export async function commit(rulesetId, path, writeFn) {
             Array.from(allFunctions.values()).sort().join('\n\n')
         );
         content = safeReplace(content, /\$rulesetId\$/, rulesetId, 0);
-        writeFn(`${path}/${world.toLowerCase()}/${rulesetId}.js`, content);
-        stats[world] = Array.from(worldDetails.matches).sort();
+        stats[world] = {
+            code: content,
+            hostnames: Array.from(worldDetails.matches).sort(),
+            hasRegexes: scriptletFromRegexes.length !== 0,
+            hasAncestors: worldDetails.hasAncestors,
+            hasEntities: worldDetails.hasEntities,
+        };
     }
     return stats;
 }

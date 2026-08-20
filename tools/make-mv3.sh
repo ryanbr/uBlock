@@ -56,8 +56,9 @@ UBOL_DIR=$(pwd)
 cd - > /dev/null
 
 mkdir -p "$UBOL_DIR"/css/fonts
-mkdir -p "$UBOL_DIR"/js
+mkdir -p "$UBOL_DIR"/js/offscreen
 mkdir -p "$UBOL_DIR"/img
+mkdir -p "$UBOL_DIR"/lib
 
 if [ -n "$UBO_VERSION" ]; then
     UBO_REPO="https://github.com/gorhill/uBlock.git"
@@ -86,9 +87,12 @@ cp "$UBO_DIR"/src/js/fa-icons.js "$UBOL_DIR"/js/
 cp "$UBO_DIR"/src/js/i18n.js "$UBOL_DIR"/js/
 cp "$UBO_DIR"/src/js/jsonpath.js "$UBOL_DIR"/js/
 cp "$UBO_DIR"/src/js/redirect-resources.js "$UBOL_DIR"/js/
+cp "$UBO_DIR"/src/js/regex-analyzer.js "$UBOL_DIR"/js/offscreen/
+cp -R "$UBO_DIR"/src/js/resources "$UBOL_DIR"/js/
 cp "$UBO_DIR"/src/js/static-filtering-parser.js "$UBOL_DIR"/js/
 cp "$UBO_DIR"/src/js/urlskip.js "$UBOL_DIR"/js/
 cp "$UBO_DIR"/src/lib/punycode.js "$UBOL_DIR"/js/
+cp -R "$UBO_DIR"/src/lib/regexanalyzer "$UBOL_DIR"/lib/
 
 cp -R "$UBO_DIR/src/img/flags-of-the-world" "$UBOL_DIR"/img
 
@@ -101,6 +105,7 @@ cp platform/mv3/extension/*.json "$UBOL_DIR"/
 cp platform/mv3/extension/css/* "$UBOL_DIR"/css/
 cp -R platform/mv3/extension/js/* "$UBOL_DIR"/js/
 cp platform/mv3/"$PLATFORM"/ext-compat.js "$UBOL_DIR"/js/ 2>/dev/null || :
+cp platform/mv3/"$PLATFORM"/ext-offscreen.js "$UBOL_DIR"/js/ 2>/dev/null || :
 cp platform/mv3/"$PLATFORM"/css-api.js "$UBOL_DIR"/js/scripting/ 2>/dev/null || :
 cp platform/mv3/"$PLATFORM"/css-user.js "$UBOL_DIR"/js/scripting/ 2>/dev/null || :
 cp platform/mv3/extension/img/* "$UBOL_DIR"/img/
@@ -120,6 +125,8 @@ cp platform/mv3/extension/lib/codemirror/codemirror-ubol/LICENSE \
     "$UBOL_DIR"/lib/codemirror/codemirror-quickstart.LICENSE
 mkdir -p "$UBOL_DIR"/lib/csstree
 cp "$UBO_DIR"/src/lib/csstree/* "$UBOL_DIR"/lib/csstree/
+cp platform/mv3/extension/lib/s14e-serializer/s14e-serializer.js \
+    "$UBOL_DIR"/lib/
 
 echo "*** uBOLite.mv3: Generating rulesets"
 UBOL_BUILD_DIR=$(mktemp -d)
@@ -128,11 +135,14 @@ mkdir -p "$UBOL_BUILD_DIR"
 cp platform/mv3/*.json "$UBOL_BUILD_DIR"/
 cp platform/mv3/*.js "$UBOL_BUILD_DIR"/
 cp platform/mv3/*.mjs "$UBOL_BUILD_DIR"/
+cp platform/mv3/extension/js/ubo-parser.js "$UBOL_BUILD_DIR"/js/
 cp platform/mv3/extension/js/utils.js "$UBOL_BUILD_DIR"/js/
-cp "$UBO_DIR"/src/js/regex-analyzer.js "$UBOL_BUILD_DIR"/js/
-cp -R "$UBO_DIR"/src/lib/regexanalyzer "$UBOL_BUILD_DIR"/
+cp "$UBO_DIR"/src/lib/punycode.js "$UBOL_BUILD_DIR"/js/
+cp -R "$UBO_DIR"/src/lib/regexanalyzer "$UBOL_BUILD_DIR"/js/
 cp -R "$UBO_DIR"/src/js/resources "$UBOL_BUILD_DIR"/js/
 cp -R platform/mv3/scriptlets "$UBOL_BUILD_DIR"/
+cp -R platform/mv3/extension/js/offscreen "$UBOL_BUILD_DIR"/js/
+cp "$UBO_DIR"/src/js/regex-analyzer.js "$UBOL_BUILD_DIR"/js/offscreen/
 mkdir -p "$UBOL_BUILD_DIR"/web_accessible_resources
 cp "$UBO_DIR"/src/web_accessible_resources/* "$UBOL_BUILD_DIR"/web_accessible_resources/
 cp -R platform/mv3/"$PLATFORM" "$UBOL_BUILD_DIR"/
@@ -168,6 +178,7 @@ if [ -z "$TAGNAME" ]; then
 else
     jq --arg version "${TAGNAME}" '.version = $version' "$UBOL_DIR/manifest.json"  > "$tmp_manifest" \
         && mv "$tmp_manifest" "$UBOL_DIR/manifest.json"
+    rm -rf "$UBOL_DIR/rulesets/debug"
 fi
 
 # Platform-specific steps

@@ -1,3 +1,69 @@
+- [Add procedural operator `content(...)`, to lookup elements inside `template` tags](https://github.com/gorhill/uBlock/commit/25d413803d)
+- [Improve `prevent-clipboard-write` scriptlet](https://github.com/gorhill/uBlock/commit/8a85e04907)
+- [Improve `json-edit` scriptlet](https://github.com/gorhill/uBlock/commit/0fdbfdb2b5)
+- [Revisit scriptlets' `getExtraArgs` implementation](https://github.com/gorhill/uBlock/commit/505fbc7a75)
+
+----------
+
+# 1.73.0
+
+- [[logger] Preserve whitespace characters](https://github.com/gorhill/uBlock/commit/ef981d09b5)
+- [Improve `proxy-apply` utility scriptlet](https://github.com/gorhill/uBlock/commit/be3bb05fce)
+- [Improve `abort-current-script` scriptlet](https://github.com/gorhill/uBlock/commit/84e4bd7659)
+- [Improve `prevent-addEventListener` scriptlet](https://github.com/gorhill/uBlock/commit/89fe40d73f)
+- [Add shim for `piano-analytics.js`](https://github.com/gorhill/uBlock/commit/5dab3cbd24)
+- [Improve `trusted-click-element` scriptlet](https://github.com/gorhill/uBlock/commit/bdd39fe606)
+- [Add `prevent-clipboard-write` scriptlet](https://github.com/gorhill/uBlock/commit/735f61b8a4)
+- [Improve `prevent-bab` scriptlet](https://github.com/gorhill/uBlock/commit/6772215c35)
+- [[jsonpath] Increase RFC9535 compliance](https://github.com/gorhill/uBlock/commit/b123c23a4f)
+- [Dot notation before bracket notation is not valid](https://github.com/gorhill/uBlock/commit/028ffdbea3)
+
+----------
+
+# 1.72.2
+
+- [Add missing test against `null` object](https://github.com/gorhill/uBlock/commit/74e6c8fe3f)
+
+----------
+
+# 1.72.0
+
+- [Fix broken rendering of final URL in strict-block page](https://github.com/gorhill/uBlock/commit/fe8ce9804c)
+- [Fix potential exception in set-attribute scriptlet](https://github.com/gorhill/uBlock/commit/37fe5d9cbe)
+- [Improve parsing/interpretation of consecutive `$$` in network filters](https://github.com/gorhill/uBlock/commit/347f9f7fda)
+- [Improve `googlesyndication_adsbygoogle` shim](https://github.com/gorhill/uBlock/commit/f5be2bbed0)
+- [Add `edit-object-on-[getter|setter]` scriptlets](https://github.com/gorhill/uBlock/commit/99e622831b)
+- [JSONPath: Test presence/absence of property w/ quantifier extension](https://github.com/gorhill/uBlock/commit/b901692d57)
+- [Prefix JSONPath queries with `v2:` to benefit increased rfc9535 conformance](https://github.com/gorhill/uBlock/commit/5d9ac5d0bf)
+- [Add regex-based selectors to JSONPath](https://github.com/gorhill/uBlock/commit/cfc3b05c93)
+- [Improve JSONPath; add `[trusted-]edit-element-object` scriptlets](https://github.com/gorhill/uBlock/commit/fdc1a4e743)
+- [Improve JSONPath: add support for double quote for names](https://github.com/gorhill/uBlock/commit/fe45329032)
+- [Add `edit-this-object`/`trusted-edit-this-object` scriptlets](https://github.com/gorhill/uBlock/commit/2695b9f7d6)
+- [Minor improvement to `trusted-replace-argument` scriptlet](https://github.com/gorhill/uBlock/commit/da9287257d)
+- [Fix test for header matching when using negated value](https://github.com/gorhill/uBlock/commit/09e46b744e)
+- [Improve `trusted-click-element` scriptlet](https://github.com/gorhill/uBlock/commit/32a4d640fb)
+    - <https://github.com/gorhill/uBlock/commit/aa028eacd0>
+- [Improve `google-ima` shim](https://github.com/gorhill/uBlock/commit/9e5299e7f4)
+- [Add ISO-8859-2 as alias of Windows-1250 in text encoder](https://github.com/gorhill/uBlock/commit/3f0c4e1110)
+
+----------
+
+# 1.71.0
+
+- [Improve `freeze-element-property` scriptlet](https://github.com/gorhill/uBlock/commit/b91798c6f4)
+- [Add support for network filter option `top=`](https://github.com/gorhill/uBlock/commit/aebc108e36)
+- [Fix JS code extraction from web accessible resources](https://github.com/gorhill/uBlock/commit/a8bbd1a466)
+- [Add `freeze-element-property` scriptlet](https://github.com/gorhill/uBlock/commit/05f01f6be4)
+- [chromium][Categorize `.svg` resources as image type](https://github.com/gorhill/uBlock/commit/b862b73134)
+- [Add `prevent-navigation` scriptlet](https://github.com/gorhill/uBlock/commit/60f57594bf)
+- [Fix editor's autocomplete for first filter option](https://github.com/gorhill/uBlock/commit/ab8baaf833)
+- [Add new filter option: `requestheader`](https://github.com/gorhill/uBlock/commit/e871d6e673)
+- [Minor improvement of `trusted-create-html` scriptlet](https://github.com/gorhill/uBlock/commit/527939854d)
+
+----------
+
+# 1.70.0
+
 - [Improve `json-edit`-related scriptlets](https://github.com/gorhill/uBlock/commit/98d3e9500a)
 - [Improve `trusted-create-html` scriptlet](https://github.com/gorhill/uBlock/commit/baffd32dab)
 - [Improve `prevent-fetch` scriptlet](https://github.com/gorhill/uBlock/commit/2ce376cf1d)
@@ -24,7 +90,7 @@
 - [Add `nitropay_ads.js` shim](https://github.com/gorhill/uBlock/commit/6af8a457ed)
 - [Improve scriptlets proxying `fetch`](https://github.com/gorhill/uBlock/commit/13612d1d29)
 - [Improve google-ima shim](https://github.com/gorhill/uBlock/commit/3fc281adf1)
-- [[firefox] Change minimum required version to 115](https://github.com/gorhill/uBlock/commit/d5793b83f2)
+- [[firefox] [Change minimum required version to 115](https://github.com/gorhill/uBlock/commit/d5793b83f2)
 - [Fix regression in `prevent-fetch` scriptlet](https://github.com/gorhill/uBlock/commit/be78200c2f)
 - [Add `prevent-dialog` scriptlet](https://github.com/gorhill/uBlock/commit/fd12d01928)
 

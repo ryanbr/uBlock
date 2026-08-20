@@ -35,6 +35,10 @@
     "message": "Fortrolighedspolitik",
     "description": "Link to privacy policy on GitHub (English)"
   },
+  "aboutDocumentation": {
+    "message": "Dokumentation",
+    "description": "Link to documentation in About pane"
+  },
   "popupFilteringModeLabel": {
     "message": "filtreringstilstand",
     "description": "Label in the popup panel for the current filtering mode"
@@ -87,13 +91,33 @@
     "message": "Regioner, sprog",
     "description": "Header for a ruleset section in 'Filter lists pane'"
   },
+  "3pGroupImported": {
+    "message": "Importerede lister",
+    "description": "Header for a ruleset section in 'Filter lists pane'"
+  },
+  "customListImportLabel": {
+    "message": "Tilføj filterliste…",
+    "description": "Text label heading the import area of custom filter lists"
+  },
+  "customListImportPlaceholder": {
+    "message": "URL'en til filterlisten, der skal tilføjes",
+    "description": "Placeholder text which describes the purpose of the textarea widget"
+  },
+  "customListImportUserScriptsInfo": {
+    "message": "For at håndhæve kosmetiske eller scriptlets-filtre fra importerede lister skal uBlock gives tilladelse til at afvikle bruger-scripts.",
+    "description": "A notice to inform user that the enforcement of some filters requires permission to execute 'user scripts'"
+  },
   "customFiltersImportExportLabel": {
     "message": "Import/ Eksport",
     "description": "Text label heading the import/export area of custom filters"
   },
   "customFiltersImportTextareaPlaceholder": {
-    "message": "Indsæt bestemte kosmetiske filtre hér for at tilføje",
+    "message": "Bestemte kosmetiske/scriplets-filtre, som skal tilføjes",
     "description": "Placeholder text which describes the purpose of the textarea widget"
+  },
+  "userScriptsInfo": {
+    "message": "Åbn webbrowserens udvidelsesside (<code>chrome://extensions</code> i Chrome eller <code>Om:tilføjelser</code> i Firefox), åbn <b>uBO Lite</b>-detaljerne, og slå <b>Tillad bruger-scripts</b> til (også kaldet “ubekræftede tredjeparts-scripts”).",
+    "description": "A notice to inform user on how to enable 'user scripts' permission"
   },
   "aboutChangelog": {
     "message": "Ændringslog",
@@ -254,6 +278,22 @@
   "enableStrictBlockLegend": {
     "message": "Navigering til potentielt uønskede websteder blokeres, men man tilbydes muligheden for at fortsætte.",
     "description": "Short description for a checkbox in the options page"
+  },
+  "enablePopupBlockLabel": {
+    "message": "Aktivér pop op-blokering",
+    "description": "Label for a checkbox in the options page"
+  },
+  "enablePopupBlockLegend": {
+    "message": "Når aktiv, lukker matchende filtre automatisk uønskede webbrowserfaner åbnet af websteder.",
+    "description": "Short description for a checkbox in the options page"
+  },
+  "sandboxEditorLabel": {
+    "message": "Sandkasse til filteroprettelse",
+    "description": "Header for filter-creation section in the dashboard"
+  },
+  "sandboxEditorUserScriptsInfo": {
+    "message": "For at håndhæve kosmetiske eller scriptlets-filtre fra sandkasse skal uBlock gives tilladelse til at afvikle bruger-scripts.",
+    "description": "A notice to inform user that the enforcement of some filters requires permission to execute 'user scripts'"
   },
   "developerModeLabel": {
     "message": "Udviklertilstand",
